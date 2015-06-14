@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Don´t change this strings - only the tutorial ones if you really want to -->
+
+    <!-- Licenses -->
+    <string name="OpenSourceLicenses">Open Source Licenses:</string>
+    <string name="ApacheLicense" translatable="false">Apache License, Version 2.0</string>
+    <string name="MITLicense" translatable="false">MIT License</string>
+
+
+
+    <string name="License1">Root Tools</string>
+    <string name="License1about" translatable="false">Stephen Erickson, Chris Ravenscroft, Dominik Schuermann, Adam Shanks</string>
+    <string name="License1more">Copyright (c) 2012 Stephen Erickson, \nChris Ravenscroft, \nDominik Schuermann, \nAdam Shanks\n\nLicensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
+    <string name="License1github">https://github.com/Stericson/RootTools</string>
+    <string name="License2" translatable="false">ViewPagerIndicator</string>
+    <string name="License2about" translatable="false">Jake Wharton</string>
+    <string name="License2more"> Copyright 2012 Jake Wharton\nCopyright 2011 Patrik Åkerfeldt\nCopyright 2011 Francisco Figueiredo Jr.\n\nLicensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
+    <string name="License2github"> https://github.com/JakeWharton/ViewPagerIndicator</string>
+    <string name="License3" translatable="false">Glide</string>
+    <string name="License3about" translatable="false">Jake Wharton,\nThe Android Open Source Project</string>
+    <string name="License3more" translatable="false">Copyright 2012 Jake Wharton \nCopyright 2011 The Android Open Source Project \n\nLicensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
+    <string name="License3github" translatable="false">https://github.com/bumptech/glide</string>
+
+
+
+
+
+    <!-- About the App -->
+    <string name="DevelopedBy">Installer App developed by:</string>
+    <string name="ThemeDevelopedBy">Theme made by:</string>
+    <string name="ThanksTo">Thanks to:</string>
+    <string name="NameOfAppDeveloper">Niklas Schnettler</string>
+    <string name="ThanksTo1">BitSyko Development Team</string>
+    <string name="ThanksTo2">Mailson Campos</string>
+    <string name="ThanksTo3">Stefano Trevisani</string>
+    <string name="AppDeveloperGooglePlus">https://plus.google.com/u/0/+NiklasSchnettler/posts</string>
+    <string name="Thanksto1GooglePlus">https://plus.google.com/u/0/communities/102261717366580091389</string>
+    <string name="Thanksto2GooglePlus">https://plus.google.com/u/0/+MailsonCampos/posts</string>
+    <string name="Thanksto3GooglePlus">https://plus.google.com/+StefanoTrevisani/posts</string>
+
+
+
+
+
+    <!-- Dialogs -->
+
+        <!-- Action texts -->
+        <string name="Install" translatable="false">INSTALL</string>
+        <string name="Continue">Continue</string>
+        <string name="Close">Close</string>
+        <string name="MoveOverlays">Install Overlays?</string>
+        <string name="Cancel">Cancel</string>
+        <string name="okay" translatable="false">OK</string>
+        <string name="VisitGithub">Visit Github</string>
+        <string name="deleteModeOne">Remove one</string>
+        <string name="deleteModeAll">Remove all</string>
+        <string name="YES">YES</string>
+        <string name="CopyOverlays">Copy</string>
+        <string name="InstallOverlays">Install</string>
+        <string name="Reboot">REBOOT</string>
+        <string name="pick_color">Pick a color</string>
+
+
+        <!-- description and headline texts -->
+        <string name="title_activity_install_dialog">Install?</string>
+        <string name="CreateHeXFolder">Install Overlays to /system/vendor/overlay?</string>
+        <string name="VisitCommunity">Projects progress</string>
+        <string name="SelectDeleteMode">Select delete Mode:</string>
+        <string name="deleteModeAbout">Do you want delete all Overlays or just specific ones?</string>
+        <string name="MoveOverlaystoSdCard">Create a folder on your internal memory and move overlays into it? After that you will be able to install them using the Layers Manager app.</string>
+        <string name="chooseInstallMode">Choose installation method:</string>
+        <string name="SystemUIParts">Select parts of SystemUI to install.</string>
+        <string name="CopyMoveOverlays">Move Overlays?</string>
+        <string name="ChoseInstallationMode">Installation mode?</string>
+        <string name="ChoseInstallationMode2">Please choose an installation mode.</string>
+        <string name="rebooting">Rebooting</string>
+
+
+
+    <!-- Settings Screen -->
+    <string name="General">General</string>
+    <string name="InstallationMethod">Installation Method</string>
+    <string name="FabAllOverlays">FAB installs all Overlays</string>
+    <string name="FabAllOverlaysDetail">Option to install all Overlays at once.</string>
+    <string name="ConfirmInstallationDialog">Show confirm installation dialog</string>
+    <string name="ConfirmInstallationDialogDetail">Always show the dialog where you have to confirm that you want to install Overlays.</string>
+
+
+    <!-- Overflow Menu -->
+    <string name="About">About</string>
+    <string name="DeleteOverlay">Delete Overlay(s)</string>
+    <string name="InstallOtherOverlays">Install other Overlays</string>
+    <string name="SoftReboot">Soft Reboot</string>
+    <string name="action_settings">Settings</string>
+    <string name="Settings">Settings</string>
+
+
+
+    <!-- SnackBar texts -->
+    <string name="OverlaysMoved">Overlays moved</string>
+    <string name="selectOverlayFirst">Select Overlays first</string>
+    <string name="GOTO">GOTO</string>
+    <string name="SnackBarInstall">Install?</string>
+    <string name="RemovedOverays">Removed all Overlays</string>
+    <string name="MoveFinished">Overlays Moved</string>
+    <string name="Layers">Layers</string>
+    <string name="OverlaysInstalled">Overlays installed!</string>
+
+
+
+
+    <!-- Main Activity -->
+    <string name="Changelog">Changelog</string>
+    <string name="WhatsNew0">WHATS NEW</string>
+    <string name="more">MORE</string>
+
+
+
+
+
+</resources>

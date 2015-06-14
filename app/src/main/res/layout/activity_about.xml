@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    >
+    <android.support.v7.widget.Toolbar
+
+        android:id="@+id/toolbar4"
+        android:layout_height="160dp"
+        android:layout_width="match_parent"
+        android:minHeight="?android:attr/actionBarSize"
+        android:background="?android:attr/colorPrimary"
+        android:gravity="bottom"
+        tools:context="com.sh4dow.hex_layerstheme.activities.AboutActivity"
+        android:elevation="5dp">
+    </android.support.v7.widget.Toolbar>
+
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:id="@+id/imVie_AppLogo"
+        android:src="@mipmap/ic_launcher"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:elevation="5dp"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Layers Manager"
+        android:id="@+id/tv_AppName"
+        android:textColor="#ffffff"
+        android:layout_below="@+id/imVie_AppLogo"
+        android:layout_centerHorizontal="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_marginTop="8dp"
+        android:elevation="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="version Alpha 5.3"
+        android:id="@+id/tv_Version"
+        android:layout_below="@+id/tv_AppName"
+        android:layout_centerHorizontal="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:elevation="5dp"
+        android:textColor="#ffffff" />
+
+    <ScrollView
+
+
+        android:layout_height="match_parent"
+        android:layout_width="fill_parent"
+        android:layout_below="@+id/toolbar4"
+        android:background="@color/background">
+
+
+
+
+
+        <RelativeLayout  android:layout_width="match_parent"
+            android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="0dp"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+
+            android:id="@+id/General">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Developed by"
+                android:id="@+id/tv_caption1"
+                android:layout_alignParentStart="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textColor="@color/accent"
+                android:layout_marginTop="16dp"
+                />
+
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/listView_ThemeDeveloper"
+                android:layout_marginTop="16dp"
+                android:layout_below="@+id/tv_caption1"
+                android:layout_alignParentStart="true"
+                android:elevation="1dp" />
+
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/listView_AppDeveloper"
+                android:layout_marginTop="16dp"
+                android:layout_alignParentStart="true"
+                android:elevation="1dp"
+                android:layout_below="@+id/listView_ThemeDeveloper" />
+
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/listView_ThanksTo1"
+                android:layout_marginTop="16dp"
+                android:layout_alignParentStart="true"
+                android:elevation="1dp"
+                android:layout_below="@+id/listView_AppDeveloper" />
+
+            <View  android:layout_width="fill_parent" android:layout_height="1.0dip" android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_centerHorizontal="true"
+                android:background="#B6B6B6"
+                android:layout_marginTop="16dp"
+                android:id="@+id/divider2"
+                android:layout_below="@+id/listView_ThanksTo1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Useful links"
+                android:id="@+id/tv_caption2"
+                android:layout_alignParentStart="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textColor="@color/accent"
+                android:layout_marginTop="16dp"
+                android:layout_below="@+id/divider2"
+                />
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/listView_ThanksTo2"
+                android:layout_marginTop="16dp"
+                android:layout_below="@+id/tv_caption2"
+                android:layout_alignParentStart="true"
+                android:elevation="1dp" />
+
+            <View  android:layout_width="fill_parent" android:layout_height="1.0dip" android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_centerHorizontal="true"
+                android:background="#B6B6B6"
+                android:layout_marginTop="16dp"
+                android:id="@+id/divider3"
+                android:layout_below="@+id/listView_ThanksTo2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/OpenSourceLicenses"
+                android:id="@+id/tv_caption4"
+                android:layout_alignParentStart="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textColor="@color/accent"
+                android:layout_marginTop="16dp"
+                android:layout_below="@+id/divider3" />
+
+            <android.support.v7.widget.CardView
+                card_view:cardBackgroundColor="@color/card_background"
+
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:id="@+id/CardView_License1"
+                android:elegantTextHeight="false"
+                android:elevation="5dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/card_background"
+                android:backgroundTint="@color/card_background"
+                android:layout_below="@+id/tv_caption4">
+
+                <TextView
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:text="@string/License1"
+                    android:id="@+id/tv_license1"
+                    android:layout_marginTop="16dp"
+                    android:textSize="16dp"
+                    android:paddingRight="16dp"
+                    android:textColor="@color/about_text" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/License1about"
+                    android:id="@+id/tv_license1about"
+                    android:layout_marginTop="36dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="48dp"
+
+                    android:textColor="@color/text_color_secondary"
+                    android:textSize="14dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ApacheLicense"
+                    android:id="@+id/tv_license1license"
+                    android:layout_gravity="left"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="16dp"
+
+
+                    android:layout_marginTop="72dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imBu_more1"
+                    android:layout_alignBottom="@+id/CradViewWhatsNew"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="8dp"
+                    android:layout_gravity="center_vertical|right"
+                    android:src="@drawable/information"
+                    android:background="@color/button_background"
+                    android:padding="8dp"
+                    android:nestedScrollingEnabled="false" />
+
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                card_view:cardBackgroundColor="@color/card_background"
+
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/CardView_License1"
+                android:layout_marginTop="16dp"
+                android:id="@+id/CardView_License2"
+                android:elegantTextHeight="false"
+                android:elevation="5dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/card_background"
+                android:backgroundTint="@color/card_background">
+
+
+
+                <TextView
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:text="@string/License2"
+                    android:id="@+id/tv_license2"
+                    android:layout_marginTop="16dp"
+                    android:textSize="16dp"
+                    android:paddingRight="16dp"
+                    android:textColor="@color/about_text" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/License2about"
+                    android:id="@+id/tv_license2about"
+                    android:layout_marginTop="36dp"
+                    android:layout_marginLeft="16dp"
+
+                    android:textColor="@color/text_color_secondary"
+                    android:textSize="14dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ApacheLicense"
+                    android:id="@+id/tv_license2license"
+                    android:layout_gravity="left"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="16dp"
+
+
+                    android:layout_marginTop="56dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imBu_more2"
+                    android:layout_alignBottom="@+id/CradViewWhatsNew"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="8dp"
+                    android:layout_gravity="center_vertical|right"
+                    android:src="@drawable/information"
+                    android:background="@color/card_background"
+                    android:padding="8dp" />
+
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                card_view:cardBackgroundColor="@color/card_background"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:id="@+id/CardView_License3"
+                android:elegantTextHeight="false"
+                android:elevation="5dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/card_background"
+                android:backgroundTint="@color/card_background"
+                android:layout_below="@+id/CardView_License2">
+
+
+
+
+                <TextView
+                    android:textStyle="bold"
+                    android:paddingLeft="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:text="@string/License3"
+                    android:id="@+id/tv_license3"
+                    android:layout_marginTop="16dp"
+                    android:textSize="16dp"
+                    android:paddingRight="16dp"
+                    android:textColor="@color/about_text" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/License3about"
+                    android:id="@+id/tv_license3about"
+                    android:layout_marginTop="36dp"
+                    android:layout_marginLeft="16dp"
+
+                    android:textColor="@color/text_color_secondary"
+                    android:textSize="14dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ApacheLicense"
+                    android:id="@+id/tv_license3license"
+                    android:layout_gravity="left"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="16dp"
+
+
+                    android:layout_marginTop="72dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imBu_more3"
+                    android:layout_alignBottom="@+id/CradViewWhatsNew"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="8dp"
+                    android:layout_gravity="center_vertical|right"
+                    android:src="@drawable/information"
+                    android:background="@color/button_background"
+                    android:padding="8dp" />
+
+
+            </android.support.v7.widget.CardView>
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>
+
+<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:theme="@style/Base.Theme.Test"
+        />
+
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_material_light"
+    android:layout_below="@+id/toolbar2"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/background_material_light"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/layersmanager"
+            android:textColor="@color/app_text_primary"
+            android:textSize="35sp"
+            />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:text="@string/aboutTV3"
+            android:textColor="@color/app_text_secondary"
+            android:textSize="15sp"
+            />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="34dp"
+            android:layout_weight="1"
+            android:text="@string/aboutTV2"
+            android:textSize="24sp"
+            android:textColor="@color/app_text_secondary"
+            />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:text="@string/version"
+            android:textSize="24sp"
+            android:textColor="@color/app_text_secondary"
+            />
+
+    </LinearLayout>
+</ScrollView>
+</RelativeLayout> -->

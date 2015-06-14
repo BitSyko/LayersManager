@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="256dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:fitsSystemWindows="true">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                android:fitsSystemWindows="true"
+                app:contentScrim="?attr/colorPrimary"
+                app:expandedTitleMarginStart="48dp"
+                app:expandedTitleMarginEnd="64dp">
+
+                <ImageView
+                    android:id="@+id/backdrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:fitsSystemWindows="true"
+                    app:layout_collapseMode="parallax" />
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                    app:layout_collapseMode="pin" />
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:id="@+id/scroll">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/lin2">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:weightSum="1"
+                    android:background="@color/background"
+                    android:paddingBottom="8dp">
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/background"
+                        android:paddingLeft="@dimen/activity_horizontal_margin"
+                        android:paddingRight="@dimen/activity_horizontal_margin"
+                        android:paddingTop="32dp"
+                        android:text="ERROR"
+                        android:id="@+id/HeX1"
+                        android:textSize="20dp"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/textColorPrimary"
+                        />
+
+
+                    <android.support.v7.widget.CardView
+                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        card_view:cardBackgroundColor="@color/card_background"
+
+                        android:layout_marginTop="16dp"
+                        android:id="@+id/CradViewWhatsNew"
+                        android:elegantTextHeight="false"
+                        android:elevation="5dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="8dp"
+                        android:paddingBottom="20dp">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5.59"
+                            >
+
+                            <TextView
+                                android:textColor="@color/textColorPrimary"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/WhatsNew0"
+                                android:id="@+id/textView52"
+                                android:layout_gravity="left|top"
+                                android:layout_marginLeft="16dp"
+                                android:layout_marginTop="16dp"
+                                android:textStyle="bold"
+                                android:elevation="5dp" />
+
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/WhatsNewDetail"
+
+                                android:id="@+id/tv_whatsNew"
+                                android:layout_gravity="left|top"
+                                android:layout_marginLeft="16dp"
+                                android:textColor="@color/text_color_secondary"
+                                android:elevation="5dp"
+                                android:layout_marginTop="12dp"
+                                android:layout_marginBottom="16dp" />
+
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:weightSum="1"
+                    android:background="@color/background">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:id="@+id/textView51"
+                        android:layout_gravity="center"
+                        android:textColor="@color/accent"
+                        android:textSize="16dp"
+                        android:layout_marginTop="0dp"
+                        android:padding="8dp" />
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/horizontalScrollView"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="0dp"
+                        android:scrollbars="none"
+                        android:layout_marginBottom="8dp">
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/LinearLayoutScreenshots">
+
+
+
+                        </LinearLayout>
+                    </HorizontalScrollView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:weightSum="1"
+                    android:id="@+id/lin1"
+                    android:background="@color/background">
+
+                    <android.support.v7.widget.CardView
+
+                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        card_view:cardBackgroundColor="@color/card_background"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="8dp"
+                        android:id="@+id/CardViewCategory0"
+                        android:elegantTextHeight="false"
+                        android:elevation="5dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/Tv_Category0Name"
+                            android:elevation="5dp"
+                            android:textColor="@color/accent"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginTop="16dp"
+                            android:textSize="16dp"
+                            android:text="Install everything"/>
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_marginTop="48dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginRight="16dp"
+                            android:id="@+id/LinearLayoutCategory0"
+                            android:layout_marginBottom="16dp">
+
+                           <Switch
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:text="Select all Overlays"
+                               android:id="@+id/allswitch"/>
+                        </LinearLayout>
+
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+
+                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        card_view:cardBackgroundColor="@color/card_background"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="8dp"
+                        android:id="@+id/CardViewCategory1"
+                        android:elegantTextHeight="false"
+                        android:elevation="5dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/Tv_Category1Name"
+                            android:elevation="5dp"
+                            android:textColor="@color/accent"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginTop="16dp"
+                            android:textSize="16dp"/>
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_marginTop="48dp"
+                            android:layout_marginLeft="16dp"
+                            android:id="@+id/LinearLayoutCategory1"
+                            android:layout_marginBottom="16dp">
+                        </LinearLayout>
+
+                    </android.support.v7.widget.CardView>
+
+
+                    <android.support.v7.widget.CardView
+
+                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        card_view:cardBackgroundColor="@color/card_background"
+
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="36dp"
+                        android:id="@+id/CardViewCategory2"
+                        android:elegantTextHeight="false"
+                        android:elevation="5dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/Tv_Category2Name"
+                            android:elevation="5dp"
+                            android:textColor="@color/accent"
+                            android:textStyle="bold"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginTop="16dp"
+                            android:textSize="16dp" />
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_marginTop="48dp"
+                            android:layout_marginLeft="16dp"
+                            android:id="@+id/LinearLayoutCategory2"
+                            android:layout_marginBottom="16dp">
+                        </LinearLayout>
+
+                    </android.support.v7.widget.CardView>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </android.support.v4.widget.NestedScrollView>
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            app:layout_anchor="@id/appbar"
+            app:layout_anchorGravity="bottom|right|end"
+            android:src="@drawable/ic_action_add"
+            android:layout_margin="16dp"
+            android:clickable="true"
+            android:id="@+id/fab"
+            app:borderWidth="0dp"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:scaleType="center"
+            android:src="@drawable/ic_action_add"
+            android:layout_margin="16dp"
+            android:clickable="true"
+            android:id="@+id/fab2"
+            app:borderWidth="0dp"/>
+
+    </android.support.design.widget.CoordinatorLayout>

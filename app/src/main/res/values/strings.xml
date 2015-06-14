@@ -1,0 +1,160 @@
+<resources>
+
+    <!-- Main Layers Strings -->
+    <string name="app_name">rroandlayersmanager1</string>
+    <string name="slogan">\"Your Style Your Choice\"</string>
+    <string name="splashTitle">SPLASH</string>
+    <string name="action_all">All</string>
+    <string name="version">Version 3.8</string>
+    <string name="layersmanager">Layers Manager</string>
+
+
+
+    <!-- Menu CardView 1 Strings -->
+    <string name="card1text1">Install/Restore</string>
+    <string name="card1text2">• Install new Layers</string>
+    <string name="card1text3">• Restore existing backups</string>
+
+    <!-- Menu CardView 2 Strings -->
+    <string name="card2text1">Backup/Delete</string>
+    <string name="card2text2">• Backup Installed Layers</string>
+    <string name="card2text3">• Delete Installed Layers</string>
+
+    <!-- Menu CardView 3 Strings -->
+    <string name="card3text1">Reboot</string>
+    <string name="card3text2">• For changes to take effect</string>
+    <string name="card3text3"> </string>
+
+    <!-- FilePicker Strings -->
+    <string name="delete">OK</string>
+    <string name="backup">Cancel</string>
+    <string name="backup1">Backup</string>
+    <string name="back">Back</string>
+    <color name="action_select">#6d6d6d</color>
+    <string name="new_folder">New folder</string>
+    <string name="create_folder_error">Failed to create folder</string>
+    <string name="go_back">Go back</string>
+    <string name="select_something_first">Nothing Selected</string>
+
+    <!-- INSTRUCTIONS -->
+    <string name="instructionsTV1">Select what type of file you are installing from the Home screen.</string>
+    <string name="instructionsTV6">Layers Installer</string>
+    <string name="instructionsTV7">
+    <u><b>Installing Layers:</b></u>\n
+    • From the Install screen.\n
+    • Click on the \"File Chooser\" button.\n
+    • Select your Layers.zip that you pre-downloaded or individual .apk file that you want to install and click it.\n
+    • If the theme dev has provided previews for the theme a preview screen will pop-up otherwise it will just apply the chosen file.\n
+    • Click on any preview to see a zoomed in image (you can pinch zoom again in the fullscreen mode). If you like that particular apk hit back and then long-press on the preview to install that particular themed apk.\n
+    • If you want to install all themed apk\'s use the \"tick\" icon in the action bar. \"Reboot for Changes to Take Effect\" button for the layers to be installed.\n
+    (you can then check whats installed by clicking the \"Installed Layers\" Button).\n
+    \n
+    <u><b>Delete Multiple layers at a time:</b></u>\n
+    • From the nav drawer select Delete Layers\n
+    • Click the \"Delete File Chooser\" button.\n
+    • Select layer.apks you want to delete.\n
+    • Click the \"Delete Selected Layers\" button.\n
+    (you can then click the \"File Chooser\" button again to check it was deleted).\n
+    \n
+    <u><b>Deleting everything in the Overlays folder:</b></u>\n
+    • Click the \"Delete All Layers\" Button.\n
+    (you can then click the \"File Chooser\" button again to check they have all been deleted).\n
+    \n
+    <u><b>Backup / Restore:</b></u>\n
+    • From the nav drawer select Backup/restore.\n
+    \n
+    <u><b>Backup:</b></u>\n
+    • Click the \"Backup All Applied Layers\" button and enter a name for your backup.\n
+    \n
+    <u><b>Restore:</b></u>\n
+    • Click the \"File Chooser\" button and click your chosen saved folder then click the overlay.zip file.\n
+    (you can use this to check what saved layers you have).\n
+    • Check the file path is correct in the text view then click the \"Restore Selected Backup\" button then click the \"Reboot for Changes to Take Effect\" button for your backup to be restored.\n
+    \n
+    <u><b>SETTINGS:</b></u>\n
+    • You can customize the apps complete UI to match your Layers themes. \n
+    • After you make any changes restart the app for them to take effect. \n
+    \n
+    <u><b>TIPS:</b></u>\n
+    • You can package any number of layers.apk\'s into a folder of your choice then zip the whole folder and apply it in one go or just pick the .apk\'s 1x1.\n
+    • Use the \"Applied Layers\" button to check whats currently applied.\n
+    • You also need to reboot after installing, deleting or restoring for the changes to take effect.\n
+    • There\'s some useful links at the bottom of the nav drawer.\n
+    • Ask your theme dev for the Hex code for background color and input it in settings, code must start with #.\n
+
+
+    </string>
+
+    <!-- About -->
+    <string name="aboutTV2">Developed by the BS™ Team </string>
+    <string name="aboutTV3">An easy way to manage your favourite layers. </string>
+    <string name="aboutTV4">Meet the Team. </string>
+    <string name="aboutTV5">Syko. </string>
+    <string name="aboutTV6">Lovejoy777. </string>
+    <string name="aboutTV7">Bgill55. </string>
+
+    <string name="bitsykotext">BS™</string>
+
+    <!-- Changelog -->
+    <string name="changelogtitle">Changelog</string>
+    <string name="changelog">
+        • <u><b>3.8</b></u>\n
+     • Rewritten complete app.\n
+     • <u><b>3.7</b></u>\n
+     • Color Picker bug fix.\n
+     • <u><b>3.6</b></u>\n
+     • Added scroll view for multiselect delete paths.\n
+     • Removed unneeded items from navigation drawers.\n
+     • <u><b>3.5</b></u>\n
+     • Complete rewrite\n
+     • <u><b>3.4</b></u>\n
+     • bug fixes\n
+     • <u><b>3.3</b></u>\n
+     • Added Backup / Restore section.\n
+     • <u><b>3.2</b></u>\n
+     • New UI\n
+
+     •
+    </string>
+
+    <!-- MAIN HEADER DRAWER -->
+    <string name="drawer_item_about">About</string>
+    <string name="drawer_item_changelog">Changelog</string>
+    <string name="drawer_item_instructions">Instructions</string>
+    <string name="drawer_item_settings">Settings</string>
+
+    <string name="drawer_item_links_header">Useful Links</string>
+    <string name="drawer_item_gplus">G +</string>
+    <string name="drawer_item_xda">Xda</string>
+    <string name="drawer_item_forum">Forum</string>
+    <string name="drawer_item_website">Website</string>
+
+    <string name="drawer_item_compact_header">CompactHeader Sample</string>
+    <string name="drawer_item_action_bar">ActionBar Sample</string>
+    <string name="drawer_item_multi_drawer">MultiDrawer Sample</string>
+    <string name="drawer_item_non_translucent_status_drawer">NonTranslucentStatusDrawer Sample</string>
+    <string name="title_activity_icon_main">IconMainActivity</string>
+
+    <plurals
+        name="select_dir">
+        <item quantity="one">Select directory</item>
+        <item quantity="other">Select directories</item>
+    </plurals>
+
+    <plurals
+        name="select_file">
+        <item quantity="one">Select Layers</item>
+        <item quantity="other">Select files</item>
+    </plurals>
+
+    <plurals
+        name="select_dir_or_file">
+        <item quantity="one">Select directory or file</item>
+        <item quantity="other">Select directories or files</item>
+    </plurals>
+
+    <!-- FilePicker dialog Strings -->
+    <string name="name">Name</string>
+
+
+</resources>

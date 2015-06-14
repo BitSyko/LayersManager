@@ -1,0 +1,154 @@
+<resources>
+
+    <!-- Base application theme. -->
+
+        <!-- Customize your theme here. -->
+
+
+    <style name="LayersTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/material_drawer_primary</item>
+        <item name="colorPrimaryDark">@color/material_drawer_primary_dark</item>
+
+    </style>
+
+    <style name="ToolbarTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:textColorPrimary">@color/abc_primary_text_material_dark</item>
+        <item name="actionMenuTextColor">@color/abc_primary_text_material_dark</item>
+        <item name="android:textColorSecondary">@color/abc_secondary_text_material_dark</item>
+    </style>
+
+    <style name="Base.Theme.Test" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_menu</item>
+    </style>
+
+    <style name="Base.Theme.Toolbar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+
+    </style>
+
+    <!-- Normal app Theme -->
+    <style name="AppTheme" parent="android:Theme.Material.Light">
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <item name="android:colorAccent">@color/accent</item>
+    </style>
+
+
+    <!-- Main Activity -->
+    <style name="AppTheme.Toolbar" parent="Theme.AppCompat.Light.NoActionBar">                        <!-- MaterialLight: Theme.AppCompat.Light.NoActionBar | MaterialDark: Theme.AppCompat.NoActionBar -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:actionOverflowButtonStyle">@style/menuOverflow</item>
+        <item name="android:navigationBarColor">@color/primary</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/text_color_secondary</item>
+        <item name="android:windowBackground">@color/background</item>
+    </style>
+
+
+
+
+
+    <!-- Main Activity - Overflow Menu -->
+    <style name="popupNew" parent="Theme.AppCompat.Light"/>                                      <!-- MaterialLight: Theme.AppCompat.Light | MaterialDark: Theme.AppCompat -->
+
+
+
+
+
+
+
+
+
+
+    <!-- About -->
+    <style name="Toolbar2" parent="Theme.AppCompat.Light.NoActionBar">                                  <!-- MaterialLight: Theme.Material.Light.DarkActionBar | MaterialDark: Theme.Material -->
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/text_color_secondary</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:divider">@null</item>
+        <item name="android:listDivider">@null</item>
+
+    </style>
+
+
+    <!-- Tutorial -->
+    <style name="Tutorial" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/text_color_secondary</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+
+
+
+
+
+    <style name="Widget.ActionBar" parent="@android:style/Widget.Material.Light.ActionBar">
+        <item name="android:background">@color/primary</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+
+    <style name="menuOverflow" parent="Widget.AppCompat.Light.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_action_overflow</item>
+    </style>
+
+
+    <style name="Base.TextAppearance.AppCompat.Subhead" parent="@style/Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/abc_text_size_subhead_material</item>
+        <item name="android:textColor">@color/text_color_secondary</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/text_color_secondary</item>
+    </style>
+
+    <style name="Base.TextAppearance.AppCompat.Body2" parent="@style/Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/abc_text_size_body_2_material</item>
+        <item name="android:textColor">@color/text_color_secondary</item>
+    </style>
+
+    <style name="Base.TextAppearance.AppCompat" parent="@android:style/TextAppearance">
+        <item name="android:textSize">@dimen/abc_text_size_body_1_material</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:textColorHighlight">?android:textColorHighlight</item>
+        <item name="android:textColorHint">?android:textColorHint</item>
+        <item name="android:textColorLink">?android:textColorLink</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Title" parent="@style/Base.TextAppearance.AppCompat.Title" />
+
+    <style name="Base.TextAppearance.AppCompat.Title.Inverse" parent="@style/Base.TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/text_color_inverse</item>
+        <item name="android:textColorHint">?android:textColorHintInverse</item>
+    </style>
+
+    <style name="Base.TextAppearance.AppCompat.Title" parent="@style/Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/abc_text_size_title_material</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">@dimen/abc_text_size_body_1_material</item>
+        <item name="android:textColor">#727272</item>
+    </style>
+
+</resources>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <RelativeLayout
+        android:id="@+id/toolbar_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:paddingTop="@dimen/tool_bar_top_padding">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:elevation="4dp"
+            android:transitionName="actionBar" />
+    </RelativeLayout>
+
+<ScrollView
+    android:id="@+id/layout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_material_light"
+    android:layout_below="@+id/toolbar_container"
+    android:fillViewport="true"
+    android:scrollbarStyle="insideInset"
+    android:scrollbars="vertical">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background_material_light"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+
+            android:layout_marginTop="10dp"
+            android:text="@string/instructionsTV6"
+            android:textSize="@dimen/title_text_size"
+            android:textColor="@color/app_text_primary"
+            />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:padding="24dp"
+            android:text="@string/instructionsTV7"
+            android:textSize="15sp"
+            android:textColor="@color/app_text_secondary"
+            />
+
+    </LinearLayout>
+
+</ScrollView>
+    </RelativeLayout>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <style name="AppTheme" parent="android:Theme.Material.Light.DarkActionBar">
+
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:itemTextAppearance">@style/TextAppearance</item>
+        <item name="android:navigationBarColor">@color/primary</item>
+        <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:actionMenuTextColor">@color/text_color_inverse</item>
+
+    </style>
+
+    <style name="Theme.Toolbar" parent="Base.Theme.Toolbar">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="TextAppearance">
+        <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
+
+
+</resources>
