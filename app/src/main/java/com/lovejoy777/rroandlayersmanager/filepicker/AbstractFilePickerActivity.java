@@ -214,12 +214,12 @@ public abstract class AbstractFilePickerActivity<T> extends AppCompatActivity
 
 
         finish();
-        Intent menuactivity = new Intent(AbstractFilePickerActivity.this, MainActivity.class);
+        Intent mainactivity = new Intent(AbstractFilePickerActivity.this, MainActivity.class);
 
-        menuactivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        mainactivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         Bundle bndlanimation =
                 ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
-        startActivity(menuactivity, bndlanimation);
+        startActivity(mainactivity, bndlanimation);
 
        // finish();
         //super.onBackPressed();

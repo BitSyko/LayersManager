@@ -45,7 +45,7 @@ xmlns:tools="http://schemas.android.com/tools"
             android:theme="@style/Base.Theme.Toolbar"
             android:parentActivityName=".activities.MainActivity">
             <intent-filter>
-                <action android:name="com.lovejoy777.rroandlayersmanager1.BACKUP" />
+                <action android:name="com.lovejoy777.rroandlayersmanager.BACKUP" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -71,7 +71,7 @@ xmlns:tools="http://schemas.android.com/tools"
             android:theme="@style/LayersTheme"
             android:parentActivityName=".activities.MainActivity">
             <intent-filter>
-                <action android:name="com.lovejoy777.rroandlayersmanager1.RESTORE" />
+                <action android:name="com.lovejoy777.rroandlayersmanager.RESTORE" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -84,7 +84,7 @@ xmlns:tools="http://schemas.android.com/tools"
             android:theme="@style/LayersTheme"
             android:parentActivityName=".activities.MainActivity">
             <intent-filter>
-                <action android:name="com.lovejoy777.rroandlayersmanager1.DELETE" />
+                <action android:name="com.lovejoy777.rroandlayersmanager.DELETE" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -98,7 +98,7 @@ xmlns:tools="http://schemas.android.com/tools"
             android:theme="@style/LayersTheme"
             android:parentActivityName=".activities.MainActivity">
             <intent-filter>
-                <action android:name="com.lovejoy777.rroandlayersmanager1.SETTINGS" />
+                <action android:name="com.lovejoy777.rroandlayersmanager.SETTINGS" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -119,7 +119,7 @@ xmlns:tools="http://schemas.android.com/tools"
             android:icon="@mipmap/ic_launcher"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="com.lovejoy777.rroandlayersmanager1.PLAYSU" />
+                <action android:name="com.lovejoy777.rroandlayersmanager.PLAYSU" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

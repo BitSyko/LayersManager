@@ -91,11 +91,11 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent menuactivity = new Intent(MainActivity.this, Install.class);
+                Intent Mainactivity = new Intent(MainActivity.this, Install.class);
 
                 Bundle bndlanimation =
                         ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
-                startActivity(menuactivity, bndlanimation);
+                startActivity(Mainactivity, bndlanimation);
             }
 
 
@@ -243,17 +243,17 @@ public class MainActivity extends AppCompatActivity
                         int id = menuItem.getItemId();
                         switch (id){
                             case R.id.nav_about:
-                                Intent menuactivity4 = new Intent(MainActivity.this, AboutActivity.class);
+                                Intent about = new Intent(MainActivity.this, AboutActivity.class);
                                 Bundle bndlanimation4 =
                                         ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
-                                startActivity(menuactivity4, bndlanimation4);
+                                startActivity(about, bndlanimation4);
                                 mDrawerLayout.closeDrawers();
                                 break;
                             case R.id.nav_delete:
-                                Intent menuactivity = new Intent(MainActivity.this, Delete.class);
+                                Intent delete = new Intent(MainActivity.this, Delete.class);
                                 Bundle bndlanimation =
                                         ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
-                                startActivity(menuactivity, bndlanimation);
+                                startActivity(delete, bndlanimation);
                                 break;
                             case R.id.nav_backup:
                                 Intent backup = new Intent(MainActivity.this, Backup.class);
@@ -262,11 +262,11 @@ public class MainActivity extends AppCompatActivity
                                 startActivity(backup, bndlanimation2);
                                 break;
                             case R.id.nav_restore:
-                                Intent menuactivity2 = new Intent(MainActivity.this, Restore.class);
+                                Intent restore = new Intent(MainActivity.this, Restore.class);
 
                                 Bundle bndlanimation3 =
                                         ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
-                                startActivity(menuactivity2, bndlanimation3);
+                                startActivity(restore, bndlanimation3);
                         }
 
                         return false;
@@ -442,7 +442,7 @@ public class MainActivity extends AppCompatActivity
         String Test2[] = new String[3];
 
         Test1[0] = "Too bad.";
-        Test2[0] = "It seems like you haven´t installed any compatibel theme yet.";
+        Test2[0] = "It seems like you haven´t installed any compatible themes yet.";
         Test1[1] = "Layers Theme Showcase";
         Test2[1] = "Find some new, beautiful themes in the all new Layers Showcase App.";
         Test1[2] = "Play Store";

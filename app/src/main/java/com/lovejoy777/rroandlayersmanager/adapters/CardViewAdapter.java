@@ -67,10 +67,5 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Contac
 
         }
     }
-
-
-
-
-
     }
 

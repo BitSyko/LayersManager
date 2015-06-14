@@ -595,8 +595,4 @@ public abstract class AbstractFilePickerFragment<T> extends ListFragment
             return containsKey(k) ? super.get(k) : defaultValue;
         }
     }
-
-
-
-
 }
