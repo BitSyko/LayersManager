@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- Never change this Strings, it would break important parts of the App -->
-
-    <string name="directInstallation" translatable="false">Direct installation</string>
-    <string name="justCopy" translatable="false">Just copy Overlays</string>
-    <string name="askEveryTime" translatable="false">Ask before every installation</string>
-
-</resources>

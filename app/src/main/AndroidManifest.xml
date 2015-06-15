@@ -103,17 +103,6 @@ xmlns:tools="http://schemas.android.com/tools"
         </activity>
 
         <activity
-            android:name="com.lovejoy777.rroandlayersmanager.PlaystoreSuperUser"
-            android:icon="@mipmap/ic_launcher"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="com.lovejoy777.rroandlayersmanager.PLAYSU" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <activity
             android:name="com.lovejoy777.rroandlayersmanager.Instructions"
             android:icon="@mipmap/ic_launcher"
             android:label="Instructions"

@@ -120,8 +120,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/WhatsNewDetail"
-
+                                android:text="An Error Occured"
                                 android:id="@+id/tv_whatsNew"
                                 android:layout_gravity="left|top"
                                 android:layout_marginLeft="16dp"
