@@ -74,7 +74,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
 
     public static final int NumberOfScreenshotsMain = 3;
 
-    boolean isVisible = false;
 
     private String whichColor = null;
 
@@ -395,6 +394,9 @@ public class OverlayDetailActivity extends AppCompatActivity {
     }
 
 
+
+
+
     //Glide Methods
     private void loadBackdrop() {
         final String packName = package2;
@@ -500,6 +502,200 @@ public class OverlayDetailActivity extends AppCompatActivity {
         }
     }
 
+
+
+
+
+    //Preperation of Installation Of Overlays
+    protected void InstallOverlays() throws InterruptedException {
+        String sSUCommand;
+        String sSuCommand2;
+
+        //install Normal Overlays
+        for (int i=0; i <NumberOfOverlays; i++){
+            if (InstallOverlayList.get(i) == 1) {
+                AppPath = OverlayPathList.get(i);
+                InstallOverlayList.set(i,0);
+                sSUCommand = "cp " + ThemeFolderGeneral + AppPath + " " + TargetPath;
+                sSuCommand2 = "chmod 666 " + TargetPath + AppPath;
+                installAPK(sSUCommand, sSuCommand2);
+            }
+        }
+
+
+        //install Color Specific Overlays
+        for (int i4=NumberOfOverlays+1; i4 <NumberOfOverlays+NumberOfColorOverlays+1; i4++){
+
+            if (InstallOverlayList.get(i4) == 1) {
+                AppPath = OverlayPathList.get(i4);
+                InstallOverlayList.set(i4,0);
+                sSUCommand = "cp " + ThemeFolder + whichColor + "/"+ AppPath + " " +  TargetPath;
+                sSuCommand2 = "chmod 666 " + TargetPath +AppPath;
+                installAPK(sSUCommand, sSuCommand2);
+            }
+        }
+    }
+
+
+    public void installAPK(String sSUCommand, String sSuCommand2) throws InterruptedException {
+
+        RootCommandsInstallationHelper cls2= new RootCommandsInstallationHelper();
+        cls2.installOverlays(sSUCommand, sSuCommand2);
+
+    }
+
+
+
+    private void CopyFolderToSDCard(){
+        int result = 0;
+
+        int i1 = 1;
+        int i2 = 2;
+        try {
+            result = opService.operation(i1, i2);
+        } catch (DeadObjectException ex) {
+            Log.e(LOG_TAG, "DeadObjectException", ex);
+        } catch (RemoteException ex) {
+            Log.e(LOG_TAG, "RemoteException", ex);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+
+
+    //unzip ..... the zip files :DD
+    public void unzip() {
+
+        int NumberOfSelectedNormalOverlays = 0;
+        for (int i = 0; i < NumberOfOverlays; i++)
+        {
+            NumberOfSelectedNormalOverlays = NumberOfSelectedNormalOverlays + InstallOverlayList.get(i);
+        }
+
+
+        int NumberOfSelectedColorOverlays = 0;
+        for (int i = NumberOfOverlays+1; i < NumberOfColorOverlays+NumberOfOverlays+1; i++)
+        {
+            NumberOfSelectedColorOverlays = NumberOfSelectedColorOverlays + InstallOverlayList.get(i);
+        }
+
+
+        ApplicationInfo ai = null;
+        try {
+            ai = getPackageManager().getApplicationInfo(package2, PackageManager.GET_META_DATA);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        CopyUnzipHelper cls2= new CopyUnzipHelper();
+        cls2.unzip(ThemeName.replaceAll(" ", ""), NumberOfSelectedNormalOverlays, NumberOfSelectedColorOverlays, whichColor/*,NumberOfSelectedAdditionalOveerlays*/);
+
+    }
+
+
+
+
+    private void UncheckAllCheckBoxes(String Mode) {
+
+        if (Mode.equals("Uncheck")) {
+            //fab2.animate().translationY(fab2.getHeight()+48).setInterpolator(new AccelerateInterpolator(2)).start();
+
+            fab2.setVisibility(View.INVISIBLE);
+
+            for (int i = 0; i < NumberOfOverlays; i++){
+                CheckBox checkBox = (CheckBox)findViewById(i);
+                checkBox.setChecked(false);
+                InstallOverlayList.set(i,0);
+            }
+
+            for (int i = NumberOfOverlays+1; i < NumberOfColorOverlays+NumberOfOverlays+1; i++){
+                CheckBox checkBox = (CheckBox)findViewById(i);
+                checkBox.setChecked(false);
+                InstallOverlayList.set(i,0);
+            }
+        }
+
+        if (Mode.equals("Disable")){
+            //disable all Checkboxes
+            for (int i = 0; i < NumberOfOverlays; i++){
+                CheckBox checkBox = (CheckBox)findViewById(i);
+                checkBox.setEnabled(false);
+            }
+
+            for (int i = NumberOfOverlays+1; i < NumberOfColorOverlays+NumberOfOverlays+1; i++)
+            {
+                CheckBox checkBox = (CheckBox)findViewById(i);
+                checkBox.setEnabled(false);
+            }
+        }
+    }
+
+    private void checkall() {
+
+        fab2.setVisibility(View.VISIBLE);
+        fab2.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+
+            for (int i = 0; i < NumberOfOverlays; i++){
+                CheckBox checkBox = (CheckBox)findViewById(i);
+                checkBox.setChecked(true);
+                InstallOverlayList.set(i,1);
+            }
+
+            for (int i = NumberOfOverlays+1; i < NumberOfColorOverlays+NumberOfOverlays+1; i++){
+                CheckBox checkBox = (CheckBox)findViewById(i);
+                checkBox.setChecked(true);
+                InstallOverlayList.set(i,1);
+            }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.back2, R.anim.back1);
+    }
+
+
+
+
+    ///////////
+    //Snackbars
+    private void selectOverlaysFirstSnackbar() {
+
+        Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), string.selectOverlayFirst, Snackbar.LENGTH_SHORT)
+                .show();
+    }
+
+    private void installationFinishedSnackBar() {
+
+        //show SnackBar after sucessfull installation of the overlays
+        final View coordinatorLayoutView = findViewById(id.main_content);
+        Snackbar.make(coordinatorLayoutView, string.OverlaysInstalled, Snackbar.LENGTH_LONG)
+                .setAction(R.string.Reboot, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        (new Reboot()).execute();
+                    }
+                })
+                .show();
+    }
+
+
+
+    /////////
+    //Dialogs
     public void installDialog() {
 
         //if (showInstallationConfirmDialog()) {
@@ -541,127 +737,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
         }
     }
 
-    private class InstallOverlays extends AsyncTask<Void, Void, Void> {
-        ProgressDialog progress2;
-
-
-        protected void onPreExecute() {
-
-            progress2 = ProgressDialog.show(OverlayDetailActivity.this, "Install overlays",
-                    "Installing...", true);
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            //Mount System to Read / Write
-                    RootTools.remount("/system/", "RW");
-
-            //initialize last part of root Commands
-                    String SuperuserCommandOverlayFolderPermission = (String) "chmod 777 /vendor/overlay";
-                    String SuperuserCommandCreateOverlayFolder = "mkdir /vendor/overlay";
-
-                    CommandCapture command4 = new CommandCapture(0, SuperuserCommandCreateOverlayFolder);
-                    try {
-                        RootTools.getShell(true).add(command4);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (TimeoutException e) {
-                        e.printStackTrace();
-                    } catch (RootDeniedException e) {
-                        e.printStackTrace();
-                    }
-                    while (!command4.isFinished()){
-                        try {
-                            Thread.sleep(1);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    CopyFolderToSDCard();  //copy Overlay Files to SD Card
-
-                    unzip();  //unzip Overlay ZIP´s
-
-                    try {
-                        InstallOverlays();  //open Method to install Overlays
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    CommandCapture command3 = new CommandCapture(0, SuperuserCommandOverlayFolderPermission);
-                    try {
-                        RootTools.getShell(true).add(command3);
-                   } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (TimeoutException e) {
-                        e.printStackTrace();
-                    } catch (RootDeniedException e) {
-                        e.printStackTrace();
-                    }
-                    while (!command3.isFinished()){
-                        try {
-                            Thread.sleep(1);
-                        } catch (InterruptedException e) {
-                           e.printStackTrace();
-                       }
-                    }
-
-                    RootTools.remount("/system/", "RO");  //remount /system back to RO
-
-            return null;
-
-        }
-
-        protected void onPostExecute(Void result) {
-
-            UncheckAllCheckBoxes("Uncheck");
-            installEverything.setChecked(false);
-
-
-            progress2.dismiss();
-                    installationFinishedSnackBar(); //show snackbar with option to reboot
-
-        }
-    }
-
-    //Preperation of Installation Of Overlays
-    protected void InstallOverlays() throws InterruptedException {
-        String sSUCommand;
-        String sSuCommand2;
-
-        //install Normal Overlays
-        for (int i=0; i <NumberOfOverlays; i++){
-            if (InstallOverlayList.get(i) == 1) {
-                AppPath = OverlayPathList.get(i);
-                InstallOverlayList.set(i,0);
-                sSUCommand = "cp " + ThemeFolderGeneral + AppPath + " " + TargetPath;
-                sSuCommand2 = "chmod 666 " + TargetPath + AppPath;
-                installAPK(sSUCommand, sSuCommand2);
-            }
-        }
-
-
-        //install Color Specific Overlays
-        for (int i4=NumberOfOverlays+1; i4 <NumberOfOverlays+NumberOfColorOverlays+1; i4++){
-
-            if (InstallOverlayList.get(i4) == 1) {
-                AppPath = OverlayPathList.get(i4);
-                InstallOverlayList.set(i4,0);
-                sSUCommand = "cp " + ThemeFolder + whichColor + "/"+ AppPath + " " +  TargetPath;
-                sSuCommand2 = "chmod 666 " + TargetPath +AppPath;
-                installAPK(sSUCommand, sSuCommand2);
-            }
-        }
-    }
-
-
-    public void installAPK(String sSUCommand, String sSuCommand2) throws InterruptedException {
-
-        RootCommandsInstallationHelper cls2= new RootCommandsInstallationHelper();
-        cls2.installOverlays(sSUCommand, sSuCommand2);
-
-    }
 
     //Dialog to choose color
     public void colorDialog() {
@@ -744,121 +819,96 @@ public class OverlayDetailActivity extends AppCompatActivity {
         colorDialog.show();
     }
 
-    private void CopyFolderToSDCard(){
-        int result = 0;
 
-        int i1 = 1;
-        int i2 = 2;
-        try {
-            result = opService.operation(i1, i2);
-        } catch (DeadObjectException ex) {
-            Log.e(LOG_TAG, "DeadObjectException", ex);
-        } catch (RemoteException ex) {
-            Log.e(LOG_TAG, "RemoteException", ex);
-        }
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private class LoadDrawables extends AsyncTask<Void, Void, Void> {
+    /////////////
+    //Async Tasks
+    private class InstallOverlays extends AsyncTask<Void, Void, Void> {
+        ProgressDialog progress2;
 
 
         protected void onPreExecute() {
 
+            progress2 = ProgressDialog.show(OverlayDetailActivity.this, "Install overlays",
+                    "Installing...", true);
         }
-
 
         @Override
         protected Void doInBackground(Void... params) {
 
-            for (int i = 0; i < NumberOfScreenshotsMain; i++) {
-                Drawable Screenshots[] = new Drawable[NumberOfScreenshotsMain];
-                int j = i + 1;
-                final String packName = package2;
-                String mDrawableName = "screenshot" + j;
-                PackageManager manager = getPackageManager();
-                Resources mApk1Resources = null;
+            //Mount System to Read / Write
+            RootTools.remount("/system/", "RW");
+
+            //initialize last part of root Commands
+            String SuperuserCommandOverlayFolderPermission = (String) "chmod 777 /vendor/overlay";
+            String SuperuserCommandCreateOverlayFolder = "mkdir /vendor/overlay";
+
+            CommandCapture command4 = new CommandCapture(0, SuperuserCommandCreateOverlayFolder);
+            try {
+                RootTools.getShell(true).add(command4);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            } catch (RootDeniedException e) {
+                e.printStackTrace();
+            }
+            while (!command4.isFinished()){
                 try {
-                    mApk1Resources = manager.getResourcesForApplication(packName);
-                } catch (PackageManager.NameNotFoundException e) {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                int mDrawableResID = mApk1Resources.getIdentifier(mDrawableName, "drawable", packName);
-                Drawable myDrawable = mApk1Resources.getDrawable(mDrawableResID);
-                Screenshots[i] = myDrawable;
-                bitmap[i] = ((BitmapDrawable) Screenshots[i]).getBitmap();
-
             }
+
+            CopyFolderToSDCard();  //copy Overlay Files to SD Card
+
+            unzip();  //unzip Overlay ZIP´s
+
+            try {
+                InstallOverlays();  //open Method to install Overlays
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            CommandCapture command3 = new CommandCapture(0, SuperuserCommandOverlayFolderPermission);
+            try {
+                RootTools.getShell(true).add(command3);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            } catch (RootDeniedException e) {
+                e.printStackTrace();
+            }
+            while (!command3.isFinished()){
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            RootTools.remount("/system/", "RO");  //remount /system back to RO
+
             return null;
 
         }
 
         protected void onPostExecute(Void result) {
 
-            for (int i = 0; i < NumberOfScreenshotsMain; i++) {
-                ScreenshotimageView[i].setImageBitmap(Bitmap.createScaledBitmap(bitmap[i], (int) (bitmap[i].getWidth() * 0.3), (int) (bitmap[i].getHeight() * 0.3), true));
-            }
+            UncheckAllCheckBoxes("Uncheck");
+            installEverything.setChecked(false);
+
+
+            progress2.dismiss();
+            installationFinishedSnackBar(); //show snackbar with option to reboot
+
         }
     }
 
-    private void selectOverlaysFirstSnackbar() {
-
-        Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), string.selectOverlayFirst, Snackbar.LENGTH_SHORT)
-                .show();
-    }
-
-    private void installationFinishedSnackBar() {
-
-        //show SnackBar after sucessfull installation of the overlays
-        final View coordinatorLayoutView = findViewById(id.main_content);
-        Snackbar.make(coordinatorLayoutView, string.OverlaysInstalled, Snackbar.LENGTH_LONG)
-                .setAction(R.string.Reboot, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        (new Reboot()).execute();
-                    }
-                })
-                .show();
-    }
-
-    //unzip ..... the zip files :DD
-    public void unzip() {
-
-        int NumberOfSelectedNormalOverlays = 0;
-        for (int i = 0; i < NumberOfOverlays; i++)
-        {
-            NumberOfSelectedNormalOverlays = NumberOfSelectedNormalOverlays + InstallOverlayList.get(i);
-        }
 
 
-        int NumberOfSelectedColorOverlays = 0;
-        for (int i = NumberOfOverlays+1; i < NumberOfColorOverlays+NumberOfOverlays+1; i++)
-        {
-            NumberOfSelectedColorOverlays = NumberOfSelectedColorOverlays + InstallOverlayList.get(i);
-        }
-
-
-        ApplicationInfo ai = null;
-        try {
-            ai = getPackageManager().getApplicationInfo(package2, PackageManager.GET_META_DATA);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
-
-        CopyUnzipHelper cls2= new CopyUnzipHelper();
-        cls2.unzip(ThemeName.replaceAll(" ", ""), NumberOfSelectedNormalOverlays, NumberOfSelectedColorOverlays, whichColor/*,NumberOfSelectedAdditionalOveerlays*/);
-
-    }
 
     //Async Task to reboot device///////////////////////////////////////////////////////////////////
     private class Reboot extends AsyncTask<Void, Void, Void> {
@@ -931,62 +981,44 @@ public class OverlayDetailActivity extends AppCompatActivity {
     }
 
 
-    private void UncheckAllCheckBoxes(String Mode) {
+    private class LoadDrawables extends AsyncTask<Void, Void, Void> {
 
-        if (Mode.equals("Uncheck")) {
-            //fab2.animate().translationY(fab2.getHeight()+48).setInterpolator(new AccelerateInterpolator(2)).start();
 
-            fab2.setVisibility(View.INVISIBLE);
+        protected void onPreExecute() {
 
-            for (int i = 0; i < NumberOfOverlays; i++){
-                CheckBox checkBox = (CheckBox)findViewById(i);
-                checkBox.setChecked(false);
-                InstallOverlayList.set(i,0);
-            }
-
-            for (int i = NumberOfOverlays+1; i < NumberOfColorOverlays+NumberOfOverlays+1; i++){
-                CheckBox checkBox = (CheckBox)findViewById(i);
-                checkBox.setChecked(false);
-                InstallOverlayList.set(i,0);
-            }
         }
 
-        if (Mode.equals("Disable")){
-            //disable all Checkboxes
-            for (int i = 0; i < NumberOfOverlays; i++){
-                CheckBox checkBox = (CheckBox)findViewById(i);
-                checkBox.setEnabled(false);
-            }
 
-            for (int i = NumberOfOverlays+1; i < NumberOfColorOverlays+NumberOfOverlays+1; i++)
-            {
-                CheckBox checkBox = (CheckBox)findViewById(i);
-                checkBox.setEnabled(false);
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            for (int i = 0; i < NumberOfScreenshotsMain; i++) {
+                Drawable Screenshots[] = new Drawable[NumberOfScreenshotsMain];
+                int j = i + 1;
+                final String packName = package2;
+                String mDrawableName = "screenshot" + j;
+                PackageManager manager = getPackageManager();
+                Resources mApk1Resources = null;
+                try {
+                    mApk1Resources = manager.getResourcesForApplication(packName);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+                int mDrawableResID = mApk1Resources.getIdentifier(mDrawableName, "drawable", packName);
+                Drawable myDrawable = mApk1Resources.getDrawable(mDrawableResID);
+                Screenshots[i] = myDrawable;
+                bitmap[i] = ((BitmapDrawable) Screenshots[i]).getBitmap();
+
+            }
+            return null;
+
+        }
+
+        protected void onPostExecute(Void result) {
+
+            for (int i = 0; i < NumberOfScreenshotsMain; i++) {
+                ScreenshotimageView[i].setImageBitmap(Bitmap.createScaledBitmap(bitmap[i], (int) (bitmap[i].getWidth() * 0.3), (int) (bitmap[i].getHeight() * 0.3), true));
             }
         }
-    }
-
-    private void checkall() {
-
-        fab2.setVisibility(View.VISIBLE);
-        fab2.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
-
-            for (int i = 0; i < NumberOfOverlays; i++){
-                CheckBox checkBox = (CheckBox)findViewById(i);
-                checkBox.setChecked(true);
-                InstallOverlayList.set(i,1);
-            }
-
-            for (int i = NumberOfOverlays+1; i < NumberOfColorOverlays+NumberOfOverlays+1; i++){
-                CheckBox checkBox = (CheckBox)findViewById(i);
-                checkBox.setChecked(true);
-                InstallOverlayList.set(i,1);
-            }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.back2, R.anim.back1);
     }
 }
