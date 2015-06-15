@@ -485,8 +485,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void NotAvailableSnackbar() {
-
-        Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "Sry, not available yet.", Snackbar.LENGTH_SHORT)
+        final View coordinatorLayoutView = findViewById(R.id.main_content2);
+        Snackbar.make(coordinatorLayoutView, "Sorry, not available yet.", Snackbar.LENGTH_SHORT)
                 .show();
     }
 
