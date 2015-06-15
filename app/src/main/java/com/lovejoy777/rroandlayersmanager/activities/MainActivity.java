@@ -2,6 +2,7 @@ package com.lovejoy777.rroandlayersmanager.activities;
 
 import android.app.ActivityOptions;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,6 +15,7 @@ import android.content.pm.ServiceInfo;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
@@ -275,7 +277,6 @@ public class MainActivity extends AppCompatActivity
 
                                 final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
                                 final EditText input = new EditText(MainActivity.this);
-                                alert.setIcon(R.drawable.ic_backup);
                                 alert.setTitle("BACKUP");
                                 alert.setMessage("");
                                 alert.setView(input);
@@ -284,148 +285,87 @@ public class MainActivity extends AppCompatActivity
 
                                 alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
-                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                            public void onClick(DialogInterface dialog, int whichButton) {
 
-                                        // get editText String
-                                        String backupname = input.getText().toString();
+                                                // get editText String
+                                                String backupname = input.getText().toString();
 
-                                        if (backupname.length() <= 1) {
+                                                if (backupname.length() <= 1) {
 
-                                            Toast.makeText(MainActivity.this, "input a name", Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(MainActivity.this, "input a name", Toast.LENGTH_LONG).show();
 
-                                            finish();
+                                                    finish();
 
-                                        } else {
+                                                } else {
+                                                    File directory = new File("/vendor/overlay");
+                                                    File[] contents = directory.listFiles();
 
-                                            File directory = new File("/vendor/overlay");
-                                            File[] contents = directory.listFiles();
+                                                    // Folder is empty
+                                                    if (contents.length == 0) {
 
-                                            // Folder is empty
-                                            if (contents.length == 0) {
+                                                        Toast.makeText(MainActivity.this, "nothing to backup", Toast.LENGTH_LONG).show();
 
-                                                Toast.makeText(MainActivity.this, "nothing to backup", Toast.LENGTH_LONG).show();
-
-                                                finish();
-                                            } else {
-                                                try {
-
-                                                    String sdOverlays = Environment.getExternalStorageDirectory() + "/Overlays";
-
-                                                    // CREATES /SDCARD/OVERLAYS/BACKUP/TEMP
-                                                    File dir1 = new File(sdOverlays + "/Backup/temp");
-                                                    if (!dir1.exists() && !dir1.isDirectory()) {
-                                                        CommandCapture command = new CommandCapture(0, "mkdir " + sdOverlays + "/Backup/temp");
-                                                        try {
-                                                            RootTools.getShell(true).add(command);
-                                                            while (!command.isFinished()) {
-                                                                Thread.sleep(1);
+                                                        finish();
+                                                    } else {
+                                                        // CREATES /SDCARD/OVERLAYS/BACKUP/BACKUPNAME
+                                                        String sdOverlays = Environment.getExternalStorageDirectory() + "/Overlays";
+                                                        File dir2 = new File(sdOverlays + "/Backup/" + backupname);
+                                                        if (!dir2.exists() && !dir2.isDirectory()) {
+                                                            CommandCapture command1 = new CommandCapture(0, "mkdir " + sdOverlays + "/Backup/" + backupname);
+                                                            try {
+                                                                RootTools.getShell(true).add(command1);
+                                                                while (!command1.isFinished()) {
+                                                                    Thread.sleep(1);
+                                                                }
+                                                            } catch (IOException e) {
+                                                                e.printStackTrace();
+                                                            } catch (TimeoutException e) {
+                                                                e.printStackTrace();
+                                                            } catch (RootDeniedException e) {
+                                                                e.printStackTrace();
+                                                            } catch (InterruptedException e) {
+                                                                e.printStackTrace();
                                                             }
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        } catch (TimeoutException e) {
-                                                            e.printStackTrace();
-                                                        } catch (RootDeniedException e) {
-                                                            e.printStackTrace();
-                                                        } catch (InterruptedException e) {
-                                                            e.printStackTrace();
                                                         }
+
+                                                        new BackupOverlays().execute(backupname);
                                                     }
-
-                                                    // CREATES /SDCARD/OVERLAYS/BACKUP/BACKUPNAME
-                                                    File dir2 = new File(sdOverlays + "/Backup/" + backupname);
-                                                    if (!dir2.exists() && !dir2.isDirectory()) {
-                                                        CommandCapture command1 = new CommandCapture(0, "mkdir " + sdOverlays + "/Backup/" + backupname);
-                                                        try {
-                                                            RootTools.getShell(true).add(command1);
-                                                            while (!command1.isFinished()) {
-                                                                Thread.sleep(1);
-                                                            }
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        } catch (TimeoutException e) {
-                                                            e.printStackTrace();
-                                                        } catch (RootDeniedException e) {
-                                                            e.printStackTrace();
-                                                        } catch (InterruptedException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                    }
-
-                                                    RootTools.remount("/system", "RW");
-
-                                                    // CHANGE PERMISSIONS OF /VENDOR/OVERLAY && /SDCARD/OVERLAYS/BACKUP
-                                                    CommandCapture command2 = new CommandCapture(0,
-                                                            "chmod -R 755 /vendor/overlay",
-                                                            "chmod -R 755 " + Environment.getExternalStorageDirectory() + "/Overlays/Backup/",
-                                                            "cp -fr /vendor/overlay " + Environment.getExternalStorageDirectory() + "/Overlays/Backup/temp/");
-                                                    RootTools.getShell(true).add(command2);
-                                                    while (!command2.isFinished()) {
-                                                        Thread.sleep(1);
-                                                    }
-
-                                                    // ZIP OVERLAY FOLDER
-                                                    zipFolder(Environment.getExternalStorageDirectory() + "/Overlays/Backup/temp/overlay", Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + backupname + "/overlay.zip");
-
-                                                    // CHANGE PERMISSIONS OF /VENDOR/OVERLAY/ 666  && /VENDOR/OVERLAY 777 && /SDCARD/OVERLAYS/BACKUP/ 666
-                                                    CommandCapture command18 = new CommandCapture(0, "chmod 777 " + Environment.getExternalStorageDirectory() + "/Overlays/Backup/temp");
-                                                    RootTools.getShell(true).add(command18);
-                                                    while (!command18.isFinished()) {
-                                                        Thread.sleep(1);
-                                                    }
-                                                    // DELETE /SDCARD/OVERLAYS/BACKUP/TEMP FOLDER
-                                                    // RootTools.deleteFileOrDirectory(Environment.getExternalStorageDirectory() + "/Overlays/Backup/temp", true);
-
-                                                    RootCommands.DeleteFileRoot(Environment.getExternalStorageDirectory() + "/Overlays/Backup/temp");
-                                                    // CHANGE PERMISSIONS OF /VENDOR/OVERLAY/ 666  && /VENDOR/OVERLAY 777 && /SDCARD/OVERLAYS/BACKUP/ 666
-                                                    CommandCapture command17 = new CommandCapture(0, "chmod -R 666 /vendor/overlay", "chmod 755 /vendor/overlay", "chmod -R 666" + Environment.getExternalStorageDirectory() + "/Overlays/Backup/");
-                                                    RootTools.getShell(true).add(command17);
-                                                    while (!command17.isFinished()) {
-                                                        Thread.sleep(1);
-                                                    }
-
-                                                    // CLOSE ALL SHELLS
-                                                    RootTools.closeAllShells();
-
-                                                    Toast.makeText(MainActivity.this, "backup complete", Toast.LENGTH_LONG).show();
-
-                                                } catch (IOException e) {
-                                                    e.printStackTrace();
-                                                } catch (RootDeniedException e) {
-                                                    e.printStackTrace();
-                                                } catch (TimeoutException e) {
-                                                    e.printStackTrace();
-                                                } catch (InterruptedException e) {
-                                                    e.printStackTrace();
                                                 }
-
                                             }
                                         }
+
+                                    );
+
+                                    alert.setNegativeButton("Cancel",new DialogInterface.OnClickListener()
+
+                                    {
+
+                                        public void onClick (DialogInterface dialog,int whichButton)
+                                        {
+
+                                            dialog.cancel();
+
+                                        }
                                     }
-                                });
 
-                                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    );
 
-                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                    alert.show();
 
-                                        dialog.cancel();
+                                    mDrawerLayout.closeDrawers();
+                                    break;
+                                    case R.id.nav_restore:
+                                    Intent restore = new Intent(MainActivity.this, Restore.class);
 
-                                    }
-                                });
+                                    Bundle bndlanimation3 =
+                                            ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
 
-                                alert.show();
+                                    startActivity(restore, bndlanimation3);
 
-                                mDrawerLayout.closeDrawers();
-                                break;
-                            case R.id.nav_restore:
-                                Intent restore = new Intent(MainActivity.this, Restore.class);
+                                    mDrawerLayout.closeDrawers();
+                                }
 
-                                Bundle bndlanimation3 =
-                                        ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
-                                startActivity(restore, bndlanimation3);
-                                mDrawerLayout.closeDrawers();
-                        }
-
-                        return false;
+                                return false;
                     }
         });
     }
@@ -666,6 +606,110 @@ public class MainActivity extends AppCompatActivity
             zos.close();
         } catch (IOException ioe) {
             Log.e("", ioe.getMessage());
+        }
+    }
+
+
+
+
+
+    private class BackupOverlays extends AsyncTask<String,String,Void> {
+        ProgressDialog progressBackup;
+        private String data;
+
+
+
+        protected void onPreExecute() {
+
+            progressBackup = ProgressDialog.show(MainActivity.this, "Backup Overlays",
+                    "Backing up...", true);
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+                String backupname = params[0];
+            try {
+
+                    String sdOverlays = Environment.getExternalStorageDirectory() + "/Overlays";
+
+                    // CREATES /SDCARD/OVERLAYS/BACKUP/TEMP
+                    File dir1 = new File(sdOverlays + "/Backup/temp");
+                    if (!dir1.exists() && !dir1.isDirectory()) {
+                        CommandCapture command = new CommandCapture(0, "mkdir " + sdOverlays + "/Backup/temp");
+                        try {
+                            RootTools.getShell(true).add(command);
+                            while (!command.isFinished()) {
+                                Thread.sleep(1);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (TimeoutException e) {
+                            e.printStackTrace();
+                        } catch (RootDeniedException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+
+
+                    RootTools.remount("/system", "RW");
+
+                    // CHANGE PERMISSIONS OF /VENDOR/OVERLAY && /SDCARD/OVERLAYS/BACKUP
+                    CommandCapture command2 = new CommandCapture(0,
+                            "chmod -R 755 /vendor/overlay",
+                            "chmod -R 755 " + Environment.getExternalStorageDirectory() + "/Overlays/Backup/",
+                            "cp -fr /vendor/overlay " + Environment.getExternalStorageDirectory() + "/Overlays/Backup/temp/");
+                    RootTools.getShell(true).add(command2);
+                    while (!command2.isFinished()) {
+                        Thread.sleep(1);
+                    }
+
+                    // ZIP OVERLAY FOLDER
+                    zipFolder(Environment.getExternalStorageDirectory() + "/Overlays/Backup/temp/overlay", Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + backupname + "/overlay.zip");
+
+                    // CHANGE PERMISSIONS OF /VENDOR/OVERLAY/ 666  && /VENDOR/OVERLAY 777 && /SDCARD/OVERLAYS/BACKUP/ 666
+                    CommandCapture command18 = new CommandCapture(0, "chmod 777 " + Environment.getExternalStorageDirectory() + "/Overlays/Backup/temp");
+                    RootTools.getShell(true).add(command18);
+                    while (!command18.isFinished()) {
+                        Thread.sleep(1);
+                    }
+                    // DELETE /SDCARD/OVERLAYS/BACKUP/TEMP FOLDER
+                    // RootTools.deleteFileOrDirectory(Environment.getExternalStorageDirectory() + "/Overlays/Backup/temp", true);
+
+                    RootCommands.DeleteFileRoot(Environment.getExternalStorageDirectory() + "/Overlays/Backup/temp");
+                    // CHANGE PERMISSIONS OF /VENDOR/OVERLAY/ 666  && /VENDOR/OVERLAY 777 && /SDCARD/OVERLAYS/BACKUP/ 666
+                    CommandCapture command17 = new CommandCapture(0, "chmod -R 666 /vendor/overlay", "chmod 755 /vendor/overlay", "chmod -R 666" + Environment.getExternalStorageDirectory() + "/Overlays/Backup/");
+                    RootTools.getShell(true).add(command17);
+                    while (!command17.isFinished()) {
+                        Thread.sleep(1);
+                    }
+
+                    // CLOSE ALL SHELLS
+                    RootTools.closeAllShells();
+
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (RootDeniedException e) {
+                    e.printStackTrace();
+                } catch (TimeoutException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            return null;
+
+        }
+
+        protected void onPostExecute(Void result) {
+
+            progressBackup.dismiss();
+            Toast.makeText(MainActivity.this, "backup complete", Toast.LENGTH_LONG).show();
+
         }
     }
 }
