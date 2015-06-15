@@ -161,7 +161,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
         OverlayColorString = bundle.getString("Layers_Colors");
         WhatsNew = bundle.getString("Layers_WhatsNew");
 
-        //Use the recieved data
+        //Use the received data
         ThemeFolder = "/sdcard/Overlays/"+ThemeName.replaceAll(" ", "")+"/";
         ThemeFolderGeneral = ThemeFolder+"General/";
 
@@ -641,24 +641,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
             }
         }
 
-        /*//install Additional Overlays
-        for (int i = 0; i<NumberOfOverlays+NumberOfColorOverlays+1; i++){
-            if (NumberOfAdditionalOverlays[i]>0){
-                for (int e=1; e< NumberOfAdditionalOverlays[i]+2;e++){
-                    if (InstallAdditionalOverlays[i][e]==1){
-                        AppPath = AdditionalOverlayPath[i][e];
-                        sSUCommand = "cp " + ThemeFolderGeneral + AppPath + " " + TargetPath;
-                        sSuCommand2 = "chmod 666 " + TargetPath + AppPath;
-                        installAPK(sSUCommand, sSuCommand2);
-
-                        sSUCommand = "cp " + ThemeFolder + whichColor + "/"+ AppPath + " " +  TargetPath;
-                        sSuCommand2 = "chmod 666 " + TargetPath +AppPath;
-                        installAPK(sSUCommand, sSuCommand2);
-                    }
-                }
-            }
-        }*/
-
 
         //install Color Specific Overlays
         for (int i4=NumberOfOverlays+1; i4 <NumberOfOverlays+NumberOfColorOverlays+1; i4++){
@@ -723,9 +705,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
                 }
             });
 
-            //SharedPreferences myPrefs = OverlayDetailActivity.this.getSharedPreferences("myPrefs", MODE_WORLD_READABLE);
-            //SharedPreferences.Editor editor = myPrefs.edit();
-            //int which = myPrefs.getInt("ColorDialogRadioButton",0);
             if (i==0){
                 radioButton.setChecked(true);
             }
@@ -791,13 +770,10 @@ public class OverlayDetailActivity extends AppCompatActivity {
     }
 
     private class LoadDrawables extends AsyncTask<Void, Void, Void> {
-        ProgressDialog progress2;
 
 
         protected void onPreExecute() {
 
-            //progress2 = ProgressDialog.show(InvokeOp.this, "Install overlays",
-            //        "Installing...", true);
         }
 
 
@@ -862,11 +838,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
         {
             NumberOfSelectedNormalOverlays = NumberOfSelectedNormalOverlays + InstallOverlayList.get(i);
         }
-        /*for (int i = 0; i<NumberOfOverlays; i++){
-            for (int e=1; e< NumberOfAdditionalOverlays[i]+2;e++){
-                NumberOfSelectedNormalOverlays =NumberOfSelectedNormalOverlays + InstallAdditionalOverlays[i][e];
-            }
-        } */
+
 
         int NumberOfSelectedColorOverlays = 0;
         for (int i = NumberOfOverlays+1; i < NumberOfColorOverlays+NumberOfOverlays+1; i++)
@@ -874,20 +846,13 @@ public class OverlayDetailActivity extends AppCompatActivity {
             NumberOfSelectedColorOverlays = NumberOfSelectedColorOverlays + InstallOverlayList.get(i);
         }
 
-       /* int NumberOfSelectedAdditionalOveerlays = 0;
-        for (int i= 0; i < NumberOfOverlays+NumberOfColorOverlays+1;i++){
-            for (int e=0; e< NumberOfAdditionalOverlays[i]+1;e++){
-                NumberOfSelectedAdditionalOveerlays = NumberOfSelectedAdditionalOveerlays + InstallAdditionalOverlays[i][e+1];
-            }
-        } */
+
         ApplicationInfo ai = null;
         try {
             ai = getPackageManager().getApplicationInfo(package2, PackageManager.GET_META_DATA);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-
-        Bundle bundle = ai.metaData;
 
 
         CopyUnzipHelper cls2= new CopyUnzipHelper();
