@@ -615,9 +615,6 @@ public class MainActivity extends AppCompatActivity
 
     private class BackupOverlays extends AsyncTask<String,String,Void> {
         ProgressDialog progressBackup;
-        private String data;
-
-
 
         protected void onPreExecute() {
 
