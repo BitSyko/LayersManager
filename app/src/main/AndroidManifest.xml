@@ -38,18 +38,6 @@ xmlns:tools="http://schemas.android.com/tools"
             android:theme="@style/Theme.Toolbar"
             android:parentActivityName=".activities.MainActivity" />
 
-        <activity
-            android:name="com.lovejoy777.rroandlayersmanager.Backup"
-            android:icon="@mipmap/ic_launcher"
-            android:label="Backup"
-            android:theme="@style/Base.Theme.Toolbar"
-            android:parentActivityName=".activities.MainActivity">
-            <intent-filter>
-                <action android:name="com.lovejoy777.rroandlayersmanager.BACKUP" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
 
         <activity
             android:name="com.lovejoy777.rroandlayersmanager.Install"
