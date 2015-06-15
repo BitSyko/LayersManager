@@ -76,11 +76,17 @@ public class MainActivity extends AppCompatActivity
     RecyclerView recList = null;
     CardViewAdapter ca = null;
     /** Called when the activity is first created. */
+
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //create RecyclerView
         recyclerCardViewList = (RecyclerView) findViewById(R.id.cardList);
         recyclerCardViewList.setHasFixedSize(true);
         recyclerCardViewList.addOnItemTouchListener(
@@ -95,8 +101,8 @@ public class MainActivity extends AppCompatActivity
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerCardViewList.setLayoutManager(llm);
 
+        //create FAB
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab3);
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,24 +116,32 @@ public class MainActivity extends AppCompatActivity
 
         });
 
+
+        //set Toolbar
         final android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
+        //set NavigationDrawer
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null) {
             setupDrawerContent(navigationView);
         }
 
+
+        //Get SuperSU permissions
         (new SuperUser()).execute();
 
+
+        //Load plugins
         fillPluginList();
 
+
+        //initialize swipetorefresh
         final SwipeRefreshLayout mSwipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         mSwipeRefresh.setColorSchemeResources(R.color.accent);
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -137,12 +151,13 @@ public class MainActivity extends AppCompatActivity
                 fillPluginList();
                 onItemsLoadComplete();
             }
-
             void onItemsLoadComplete(){
                 ca.notifyDataSetChanged();
                 mSwipeRefresh.setRefreshing(false);
             }
         });
+
+
         packageBroadcastReceiver = new PackageBroadcastReceiver();
         packageFilter = new IntentFilter();
         packageFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
@@ -153,6 +168,8 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
+    //navigationDrawerIcon Onclick
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -164,7 +181,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
+    //set NavigationDrawerContent
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -191,7 +208,7 @@ public class MainActivity extends AppCompatActivity
 
                                 final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
                                 final EditText input = new EditText(MainActivity.this);
-                                alert.setTitle("BACKUP");
+                                alert.setTitle("Backup");
                                 alert.setMessage("");
                                 alert.setView(input);
                                 input.setHint("enter backup name");
@@ -241,7 +258,7 @@ public class MainActivity extends AppCompatActivity
                                                                 e.printStackTrace();
                                                             }
                                                         }
-
+                                                        //Async Task to backup Overlays
                                                         new BackupOverlays().execute(backupname);
                                                     }
                                                 }
@@ -251,14 +268,10 @@ public class MainActivity extends AppCompatActivity
                                     );
 
                                     alert.setNegativeButton("Cancel",new DialogInterface.OnClickListener()
-
                                     {
-
                                         public void onClick (DialogInterface dialog,int whichButton)
                                         {
-
                                             dialog.cancel();
-
                                         }
                                     }
 
@@ -284,6 +297,8 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+
+    //create List with all Plugins
     private List createList(int size, String name[], String developer[], String packages[]) {
 
         List result = new ArrayList();
@@ -314,6 +329,8 @@ public class MainActivity extends AppCompatActivity
         return result;
     }
 
+
+    //create list if no plugins are installed
     private List createList2(int size, String[] message1, String[] message2) {
 
         List result = new ArrayList();
@@ -333,11 +350,13 @@ public class MainActivity extends AppCompatActivity
         return result;
     }
 
+
     protected void onStart() {
         super.onStart();
         Log.d(LOG_TAG, "onStart");
         registerReceiver( packageBroadcastReceiver, packageFilter );
     }
+
 
     protected void onStop() {
         super.onStop();
@@ -345,6 +364,7 @@ public class MainActivity extends AppCompatActivity
         unregisterReceiver( packageBroadcastReceiver );
     }
 
+    //open Plugin page after clicked on a cardview
     protected void onListItemClick (int position) {
         if (!TestBoolean){
             String package2 = packages[position];
@@ -372,6 +392,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
+    //fill the list containing all Plugins
     private void fillPluginList()  {
 
         services = new ArrayList<HashMap<String,String>>();
@@ -474,6 +496,7 @@ public class MainActivity extends AppCompatActivity
     class PackageBroadcastReceiver extends BroadcastReceiver {
         private static final String LOG_TAG = "PackageBroadcastReceiver";
 
+        //when a new Plugin is installed
         public void onReceive(Context context, Intent intent) {
             Log.d(LOG_TAG, "onReceive: " + intent);
             services.clear();
@@ -489,6 +512,8 @@ public class MainActivity extends AppCompatActivity
         Snackbar.make(coordinatorLayoutView, "Sorry, not available yet.", Snackbar.LENGTH_SHORT)
                 .show();
     }
+
+
 
     /**
      * **********************************************************************************************************

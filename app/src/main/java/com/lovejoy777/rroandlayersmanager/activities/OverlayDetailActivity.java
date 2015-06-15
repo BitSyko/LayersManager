@@ -463,7 +463,8 @@ public class OverlayDetailActivity extends AppCompatActivity {
         public void onServiceDisconnected(ComponentName className) {
             opService = null;
             Log.d(LOG_TAG, "onServiceDisconnected");
-            loadBackdrop2();
+            onBackPressed();
+            //loadBackdrop2();
         }
     }
 
