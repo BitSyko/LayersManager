@@ -31,6 +31,7 @@ import java.util.zip.ZipInputStream;
 public class Install extends AppCompatActivity{
 
     static final String TAG = "Install";
+    final String previewimageszip = getApplicationInfo().dataDir + "/overlay/previewimages.zip";
 
     final String startDirInstall = Environment.getExternalStorageDirectory() +  "/Overlays";
     private static final int CODE_SD = 0;
@@ -142,6 +143,13 @@ public class Install extends AppCompatActivity{
                         RootTools.getShell(true).add(command);
                         while (!command.isFinished()) {
                             Thread.sleep(1);
+                        }
+
+                        // IF PREVIEWIMAGES.ZIP EXISTS DELETE IT
+                        File dir1 = new File(previewimageszip);
+                        if (dir1.exists()) {
+
+                            RootCommands.DeleteFileRoot(previewimageszip);
                         }
 
                             // INSTALL .ZIP
