@@ -68,7 +68,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
     int NumberOfOverlays = 0;
     int NumberOfColorOverlays = 0;
 
-
     //Variables you SHOULD NOT CHANGE!
 
     Bitmap bitmap[] = new Bitmap[NumberOfScreenshotsMain];
@@ -99,12 +98,9 @@ public class OverlayDetailActivity extends AppCompatActivity {
     private String ThemeFolderGeneral = null;
     private int NumberOfColors = 0;
 
-
-
     //Observable Scroll View variables | DON´T Change/////////////////////////
     private View mFab;
     private View mFab2;
-
 
     private String category;
     private String package2;
@@ -115,7 +111,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
 
     public OverlayDetailActivity() {
     }
-
 
     /** Called when the activity is first created. */
     @Override
@@ -148,8 +143,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
 
-
-
         //get important data from Plugin´s Manifest
         String Description;
         String OverlayNameString;
@@ -167,9 +160,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
         OverlayNameString = bundle.getString("Layers_OverlayNames");
         OverlayColorString = bundle.getString("Layers_Colors");
         WhatsNew = bundle.getString("Layers_WhatsNew");
-
-
-
 
         //Use the recieved data
         ThemeFolder = "/sdcard/Overlays/"+ThemeName.replaceAll(" ", "")+"/";
@@ -203,9 +193,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-
-
         mFab = findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -237,8 +224,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
             }
         }
 
-
-
         //Scroll view with screenshots
         LinearLayout screenshotLayout = (LinearLayout)findViewById(R.id.LinearLayoutScreenshots);
 
@@ -261,7 +246,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
             screenshotLayout.addView(linear);
         }
         loadScreenshots();
-
 
         //sort cardviews by number of Overlays
         LinearLayout CardViewCategory1, CardViewCategory2 ;
@@ -332,9 +316,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
             CardViewCategory1.addView(row);
         }
 
-
-
-
         //CardView with color specific Overlays
         for (int i = NumberOfOverlays+1; i < NumberOfColorOverlays+NumberOfOverlays+1; i++)
         {
@@ -361,7 +342,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
 
                                     atleastOneIsClicked = atleastOneIsClicked + 1;
 
-
                             } else {
                                 atleastOneIsClicked = atleastOneIsClicked - 1;
                                 InstallOverlayList.set(c, Integer.valueOf(0));
@@ -377,9 +357,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
 
                             }
                         }
-
                     }
-
                 }
             });
             row.addView(check[i]);
@@ -403,12 +381,9 @@ public class OverlayDetailActivity extends AppCompatActivity {
             }
         });
 
-
         //create the Theme folder
         File ThemeDirectory = new File("/sdcard/Overlays/"+ThemeName.replaceAll(" ", "")+"/");
         ThemeDirectory.mkdirs();
-
-
 
         fab2.setOnClickListener((new View.OnClickListener(){
             @Override
@@ -439,9 +414,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
         }
     }
 
-
-
-
     private void loadBackdrop2() {
         final ImageView imageView = (ImageView) findViewById(R.id.backdrop);
         imageView.setBackgroundResource(R.drawable.no_heroimage);
@@ -453,18 +425,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
         (new LoadDrawables()).execute();
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
     public void onDestroy() {
         super.onDestroy();
@@ -487,7 +447,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
         opServiceConnection = null;
     }
 
-
     private OpServiceConnection opServiceConnection;
 
     private static final String LOG_TAG = "InvokeOp";
@@ -508,8 +467,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
         }
     }
 
-
-
     //If FAB is clicked
     public void installTheme() {
 
@@ -518,15 +475,11 @@ public class OverlayDetailActivity extends AppCompatActivity {
             NumberOfSelectedNormalOverlays = NumberOfSelectedNormalOverlays + InstallOverlayList.get(i);
         }
 
-
         int NumberOfSelectedColorOverlays = 0;
-
 
         for (int i = NumberOfOverlays + 1; i < NumberOfOverlays + NumberOfColorOverlays + 1; i++) {
             NumberOfSelectedColorOverlays = NumberOfSelectedColorOverlays + InstallOverlayList.get(i);
         }
-
-
 
         //No checkBox is checked
         if (NumberOfSelectedNormalOverlays == 0 & NumberOfSelectedColorOverlays == 0 ) {
@@ -546,12 +499,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
         }
     }
 
-
-
-
-
     public void installDialog() {
-
 
         //if (showInstallationConfirmDialog()) {
         AlertDialog.Builder installdialog = new AlertDialog.Builder(this);
@@ -582,6 +530,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
                 installEverything.setChecked(false);
             }
         });
+
         SharedPreferences myprefs = getSharedPreferences("myPrefs", MODE_WORLD_READABLE);
         String skipMessage = myprefs.getString("ConfirmInstallationDialog", "unchecked");
         if (!skipMessage.equals("checked")) {
@@ -590,13 +539,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
             (new InstallOverlays()).execute();
         }
     }
-
-
-
-
-
-
-
 
     private class InstallOverlays extends AsyncTask<Void, Void, Void> {
         ProgressDialog progress2;
@@ -608,18 +550,15 @@ public class OverlayDetailActivity extends AppCompatActivity {
                     "Installing...", true);
         }
 
-
         @Override
         protected Void doInBackground(Void... params) {
 
             //Mount System to Read / Write
                     RootTools.remount("/system/", "RW");
 
-
             //initialize last part of root Commands
                     String SuperuserCommandOverlayFolderPermission = (String) "chmod 777 /vendor/overlay";
                     String SuperuserCommandCreateOverlayFolder = "mkdir /vendor/overlay";
-
 
                     CommandCapture command4 = new CommandCapture(0, SuperuserCommandCreateOverlayFolder);
                     try {
@@ -639,19 +578,15 @@ public class OverlayDetailActivity extends AppCompatActivity {
                         }
                     }
 
-
                     CopyFolderToSDCard();  //copy Overlay Files to SD Card
 
-
                     unzip();  //unzip Overlay ZIP´s
-
 
                     try {
                         InstallOverlays();  //open Method to install Overlays
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-
 
                     CommandCapture command3 = new CommandCapture(0, SuperuserCommandOverlayFolderPermission);
                     try {
@@ -671,13 +606,11 @@ public class OverlayDetailActivity extends AppCompatActivity {
                        }
                     }
 
-
                     RootTools.remount("/system/", "RO");  //remount /system back to RO
 
             return null;
 
         }
-
 
         protected void onPostExecute(Void result) {
 
@@ -689,19 +622,12 @@ public class OverlayDetailActivity extends AppCompatActivity {
                     installationFinishedSnackBar(); //show snackbar with option to reboot
 
         }
-
-
     }
-
-
-
 
     //Preperation of Installation Of Overlays
     protected void InstallOverlays() throws InterruptedException {
         String sSUCommand;
         String sSuCommand2;
-
-
 
         //install Normal Overlays
         for (int i=0; i <NumberOfOverlays; i++){
@@ -713,7 +639,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
                 installAPK(sSUCommand, sSuCommand2);
             }
         }
-
 
         /*//install Additional Overlays
         for (int i = 0; i<NumberOfOverlays+NumberOfColorOverlays+1; i++){
@@ -754,8 +679,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
         cls2.installOverlays(sSUCommand, sSuCommand2);
 
     }
-
-
 
     //Dialog to choose color
     public void colorDialog() {
@@ -841,17 +764,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
         colorDialog.show();
     }
 
-
-
-
-
-
-
-
-
-
-
-
     private void CopyFolderToSDCard(){
         int result = 0;
 
@@ -866,8 +778,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
         }
     }
 
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -878,18 +788,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
     private class LoadDrawables extends AsyncTask<Void, Void, Void> {
         ProgressDialog progress2;
@@ -927,22 +825,13 @@ public class OverlayDetailActivity extends AppCompatActivity {
 
         }
 
-
         protected void onPostExecute(Void result) {
 
             for (int i = 0; i < NumberOfScreenshotsMain; i++) {
                 ScreenshotimageView[i].setImageBitmap(Bitmap.createScaledBitmap(bitmap[i], (int) (bitmap[i].getWidth() * 0.3), (int) (bitmap[i].getHeight() * 0.3), true));
             }
-
-
         }
-
-
     }
-
-
-
-
 
     private void selectOverlaysFirstSnackbar() {
 
@@ -964,8 +853,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
                 .show();
     }
 
-
-
     //unzip ..... the zip files :DD
     public void unzip() {
 
@@ -974,8 +861,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
         {
             NumberOfSelectedNormalOverlays = NumberOfSelectedNormalOverlays + InstallOverlayList.get(i);
         }
-
-
         /*for (int i = 0; i<NumberOfOverlays; i++){
             for (int e=1; e< NumberOfAdditionalOverlays[i]+2;e++){
                 NumberOfSelectedNormalOverlays =NumberOfSelectedNormalOverlays + InstallAdditionalOverlays[i][e];
@@ -1009,12 +894,9 @@ public class OverlayDetailActivity extends AppCompatActivity {
 
     }
 
-
-
     //Async Task to reboot device///////////////////////////////////////////////////////////////////
     private class Reboot extends AsyncTask<Void, Void, Void> {
         final ProgressDialog progressDialogReboot = new ProgressDialog(OverlayDetailActivity.this);
-
 
         protected void onPreExecute() {
             //progressDialog rebooting / 10 seconds
@@ -1046,8 +928,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
             progressDialogReboot.show();
         }
 
-
-
         //wait 10 seconds to reboot
         @Override
         protected Void doInBackground(Void... params) {
@@ -1069,8 +949,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
             }
             return null;
         }
-
-
 
         protected void onPostExecute(Void result) {
             //close Dialog
@@ -1107,9 +985,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
             }
         }
 
-
-
-
         if (Mode.equals("Disable")){
             //disable all Checkboxes
             for (int i = 0; i < NumberOfOverlays; i++){
@@ -1143,16 +1018,9 @@ public class OverlayDetailActivity extends AppCompatActivity {
             }
     }
 
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.back2, R.anim.back1);
     }
-
-
-
-
 }
-
-

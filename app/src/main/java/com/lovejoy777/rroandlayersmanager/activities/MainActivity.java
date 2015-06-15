@@ -91,11 +91,11 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent Mainactivity = new Intent(MainActivity.this, Install.class);
+                Intent Installactivity = new Intent(MainActivity.this, Install.class);
 
                 Bundle bndlanimation =
                         ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
-                startActivity(Mainactivity, bndlanimation);
+                startActivity(Installactivity, bndlanimation);
             }
 
 
@@ -114,7 +114,6 @@ public class MainActivity extends AppCompatActivity
         if (navigationView != null) {
             setupDrawerContent(navigationView);
         }
-
 
         // IF ROOT ACCESS IS GIVEN / ELSE LAUNCH PLAYSTORE FOR SUPERUSER APP
         if (!RootTools.isAccessGiven()) {
@@ -141,7 +140,6 @@ public class MainActivity extends AppCompatActivity
                         Thread.sleep(1);
                     }
 
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (TimeoutException e) {
@@ -163,7 +161,6 @@ public class MainActivity extends AppCompatActivity
                         while (!command4.isFinished()) {
                             Thread.sleep(1);
                         }
-
 
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -230,9 +227,7 @@ public class MainActivity extends AppCompatActivity
         packageFilter.addCategory( Intent.CATEGORY_DEFAULT );
         packageFilter.addDataScheme( "package" );
 
-
     }
-
 
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
@@ -254,12 +249,14 @@ public class MainActivity extends AppCompatActivity
                                 Bundle bndlanimation =
                                         ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
                                 startActivity(delete, bndlanimation);
+                                mDrawerLayout.closeDrawers();
                                 break;
                             case R.id.nav_backup:
                                 Intent backup = new Intent(MainActivity.this, Backup.class);
                                 Bundle bndlanimation2 =
                                         ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
                                 startActivity(backup, bndlanimation2);
+                                mDrawerLayout.closeDrawers();
                                 break;
                             case R.id.nav_restore:
                                 Intent restore = new Intent(MainActivity.this, Restore.class);
@@ -267,15 +264,13 @@ public class MainActivity extends AppCompatActivity
                                 Bundle bndlanimation3 =
                                         ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
                                 startActivity(restore, bndlanimation3);
+                                mDrawerLayout.closeDrawers();
                         }
 
                         return false;
                     }
         });
     }
-
-
-
 
     private List createList(int size, String name[], String developer[], String packages[]) {
 
@@ -325,8 +320,6 @@ public class MainActivity extends AppCompatActivity
         }
         return result;
     }
-
-
 
     protected void onStart() {
         super.onStart();
@@ -459,9 +452,6 @@ public class MainActivity extends AppCompatActivity
         recList.setAdapter(ca);
     }
 
-
-
-
     private PackageBroadcastReceiver packageBroadcastReceiver;
     private IntentFilter packageFilter;
     private ArrayList<HashMap<String,String>> services;
@@ -481,7 +471,6 @@ public class MainActivity extends AppCompatActivity
             System.out.println("TEST");
         }
     }
-
 
     private void NotAvailableSnackbar() {
 

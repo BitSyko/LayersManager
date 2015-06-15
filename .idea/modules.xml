@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/rroandlayersmanager1-new_master.iml" filepath="$PROJECT_DIR$/rroandlayersmanager1-new_master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rroandlayersmanager-new_master.iml" filepath="$PROJECT_DIR$/rroandlayersmanager-new_master.iml" />
     </modules>
   </component>
 </project>

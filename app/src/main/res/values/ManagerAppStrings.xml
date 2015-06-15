@@ -13,14 +13,6 @@
     <string name="License1about" translatable="false">Stephen Erickson, Chris Ravenscroft, Dominik Schuermann, Adam Shanks</string>
     <string name="License1more">Copyright (c) 2012 Stephen Erickson, \nChris Ravenscroft, \nDominik Schuermann, \nAdam Shanks\n\nLicensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
     <string name="License1github">https://github.com/Stericson/RootTools</string>
-    <string name="License2" translatable="false">ViewPagerIndicator</string>
-    <string name="License2about" translatable="false">Jake Wharton</string>
-    <string name="License2more"> Copyright 2012 Jake Wharton\nCopyright 2011 Patrik Åkerfeldt\nCopyright 2011 Francisco Figueiredo Jr.\n\nLicensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
-    <string name="License2github"> https://github.com/JakeWharton/ViewPagerIndicator</string>
-    <string name="License3" translatable="false">Glide</string>
-    <string name="License3about" translatable="false">Jake Wharton,\nThe Android Open Source Project</string>
-    <string name="License3more" translatable="false">Copyright 2012 Jake Wharton \nCopyright 2011 The Android Open Source Project \n\nLicensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
-    <string name="License3github" translatable="false">https://github.com/bumptech/glide</string>
 
 
 
@@ -36,7 +28,6 @@
     <string name="ThanksTo3">Stefano Trevisani</string>
     <string name="AppDeveloperGooglePlus">https://plus.google.com/u/0/+NiklasSchnettler/posts</string>
     <string name="Thanksto1GooglePlus">https://plus.google.com/u/0/communities/102261717366580091389</string>
-    <string name="Thanksto2GooglePlus">https://plus.google.com/u/0/+MailsonCampos/posts</string>
     <string name="Thanksto3GooglePlus">https://plus.google.com/+StefanoTrevisani/posts</string>
 
 

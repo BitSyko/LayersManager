@@ -22,10 +22,8 @@ import com.lovejoy777.rroandlayersmanager.adapters.CustomListAdapter;
  */
 public class AboutActivity extends AppCompatActivity {
 
-
-
-    ListView list1, list2, list3, list4, list5;
-    ImageButton moreButton1, moreButton2, moreButton3;
+    ListView list1, list2, list3, list4;
+    ImageButton moreButton1;
 
     Integer[] listImage2 = {
             R.drawable.steve,
@@ -39,15 +37,15 @@ public class AboutActivity extends AppCompatActivity {
     Integer[] listImage4 = {
             R.drawable.xda,
     };
-    Integer[] listImage5 = {
-            R.drawable.stefano,
-    };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
+
+        String[] ListContent1 = {
+                "Bitsyko Development Team"
+        };
 
         String[] ListContent2 = {
                 "Steve Lovejoy"
@@ -58,20 +56,11 @@ public class AboutActivity extends AppCompatActivity {
         String[] ListContent4 = {
                 "Layers on XDA"
         } ;
-        String[] ListContent5 = {
-                this.getString(R.string.ThanksTo3)
-        } ;
-
-        String[] ListContent1 = {
-                "Bitsyko Development Team"
-        };
-
 
         //set Toolbar
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar4);
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
         setSupportActionBar(toolbar);
-
 
         //List 1
         CustomListAdapter adapter3 = new CustomListAdapter(AboutActivity.this, ListContent1, listImage1);
@@ -94,7 +83,6 @@ public class AboutActivity extends AppCompatActivity {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/u/0/+SteveLovejoy/posts")));
             }
         });
-
 
         //List3
         CustomListAdapter adapter2 = new
@@ -120,9 +108,6 @@ public class AboutActivity extends AppCompatActivity {
             }
         });
 
-
-
-
         //app version textView
         TextView tv_version = (TextView) findViewById(R.id.tv_Version);
         try {
@@ -135,13 +120,7 @@ public class AboutActivity extends AppCompatActivity {
 
         //i Buttons
         moreButton1 = (ImageButton) findViewById(R.id.imBu_more1);
-        moreButton2 = (ImageButton) findViewById(R.id.imBu_more2);
-        moreButton3 = (ImageButton) findViewById(R.id.imBu_more3);
         moreButton1.setOnClickListener(onclicklistener);
-        moreButton2.setOnClickListener(onclicklistener);
-        moreButton3.setOnClickListener(onclicklistener);
-
-
 
     }
 
@@ -164,26 +143,7 @@ public class AboutActivity extends AppCompatActivity {
                             startActivity(browserIntent);
                         }
                     });
-                    break;
-                case R.id.imBu_more2:
-                    dialogText = getResources().getString(R.string.License2more);
-                    dialogTitleText = getResources().getString(R.string.License2);
-                    dialog.setPositiveButton(R.string.VisitGithub, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.License2github)));
-                            startActivity(browserIntent);
-                        }
-                    });
-                    break;
-                case R.id.imBu_more3:
-                    dialogText = getResources().getString(R.string.License3more);
-                    dialogTitleText = getResources().getString(R.string.License3);
-                    dialog.setPositiveButton(R.string.VisitGithub, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.License3github)));
-                            startActivity(browserIntent);
-                        }
-                    });
+
                     break;
             }
             dialog.setTitle(dialogTitleText);
@@ -196,13 +156,9 @@ public class AboutActivity extends AppCompatActivity {
         }
     };
 
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.back2, R.anim.back1);
     }
-
-
-
 }

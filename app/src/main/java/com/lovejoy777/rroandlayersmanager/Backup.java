@@ -1,14 +1,17 @@
 package com.lovejoy777.rroandlayersmanager;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.lovejoy777.rroandlayersmanager.activities.MainActivity;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
