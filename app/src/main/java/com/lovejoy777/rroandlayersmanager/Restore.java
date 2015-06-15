@@ -1,10 +1,14 @@
 package com.lovejoy777.rroandlayersmanager;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.lovejoy777.rroandlayersmanager.activities.MainActivity;
@@ -112,84 +116,8 @@ public class Restore extends Activity{
 
         if (SZP != null) {
 
-            try {
 
-                RootTools.remount("/system/", "RW");
-
-                // DELETE /VENDOR/OVERLAY
-
-                RootCommands.DeleteFileRoot("/vendor/overlay");
-
-                // MK DIR /VENDOR/OVERLAY
-                CommandCapture command3 = new CommandCapture(0, "mkdir /vendor/overlay");
-
-                RootTools.getShell(true).add(command3);
-                while (!command3.isFinished()) {
-                    Thread.sleep(1);
-                }
-
-                // MK DIR /SDCARD/OVERLAYS/BACKUP/TEMP
-                CommandCapture command4 = new CommandCapture(0, "mkdir" + Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp");
-
-                RootTools.getShell(true).add(command4);
-                while (!command4.isFinished()) {
-                    Thread.sleep(1);
-                }
-
-                // MK DIR /SDCARD/OVERLAYS/BACKUP/TEMP/OVERLAY
-                CommandCapture command5 = new CommandCapture(0, "mkdir" + Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp/overlay");
-
-                RootTools.getShell(true).add(command5);
-                while (!command5.isFinished()) {
-                    Thread.sleep(1);
-                }
-
-                // CHANGE PERMISSIONS OF /VENDOR/OVERLAY && /SDCARD/OVERLAYS/BACKUP
-                CommandCapture command6 = new CommandCapture(0, "chmod 755 /vendor/overlay", "chmod 755 " + Environment.getExternalStorageDirectory() + "/Overlays/Backup");
-                RootTools.getShell(true).add(command6);
-                while (!command6.isFinished()) {
-                    Thread.sleep(1);
-                }
-
-                // UNZIP SZP TO /SDCARD/OVERLAYS/BACKUP/TEMP/OVERLAY FOLDER
-                unzip(SZP, Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp/overlay");
-
-                // MOVE /SDCARD/OVERLAYS/BACKUP/TEMP/OVERLAY TO /VENDOR/
-                RootCommands.moveCopyRoot(Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp/overlay", "/vendor/");
-
-                // DELETE /SDCARD/OVERLAYS/BACKUP/TEMP FOLDER
-                RootCommands.DeleteFileRoot(Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp");
-
-                // CHANGE PERMISSIONS OF /VENDOR/OVERLAY/ 666  && /VENDOR/OVERLAY 777 && /SDCARD/OVERLAYS/BACKUP/ 666
-                CommandCapture command7 = new CommandCapture(0, "chmod -R 666 /vendor/overlay", "chmod 755 /vendor/overlay", "chmod -R 666" + Environment.getExternalStorageDirectory() + "/Overlays/Backup");
-                RootTools.getShell(true).add(command7);
-                while (!command7.isFinished()) {
-                    Thread.sleep(1);
-                }
-
-                // CLOSE ALL SHELLS
-                RootTools.closeAllShells();
-
-                Toast.makeText(Restore.this, "restore complete", Toast.LENGTH_LONG).show();
-
-                finish();
-
-                // LAUNCH LAYERS.CLASS
-                overridePendingTransition(R.anim.back2, R.anim.back1);
-                Intent iIntent = new Intent(this, MainActivity.class);
-                iIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(iIntent);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (RootDeniedException e) {
-                e.printStackTrace();
-            } catch (TimeoutException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
+            new RestoreOverlays().execute(SZP);
         } else {
 
             Toast.makeText(Restore.this, "select a backup to restore", Toast.LENGTH_LONG).show();
@@ -269,5 +197,120 @@ public class Restore extends Activity{
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.back2, R.anim.back1);
+    }
+
+
+
+
+    private class RestoreOverlays extends AsyncTask<String,String,Void> {
+        ProgressDialog progressBackup;
+
+        protected void onPreExecute() {
+
+            progressBackup = ProgressDialog.show(Restore.this, "Restore Overlays",
+                    "Restoring...", true);
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            String SZP = params[0];
+            try {
+
+                RootTools.remount("/system/", "RW");
+
+                // DELETE /VENDOR/OVERLAY
+
+                RootCommands.DeleteFileRoot("/vendor/overlay");
+
+                // MK DIR /VENDOR/OVERLAY
+                CommandCapture command3 = new CommandCapture(0, "mkdir /vendor/overlay");
+
+                RootTools.getShell(true).add(command3);
+                while (!command3.isFinished()) {
+                    Thread.sleep(1);
+                }
+
+                // MK DIR /SDCARD/OVERLAYS/BACKUP/TEMP
+                CommandCapture command4 = new CommandCapture(0, "mkdir" + Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp");
+
+                RootTools.getShell(true).add(command4);
+                while (!command4.isFinished()) {
+                    Thread.sleep(1);
+                }
+
+                // MK DIR /SDCARD/OVERLAYS/BACKUP/TEMP/OVERLAY
+                CommandCapture command5 = new CommandCapture(0, "mkdir" + Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp/overlay");
+
+                RootTools.getShell(true).add(command5);
+                while (!command5.isFinished()) {
+                    Thread.sleep(1);
+                }
+
+                // CHANGE PERMISSIONS OF /VENDOR/OVERLAY && /SDCARD/OVERLAYS/BACKUP
+                CommandCapture command6 = new CommandCapture(0, "chmod 755 /vendor/overlay", "chmod 755 " + Environment.getExternalStorageDirectory() + "/Overlays/Backup");
+                RootTools.getShell(true).add(command6);
+                while (!command6.isFinished()) {
+                    Thread.sleep(1);
+                }
+
+                // UNZIP SZP TO /SDCARD/OVERLAYS/BACKUP/TEMP/OVERLAY FOLDER
+                unzip(SZP, Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp/overlay");
+
+                // MOVE /SDCARD/OVERLAYS/BACKUP/TEMP/OVERLAY TO /VENDOR/
+                RootCommands.moveCopyRoot(Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp/overlay", "/vendor/");
+
+                // DELETE /SDCARD/OVERLAYS/BACKUP/TEMP FOLDER
+                RootCommands.DeleteFileRoot(Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp");
+
+                // CHANGE PERMISSIONS OF /VENDOR/OVERLAY/ 666  && /VENDOR/OVERLAY 777 && /SDCARD/OVERLAYS/BACKUP/ 666
+                CommandCapture command7 = new CommandCapture(0, "chmod -R 666 /vendor/overlay", "chmod 755 /vendor/overlay", "chmod -R 666" + Environment.getExternalStorageDirectory() + "/Overlays/Backup");
+                RootTools.getShell(true).add(command7);
+                while (!command7.isFinished()) {
+                    Thread.sleep(1);
+                }
+
+                // CLOSE ALL SHELLS
+                RootTools.closeAllShells();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (RootDeniedException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+            return null;
+
+        }
+
+        protected void onPostExecute(Void result) {
+
+            progressBackup.dismiss();
+
+
+
+            //show SnackBar after sucessfull installation of the overlays
+
+            /*Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "Restored Overlays", Snackbar.LENGTH_LONG)
+                    .setAction(R.string.Reboot, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //(new Reboot()).execute();
+                        }
+                    })
+                    .show();
+*/
+            Toast.makeText(Restore.this, "restore complete", Toast.LENGTH_LONG).show();
+            finish();
+
+            // LAUNCH LAYERS.CLASS
+            overridePendingTransition(R.anim.back2, R.anim.back1);
+            Intent iIntent = new Intent(Restore.this, MainActivity.class);
+            iIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(iIntent);
+
+        }
     }
 }
