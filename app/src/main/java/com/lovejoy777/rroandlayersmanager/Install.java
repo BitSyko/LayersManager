@@ -31,7 +31,7 @@ import java.util.zip.ZipInputStream;
 public class Install extends AppCompatActivity{
 
     static final String TAG = "Install";
-    final String previewimageszip = getApplicationInfo().dataDir + "/overlay/previewimages.zip";
+    private String previewimageszip = null;
 
     final String startDirInstall = Environment.getExternalStorageDirectory() +  "/Overlays";
     private static final int CODE_SD = 0;
@@ -41,6 +41,7 @@ public class Install extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        previewimageszip = getApplicationInfo().dataDir + "/overlay/previewimages.zip";
         // GET STRING SZP
         final Intent extras = getIntent();
         String SZP = null;
