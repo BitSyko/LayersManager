@@ -24,6 +24,7 @@ import android.content.Loader;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,7 @@ import android.widget.Toast;
 
 import com.lovejoy777.rroandlayersmanager.R;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -452,7 +454,23 @@ public abstract class AbstractFilePickerFragment<T> extends ListFragment
         adapter.sort(comparator);
         setListAdapter(adapter);
         adapter.notifyDataSetChanged();
-        currentDirView.setText(getFullPath(currentPath));
+        if (getFullPath(currentPath).contains("/storage/emulated/0")){
+            currentDirView.setText("SD CARD"+getFullPath(currentPath).toUpperCase().replace("/STORAGE/EMULATED/0", ""));
+        } else{
+            currentDirView.setText(getFullPath(currentPath).toUpperCase());
+        }
+
+        /*File f = new File(getFullPath(currentPath));
+        File[] files=f.listFiles();
+        int numberOfFiles = 0;
+        for(int i=0; i<files.length; i++) {
+            File file = files[i];
+            String filePath = file.getPath();
+            if (filePath.endsWith(".apk")|| filePath.endsWith(".zip"))
+                numberOfFiles = numberOfFiles + 1;
+        }
+
+        System.out.println(numberOfFiles); */
     }
 
     /**
