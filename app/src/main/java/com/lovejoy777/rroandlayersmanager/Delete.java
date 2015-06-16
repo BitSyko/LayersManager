@@ -113,6 +113,7 @@ public class Delete extends Activity{
             }
 
             Toast.makeText(Delete.this, "deleted selected layers", Toast.LENGTH_LONG).show();
+            finish();
 
         } else {
 
