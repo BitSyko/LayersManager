@@ -86,6 +86,10 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        Intent intent = new Intent(MainActivity.this, ProductTour2Activity.class);
+        startActivity(intent);
+
         //create RecyclerView
         recyclerCardViewList = (RecyclerView) findViewById(R.id.cardList);
         recyclerCardViewList.setHasFixedSize(true);
