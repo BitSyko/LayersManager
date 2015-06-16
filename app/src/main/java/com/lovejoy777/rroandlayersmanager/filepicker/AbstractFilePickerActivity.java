@@ -23,10 +23,12 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.MenuItem;
 import android.view.WindowManager;
 
 import com.lovejoy777.rroandlayersmanager.activities.MainActivity;
@@ -91,7 +93,10 @@ public abstract class AbstractFilePickerActivity<T> extends AppCompatActivity
 
         // Handle Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_action_back);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setElevation(0);
+
 
 
         Intent intent = getIntent();
@@ -218,11 +223,21 @@ public abstract class AbstractFilePickerActivity<T> extends AppCompatActivity
 
         mainactivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         Bundle bndlanimation =
-                ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
+                ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.back2, R.anim.back1).toBundle();
         startActivity(mainactivity, bndlanimation);
 
        // finish();
         //super.onBackPressed();
         //overridePendingTransition(R.anim.back2, R.anim.back1);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

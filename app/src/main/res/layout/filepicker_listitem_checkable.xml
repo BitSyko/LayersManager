@@ -32,7 +32,8 @@
         android:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        tools:ignore="ContentDescription"/>
+        tools:ignore="ContentDescription"
+        android:layout_marginLeft="16dp" />
 
     <CheckedTextView
         android:layout_width="0dp"
@@ -42,11 +43,13 @@
         android:checked="false"
         android:checkMark="?android:attr/listChoiceIndicatorMultiple"
         android:fontFamily="light"
-        android:padding="8dp"
         android:gravity="center_vertical"
         android:textColor="@color/app_text_secondary"
         android:id="@android:id/text1"
         android:maxLines="1"
         android:ellipsize="end"
-        android:singleLine="true"/>
+        android:singleLine="true"
+        android:layout_marginLeft="16dp"
+        android:text="test"
+        android:paddingRight="8dp" />
 </LinearLayout>

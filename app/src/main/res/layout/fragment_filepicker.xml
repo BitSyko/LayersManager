@@ -18,87 +18,63 @@
   -->
 
 
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-    android:paddingStart="@dimen/activity_horizontal_margin"
-    android:paddingEnd="@dimen/activity_horizontal_margin"
-                tools:context=".FilePickerActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    tools:context=".FilePickerActivity">
 
 
     <TextView
         android:id="@+id/current_dir"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:textSize="18sp"
-        android:textColor="@color/app_text_accent"
+        android:textColor="@color/white"
         android:elevation="4dp"
         android:maxLines="1"
         android:singleLine="true"
         android:scrollHorizontally="false"
         android:ellipsize="start"
         style="?android:textAppearanceMedium"
-        android:padding="4dp"
-        android:gravity="center_vertical"
-        />
+        android:background="@color/primary"
+        android:text="TEST"
+        android:paddingLeft="16dp"
+        android:paddingRight="48dp"
+        android:gravity="center_vertical" />
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/current_dir"
         android:id="@android:id/list"
-        android:layout_above="@+id/button_container"
-        tools:listitem="@layout/filepicker_listitem_dir"/>
+        tools:listitem="@layout/filepicker_listitem_dir" />
 
-    <LinearLayout android:id="@+id/button_container"
-                  android:layout_alignParentBottom="true"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:orientation="vertical">
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:scaleType="center"
+        android:src="@drawable/ic_action_check"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:id="@+id/fab4"
+        app:borderWidth="0dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"/>
 
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/dividerHorizontal"/>
-
-        <LinearLayout
-            style="?android:attr/buttonBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/button_go_parent"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="light"
-                android:text="@string/back"/>
-
-            <Button
-                android:id="@+id/button_cancel"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="light"
-                android:text="@string/backup"/>
-
-            <Button
-                android:id="@+id/button_ok"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="light"
-                android:text="@string/delete"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/up"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_action_up"
+        android:elevation="4dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp" />
 
 </RelativeLayout>

@@ -32,7 +32,8 @@
         android:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        tools:ignore="ContentDescription"/>
+        tools:ignore="ContentDescription"
+        android:layout_marginLeft="12dp" />
 
     <TextView
         android:layout_width="0dp"
@@ -46,5 +47,6 @@
         android:id="@android:id/text1"
         android:maxLines="1"
         android:ellipsize="end"
-        android:singleLine="true"/>
+        android:singleLine="true"
+        android:layout_marginLeft="4dp" />
 </LinearLayout>

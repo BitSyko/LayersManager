@@ -79,23 +79,12 @@ xmlns:tools="http://schemas.android.com/tools"
         </activity>
 
 
-        <activity
-            android:name="com.lovejoy777.rroandlayersmanager.Settings"
-            android:icon="@mipmap/ic_launcher"
-            android:label="Settings"
-            android:theme="@style/LayersTheme"
-            android:parentActivityName=".activities.MainActivity">
-            <intent-filter>
-                <action android:name="com.lovejoy777.rroandlayersmanager.SETTINGS" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
 
         <activity
             android:name="com.lovejoy777.rroandlayersmanager.filepicker.FilePickerActivity"
             android:label="Layers"
-            android:theme="@style/Base.Theme.Toolbar">
+            android:theme="@style/Base.Theme.Toolbar"
+            android:parentActivityName=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />
                 <category android:name="android.intent.category.DEFAULT" />

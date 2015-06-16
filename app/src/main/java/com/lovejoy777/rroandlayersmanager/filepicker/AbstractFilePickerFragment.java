@@ -24,6 +24,7 @@ import android.content.Loader;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -125,7 +126,7 @@ public abstract class AbstractFilePickerFragment<T> extends ListFragment
 
         lv.setOnItemLongClickListener(this);
 
-        view.findViewById(R.id.button_cancel)
+        /*view.findViewById(R.id.button_cancel)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
@@ -133,10 +134,11 @@ public abstract class AbstractFilePickerFragment<T> extends ListFragment
                             listener.onCancelled();
                         }
                     }
-                });
+                }); */
 
-        view.findViewById(R.id.button_ok)
-                .setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab4);
+        //view.findViewById(R.id.button_ok)
+                fab.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
                         if (listener == null) {
@@ -167,7 +169,7 @@ public abstract class AbstractFilePickerFragment<T> extends ListFragment
 
 
 
-        view.findViewById(R.id.button_go_parent)
+        view.findViewById(R.id.up)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
