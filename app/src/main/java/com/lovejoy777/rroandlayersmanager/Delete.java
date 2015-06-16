@@ -43,6 +43,7 @@ public class Delete extends Activity{
                 i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
                 i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
                 i.putExtra(FilePickerActivity.EXTRA_START_PATH, startDirvendor);
+                i.putExtra("FilePickerMode","Uninstall Overlays");
 
                 // start filePicker forResult
                 startActivityForResult(i, CODE_SD);

@@ -105,6 +105,7 @@ public abstract class AbstractFilePickerActivity<T> extends AppCompatActivity
             mode = intent.getIntExtra(EXTRA_MODE, mode);
             allowCreateDir = intent.getBooleanExtra(EXTRA_ALLOW_CREATE_DIR, allowCreateDir);
             allowMultiple = intent.getBooleanExtra(EXTRA_ALLOW_MULTIPLE, allowMultiple);
+            getSupportActionBar().setTitle(intent.getStringExtra("FilePickerMode"));
         }
 
         FragmentManager fm = getFragmentManager();
