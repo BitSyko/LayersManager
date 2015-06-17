@@ -36,12 +36,12 @@
         android:layout_marginTop="24dp"
         android:layout_marginLeft="@dimen/welcome_text_margin"
         android:layout_marginRight="@dimen/welcome_text_margin"
-        android:text="Manage your favorite Overlays"
+        android:text="@string/Welcome_01_Heading"
         android:textAppearance="@style/WelcomeHeadingAppearance" />
 
     <TextView
         android:id="@+id/content"
-        android:text="Install, uninstall, backup and restore your favorite Layers Overlays"
+        android:text="@string/Welcome_01_Text01"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/images"
@@ -51,5 +51,7 @@
         android:layout_marginRight="@dimen/welcome_text_margin"
         android:minHeight="@dimen/welcome_content_min_height"
         android:textAppearance="@style/WelcomeContentAppearance" />
+
+
 
 </RelativeLayout>

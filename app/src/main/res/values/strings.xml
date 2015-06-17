@@ -8,6 +8,14 @@
     <string name="version">Version 3.8</string>
     <string name="layersmanager">Layers Manager</string>
 
+    <!-- welcome strings -->
+    <string name="Welcome_01_Heading">Installing Overlays</string>
+    <string name="Welcome_01_Text01">Plugin overlays will appear here\nUse the fab button for none plugin overlays</string>
+    <string name="Welcome_02_Heading">Navigation Drawer</string>
+    <string name="Welcome_02_Text01">Use the nav-drawer to uninstall, backup and restore your installed overlays </string>
+    <string name="Welcome_03_Heading">Instructions</string>
+    <string name="Welcome_03_Text01">You will find full instructions in the About section</string>
+
 
 
     <!-- Menu CardView 1 Strings -->

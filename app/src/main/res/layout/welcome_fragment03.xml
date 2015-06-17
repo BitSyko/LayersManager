@@ -29,7 +29,7 @@
 
     <TextView
         android:id="@+id/heading"
-        android:text="Hallo3"
+        android:text="@string/Welcome_03_Heading"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/images"
@@ -41,7 +41,7 @@
 
     <TextView
         android:id="@+id/content"
-        android:text="Hallo"
+        android:text="@string/Welcome_03_Text01"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/heading"
