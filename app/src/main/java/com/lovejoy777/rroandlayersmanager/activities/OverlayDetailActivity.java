@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -18,6 +19,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.DeadObjectException;
+import android.os.Environment;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -52,7 +54,11 @@ import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -69,6 +75,8 @@ public class OverlayDetailActivity extends AppCompatActivity {
     int NumberOfColorOverlays = 0;
 
     //Variables you SHOULD NOT CHANGE!
+
+    private final static int BUFFER_SIZE = 1024;
 
     Bitmap bitmap[] = new Bitmap[NumberOfScreenshotsMain];
 
@@ -465,8 +473,8 @@ public class OverlayDetailActivity extends AppCompatActivity {
         public void onServiceDisconnected(ComponentName className) {
             opService = null;
             Log.d(LOG_TAG, "onServiceDisconnected");
-            onBackPressed();
-            //loadBackdrop2();
+            //onBackPressed();
+            loadBackdrop2();
         }
     }
 
@@ -547,18 +555,95 @@ public class OverlayDetailActivity extends AppCompatActivity {
 
 
     private void CopyFolderToSDCard(){
-        int result = 0;
-
-        int i1 = 1;
-        int i2 = 2;
+        Context otherContext = null;
+        final String packName = package2;
         try {
-            result = opService.operation(i1, i2);
-        } catch (DeadObjectException ex) {
-            Log.e(LOG_TAG, "DeadObjectException", ex);
-        } catch (RemoteException ex) {
-            Log.e(LOG_TAG, "RemoteException", ex);
+            otherContext = OverlayDetailActivity.this.createPackageContext(packName,0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        AssetManager am = otherContext.getAssets();
+        System.out.println(am);
+
+        String ThemeNameNoSpace = ThemeName.replaceAll(" ","");
+        ApplicationInfo ai = null;
+        try {
+            ai = getPackageManager().getApplicationInfo(packName, PackageManager.GET_META_DATA);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        String destinationGeneral = Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeNameNoSpace + "/General/";
+        String destinationColor = Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeNameNoSpace + "/";
+        File ThemeDirectory = new File("/sdcard/Overlays/"+ThemeNameNoSpace+"/");
+        ThemeDirectory.mkdirs();
+        CopyFolderToSDCard(OverlayDetailActivity.this, ThemeNameNoSpace,am);
+    }
+
+
+
+    //copy files to sd card
+    public void CopyFolderToSDCard(Context context, String ThemeNameNoSpace, AssetManager assetFiles) {
+        Context mContext;
+        //RootTools.deleteFileOrDirectory("/sdcard/Overlays/"+ThemeName, true);
+        mContext= context;
+        try {
+
+            //AssetManager assetFiles = mContext.getAssets();
+
+            String[] files = assetFiles.list("Files");
+
+            //initialize streams
+            InputStream in;
+            OutputStream out;
+
+            for (int i=0; i < files.length; i++) {
+
+                if (files[i].toString().equalsIgnoreCase("images")
+                        || files[i].toString().equalsIgnoreCase("js")) {
+                    //nothing
+                } else {
+                    in= assetFiles.open("Files/" + files[i]);
+                    System.out.println(files[i]);
+                    out = new FileOutputStream(Environment.getExternalStorageDirectory()+"/Overlays/"+ThemeNameNoSpace+"/"+files[i]);
+                    copyAssetFiles(in, out);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+        }catch (NullPointerException e) {
+            e.printStackTrace();
+        }catch (Exception e) {
+            e.printStackTrace();
         }
     }
+
+
+    private  void copyAssetFiles(InputStream in, OutputStream out) {
+
+        try{
+            byte[] buffer = new byte [BUFFER_SIZE];
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
+
+            in.close();
+            out.flush();
+            out.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -1017,7 +1102,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
         protected void onPostExecute(Void result) {
 
             for (int i = 0; i < NumberOfScreenshotsMain; i++) {
-                ScreenshotimageView[i].setImageBitmap(Bitmap.createScaledBitmap(bitmap[i], (int) (bitmap[i].getWidth() * 0.3), (int) (bitmap[i].getHeight() * 0.3), true));
+                ScreenshotimageView[i].setImageBitmap(Bitmap.createScaledBitmap(bitmap[i], (int) (bitmap[i].getWidth() * 0.4), (int) (bitmap[i].getHeight() * 0.4), true));
             }
         }
     }

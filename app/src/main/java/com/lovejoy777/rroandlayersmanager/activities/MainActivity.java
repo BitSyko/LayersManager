@@ -62,7 +62,7 @@ import java.util.zip.ZipOutputStream;
 public class MainActivity extends AppCompatActivity
 {
 
-    public static final String ACTION_PICK_PLUGIN = "androidsrc.intent.action.PICK_PLUGIN";
+    public static final String ACTION_PICK_PLUGIN = "com.layers.plugins.PICK_OVERLAYS";
     static final String KEY_PKG = "pkg";
     static final String KEY_SERVICENAME = "servicename";
     static final String KEY_ACTIONS = "actions";
