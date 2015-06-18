@@ -59,7 +59,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class MainActivity extends AppCompatActivity
+public class menu extends AppCompatActivity
 {
 
     public static final String ACTION_PICK_PLUGIN = "com.layers.plugins.PICK_OVERLAYS";
@@ -87,14 +87,14 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
 
-        Intent intent = new Intent(MainActivity.this, ProductTour2Activity.class);
+        Intent intent = new Intent(menu.this, ProductTour2Activity.class);
         //startActivity(intent);
 
         //create RecyclerView
         recyclerCardViewList = (RecyclerView) findViewById(R.id.cardList);
         recyclerCardViewList.setHasFixedSize(true);
         recyclerCardViewList.addOnItemTouchListener(
-                new RecyclerItemClickListener(MainActivity.this, new RecyclerItemClickListener.OnItemClickListener() {
+                new RecyclerItemClickListener(menu.this, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         onListItemClick(position);
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent Installactivity = new Intent(MainActivity.this, Install.class);
+                Intent Installactivity = new Intent(menu.this, Install.class);
 
                 Bundle bndlanimation =
                         ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Reboot", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                AlertDialog.Builder progressDialogReboot = new AlertDialog.Builder(MainActivity.this);
+                                AlertDialog.Builder progressDialogReboot = new AlertDialog.Builder(menu.this);
                                 progressDialogReboot.setTitle("Reboot");
                                 progressDialogReboot.setMessage("Perform a soft reboot?");
                                 progressDialogReboot.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -194,13 +194,14 @@ public class MainActivity extends AppCompatActivity
                                 progressDialogReboot.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     //when Cancel Button is clicked
                                     @Override
-                                    public  void onClick(DialogInterface dialog, int which) {
+                                    public void onClick(DialogInterface dialog, int which) {
                                         try {
                                             Process proc = Runtime.getRuntime()
                                                     .exec(new String[]{"su", "-c", "busybox killall system_server"});
                                         } catch (IOException e) {
                                             e.printStackTrace();
-                                        };
+                                        }
+                                        ;
                                         dialog.dismiss();
                                     }
                                 });
@@ -235,14 +236,14 @@ public class MainActivity extends AppCompatActivity
                         int id = menuItem.getItemId();
                         switch (id){
                             case R.id.nav_about:
-                                Intent about = new Intent(MainActivity.this, AboutActivity.class);
+                                Intent about = new Intent(menu.this, AboutActivity.class);
                                 Bundle bndlanimation4 =
                                         ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
                                 startActivity(about, bndlanimation4);
                                 mDrawerLayout.closeDrawers();
                                 break;
                             case R.id.nav_delete:
-                                Intent delete = new Intent(MainActivity.this, Delete.class);
+                                Intent delete = new Intent(menu.this, Delete.class);
                                 Bundle bndlanimation =
                                         ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
                                 startActivity(delete, bndlanimation);
@@ -250,8 +251,8 @@ public class MainActivity extends AppCompatActivity
                                 break;
                             case R.id.nav_backup:
 
-                                final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-                                final EditText input = new EditText(MainActivity.this);
+                                final AlertDialog.Builder alert = new AlertDialog.Builder(menu.this);
+                                final EditText input = new EditText(menu.this);
                                 alert.setTitle("Backup");
                                 alert.setMessage("");
                                 alert.setView(input);
@@ -267,7 +268,7 @@ public class MainActivity extends AppCompatActivity
 
                                                 if (backupname.length() <= 1) {
 
-                                                    Toast.makeText(MainActivity.this, "input a name", Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(menu.this, "input a name", Toast.LENGTH_LONG).show();
 
                                                     finish();
 
@@ -278,7 +279,7 @@ public class MainActivity extends AppCompatActivity
                                                     // Folder is empty
                                                     if (contents.length == 0) {
 
-                                                        Toast.makeText(MainActivity.this, "nothing to backup", Toast.LENGTH_LONG).show();
+                                                        Toast.makeText(menu.this, "nothing to backup", Toast.LENGTH_LONG).show();
 
                                                         finish();
                                                     } else {
@@ -326,7 +327,7 @@ public class MainActivity extends AppCompatActivity
                                     mDrawerLayout.closeDrawers();
                                     break;
                                     case R.id.nav_restore:
-                                    Intent restore = new Intent(MainActivity.this, Restore.class);
+                                    Intent restore = new Intent(menu.this, Restore.class);
 
                                     Bundle bndlanimation3 =
                                             ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
@@ -415,7 +416,7 @@ public class MainActivity extends AppCompatActivity
             String category = categories.get(position);
             if( category.length() > 0 ) {
 
-                Intent intent = new Intent(MainActivity.this, Delete.class);
+                Intent intent = new Intent(menu.this, Delete.class);
                 intent.setClassName("com.lovejoy777.rroandlayersmanager",
                         "com.lovejoy777.rroandlayersmanager.activities.OverlayDetailActivity");
                 intent.putExtra(BUNDLE_EXTRAS_CATEGORY, category);
@@ -599,7 +600,7 @@ public class MainActivity extends AppCompatActivity
 
         protected void onPreExecute() {
 
-            progressSuperSU = ProgressDialog.show(MainActivity.this, "Superuser Permission",
+            progressSuperSU = ProgressDialog.show(menu.this, "Superuser Permission",
                     "Gaining SuperUser permissions...", true);
         }
 
@@ -718,7 +719,7 @@ public class MainActivity extends AppCompatActivity
 
         protected void onPreExecute() {
 
-            progressBackup = ProgressDialog.show(MainActivity.this, "Backup Overlays",
+            progressBackup = ProgressDialog.show(menu.this, "Backup Overlays",
                     "Backing up...", true);
         }
 
@@ -805,7 +806,7 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(Void result) {
 
             progressBackup.dismiss();
-            Toast.makeText(MainActivity.this, "Backup complete", Toast.LENGTH_LONG).show();
+            Toast.makeText(menu.this, "Backup complete", Toast.LENGTH_LONG).show();
 
         }
     }

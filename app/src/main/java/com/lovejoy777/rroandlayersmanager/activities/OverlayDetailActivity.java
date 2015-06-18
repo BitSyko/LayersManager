@@ -18,10 +18,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.DeadObjectException;
 import android.os.Environment;
 import android.os.IBinder;
-import android.os.RemoteException;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -128,8 +126,8 @@ public class OverlayDetailActivity extends AppCompatActivity {
         //get Intent from Main Activity
         Intent g = getIntent();
         if (g != null) {
-            category = g.getStringExtra(MainActivity.BUNDLE_EXTRAS_CATEGORY);
-            package2 = g.getStringExtra(MainActivity.BUNDLE_EXTRAS_PACKAGENAME);
+            category = g.getStringExtra(menu.BUNDLE_EXTRAS_CATEGORY);
+            package2 = g.getStringExtra(menu.BUNDLE_EXTRAS_PACKAGENAME);
         }
 
         //"connect" to selected Plugin
@@ -444,7 +442,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
     private void bindOpService() {
         if (category != null) {
             opServiceConnection = new OpServiceConnection();
-            Intent i = new Intent(MainActivity.ACTION_PICK_PLUGIN);
+            Intent i = new Intent(menu.ACTION_PICK_PLUGIN);
             ResolveInfo info = this.getPackageManager().resolveService(i, Context.BIND_AUTO_CREATE);
             i.setComponent(new ComponentName(package2,package2+"."+category));
             i.addCategory(category);

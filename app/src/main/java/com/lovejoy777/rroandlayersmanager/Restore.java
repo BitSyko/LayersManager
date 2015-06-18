@@ -6,12 +6,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
-import com.lovejoy777.rroandlayersmanager.activities.MainActivity;
+import com.lovejoy777.rroandlayersmanager.activities.menu;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 import com.lovejoy777.rroandlayersmanager.filepicker.FilePickerActivity;
 import com.stericson.RootTools.RootTools;
@@ -308,7 +306,7 @@ public class Restore extends Activity{
 
             // LAUNCH LAYERS.CLASS
             overridePendingTransition(R.anim.back2, R.anim.back1);
-            Intent iIntent = new Intent(Restore.this, MainActivity.class);
+            Intent iIntent = new Intent(Restore.this, menu.class);
             iIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             iIntent.putExtra("ShowSnackbar", true);
             iIntent.putExtra("SnackbarText","Restored your Overlays");
