@@ -251,6 +251,7 @@ public class Install extends AppCompatActivity{
         Intent extras = getIntent();
         String SZP = extras.getStringExtra("key1");
         String layersdata = getApplicationInfo().dataDir + "/overlay";
+        String overlaypath = "/vendor";
 
         try {
 
@@ -292,6 +293,8 @@ public class Install extends AppCompatActivity{
             }
 
 
+            // COPY NEW FILES TO /VENDOR/OVERLAY FOLDER
+            RootCommands.moveCopyRoot(layersdata + "/", overlaypath);
 
             // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 666
             CommandCapture command9 = new CommandCapture(0, "chmod -R 666 /vendor/overlay");
