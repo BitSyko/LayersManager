@@ -17,8 +17,10 @@ public class Instructions extends AppCompatActivity {
         setContentView(R.layout.instructions);
 
         // Handle Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar5);
+        toolbar.setNavigationIcon(R.drawable.ic_action_back);
         setSupportActionBar(toolbar);
+
 
 
     } // ends onCreate

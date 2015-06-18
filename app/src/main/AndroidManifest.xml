@@ -25,7 +25,7 @@ xmlns:tools="http://schemas.android.com/tools"
 
         <activity
             android:name=".activities.menu"
-            android:label="Install Overlays" >
+            android:label="Layers Manager" >
             <intent-filter android:label="Layers Manager">
                 <action android:name="android.intent.action.MAIN" />
 
@@ -94,9 +94,8 @@ xmlns:tools="http://schemas.android.com/tools"
         <activity
             android:name="com.lovejoy777.rroandlayersmanager.Instructions"
             android:icon="@mipmap/ic_launcher"
-            android:label="Instructions"
-            android:parentActivityName=".activities.menu"
-            android:theme="@style/LayersTheme">
+            android:label=""
+            android:parentActivityName=".activities.menu">
             <intent-filter>
                 <action android:name="android.intent.action.INSTRUCTIONS" />
 

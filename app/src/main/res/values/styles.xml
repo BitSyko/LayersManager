@@ -161,4 +161,8 @@
         <item name="android:textColor">#727272</item>
     </style>
 
+    <style name="NavigationViewTheme" parent="AppTheme">
+        <item name="textAppearanceListItem">@style/TextAppearance.AppCompat.Body2</item>
+    </style>
+
 </resources>

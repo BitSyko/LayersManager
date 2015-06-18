@@ -40,6 +40,10 @@
     <item android:title="More">
         <menu>
             <item
+                android:id="@+id/nav_tutorial"
+                android:icon="@drawable/ic_action_help"
+                android:title="Tutorial" />
+            <item
                 android:id="@+id/nav_about"
                 android:icon="@drawable/ic_action_about"
                 android:title="About" />

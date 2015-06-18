@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 import com.lovejoy777.rroandlayersmanager.Delete;
 import com.lovejoy777.rroandlayersmanager.Install;
+import com.lovejoy777.rroandlayersmanager.Instructions;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.Restore;
 import com.lovejoy777.rroandlayersmanager.adapters.CardViewAdapter;
@@ -232,20 +233,18 @@ public class menu extends AppCompatActivity
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
-
+                        Bundle bndlanimation =
+                                ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
                         int id = menuItem.getItemId();
                         switch (id){
                             case R.id.nav_about:
                                 Intent about = new Intent(menu.this, AboutActivity.class);
-                                Bundle bndlanimation4 =
-                                        ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
-                                startActivity(about, bndlanimation4);
+
+                                startActivity(about, bndlanimation);
                                 mDrawerLayout.closeDrawers();
                                 break;
                             case R.id.nav_delete:
                                 Intent delete = new Intent(menu.this, Delete.class);
-                                Bundle bndlanimation =
-                                        ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
                                 startActivity(delete, bndlanimation);
                                 mDrawerLayout.closeDrawers();
                                 break;
@@ -329,12 +328,14 @@ public class menu extends AppCompatActivity
                                     case R.id.nav_restore:
                                     Intent restore = new Intent(menu.this, Restore.class);
 
-                                    Bundle bndlanimation3 =
-                                            ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
-
-                                    startActivity(restore, bndlanimation3);
+                                    startActivity(restore, bndlanimation);
 
                                     mDrawerLayout.closeDrawers();
+                            case R.id.nav_tutorial:
+                                Intent tutorial = new Intent(menu.this, Instructions.class);
+                                startActivity(tutorial, bndlanimation);
+                                mDrawerLayout.closeDrawers();
+                                break;
                                 }
 
                                 return false;
