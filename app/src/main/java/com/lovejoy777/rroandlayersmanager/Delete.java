@@ -1,15 +1,23 @@
 package com.lovejoy777.rroandlayersmanager;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.widget.Toast;
 
+import com.lovejoy777.rroandlayersmanager.activities.MainActivity;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 import com.lovejoy777.rroandlayersmanager.filepicker.FilePickerActivity;
 import com.stericson.RootTools.RootTools;
+import com.stericson.RootTools.exceptions.RootDeniedException;
+import com.stericson.RootTools.execution.CommandCapture;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by lovejoy777 on 13/06/15.
@@ -95,35 +103,82 @@ public class Delete extends Activity{
             }
         }
     } // ends onActivity for result
-
+    private ArrayList<String> paths;
     public void deletemultiplecommand () {
 
-        ArrayList<String> paths;
+        //ArrayList<String> paths;
         paths = getIntent().getStringArrayListExtra("key2");
+        new DeleteOverlays().execute();
 
-        if (paths != null) {
-
-            for (String path : paths) {
-                if (path.startsWith("file://")) {
-                    path = path.substring(7);
-
-                    RootTools.remount("/system", "RW");
-                    RootCommands.DeleteFileRoot(path);
-                }
-            }
-
-            Toast.makeText(Delete.this, "deleted selected layers", Toast.LENGTH_LONG).show();
-            finish();
-
-        } else {
-
-            Toast.makeText(Delete.this, "nothing to delete", Toast.LENGTH_LONG).show();
-        }
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.back2, R.anim.back1);
+    }
+
+    private class DeleteOverlays extends AsyncTask<Void,Void,Void> {
+        ProgressDialog progressDelete;
+
+        protected void onPreExecute() {
+
+            progressDelete = ProgressDialog.show(Delete.this, "Uninstall Overlays",
+                    "Uninstalling...", true);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            if (paths != null) {
+                for (String path : paths) {
+                    if (path.startsWith("file://")) {
+                        path = path.substring(7);
+
+                        RootTools.remount("/system", "RW");
+                        RootCommands.DeleteFileRoot(path);
+                    }
+                }
+
+                //Toast.makeText(Delete.this, "deleted selected layers", Toast.LENGTH_LONG).show();
+                finish();
+
+            } else {
+
+                //Toast.makeText(Delete.this, "nothing to delete", Toast.LENGTH_LONG).show();
+            }
+            return null;
+
+        }
+
+        protected void onPostExecute(Void result) {
+
+            progressDelete.dismiss();
+
+
+
+            //show SnackBar after sucessfull installation of the overlays
+
+            /*Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "Restored Overlays", Snackbar.LENGTH_LONG)
+                    .setAction(R.string.Reboot, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //(new Reboot()).execute();
+                        }
+                    })
+                    .show();
+*/
+            //Toast.makeText(Delete.this, "deleted selected overlays", Toast.LENGTH_LONG).show();
+            finish();
+
+            // LAUNCH LAYERS.CLASS
+            overridePendingTransition(R.anim.back2, R.anim.back1);
+            Intent iIntent = new Intent(Delete.this, MainActivity.class);
+            iIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            iIntent.putExtra("ShowSnackbar", true);
+            iIntent.putExtra("SnackbarText","Deleted Overlays");
+            startActivity(iIntent);
+
+        }
     }
 }

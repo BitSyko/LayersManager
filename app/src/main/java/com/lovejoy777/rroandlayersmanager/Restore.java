@@ -303,13 +303,15 @@ public class Restore extends Activity{
                     })
                     .show();
 */
-            Toast.makeText(Restore.this, "restore complete", Toast.LENGTH_LONG).show();
+            //Toast.makeText(Restore.this, "restore complete", Toast.LENGTH_LONG).show();
             finish();
 
             // LAUNCH LAYERS.CLASS
             overridePendingTransition(R.anim.back2, R.anim.back1);
             Intent iIntent = new Intent(Restore.this, MainActivity.class);
             iIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            iIntent.putExtra("ShowSnackbar", true);
+            iIntent.putExtra("SnackbarText","Restored your Overlays");
             startActivity(iIntent);
 
         }

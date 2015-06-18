@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity
 
 
         Intent intent = new Intent(MainActivity.this, ProductTour2Activity.class);
-        startActivity(intent);
+        //startActivity(intent);
 
         //create RecyclerView
         recyclerCardViewList = (RecyclerView) findViewById(R.id.cardList);
@@ -170,6 +170,46 @@ public class MainActivity extends AppCompatActivity
         packageFilter.addCategory( Intent.CATEGORY_DEFAULT );
         packageFilter.addDataScheme( "package" );
 
+
+        Intent g = getIntent();
+        if (g != null) {
+            boolean snackbar = g.getBooleanExtra("ShowSnackbar",false);
+            String snackbarText = g.getStringExtra("SnackbarText");
+            if (snackbar){
+                final View coordinatorLayoutView = findViewById(R.id.main_content2);
+                Snackbar.make(coordinatorLayoutView, snackbarText, Snackbar.LENGTH_LONG)
+                        .setAction("Reboot", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                AlertDialog.Builder progressDialogReboot = new AlertDialog.Builder(MainActivity.this);
+                                progressDialogReboot.setTitle("Reboot");
+                                progressDialogReboot.setMessage("Perform a soft reboot?");
+                                progressDialogReboot.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                    //when Cancel Button is clicked
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                progressDialogReboot.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    //when Cancel Button is clicked
+                                    @Override
+                                    public  void onClick(DialogInterface dialog, int which) {
+                                        try {
+                                            Process proc = Runtime.getRuntime()
+                                                    .exec(new String[]{"su", "-c", "busybox killall system_server"});
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        };
+                                        dialog.dismiss();
+                                    }
+                                });
+                                progressDialogReboot.show();
+                            }
+                        })
+                        .show();
+            }
+        }
     }
 
 
@@ -765,7 +805,7 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(Void result) {
 
             progressBackup.dismiss();
-            Toast.makeText(MainActivity.this, "backup complete", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "Backup complete", Toast.LENGTH_LONG).show();
 
         }
     }
