@@ -1,14 +1,16 @@
-package com.lovejoy777.rroandlayersmanager;
+package com.lovejoy777.rroandlayersmanager.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.lovejoy777.rroandlayersmanager.R;
+
 /**
  * Created by lovejoy on 05/10/14.
  */
-public class Instructions extends AppCompatActivity {
+public class DetailedTutorialActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

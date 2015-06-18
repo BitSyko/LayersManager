@@ -790,7 +790,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
         installdialog.setView(dontShowAgainLayout);
         installdialog.setTitle(R.string.MoveOverlays);
         installdialog.setMessage(R.string.CreateHeXFolder);
-        installdialog.setPositiveButton(string.Continue, new DialogInterface.OnClickListener() {
+        installdialog.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
                 if (dontShowAgain.isChecked()) {
@@ -804,7 +804,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
                 (new InstallOverlays()).execute();
             }
         });
-        installdialog.setNegativeButton(R.string.Cancel, new DialogInterface.OnClickListener() {
+        installdialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 UncheckAllCheckBoxes("Uncheck");
                 installEverything.setChecked(false);
@@ -870,7 +870,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
         }
 
         colorDialog.setCancelable(false);
-        colorDialog.setPositiveButton(string.okay, new DialogInterface.OnClickListener() {
+        colorDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 int whichRadioButton = 0;

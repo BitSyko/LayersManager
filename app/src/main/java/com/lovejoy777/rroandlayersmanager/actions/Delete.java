@@ -1,4 +1,4 @@
-package com.lovejoy777.rroandlayersmanager;
+package com.lovejoy777.rroandlayersmanager.actions;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.activities.menu;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 import com.lovejoy777.rroandlayersmanager.filepicker.FilePickerActivity;

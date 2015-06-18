@@ -40,7 +40,7 @@ xmlns:tools="http://schemas.android.com/tools"
 
 
         <activity
-            android:name="com.lovejoy777.rroandlayersmanager.Install"
+            android:name=".actions.Install"
             android:icon="@mipmap/ic_launcher"
             android:label="Install"
             android:theme="@style/Base.Theme.Toolbar"
@@ -53,7 +53,7 @@ xmlns:tools="http://schemas.android.com/tools"
         </activity>
 
         <activity
-            android:name="com.lovejoy777.rroandlayersmanager.Restore"
+            android:name=".actions.Restore"
             android:icon="@mipmap/ic_launcher"
             android:label="Restore"
             android:theme="@style/LayersTheme"
@@ -66,7 +66,7 @@ xmlns:tools="http://schemas.android.com/tools"
         </activity>
 
         <activity
-            android:name="com.lovejoy777.rroandlayersmanager.Delete"
+            android:name=".actions.Delete"
             android:icon="@mipmap/ic_launcher"
             android:label="Delete"
             android:theme="@style/LayersTheme"
@@ -92,7 +92,7 @@ xmlns:tools="http://schemas.android.com/tools"
         </activity>
 
         <activity
-            android:name="com.lovejoy777.rroandlayersmanager.Instructions"
+            android:name=".activities.DetailedTutorialActivity"
             android:icon="@mipmap/ic_launcher"
             android:label=""
             android:parentActivityName=".activities.menu">
@@ -110,18 +110,6 @@ xmlns:tools="http://schemas.android.com/tools"
             android:parentActivityName=".activities.menu">
             <intent-filter>
                 <action android:name="android.intent.action.ABOUT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.lovejoy777.rroandlayersmanager.ChangeLog"
-            android:icon="@mipmap/ic_launcher"
-            android:label="ChangeLog"
-            android:parentActivityName=".activities.menu"
-            android:theme="@style/LayersTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.CHANGELOG" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

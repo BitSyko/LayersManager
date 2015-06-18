@@ -35,11 +35,10 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 
-import com.lovejoy777.rroandlayersmanager.Delete;
-import com.lovejoy777.rroandlayersmanager.Install;
-import com.lovejoy777.rroandlayersmanager.Instructions;
+import com.lovejoy777.rroandlayersmanager.actions.Delete;
+import com.lovejoy777.rroandlayersmanager.actions.Install;
 import com.lovejoy777.rroandlayersmanager.R;
-import com.lovejoy777.rroandlayersmanager.Restore;
+import com.lovejoy777.rroandlayersmanager.actions.Restore;
 import com.lovejoy777.rroandlayersmanager.adapters.CardViewAdapter;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 import com.lovejoy777.rroandlayersmanager.helper.CardViewContent;
@@ -253,12 +252,11 @@ public class menu extends AppCompatActivity
                                 final AlertDialog.Builder alert = new AlertDialog.Builder(menu.this);
                                 final EditText input = new EditText(menu.this);
                                 alert.setTitle("Backup");
-                                alert.setMessage("");
                                 alert.setView(input);
-                                input.setHint("enter backup name");
+                                input.setHint("Backup name");
                                 alert.setInverseBackgroundForced(true);
 
-                                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
                                             public void onClick(DialogInterface dialog, int whichButton) {
 
@@ -311,7 +309,7 @@ public class menu extends AppCompatActivity
 
                                     );
 
-                                    alert.setNegativeButton("Cancel",new DialogInterface.OnClickListener()
+                                    alert.setNegativeButton(android.R.string.cancel,new DialogInterface.OnClickListener()
                                     {
                                         public void onClick (DialogInterface dialog,int whichButton)
                                         {
@@ -324,21 +322,19 @@ public class menu extends AppCompatActivity
                                     alert.show();
 
                                     mDrawerLayout.closeDrawers();
-                                    break;
-                                    case R.id.nav_restore:
-                                    Intent restore = new Intent(menu.this, Restore.class);
-
-                                    startActivity(restore, bndlanimation);
-
-                                    mDrawerLayout.closeDrawers();
+                                break;
                             case R.id.nav_tutorial:
-                                Intent tutorial = new Intent(menu.this, Instructions.class);
+                                Intent tutorial = new Intent(menu.this, DetailedTutorialActivity.class);
                                 startActivity(tutorial, bndlanimation);
                                 mDrawerLayout.closeDrawers();
                                 break;
-                                }
-
-                                return false;
+                            case R.id.nav_restore:
+                                Intent restore = new Intent(menu.this, Restore.class);
+                                startActivity(restore, bndlanimation);
+                                mDrawerLayout.closeDrawers();
+                                break;
+                        }
+                        return false;
                     }
         });
     }

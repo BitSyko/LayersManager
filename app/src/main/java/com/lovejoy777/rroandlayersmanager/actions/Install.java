@@ -1,4 +1,4 @@
-package com.lovejoy777.rroandlayersmanager;
+package com.lovejoy777.rroandlayersmanager.actions;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 import com.lovejoy777.rroandlayersmanager.filepicker.FilePickerActivity;
 import com.stericson.RootTools.RootTools;
