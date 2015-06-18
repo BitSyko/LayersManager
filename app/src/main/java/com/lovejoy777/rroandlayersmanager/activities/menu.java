@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -18,6 +19,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -84,11 +86,26 @@ public class menu extends AppCompatActivity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        // Get the app's shared preferences
+        SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // Get the value for the run counter
+        int counter = app_preferences.getInt("counter", 0);
+
+        if (counter < 1){
+
+            Intent intent = new Intent(menu.this, ProductTour2Activity.class);
+            startActivity(intent);
+
+        }
+
+        // Increment the counter
+        SharedPreferences.Editor editor = app_preferences.edit();
+        editor.putInt("counter", ++counter);
+        editor.commit();
+
         setContentView(R.layout.activity_main);
-
-
-        Intent intent = new Intent(menu.this, ProductTour2Activity.class);
-        //startActivity(intent);
 
         //create RecyclerView
         recyclerCardViewList = (RecyclerView) findViewById(R.id.cardList);
@@ -450,7 +467,6 @@ public class menu extends AppCompatActivity
         final String name[] = new String[list.size()];
         final String developer[] = new String[list.size()];
 
-
         for( int i = 0 ; i < list.size() ; ++i ) {
 
             ResolveInfo info = list.get( i );
@@ -507,6 +523,7 @@ public class menu extends AppCompatActivity
                 services.add( item );
             }
         }
+
         String Test1[] = new String[3];
         String Test2[] = new String[3];
 
@@ -588,8 +605,6 @@ public class menu extends AppCompatActivity
         }
     }
 
-
-
     private class SuperUser extends AsyncTask<Void, Void, Void> {
         ProgressDialog progressSuperSU;
 
@@ -668,7 +683,6 @@ public class menu extends AppCompatActivity
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-
                     }
 
                     RootTools.remount("/system", "RW");
@@ -683,7 +697,6 @@ public class menu extends AppCompatActivity
                             while (!command5.isFinished()) {
                                 Thread.sleep(1);
                             }
-
 
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -706,8 +719,6 @@ public class menu extends AppCompatActivity
             progressSuperSU.dismiss();
         }
     }
-
-
 
     private class BackupOverlays extends AsyncTask<String,String,Void> {
         ProgressDialog progressBackup;
@@ -746,8 +757,6 @@ public class menu extends AppCompatActivity
                         }
                     }
 
-
-
                     RootTools.remount("/system", "RW");
 
                     // CHANGE PERMISSIONS OF /VENDOR/OVERLAY && /SDCARD/OVERLAYS/BACKUP
@@ -770,8 +779,6 @@ public class menu extends AppCompatActivity
                         Thread.sleep(1);
                     }
                     // DELETE /SDCARD/OVERLAYS/BACKUP/TEMP FOLDER
-                    // RootTools.deleteFileOrDirectory(Environment.getExternalStorageDirectory() + "/Overlays/Backup/temp", true);
-
                     RootCommands.DeleteFileRoot(Environment.getExternalStorageDirectory() + "/Overlays/Backup/temp");
                     // CHANGE PERMISSIONS OF /VENDOR/OVERLAY/ 666  && /VENDOR/OVERLAY 777 && /SDCARD/OVERLAYS/BACKUP/ 666
                     CommandCapture command17 = new CommandCapture(0, "chmod -R 666 /vendor/overlay", "chmod 755 /vendor/overlay", "chmod -R 666" + Environment.getExternalStorageDirectory() + "/Overlays/Backup/");
@@ -782,8 +789,6 @@ public class menu extends AppCompatActivity
 
                     // CLOSE ALL SHELLS
                     RootTools.closeAllShells();
-
-
 
                 } catch (IOException e) {
                     e.printStackTrace();
