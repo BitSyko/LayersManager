@@ -26,8 +26,8 @@
         android:id="@+id/textView3"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="56dp"
-        android:textSize="18dp"
+        android:layout_marginStart="56dp"
+        android:textSize="18sp"
         android:elevation="4dp"
         android:textColor="#ffffff"
         android:layout_below="@+id/toolbar5"
@@ -60,14 +60,13 @@
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/CardView_License1"
+            android:id="@+id/CardView_Instructions1"
             android:elegantTextHeight="false"
             android:elevation="5dp"
             android:background="@color/card_background"
             android:backgroundTint="@color/card_background"
-            android:layout_below="@+id/tv_caption4"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginTop="16dp">
 
 
@@ -83,9 +82,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Install Plugin Overlays"
-                android:id="@+id/textView52"
-                android:layout_gravity="left|top"
-                android:layout_marginLeft="16dp"
+                android:id="@+id/textView4"
+                android:layout_gravity="start|top"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:textStyle="bold"
                 android:elevation="5dp" />
@@ -96,9 +95,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Click on one of the installed Overlays\nChoose the apps you want to have themed\nClick on the FAB to install the Overlays"
-                android:id="@+id/tv_whatsNew"
-                android:layout_gravity="left|top"
-                android:layout_marginLeft="16dp"
+                android:id="@+id/textView5"
+                android:layout_gravity="start|top"
+                android:layout_marginStart="16dp"
                 android:textColor="@color/text_color_secondary"
                 android:elevation="5dp"
                 android:layout_marginTop="12dp"
@@ -114,14 +113,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:id="@+id/CardView_License1"
+            android:id="@+id/CardView_Instructions2"
             android:elegantTextHeight="false"
             android:elevation="5dp"
             android:background="@color/card_background"
             android:backgroundTint="@color/card_background"
-            android:layout_below="@+id/tv_caption4"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp">
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
 
 
             <LinearLayout
@@ -136,9 +134,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Install normal Overlays"
-                    android:id="@+id/textView52"
-                    android:layout_gravity="left|top"
-                    android:layout_marginLeft="16dp"
+                    android:id="@+id/textView6"
+                    android:layout_gravity="start|top"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:textStyle="bold"
                     android:elevation="5dp" />
@@ -149,14 +147,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Click on the FAB at the right bottom of the main activity\nChoose either a zip file containig Overlays or select multiple apk files\nClick on the FAB to install the selected Overlays"
-                    android:id="@+id/tv_whatsNew"
-                    android:layout_gravity="left|top"
-                    android:layout_marginLeft="16dp"
+                    android:id="@+id/textview7"
+                    android:layout_gravity="start|top"
+                    android:layout_marginStart="16dp"
                     android:textColor="@color/text_color_secondary"
                     android:elevation="5dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="16dp"
-                    android:layout_marginRight="16dp" />
+                    android:layout_marginEnd="16dp" />
 
             </LinearLayout>
         </android.support.v7.widget.CardView>
@@ -168,14 +166,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:id="@+id/CardView_License1"
+            android:id="@+id/CardView_Instructions3"
             android:elegantTextHeight="false"
             android:elevation="5dp"
             android:background="@color/card_background"
             android:backgroundTint="@color/card_background"
-            android:layout_below="@+id/tv_caption4"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp">
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
 
 
             <LinearLayout
@@ -190,9 +187,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Uninstall Overlays"
-                    android:id="@+id/textView52"
+                    android:id="@+id/textView8"
                     android:layout_gravity="left|top"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:textStyle="bold"
                     android:elevation="5dp" />
@@ -203,14 +200,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Open the navigation drawer and select uninstall Overlays\nSelect the Overlays you want to uninstall\nClick on the FAB to uninstall the selected Overlays"
-                    android:id="@+id/tv_whatsNew"
-                    android:layout_gravity="left|top"
-                    android:layout_marginLeft="16dp"
+                    android:id="@+id/textview9"
+                    android:layout_gravity="start|top"
+                    android:layout_marginStart="16dp"
                     android:textColor="@color/text_color_secondary"
                     android:elevation="5dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="16dp"
-                    android:layout_marginRight="16dp" />
+                    android:layout_marginEnd="16dp" />
 
             </LinearLayout>
         </android.support.v7.widget.CardView>
@@ -222,14 +219,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:id="@+id/CardView_License1"
+            android:id="@+id/CardView_Instructions4"
             android:elegantTextHeight="false"
             android:elevation="5dp"
             android:background="@color/card_background"
             android:backgroundTint="@color/card_background"
-            android:layout_below="@+id/tv_caption4"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp">
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp">
 
 
             <LinearLayout
@@ -244,9 +240,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Backup Overlays"
-                    android:id="@+id/textView52"
-                    android:layout_gravity="left|top"
-                    android:layout_marginLeft="16dp"
+                    android:id="@+id/textView10"
+                    android:layout_gravity="start|top"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:textStyle="bold"
                     android:elevation="5dp" />
@@ -257,14 +253,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Open the navigation drawer and select Backup Overlays\nEnter a name for the backup"
-                    android:id="@+id/tv_whatsNew"
-                    android:layout_gravity="left|top"
-                    android:layout_marginLeft="16dp"
+                    android:id="@+id/textview11"
+                    android:layout_gravity="start|top"
+                    android:layout_marginStart="16dp"
                     android:textColor="@color/text_color_secondary"
                     android:elevation="5dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="16dp"
-                    android:layout_marginRight="16dp" />
+                    android:layout_marginEnd="16dp" />
 
             </LinearLayout>
         </android.support.v7.widget.CardView>
@@ -276,15 +272,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:id="@+id/CardView_License1"
+            android:id="@+id/CardView_Instructions5"
             android:elegantTextHeight="false"
             android:elevation="5dp"
             android:layout_marginBottom="16dp"
             android:background="@color/card_background"
             android:backgroundTint="@color/card_background"
-            android:layout_below="@+id/tv_caption4"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp">
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
 
 
             <LinearLayout
@@ -299,9 +294,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Restore Overlays"
-                    android:id="@+id/textView52"
-                    android:layout_gravity="left|top"
-                    android:layout_marginLeft="16dp"
+                    android:id="@+id/textView12"
+                    android:layout_gravity="start|top"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:textStyle="bold"
                     android:elevation="5dp" />
@@ -312,9 +307,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Open the navigation drawer and select Restore Overlays\nChoose the backup you want to restore\nClick on the FAB to restore the selected backup"
-                    android:id="@+id/tv_whatsNew"
-                    android:layout_gravity="left|top"
-                    android:layout_marginLeft="16dp"
+                    android:id="@+id/textview13"
+                    android:layout_gravity="start|top"
+                    android:layout_marginStart="16dp"
                     android:textColor="@color/text_color_secondary"
                     android:elevation="5dp"
                     android:layout_marginTop="12dp"

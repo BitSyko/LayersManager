@@ -44,7 +44,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="version Alpha 5.3"
+        android:text="@string/version"
         android:id="@+id/tv_Version"
         android:layout_below="@+id/tv_AppName"
         android:layout_centerHorizontal="true"
@@ -66,8 +66,8 @@
 
         <RelativeLayout  android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
             android:paddingTop="0dp"
             android:paddingBottom="@dimen/activity_vertical_margin"
 
@@ -178,15 +178,15 @@
 
                 <TextView
                     android:textStyle="bold"
-                    android:paddingLeft="16dp"
+                    android:paddingStart="16dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title"
                     android:text="@string/License1"
                     android:id="@+id/tv_license1"
                     android:layout_marginTop="16dp"
-                    android:textSize="16dp"
-                    android:paddingRight="16dp"
+                    android:textSize="16sp"
+                    android:paddingEnd="16dp"
                     android:textColor="@color/about_text" />
 
                 <TextView
@@ -195,11 +195,11 @@
                     android:text="@string/License1about"
                     android:id="@+id/tv_license1about"
                     android:layout_marginTop="36dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="48dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="48dp"
 
                     android:textColor="@color/text_color_secondary"
-                    android:textSize="14dp"
+                    android:textSize="14sp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
 
@@ -208,9 +208,9 @@
                     android:layout_height="wrap_content"
                     android:text="@string/ApacheLicense"
                     android:id="@+id/tv_license1license"
-                    android:layout_gravity="left"
+                    android:layout_gravity="start"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
 
 
                     android:layout_marginTop="72dp"
@@ -222,8 +222,8 @@
                     android:id="@+id/imBu_more1"
                     android:layout_alignBottom="@+id/CradViewWhatsNew"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginRight="8dp"
-                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginEnd="8dp"
+                    android:layout_gravity="center_vertical|end"
                     android:src="@drawable/information"
                     android:background="@color/button_background"
                     android:padding="8dp"

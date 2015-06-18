@@ -511,11 +511,11 @@ public class menu extends AppCompatActivity
         String Test2[] = new String[3];
 
         Test1[0] = "Too bad.";
-        Test2[0] = "It seems like you haven´t installed any compatible themes yet.";
-        Test1[1] = "Layers Theme Showcase";
-        Test2[1] = "Find some new, beautiful themes in the all new Layers Showcase App.";
+        Test2[0] = "You don't have any compatible plugins yet, Use the FAB button for none plugin type overlays.";
+        Test1[1] = "Layers Overlays Showcase";
+        Test2[1] = "Find some new beautiful overlays. Coming Soon.";
         Test1[2] = "Play Store";
-        Test2[2] = "Have a look at the PlayStore.";
+        Test2[2] = "Have a look on the PlayStore.";
 
         if (list.size()>0) {
             ca = new CardViewAdapter(createList(list.size(), name, developer, packages));
@@ -554,8 +554,6 @@ public class menu extends AppCompatActivity
         Snackbar.make(coordinatorLayoutView, "Sorry, not available yet.", Snackbar.LENGTH_SHORT)
                 .show();
     }
-
-
 
     /**
      * **********************************************************************************************************
