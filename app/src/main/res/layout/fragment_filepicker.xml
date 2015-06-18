@@ -41,8 +41,8 @@
         style="?android:textAppearanceMedium"
         android:background="@color/primary"
         android:text="TEST"
-        android:paddingLeft="16dp"
-        android:paddingRight="48dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="48dp"
         android:gravity="center_vertical" />
 
     <ListView
@@ -55,14 +55,14 @@
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:scaleType="center"
         android:src="@drawable/ic_action_check"
         android:layout_margin="16dp"
         android:clickable="true"
         android:id="@+id/fab4"
         app:borderWidth="0dp"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"/>
 
     <ImageView
@@ -73,7 +73,7 @@
         android:layout_alignParentEnd="true"
         android:src="@drawable/ic_action_up"
         android:elevation="4dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp" />
 

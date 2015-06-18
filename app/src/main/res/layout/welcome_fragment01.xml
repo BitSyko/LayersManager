@@ -21,8 +21,8 @@
             android:scaleType="centerInside"
             android:src="@drawable/welcome_01"
             android:layout_marginTop="48dp"
-            android:layout_marginLeft="32dp"
-            android:layout_marginRight="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
             android:layout_gravity="center"/>
 
     </FrameLayout>
@@ -32,10 +32,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/images"
-        android:layout_alignLeft="@id/images"
+        android:layout_alignStart="@id/images"
         android:layout_marginTop="24dp"
-        android:layout_marginLeft="@dimen/welcome_text_margin"
-        android:layout_marginRight="@dimen/welcome_text_margin"
+        android:layout_marginStart="@dimen/welcome_text_margin"
+        android:layout_marginEnd="@dimen/welcome_text_margin"
         android:text="@string/Welcome_01_Heading"
         android:textAppearance="@style/WelcomeHeadingAppearance" />
 
@@ -44,11 +44,11 @@
         android:text="@string/Welcome_01_Text01"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/images"
+        android:layout_alignStart="@id/images"
         android:layout_below="@+id/heading"
         android:layout_marginTop="8dp"
-        android:layout_marginLeft="@dimen/welcome_text_margin"
-        android:layout_marginRight="@dimen/welcome_text_margin"
+        android:layout_marginStart="@dimen/welcome_text_margin"
+        android:layout_marginEnd="@dimen/welcome_text_margin"
         android:minHeight="@dimen/welcome_content_min_height"
         android:textAppearance="@style/WelcomeContentAppearance" />
 

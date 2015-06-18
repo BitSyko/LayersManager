@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/layout_root" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="fill_parent" android:padding="10dp">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_root"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="10dp">
 
-    <CheckBox android:text="Do not show again" android:id="@+id/skip" android:layout_width="wrap_content" android:layout_height="wrap_content" xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_marginLeft="8dp"></CheckBox>
+    <CheckBox
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:text="Do not show again"
+        android:id="@+id/skip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp">
+    </CheckBox>
 </LinearLayout>
