@@ -9,7 +9,7 @@
 
     <CheckBox
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:text="Do not show again"
+        android:text="@string/donotshowagain"
         android:id="@+id/skip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

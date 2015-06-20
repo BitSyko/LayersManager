@@ -226,9 +226,6 @@ public abstract class AbstractFilePickerActivity<T> extends AppCompatActivity
                 ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.back2, R.anim.back1).toBundle();
         startActivity(mainactivity, bndlanimation);
 
-       // finish();
-        //super.onBackPressed();
-        //overridePendingTransition(R.anim.back2, R.anim.back1);
     }
 
     @Override

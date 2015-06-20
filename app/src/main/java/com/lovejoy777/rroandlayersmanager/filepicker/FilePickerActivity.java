@@ -57,9 +57,6 @@ public class FilePickerActivity extends AbstractFilePickerActivity<File> {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
 
-
-
-
         }
         return super.onOptionsItemSelected(item);
     }
