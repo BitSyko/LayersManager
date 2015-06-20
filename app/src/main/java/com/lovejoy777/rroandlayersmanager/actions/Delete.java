@@ -19,7 +19,6 @@ import java.util.ArrayList;
  */
 public class Delete extends Activity{
 
-        static final String TAG = "Delete";
         final String startDirvendor = "/vendor/overlay";
         private static final int CODE_SD = 0;
         private static final int CODE_DB = 1;
@@ -171,7 +170,7 @@ public class Delete extends Activity{
             Intent iIntent = new Intent(Delete.this, menu.class);
             iIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             iIntent.putExtra("ShowSnackbar", true);
-            iIntent.putExtra("SnackbarText","Deleted Overlays");
+            iIntent.putExtra("SnackbarText","To Delete Overlays");
             startActivity(iIntent);
 
         }

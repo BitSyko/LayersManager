@@ -115,8 +115,6 @@ public class Restore extends Activity{
         String SZP = extras.getStringExtra("key1");
 
         if (SZP != null) {
-
-
             new RestoreOverlays().execute(SZP);
         } else {
 
@@ -199,9 +197,6 @@ public class Restore extends Activity{
         overridePendingTransition(R.anim.back2, R.anim.back1);
     }
 
-
-
-
     private class RestoreOverlays extends AsyncTask<String,String,Void> {
         ProgressDialog progressBackup;
 
@@ -219,7 +214,6 @@ public class Restore extends Activity{
                 RootTools.remount("/system/", "RW");
 
                 // DELETE /VENDOR/OVERLAY
-
                 RootCommands.DeleteFileRoot("/vendor/overlay");
 
                 // MK DIR /VENDOR/OVERLAY
@@ -289,8 +283,6 @@ public class Restore extends Activity{
 
             progressBackup.dismiss();
 
-
-
             //show SnackBar after sucessfull installation of the overlays
 
             /*Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "Restored Overlays", Snackbar.LENGTH_LONG)
@@ -302,7 +294,6 @@ public class Restore extends Activity{
                     })
                     .show();
 */
-            //Toast.makeText(Restore.this, "restore complete", Toast.LENGTH_LONG).show();
             finish();
 
             // LAUNCH LAYERS.CLASS
@@ -310,7 +301,7 @@ public class Restore extends Activity{
             Intent iIntent = new Intent(Restore.this, menu.class);
             iIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             iIntent.putExtra("ShowSnackbar", true);
-            iIntent.putExtra("SnackbarText","Restored your Overlays");
+            iIntent.putExtra("SnackbarText","To Restore Overlays");
             startActivity(iIntent);
 
         }

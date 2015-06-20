@@ -1,7 +1,9 @@
 package com.lovejoy777.rroandlayersmanager.actions;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.lovejoy777.rroandlayersmanager.R;
+import com.lovejoy777.rroandlayersmanager.activities.menu;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 import com.lovejoy777.rroandlayersmanager.filepicker.FilePickerActivity;
 import com.stericson.RootTools.RootTools;
@@ -52,7 +55,7 @@ public class Install extends AppCompatActivity{
 
         if (SZP != null) {
 
-            installcommand();
+            installmultiplecommand();
 
         } else {
             Intent i = new Intent(Intent.ACTION_GET_CONTENT);
@@ -90,6 +93,7 @@ public class Install extends AppCompatActivity{
                     String SZP = (sb.toString());
                     Intent iIntent = new Intent(this, Install.class);
                     iIntent.putExtra("key1", SZP);
+                    iIntent.putStringArrayListExtra("key2", paths);
                     startActivity(iIntent);
                     finish();
 
@@ -108,225 +112,6 @@ public class Install extends AppCompatActivity{
             }
         }
     } // ends onActivityForResult
-
-    public void installcommand() {
-
-        Intent extras = getIntent();
-
-        if (extras != null) {
-
-            String SZP = extras.getStringExtra("key1");
-            String layersdata = getApplicationInfo().dataDir + "/overlay";
-            String iszip = ".zip";
-            String isapk = ".apk";
-
-            //IF SZP IS LESS THAN 1 CHAR DO THIS.
-            if (SZP.length() <= 1) {
-
-                Toast.makeText(Install.this, "CHOOSE A FILE", Toast.LENGTH_LONG).show();
-
-            } else {
-
-                // DELETES /DATA/DATA/OVERLAY
-                File dir = new File(getApplicationInfo().dataDir + "/overlay/");
-                if (dir.exists() && dir.isDirectory()) {
-
-                    RootCommands.DeleteFileRoot(getApplicationInfo().dataDir + "/overlay");
-                }
-
-                // IF SZP ENDS WITH .ZIP
-                if (SZP.endsWith(iszip)) {
-
-                    try {
-                        // UNZIP & MOVE TO LAYERS DATA OVERLAY FOLDER
-                        unzip(SZP, layersdata);
-
-                        // CHANGE PERMISSIONS 755
-                        CommandCapture command = new CommandCapture(0, "chmod -R 755 " + layersdata);
-                        RootTools.getShell(true).add(command);
-                        while (!command.isFinished()) {
-                            Thread.sleep(1);
-                        }
-
-                        // IF PREVIEWIMAGES.ZIP EXISTS DELETE IT
-                        File dir1 = new File(previewimageszip);
-                        if (dir1.exists()) {
-
-                            RootCommands.DeleteFileRoot(previewimageszip);
-                        }
-
-                            // INSTALL .ZIP
-                            installzip();
-
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (RootDeniedException e) {
-                        e.printStackTrace();
-                    } catch (TimeoutException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                // IF SZP ENDS WITH APK INSTALL APK
-                if (SZP.endsWith(isapk)) {
-                    // INSTALL APK'S
-                    installapk();
-                }
-            }
-        } else {
-
-        }
-    } // ENDS COMMAND 1
-
-    public void installzip() {
-
-        String layersdata = getApplicationInfo().dataDir + "/overlay";
-        String overlaypath = "/vendor";
-
-        try {
-
-            // CHANGE PERMISSIONS OF UNZIPPED FOLDER & FILES
-            CommandCapture command = new CommandCapture(0, "chmod -R 666 " + layersdata + "/");
-            RootTools.getShell(true).add(command);
-            while (!command.isFinished()) {
-                Thread.sleep(1);
-            }
-
-            // MOUNT /SYSTEM RW
-            RootTools.remount("/system", "RW");
-
-            // MK DIR /VENDOR/OVERLAY
-            CommandCapture command1 = new CommandCapture(0, "mkdir /vendor/overlay");
-            RootTools.getShell(true).add(command1);
-            while (!command1.isFinished()) {
-                Thread.sleep(1);
-            }
-
-            // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 777
-            CommandCapture command2 = new CommandCapture(0, "chmod -R 777 /vendor/overlay");
-            RootTools.getShell(true).add(command2);
-            while (!command2.isFinished()) {
-                Thread.sleep(1);
-            }
-
-            // COPY NEW FILES TO /VENDOR/OVERLAY FOLDER
-            RootCommands.moveCopyRoot(layersdata + "/", overlaypath);
-
-            // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 666
-            CommandCapture command3 = new CommandCapture(0, "chmod -R 666 /vendor/overlay");
-            RootTools.getShell(true).add(command3);
-            while (!command3.isFinished()) {
-                Thread.sleep(1);
-            }
-
-            // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER BACK TO 777
-            CommandCapture command4 = new CommandCapture(0, "chmod 777 /vendor/overlay");
-            RootTools.getShell(true).add(command4);
-            while (!command4.isFinished()) {
-                Thread.sleep(1);
-            }
-
-            // CLOSE ALL SHELLS
-            RootTools.closeAllShells();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (RootDeniedException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-
-        } finally {
-            finish();
-        }
-    }
-
-    public void installapk() {
-
-        Intent extras = getIntent();
-        String SZP = extras.getStringExtra("key1");
-        String layersdata = getApplicationInfo().dataDir + "/overlay";
-        String overlaypath = "/vendor";
-
-        try {
-
-            // MK DIR LAYERSDATA
-            CommandCapture command1 = new CommandCapture(0, "mkdir " + layersdata);
-            RootTools.getShell(true).add(command1);
-            while (!command1.isFinished()) {
-                Thread.sleep(1);
-            }
-
-            // ELSE NOT A .ZIP THEN COPY FILE TO LAYERSDATA
-            CommandCapture command5 = new CommandCapture(0, "cp -f " + SZP + " " + layersdata + "/");
-            RootTools.getShell(true).add(command5);
-            while (!command5.isFinished()) {
-                Thread.sleep(1);
-            }
-
-            // CHANGE PERMISSIONS OF UNZIPPED FOLDER & FILES
-            CommandCapture command6 = new CommandCapture(0, "chmod -R 666 " + layersdata + "/");
-            RootTools.getShell(true).add(command6);
-            while (!command6.isFinished()) {
-                Thread.sleep(1);
-            }
-            // MOUNT /SYSTEM RW
-            RootTools.remount("/system", "RW");
-
-            // CHANGE PERMISSIONS OF UNZIPPED FOLDER & FILES
-            CommandCapture command7 = new CommandCapture(0, "mkdir /vendor/overlay");
-            RootTools.getShell(true).add(command7);
-            while (!command7.isFinished()) {
-                Thread.sleep(1);
-            }
-
-            // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 777
-            CommandCapture command8 = new CommandCapture(0, "chmod -R 777 /vendor/overlay");
-            RootTools.getShell(true).add(command8);
-            while (!command8.isFinished()) {
-                Thread.sleep(1);
-            }
-
-
-            // COPY NEW FILES TO /VENDOR/OVERLAY FOLDER
-            RootCommands.moveCopyRoot(layersdata + "/", overlaypath);
-
-            // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 666
-            CommandCapture command9 = new CommandCapture(0, "chmod -R 666 /vendor/overlay");
-            RootTools.getShell(true).add(command9);
-            while (!command9.isFinished()) {
-                Thread.sleep(1);
-            }
-
-            // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER BACK TO 777
-            CommandCapture command10 = new CommandCapture(0, "chmod 777 /vendor/overlay");
-            RootTools.getShell(true).add(command10);
-            while (!command10.isFinished()) {
-                Thread.sleep(1);
-                RootTools.remount("/system", "RO");
-            }
-
-            // CLOSE ALL SHELLS
-            RootTools.closeAllShells();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (RootDeniedException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-
-        } finally {
-            finish();
-        }
-    }
 
     /**
      * **********************************************************************************************************
@@ -394,10 +179,270 @@ public class Install extends AppCompatActivity{
             Log.e(TAG, "Unzip exception", e);
         }
     }
+        private ArrayList<String> paths;
+        public void installmultiplecommand () {
+
+            //ArrayList<String> paths;
+            paths = getIntent().getStringArrayListExtra("key2");
+            new InstallOverlays().execute();
+
+        }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.back2, R.anim.back1);
+    }
+
+    private class InstallOverlays extends AsyncTask<Void,Void,Void> {
+        ProgressDialog progressDelete;
+
+        protected void onPreExecute() {
+
+            progressDelete = ProgressDialog.show(Install.this, "install Overlays",
+                    "installing...", true);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            if (paths != null) {
+                for (String path : paths) {
+                    if (path.startsWith("file://")) {
+                        path = path.substring(7);
+
+                        String layersdata = getApplicationInfo().dataDir + "/overlay";
+                        String overlaypath = "/vendor";
+                        String iszip = ".zip";
+                        String isapk = ".apk";
+
+                        //IF SZP IS LESS THAN 1 CHAR DO THIS.
+                        if (path.length() <= 1) {
+
+                            Toast.makeText(Install.this, "CHOOSE A FILE", Toast.LENGTH_LONG).show();
+
+                        } else {
+
+                            // DELETES /DATA/DATA/OVERLAY
+                            File dir = new File(getApplicationInfo().dataDir + "/overlay/");
+                            if (dir.exists() && dir.isDirectory()) {
+
+                                RootCommands.DeleteFileRoot(getApplicationInfo().dataDir + "/overlay");
+                            }
+
+                            // IF SZP ENDS WITH .ZIP
+                            if (path.endsWith(iszip)) {
+
+                                try {
+                                    // UNZIP & MOVE TO LAYERS DATA OVERLAY FOLDER
+                                    unzip(path, layersdata);
+
+                                    // CHANGE PERMISSIONS 755
+                                    CommandCapture command = new CommandCapture(0, "chmod -R 755 " + layersdata);
+                                    RootTools.getShell(true).add(command);
+                                    while (!command.isFinished()) {
+                                        Thread.sleep(1);
+                                    }
+
+                                    // IF PREVIEWIMAGES.ZIP EXISTS DELETE IT
+                                    File dir1 = new File(previewimageszip);
+                                    if (dir1.exists()) {
+
+                                        RootCommands.DeleteFileRoot(previewimageszip);
+                                    }
+
+                                    try {
+
+                                        // MK DIR LAYERSDATA
+                                        CommandCapture command1 = new CommandCapture(0, "mkdir " + layersdata);
+                                        RootTools.getShell(true).add(command1);
+                                        while (!command1.isFinished()) {
+                                            Thread.sleep(1);
+                                        }
+
+                                        RootCommands.moveCopyRoot(path, layersdata + "/");
+                                        // ELSE NOT A .ZIP THEN COPY FILE TO LAYERSDATA
+                                        // CommandCapture command5 = new CommandCapture(0, "cp -f " + SZP + " " + layersdata + "/");
+                                        //RootTools.getShell(true).add(command5);
+                                        // while (!command5.isFinished()) {
+                                        //     Thread.sleep(1);
+                                        // }
+
+                                        // CHANGE PERMISSIONS OF UNZIPPED FOLDER & FILES
+                                        CommandCapture command6 = new CommandCapture(0, "chmod -R 666 " + layersdata + "/");
+                                        RootTools.getShell(true).add(command6);
+                                        while (!command6.isFinished()) {
+                                            Thread.sleep(1);
+                                        }
+                                        // MOUNT /SYSTEM RW
+                                        RootTools.remount("/system", "RW");
+
+                                        // CHANGE PERMISSIONS OF UNZIPPED FOLDER & FILES
+                                        CommandCapture command7 = new CommandCapture(0, "mkdir /vendor/overlay");
+                                        RootTools.getShell(true).add(command7);
+                                        while (!command7.isFinished()) {
+                                            Thread.sleep(1);
+                                        }
+
+                                        // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 777
+                                        CommandCapture command8 = new CommandCapture(0, "chmod -R 777 /vendor/overlay");
+                                        RootTools.getShell(true).add(command8);
+                                        while (!command8.isFinished()) {
+                                            Thread.sleep(1);
+                                        }
+
+
+                                        // COPY NEW FILES TO /VENDOR/OVERLAY FOLDER
+                                        RootCommands.moveCopyRoot(layersdata + "/", overlaypath);
+
+                                        // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 666
+                                        CommandCapture command9 = new CommandCapture(0, "chmod -R 666 /vendor/overlay");
+                                        RootTools.getShell(true).add(command9);
+                                        while (!command9.isFinished()) {
+                                            Thread.sleep(1);
+                                        }
+
+                                        // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER BACK TO 777
+                                        CommandCapture command10 = new CommandCapture(0, "chmod 777 /vendor/overlay");
+                                        RootTools.getShell(true).add(command10);
+                                        while (!command10.isFinished()) {
+                                            Thread.sleep(1);
+                                            RootTools.remount("/system", "RO");
+                                        }
+
+                                        // CLOSE ALL SHELLS
+                                        RootTools.closeAllShells();
+
+                                    }  catch (RootDeniedException e) {
+                                        e.printStackTrace();
+                                    } catch (TimeoutException e) {
+                                        e.printStackTrace();
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                } catch (RootDeniedException e) {
+                                    e.printStackTrace();
+                                } catch (TimeoutException e) {
+                                    e.printStackTrace();
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            // IF SZP ENDS WITH APK INSTALL APK
+                            if (path.endsWith(isapk)) {
+                                // INSTALL APK'S
+
+                                try {
+
+                                    // MK DIR LAYERSDATA
+                                    CommandCapture command1 = new CommandCapture(0, "mkdir " + layersdata);
+                                    RootTools.getShell(true).add(command1);
+                                    while (!command1.isFinished()) {
+                                        Thread.sleep(1);
+                                    }
+
+                                    RootCommands.moveCopyRoot(path, layersdata + "/");
+                                    // ELSE NOT A .ZIP THEN COPY FILE TO LAYERSDATA
+                                    // CommandCapture command5 = new CommandCapture(0, "cp -f " + path + " " + layersdata + "/");
+                                    // RootTools.getShell(true).add(command5);
+                                    //  while (!command5.isFinished()) {
+                                    //      Thread.sleep(1);
+                                    //  }
+
+                                    // CHANGE PERMISSIONS OF UNZIPPED FOLDER & FILES
+                                    CommandCapture command6 = new CommandCapture(0, "chmod -R 666 " + layersdata + "/");
+                                    RootTools.getShell(true).add(command6);
+                                    while (!command6.isFinished()) {
+                                        Thread.sleep(1);
+                                    }
+                                    // MOUNT /SYSTEM RW
+                                    RootTools.remount("/system", "RW");
+
+                                    // CHANGE PERMISSIONS OF UNZIPPED FOLDER & FILES
+                                    CommandCapture command7 = new CommandCapture(0, "mkdir /vendor/overlay");
+                                    RootTools.getShell(true).add(command7);
+                                    while (!command7.isFinished()) {
+                                        Thread.sleep(1);
+                                    }
+
+                                    // CHANGE PERMISSIONS TO COPY FINAL /VENDOR/OVERLAY FOLDER & FILES TO 777
+                                    CommandCapture command8 = new CommandCapture(0, "chmod -R 777 /vendor/overlay");
+                                    RootTools.getShell(true).add(command8);
+                                    while (!command8.isFinished()) {
+                                        Thread.sleep(1);
+                                    }
+
+                                    // COPY NEW FILES TO /VENDOR/OVERLAY FOLDER
+                                    RootCommands.moveCopyRoot(layersdata + "/", overlaypath);
+
+                                    // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 666 RECURING
+                                    CommandCapture command9 = new CommandCapture(0, "chmod -R 666 /vendor/overlay");
+                                    RootTools.getShell(true).add(command9);
+                                    while (!command9.isFinished()) {
+                                        Thread.sleep(1);
+                                    }
+
+                                    // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER BACK TO 777
+                                    CommandCapture command10 = new CommandCapture(0, "chmod 777 /vendor/overlay");
+                                    RootTools.getShell(true).add(command10);
+                                    while (!command10.isFinished()) {
+                                        Thread.sleep(1);
+                                        RootTools.remount("/system", "RO");
+                                    }
+
+                                    // CLOSE ALL SHELLS
+                                    RootTools.closeAllShells();
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                } catch (RootDeniedException e) {
+                                    e.printStackTrace();
+                                } catch (TimeoutException e) {
+                                    e.printStackTrace();
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+
+                                }
+                            }
+                        }
+                    }
+                }
+                finish();
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void result) {
+
+            progressDelete.dismiss();
+
+
+
+            //show SnackBar after sucessfull installation of the overlays
+
+            /*Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "Restored Overlays", Snackbar.LENGTH_LONG)
+                    .setAction(R.string.Reboot, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //(new Reboot()).execute();
+                        }
+                    })
+                    .show();
+*/
+            finish();
+
+            // LAUNCH LAYERS.CLASS
+            overridePendingTransition(R.anim.back2, R.anim.back1);
+            Intent iIntent = new Intent(Install.this, menu.class);
+            iIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            iIntent.putExtra("ShowSnackbar", true);
+            iIntent.putExtra("SnackbarText","To Install Now");
+            startActivity(iIntent);
+
+        }
     }
 }
