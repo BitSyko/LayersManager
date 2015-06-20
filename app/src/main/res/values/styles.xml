@@ -22,8 +22,8 @@
         <item name="android:homeAsUpIndicator">@drawable/ic_menu</item>
     </style>
 
-    <!-- Main Theme and FilePickerActivity -->
-    <style name="Base.Theme.Toolbar" parent="Theme.AppCompat.Light.NoActionBar">
+    <!-- Theme for menu Activity (transparent Statusbar)-->
+    <style name="Base.Theme.Toolbar.TransparentStatusBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
@@ -31,6 +31,13 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/transparent</item>
+    </style>
+
+    <!-- Main theme -->
+    <style name="Base.Theme.Toolbar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
     </style>
 
 
@@ -43,17 +50,7 @@
     </style>
 
 
-    <!-- Main Activity -->
-    <style name="AppTheme.Toolbar" parent="Theme.AppCompat.Light.NoActionBar">                        <!-- MaterialLight: Theme.AppCompat.Light.NoActionBar | MaterialDark: Theme.AppCompat.NoActionBar -->
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="android:actionOverflowButtonStyle">@style/menuOverflow</item>
-        <item name="android:navigationBarColor">@color/primary</item>
-        <item name="android:textColorPrimary">@color/textColorPrimary</item>
-        <item name="android:textColorSecondary">@color/text_color_secondary</item>
-        <item name="android:windowBackground">@color/background</item>
-    </style>
+
 
     <!-- Main Activity - Overflow Menu -->
     <style name="popupNew" parent="Theme.AppCompat.Light"/>                                      <!-- MaterialLight: Theme.AppCompat.Light | MaterialDark: Theme.AppCompat -->

@@ -25,7 +25,8 @@ xmlns:tools="http://schemas.android.com/tools"
 
         <activity
             android:name=".activities.menu"
-            android:label="Layers Manager" >
+            android:label="Layers Manager"
+            android:theme="@style/Base.Theme.Toolbar.TransparentStatusBar">
             <intent-filter android:label="Layers Manager">
                 <action android:name="android.intent.action.MAIN" />
 
