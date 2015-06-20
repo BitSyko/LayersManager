@@ -24,7 +24,7 @@
         <string name="YES">YES</string>
         <string name="InstallOverlays">Install</string>
         <string name="Reboot">REBOOT</string>
-        <string name="pick_color">Pick a color</string>
+        <string name="pick_color">Pick a Style</string>
 
 
         <!-- description and headline texts -->
@@ -54,7 +54,7 @@
 
     <!-- Main Activity -->
     <string name="WhatsNew0">WHATS NEW</string>
-    <string name="Category2Name">Color Specific Overlays</string>
+    <string name="Category2Name">Style Specific Overlays</string>
     <string name="Category1Name">General Overlays</string>
 
 
