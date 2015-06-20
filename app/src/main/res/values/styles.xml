@@ -58,21 +58,8 @@
         <item name="android:windowBackground">@color/background</item>
     </style>
 
-
-
-
-
     <!-- Main Activity - Overflow Menu -->
     <style name="popupNew" parent="Theme.AppCompat.Light"/>                                      <!-- MaterialLight: Theme.AppCompat.Light | MaterialDark: Theme.AppCompat -->
-
-
-
-
-
-
-
-
-
 
     <!-- About -->
     <style name="Toolbar2" parent="Theme.AppCompat.Light.NoActionBar">                                  <!-- MaterialLight: Theme.Material.Light.DarkActionBar | MaterialDark: Theme.Material -->
@@ -102,8 +89,6 @@
         <item name="android:textColor">@color/textColorPrimary</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
-
-
 
     <style name="WelcomeHeadingAppearance" parent="@android:style/TextAppearance.Large">
         <item name="android:textSize">@dimen/welcome_heading</item>

@@ -69,12 +69,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/background"
-                        android:paddingLeft="@dimen/activity_horizontal_margin"
-                        android:paddingRight="@dimen/activity_horizontal_margin"
+                        android:paddingStart="@dimen/activity_horizontal_margin"
+                        android:paddingEnd="@dimen/activity_horizontal_margin"
                         android:paddingTop="32dp"
-                        android:text="ERROR"
+                        android:text="@string/error"
                         android:id="@+id/HeX1"
-                        android:textSize="20dp"
+                        android:textSize="20sp"
                         android:gravity="center_horizontal"
                         android:textColor="@color/textColorPrimary"
                         />
@@ -91,8 +91,8 @@
                         android:id="@+id/CradViewWhatsNew"
                         android:elegantTextHeight="false"
                         android:elevation="5dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
                         android:layout_marginBottom="8dp"
                         android:paddingBottom="20dp">
 
@@ -109,8 +109,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/WhatsNew0"
                                 android:id="@+id/textView52"
-                                android:layout_gravity="left|top"
-                                android:layout_marginLeft="16dp"
+                                android:layout_gravity="start|top"
+                                android:layout_marginStart="16dp"
                                 android:layout_marginTop="16dp"
                                 android:textStyle="bold"
                                 android:elevation="5dp" />
@@ -120,10 +120,10 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="An Error Occured"
+                                android:text="@string/anerroroccurred"
                                 android:id="@+id/tv_whatsNew"
-                                android:layout_gravity="left|top"
-                                android:layout_marginLeft="16dp"
+                                android:layout_gravity="start|top"
+                                android:layout_marginStart="16dp"
                                 android:textColor="@color/text_color_secondary"
                                 android:elevation="5dp"
                                 android:layout_marginTop="12dp"
@@ -148,7 +148,7 @@
                         android:id="@+id/textView51"
                         android:layout_gravity="center"
                         android:textColor="@color/accent"
-                        android:textSize="16dp"
+                        android:textSize="16sp"
                         android:layout_marginTop="0dp"
                         android:padding="8dp" />
 
@@ -158,7 +158,7 @@
                         android:id="@+id/horizontalScrollView"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="8dp"
-                        android:layout_marginLeft="0dp"
+                        android:layout_marginStart="0dp"
                         android:scrollbars="none"
                         android:layout_marginBottom="8dp">
 
@@ -193,8 +193,8 @@
                         android:id="@+id/CardViewCategory0"
                         android:elegantTextHeight="false"
                         android:elevation="5dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp">
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -203,25 +203,25 @@
                             android:elevation="5dp"
                             android:textColor="@color/accent"
                             android:textStyle="bold"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:layout_marginTop="16dp"
-                            android:textSize="16dp"
-                            android:text="Install everything"/>
+                            android:textSize="16sp"
+                            android:text="@string/installeverything"/>
 
                         <LinearLayout
                             android:orientation="vertical"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
                             android:layout_marginTop="48dp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginRight="16dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
                             android:id="@+id/LinearLayoutCategory0"
                             android:layout_marginBottom="16dp">
 
                            <Switch
                                android:layout_width="match_parent"
                                android:layout_height="wrap_content"
-                               android:text="Select all Overlays"
+                               android:text="@string/selectalloverlays"
                                android:id="@+id/allswitch"/>
                         </LinearLayout>
 
@@ -238,8 +238,8 @@
                         android:id="@+id/CardViewCategory1"
                         android:elegantTextHeight="false"
                         android:elevation="5dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp">
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -248,16 +248,16 @@
                             android:elevation="5dp"
                             android:textColor="@color/accent"
                             android:textStyle="bold"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:layout_marginTop="16dp"
-                            android:textSize="16dp"/>
+                            android:textSize="16sp"/>
 
                         <LinearLayout
                             android:orientation="vertical"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
                             android:layout_marginTop="48dp"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:id="@+id/LinearLayoutCategory1"
                             android:layout_marginBottom="16dp">
                         </LinearLayout>
@@ -277,8 +277,8 @@
                         android:id="@+id/CardViewCategory2"
                         android:elegantTextHeight="false"
                         android:elevation="5dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="16dp">
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -287,16 +287,16 @@
                             android:elevation="5dp"
                             android:textColor="@color/accent"
                             android:textStyle="bold"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:layout_marginTop="16dp"
-                            android:textSize="16dp" />
+                            android:textSize="16sp" />
 
                         <LinearLayout
                             android:orientation="vertical"
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent"
                             android:layout_marginTop="48dp"
-                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
                             android:id="@+id/LinearLayoutCategory2"
                             android:layout_marginBottom="16dp">
                         </LinearLayout>

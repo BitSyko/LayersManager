@@ -27,7 +27,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Layers Manger"
+        android:text="@string/layersmanager"
         style="@style/TextAppearance.AppCompat.Subhead"/>
 
 

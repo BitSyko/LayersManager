@@ -6,6 +6,21 @@
     <string name="action_all">All</string>
     <string name="version">Version 3.8</string>
     <string name="layersmanager">Layers Manager</string>
+    <string name="donotshowagain">Do not show again</string>
+    <string name="niklasschnettler">Niklas Schnettler</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="done">Done</string>
+    <string name="skip">Skip</string>
+    <string name="error">Error</string>
+    <string name="anerroroccurred">An Error Occurred</string>
+    <string name="installeverything">An Error Install everything</string>
+    <string name="selectalloverlays">Select all Overlays</string>
+    <string name="developedby">Developed by</string>
+    <string name="usefullinks">Useful links</string>
+
+
+
 
     <!-- PRODUCT TOUR -->
     <string name="Welcome_01_Heading">Installing Overlays</string>
@@ -57,7 +72,5 @@
         <item quantity="other">Select directories or files</item>
     </plurals>
 
-    <!-- FILEPICKER DIALOG -->
-    <string name="name">Name</string>
 
 </resources>

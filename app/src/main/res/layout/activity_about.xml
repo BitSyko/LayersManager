@@ -32,7 +32,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Layers Manager"
+        android:text="@string/layersmanager"
         android:id="@+id/tv_AppName"
         android:textColor="#ffffff"
         android:layout_below="@+id/imVie_AppLogo"
@@ -54,15 +54,10 @@
 
     <ScrollView
 
-
         android:layout_height="match_parent"
         android:layout_width="fill_parent"
         android:layout_below="@+id/toolbar4"
         android:background="@color/background">
-
-
-
-
 
         <RelativeLayout  android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -77,7 +72,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Developed by"
+                android:text="@string/developedby"
                 android:id="@+id/tv_caption1"
                 android:layout_alignParentStart="true"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
@@ -114,8 +109,8 @@
 
             <View  android:layout_width="fill_parent"
                 android:layout_height="1.0dip"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
+                android:layout_marginStart="0dp"
+                android:layout_marginEnd="0dp"
                 android:layout_centerHorizontal="true"
                 android:background="#B6B6B6"
                 android:layout_marginTop="16dp"
@@ -125,7 +120,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Useful links"
+                android:text="@string/usefullinks"
                 android:id="@+id/tv_caption2"
                 android:layout_alignParentStart="true"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
@@ -142,8 +137,10 @@
                 android:layout_alignParentStart="true"
                 android:elevation="1dp" />
 
-            <View  android:layout_width="fill_parent" android:layout_height="1.0dip" android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
+            <View  android:layout_width="fill_parent"
+                android:layout_height="1.0dip"
+                android:layout_marginStart="0dp"
+                android:layout_marginEnd="0dp"
                 android:layout_centerHorizontal="true"
                 android:background="#B6B6B6"
                 android:layout_marginTop="16dp"
@@ -229,92 +226,8 @@
                     android:padding="8dp"
                     android:nestedScrollingEnabled="false" />
 
-
             </android.support.v7.widget.CardView>
-
 
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>
-
-<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar2"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        android:theme="@style/Base.Theme.Test"
-        />
-
-
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout1"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/background_material_light"
-    android:layout_below="@+id/toolbar2"
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/background_material_light"
-        android:padding="16dp">
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/layersmanager"
-            android:textColor="@color/app_text_primary"
-            android:textSize="35sp"
-            />
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:text="@string/aboutTV3"
-            android:textColor="@color/app_text_secondary"
-            android:textSize="15sp"
-            />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="34dp"
-            android:layout_weight="1"
-            android:text="@string/aboutTV2"
-            android:textSize="24sp"
-            android:textColor="@color/app_text_secondary"
-            />
-
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:layout_weight="1"
-            android:text="@string/version"
-            android:textSize="24sp"
-            android:textColor="@color/app_text_secondary"
-            />
-
-    </LinearLayout>
-</ScrollView>
-</RelativeLayout> -->
