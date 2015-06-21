@@ -25,19 +25,25 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckedTextView;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lovejoy777.rroandlayersmanager.R;
+import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
+import com.stericson.RootTools.RootTools;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -83,9 +89,12 @@ public abstract class AbstractFilePickerFragment<T> extends ListFragment
     private BindableArrayAdapter<T> adapter;
     private TextView currentDirView;
 
+    private Switch mySwitch1 = null;
     private static SharedPreferences prefs;
 
 
+    private FloatingActionButton  fab1 = null;
+    private FloatingActionButton  fab2 = null;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -120,7 +129,12 @@ public abstract class AbstractFilePickerFragment<T> extends ListFragment
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_filepicker, null);
 
-
+        fab1 = (android.support.design.widget.FloatingActionButton) view.findViewById(R.id.fab4a);
+        fab1.setVisibility(View.INVISIBLE);
+        fab2 = (android.support.design.widget.FloatingActionButton) view.findViewById(R.id.fab4);
+        fab2.setVisibility(View.INVISIBLE);
+        mySwitch1 = (Switch) view.findViewById(R.id.switch1);
+        mySwitch1.setVisibility(View.INVISIBLE);
 
 
 
@@ -128,19 +142,51 @@ public abstract class AbstractFilePickerFragment<T> extends ListFragment
 
         lv.setOnItemLongClickListener(this);
 
-        /*view.findViewById(R.id.button_cancel)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(final View v) {
-                        if (listener != null) {
-                            listener.onCancelled();
-                        }
-                    }
-                }); */
 
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab4);
-        //view.findViewById(R.id.button_ok)
-                fab.setOnClickListener(new View.OnClickListener() {
+
+        if (getFullPath(currentPath).contains("/vendor/overlay")) {
+
+            mySwitch1.setVisibility(View.VISIBLE);
+
+        }
+
+        //set the switch to ON
+        mySwitch1.setChecked(false);
+        //attach a listener to check for changes in state
+        mySwitch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+
+                if(isChecked){
+
+                    fab2.setVisibility(View.VISIBLE);
+                    //view.findViewById(R.id.button_ok)
+                    fab2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View v) {
+                            if (listener == null) {
+                                return;
+                            }
+
+                           deleteallcommand();
+
+                            return;
+                        }
+
+                    });
+
+                }else{
+
+                    fab2.setVisibility(View.INVISIBLE);
+                }
+
+            }
+        });
+
+
+                fab1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
                         if (listener == null) {
@@ -169,8 +215,6 @@ public abstract class AbstractFilePickerFragment<T> extends ListFragment
                     }
                 });
 
-
-
         view.findViewById(R.id.up)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -180,23 +224,6 @@ public abstract class AbstractFilePickerFragment<T> extends ListFragment
                         refresh();
                     }
                 });
-
-
-
-
-     //   final View createDirView = view.findViewById(R.id.button_create_dir);
-     //   Only show the create dir button if configured to
-     //   createDirView.setVisibility((allowCreateDir && (mode == MODE_DIR)) ?
-     //                           View.VISIBLE :
-     //                           View.INVISIBLE);
-     //   createDirView.setEnabled((allowCreateDir && (mode == MODE_DIR)));
-     //   createDirView.setOnClickListener(new View.OnClickListener() {
-     //     @Override
-     //     public void onClick(final View v) {
-     //     NewFolderFragment.showDialog(getFragmentManager(),
-     //               AbstractFilePickerFragment.this);
-     //      }
-     //  });
 
         currentDirView = (TextView) view.findViewById(R.id.current_dir);
         // Restore state
@@ -263,6 +290,7 @@ public abstract class AbstractFilePickerFragment<T> extends ListFragment
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
         currentPath = (T) getListAdapter().getItem(position);
+        fab1.setVisibility(View.VISIBLE);
         if (isDir(currentPath)) {
             refresh();
         } else if (isCheckable(currentPath)) {
@@ -296,6 +324,7 @@ public abstract class AbstractFilePickerFragment<T> extends ListFragment
             checkedItems.clear();
         }
         checkedItems.put(position, !oldVal);
+
         // Redraw the items
         getListView().invalidateViews();
     }
@@ -343,8 +372,6 @@ public abstract class AbstractFilePickerFragment<T> extends ListFragment
 
         setHasOptionsMenu(true);
     }
-
-
 
     @Override
     public void onSaveInstanceState(Bundle b) {
@@ -459,18 +486,6 @@ public abstract class AbstractFilePickerFragment<T> extends ListFragment
         } else{
             currentDirView.setText(getFullPath(currentPath).toUpperCase());
         }
-
-        /*File f = new File(getFullPath(currentPath));
-        File[] files=f.listFiles();
-        int numberOfFiles = 0;
-        for(int i=0; i<files.length; i++) {
-            File file = files[i];
-            String filePath = file.getPath();
-            if (filePath.endsWith(".apk")|| filePath.endsWith(".zip"))
-                numberOfFiles = numberOfFiles + 1;
-        }
-
-        System.out.println(numberOfFiles); */
     }
 
     /**
@@ -615,4 +630,23 @@ public abstract class AbstractFilePickerFragment<T> extends ListFragment
             return containsKey(k) ? super.get(k) : defaultValue;
         }
     }
+
+    // DELETE ALL COMMAND
+    public void deleteallcommand() {
+
+        String delall = "/vendor/overlay";
+
+        try {
+
+            RootTools.remount("/system", "RW");
+            RootCommands.DeleteFileRoot(delall);
+            // CLOSE ALL SHELLS
+            RootTools.closeAllShells();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }

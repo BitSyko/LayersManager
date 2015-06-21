@@ -45,10 +45,24 @@
         android:paddingEnd="48dp"
         android:gravity="center_vertical" />
 
+    <Switch
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:elevation="4dp"
+        android:background="@color/primary"
+        android:text="@string/deleteall"
+        android:id="@+id/switch1"
+        android:textColor="@color/white"
+        android:layout_below="@+id/current_dir"
+        android:layout_alignParentEnd="true"
+        android:paddingStart="240dp"
+        android:paddingEnd="3dp"
+        android:gravity="center_vertical" />
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/current_dir"
+        android:layout_below="@+id/switch1"
         android:id="@android:id/list"
         tools:listitem="@layout/filepicker_listitem_dir" />
 
@@ -65,6 +79,19 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"/>
 
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:scaleType="center"
+        android:src="@drawable/ic_action_check"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:id="@+id/fab4a"
+        app:borderWidth="0dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"/>
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -76,5 +103,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp" />
+
+
 
 </RelativeLayout>
