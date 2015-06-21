@@ -14,12 +14,14 @@ public class CustomListAdapter extends ArrayAdapter<String>{
     private final Activity context;
     private final String[] web;
     private final Integer[] imageId;
+    private final String[] subtext;
     public CustomListAdapter(Activity context,
-                             String[] web, Integer[] imageId) {
+                             String[] web, String[] subtext, Integer[] imageId) {
         super(context, R.layout.adapter_listview_about, web);
         this.context = context;
         this.web = web;
         this.imageId = imageId;
+        this.subtext = subtext;
     }
 
     @Override
@@ -28,7 +30,9 @@ public class CustomListAdapter extends ArrayAdapter<String>{
         View rowView= inflater.inflate(R.layout.adapter_listview_about, null, true);
         TextView txtTitle = (TextView) rowView.findViewById(R.id.txt);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
+        TextView txtSub = (TextView) rowView.findViewById(R.id.descripcion);
         txtTitle.setText(web[position]);
+        txtSub.setText((subtext[position]));
         imageView.setImageResource(imageId[position]);
         return rowView;
     }

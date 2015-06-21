@@ -22,19 +22,28 @@ import com.lovejoy777.rroandlayersmanager.adapters.CustomListAdapter;
  */
 public class AboutActivity extends AppCompatActivity {
 
-    ListView list1, list2, list3, list4;
+    ListView list1, list2, list3, list4, list5,list6,list7;
     ImageButton moreButton1, moreButton2;
 
-    Integer[] listImage2 = {
+    Integer[] developerImage1 = {
+            R.drawable.about_syko,
+    };
+    Integer[] developerImage2 = {
+            R.drawable.about_brian,
+    };
+    Integer[] developerImage3 = {
+            R.drawable.about_aldrin,
+    };
+    Integer[] developerImage4 = {
             R.drawable.about_steve,
     };
-    Integer[] listImage3 = {
+    Integer[] developerImage5 = {
             R.drawable.about_niklas,
     };
-    Integer[] listImage1 = {
+    Integer[] linkImage1 = {
             R.drawable.about_bitsyko,
     };
-    Integer[] listImage4 = {
+    Integer[] linkImage2 = {
             R.drawable.about_xda,
     };
 
@@ -47,61 +56,123 @@ public class AboutActivity extends AppCompatActivity {
                 "Bitsyko Development Team"
         };
 
-        String[] ListContent2 = {
+        String[] Developer1 = {
+                "Syko Pompos"
+        } ;
+        String[] Developer2 = {
+                "Brian Gill"
+        } ;
+        String[] Developer3 = {
+                "Aldrin Holmes"
+        } ;
+        String[] Developer4 = {
                 "Steve Lovejoy"
         } ;
-        String[] ListContent3 = {
+        String[] Developer5 = {
                 "Niklas Schnettler"
         } ;
-        String[] ListContent4 = {
+        String[] Link1 = {
+                "Layers on Google Plus"
+        } ;
+        String[] Link2 = {
                 "Layers on XDA"
         } ;
+        String[] LeadDeveloper = {
+                "Layers Lead Developer"
+        };
+        String[] Developer = {
+                "Layers Developer"
+        };
+        String[] AppDeveloper = {
+                "App Developer"
+        };
+        String[] Nothing = {
+                ""
+        };
 
         //set Toolbar
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar4);
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
         setSupportActionBar(toolbar);
 
-        //List 1
-        CustomListAdapter adapter3 = new CustomListAdapter(AboutActivity.this, ListContent1, listImage1);
-        list1=(ListView)findViewById(R.id.listView_ThemeDeveloper);
-        list1.setAdapter(adapter3);
+        //Developer1
+        CustomListAdapter adapter = new CustomListAdapter(AboutActivity.this, Developer1,LeadDeveloper, developerImage1);
+        list1=(ListView)findViewById(R.id.listView_Developer1);
+        list1.setAdapter(adapter);
         list1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/u/0/communities/102261717366580091389")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/u/0/+SykoPompos/posts")));
             }
         });
 
-        //List 2
-        CustomListAdapter adapter = new CustomListAdapter(AboutActivity.this, ListContent2, listImage2);
-        list2=(ListView)findViewById(R.id.listView_AppDeveloper);
-        list2.setAdapter(adapter);
+        //Developer2
+        CustomListAdapter adapter2 = new
+                CustomListAdapter(AboutActivity.this, Developer2, Developer,developerImage2);
+        list2=(ListView)findViewById(R.id.listView_Developer2);
+        list2.setAdapter(adapter2);
         list2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/u/0/+BrianGill55/posts")));
+            }
+        });
+
+
+        //Developer3
+        CustomListAdapter adapter3 = new
+                CustomListAdapter(AboutActivity.this, Developer3,Developer, developerImage3);
+        list3=(ListView)findViewById(R.id.listView_Developer3);
+        list3.setAdapter(adapter3);
+        list3.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/u/0/+AldrinHolmes20/posts")));
+            }
+        });
+
+        //4
+        CustomListAdapter adapter4 = new
+                CustomListAdapter(AboutActivity.this, Developer4,AppDeveloper, developerImage4);
+        list4=(ListView)findViewById(R.id.listView_Developer4);
+        list4.setAdapter(adapter4);
+        list4.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/u/0/+SteveLovejoy/posts")));
             }
         });
 
-        //List3
-        CustomListAdapter adapter2 = new
-                CustomListAdapter(AboutActivity.this, ListContent3, listImage3);
-        list3=(ListView)findViewById(R.id.listView_ThanksTo1);
-        list3.setAdapter(adapter2);
-        list3.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //Developer5
+        CustomListAdapter adapter5 = new
+                CustomListAdapter(AboutActivity.this, Developer5,AppDeveloper, developerImage5);
+        list5=(ListView)findViewById(R.id.listView_Developer5);
+        list5.setAdapter(adapter5);
+        list5.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/u/0/+NiklasSchnettler/posts")));
             }
         });
 
-        //List4
-        CustomListAdapter adapter4 = new
-                CustomListAdapter(AboutActivity.this, ListContent4, listImage4);
-        list4=(ListView)findViewById(R.id.listView_ThanksTo2);
-        list4.setAdapter(adapter4);
-        list4.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //Link1
+        CustomListAdapter adapter6 = new
+                CustomListAdapter(AboutActivity.this, Link1,Nothing, linkImage1);
+        list6=(ListView)findViewById(R.id.listView_link1);
+        list6.setAdapter(adapter6);
+        list6.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/u/0/communities/102261717366580091389")));
+            }
+        });
+
+        //Link1
+        CustomListAdapter adapter7 = new
+                CustomListAdapter(AboutActivity.this, Link2,Nothing, linkImage2);
+        list7=(ListView)findViewById(R.id.listView_link2);
+        list7.setAdapter(adapter7);
+        list7.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://forum.xda-developers.com/android/apps-games/official-layers-bitsyko-apps-rro-t3012172")));
