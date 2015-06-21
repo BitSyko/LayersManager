@@ -116,7 +116,7 @@ xmlns:tools="http://schemas.android.com/tools"
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.ProductTour2Activity"
+        <activity android:name=".activities.Intro"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
     </application>

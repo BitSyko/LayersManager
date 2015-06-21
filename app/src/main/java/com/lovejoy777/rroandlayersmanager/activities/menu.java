@@ -95,7 +95,7 @@ public class menu extends AppCompatActivity
 
         if (counter < 1){
 
-            Intent intent = new Intent(menu.this, ProductTour2Activity.class);
+            Intent intent = new Intent(menu.this,Intro.class);
             startActivity(intent);
 
         }
