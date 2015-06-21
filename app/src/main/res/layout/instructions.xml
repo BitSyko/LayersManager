@@ -29,7 +29,7 @@
         android:layout_marginStart="56dp"
         android:textSize="18sp"
         android:elevation="4dp"
-        android:textColor="#ffffff"
+        android:textColor="@color/actionbar_text_color"
         android:layout_below="@+id/toolbar5"
         android:layout_alignParentEnd="false"
         android:layout_marginTop="16dp"
