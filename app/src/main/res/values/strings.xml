@@ -1,17 +1,12 @@
 <resources>
 
     <!-- MAIN LAYERS MANAGER -->
-    <string name="app_name">rroandlayersmanager1</string>
-    <string name="slogan">\"Your Style Your Choice\"</string>
-    <string name="action_all">All</string>
     <string name="version">Version 3.8</string>
     <string name="layersmanager">Layers Manager</string>
     <string name="donotshowagain">Do not show again</string>
     <string name="niklasschnettler">Niklas Schnettler</string>
     <string name="name">Name</string>
     <string name="surname">Surname</string>
-    <string name="done">Done</string>
-    <string name="skip">Skip</string>
     <string name="error">Error</string>
     <string name="anerroroccurred">An Error Occurred</string>
     <string name="installeverything">Install everything</string>
@@ -49,15 +44,16 @@
     <string name="instructionscard5">From the nav-drawer select "Restore overlays"\nClick the FAB to Restore the selected backup file</string>
 
     <!-- FILEPICKER -->
-    <string name="delete">OK</string>
-    <string name="backup">Cancel</string>
-    <string name="backup1">Backup</string>
-    <string name="back">Back</string>
-    <color name="action_select">#6d6d6d</color>
     <string name="new_folder">New folder</string>
     <string name="create_folder_error">Failed to create folder</string>
-    <string name="go_back">Go back</string>
     <string name="select_something_first">Nothing Selected</string>
+    <string name="InstallOverlays2">Install Overlays</string>
+    <string name="UninstallOverlays">Uninstall Overlays</string>
+    <string name="BackupOverlays">Backup Overlays</string>
+    <string name="RestoreOverlays">Restore Backups</string>
+    <string name="More">More</string>
+    <string name="Tutorial">Tutorial</string>
+    <string name="About">About</string>
 
     <plurals
         name="select_dir">

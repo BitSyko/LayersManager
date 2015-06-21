@@ -19,11 +19,7 @@ public class RootCommandsInstallationHelper {
         CommandCapture command = new CommandCapture(0, sSUCommand);
         try {
             RootTools.getShell(true).add(command);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-        } catch (RootDeniedException e) {
+        } catch (IOException | TimeoutException | RootDeniedException e) {
             e.printStackTrace();
         }
         while (!command.isFinished()){
@@ -33,11 +29,7 @@ public class RootCommandsInstallationHelper {
         CommandCapture command2 = new CommandCapture(0, sSuCommand2);
         try {
             RootTools.getShell(true).add(command2);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-        } catch (RootDeniedException e) {
+        } catch (IOException | TimeoutException | RootDeniedException e) {
             e.printStackTrace();
         }
         while (!command.isFinished()){

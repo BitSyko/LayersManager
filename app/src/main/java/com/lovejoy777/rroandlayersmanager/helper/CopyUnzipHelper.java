@@ -22,11 +22,6 @@ import java.util.zip.ZipInputStream;
 public class CopyUnzipHelper {
     Context mContext;
     private final static int BUFFER_SIZE = 1024;
-    //final String ThemeName = MainActivity.ThemeName;
-    private String destinationGeneral = null;
-    private String destinationColor = null;
-
-
 
 
     //copy files to sd card
@@ -44,23 +39,18 @@ public class CopyUnzipHelper {
             InputStream in;
             OutputStream out;
 
-            for (int i=0; i < files.length; i++) {
+            for (String file : files) {
 
-                if (files[i].toString().equalsIgnoreCase("images")
-                        || files[i].toString().equalsIgnoreCase("js")) {
+                if (file.toString().equalsIgnoreCase("images")
+                        || file.toString().equalsIgnoreCase("js")) {
                     //nothing
                 } else {
-                    in= assetFiles.open("Files/" + files[i]);
-                    out = new FileOutputStream(Environment.getExternalStorageDirectory()+"/Overlays/"+ThemeName+"/"+files[i]);
+                    in = assetFiles.open("Files/" + file);
+                    out = new FileOutputStream(Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeName + "/" + file);
                     copyAssetFiles(in, out);
                 }
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-
-        }catch (NullPointerException e) {
-            e.printStackTrace();
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -82,10 +72,6 @@ public class CopyUnzipHelper {
             out.flush();
             out.close();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -100,8 +86,8 @@ public class CopyUnzipHelper {
 
         System.out.println("NumberSelected "+NumberOfSelectedNormalOverlays);
         String filePath;
-        destinationGeneral = Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeName+"/General/";
-        destinationColor = Environment.getExternalStorageDirectory() + "/Overlays/"+ThemeName+"/";
+        String destinationGeneral = Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeName + "/General/";
+        String destinationColor = Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeName + "/";
 
         if (NumberOfSelectedNormalOverlays > 0 /*|| NumberOfSelectedAdditionalOverlays > 0*/) {
 
@@ -116,10 +102,10 @@ public class CopyUnzipHelper {
                 while ((zEntry = zipStream.getNextEntry()) != null) {
 
                     FileOutputStream fout = new FileOutputStream(
-                            this.destinationGeneral + "/" + zEntry.getName());
+                            destinationGeneral + "/" + zEntry.getName());
                     BufferedOutputStream bufout = new BufferedOutputStream(fout);
                     byte[] buffer = new byte[1024];
-                    int read = 0;
+                    int read;
                     while ((read = zipStream.read(buffer)) != -1) {
                         bufout.write(buffer, 0, read);
                     }
@@ -141,20 +127,20 @@ public class CopyUnzipHelper {
             File ColorDirectory = new File(Environment.getExternalStorageDirectory() +"/Overlays/"+ThemeName+"/" + whichColor);
             ColorDirectory.mkdirs();
 
-            destinationColor = destinationColor   + whichColor;
+            destinationColor = destinationColor + whichColor;
 
             filePath = Environment.getExternalStorageDirectory() + "/Overlays/"+ThemeName+"/"+ThemeName+"_" +whichColor + ".zip";
             try {
                 FileInputStream inputStream = new FileInputStream(filePath);
                 ZipInputStream zipStream = new ZipInputStream(inputStream);
-                ZipEntry zEntry = null;
+                ZipEntry zEntry;
                 while ((zEntry = zipStream.getNextEntry()) != null) {
 
                     FileOutputStream fout = new FileOutputStream(
-                            this.destinationColor + "/" + zEntry.getName());
+                            destinationColor + "/" + zEntry.getName());
                     BufferedOutputStream bufout = new BufferedOutputStream(fout);
                     byte[] buffer = new byte[1024];
-                    int read = 0;
+                    int read;
                     while ((read = zipStream.read(buffer)) != -1) {
                         bufout.write(buffer, 0, read);
                     }

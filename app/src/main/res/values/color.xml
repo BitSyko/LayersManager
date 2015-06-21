@@ -25,7 +25,6 @@
     <color name="background">#ffffffff</color>
     <color name="card_background">#fffafafa</color>
     <color name="button_background">@color/card_background</color>
-    <color name="floating_background">@color/card_background</color>
     <color name="tutorial_background_1">#ff00BCD4</color>
     <color name="tutorial_background_2">#ff4CAF50</color>
     <color name="tutorial_background_3">#ff5C6BC0</color>

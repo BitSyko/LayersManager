@@ -86,8 +86,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
     final String TargetPath = "/system/vendor/overlay/";
 
 
-    private String AppPath =null;
-
     final ImageView ScreenshotimageView[] = new ImageView[NumberOfScreenshotsMain];
 
     public CheckBox dontShowAgain;
@@ -103,8 +101,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
     private String ThemeFolderGeneral = null;
     private int NumberOfColors = 0;
 
-    //Observable Scroll View variables | DON´T Change/////////////////////////
-    private View mFab;
     private View mFab2;
 
     private String category;
@@ -159,7 +155,10 @@ public class OverlayDetailActivity extends AppCompatActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        Bundle bundle = ai.metaData;
+        Bundle bundle = null;
+        if (ai != null) {
+            bundle = ai.metaData;
+        }
         ThemeName = bundle.getString("Layers_Name");
         Description = bundle.getString("Layers_Description");
         OverlayNameString = bundle.getString("Layers_OverlayNames");
@@ -167,11 +166,17 @@ public class OverlayDetailActivity extends AppCompatActivity {
         WhatsNew = bundle.getString("Layers_WhatsNew");
 
         //Use the received data
-        ThemeFolder = "/sdcard/Overlays/"+ThemeName.replaceAll(" ", "")+"/";
+        ThemeFolder = Environment.getExternalStorageDirectory()+"/Overlays/"+ThemeName.replaceAll(" ", "")+"/";
         ThemeFolderGeneral = ThemeFolder+"General/";
 
-        List<String> OverlayNameList = new ArrayList<String>(Arrays.asList(OverlayNameString.split(",")));
-        List<String> OverlayColorList = new ArrayList<String>(Arrays.asList(OverlayColorString.split(",")));
+        List<String> OverlayNameList = null;
+        if (OverlayNameString != null) {
+            OverlayNameList = new ArrayList<>(Arrays.asList(OverlayNameString.split(",")));
+        }
+        List<String> OverlayColorList = null;
+        if (OverlayColorString != null) {
+            OverlayColorList = new ArrayList<>(Arrays.asList(OverlayColorString.split(",")));
+        }
 
         NumberOfOverlays = OverlayNameList.indexOf(" ");
         NumberOfColorOverlays = OverlayNameList.size() - OverlayNameList.indexOf(" ")-1;
@@ -198,12 +203,12 @@ public class OverlayDetailActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mFab = findViewById(R.id.fab);
+        View mFab = findViewById(id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                        installTheme();
-                    }
+                installTheme();
+            }
 
 
         });
@@ -275,7 +280,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
         for (int i = 0; i < NumberOfOverlays; i++)
         {
             TableRow row =new TableRow(this);
-            row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+            row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
 
             final CheckBox[] check = new CheckBox[NumberOfOverlays];
             check[i]= new CheckBox(this);
@@ -291,14 +296,14 @@ public class OverlayDetailActivity extends AppCompatActivity {
                     for (int c=0; c<NumberOfOverlays; c++) {
                         if (buttonView.getTag().equals(c)) {
                             if (buttonView.isChecked()){
-                                InstallOverlayList.set(c, Integer.valueOf(1));
+                                InstallOverlayList.set(c, 1);
 
                                     atleastOneIsClicked = atleastOneIsClicked + 1;
 
                             }
                             else {
 
-                                InstallOverlayList.set(c, Integer.valueOf(0));
+                                InstallOverlayList.set(c, 0);
                                 //InstallOverlay[c] = 0;
                                 atleastOneIsClicked = atleastOneIsClicked -1;
                             }
@@ -326,7 +331,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
         {
             TableRow row =new TableRow(this);
 
-            row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+            row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
             final CheckBox[] check = new CheckBox[NumberOfColorOverlays+NumberOfOverlays+1];
             check[i]= new CheckBox(this);
             check[i].setText(OverlayNameList.get(i));
@@ -343,13 +348,13 @@ public class OverlayDetailActivity extends AppCompatActivity {
                         if (buttonView.getTag().equals(c)) {
 
                             if (buttonView.isChecked()) {
-                                    InstallOverlayList.set(c, Integer.valueOf(1));
+                                    InstallOverlayList.set(c, 1);
 
                                     atleastOneIsClicked = atleastOneIsClicked + 1;
 
                             } else {
                                 atleastOneIsClicked = atleastOneIsClicked - 1;
-                                InstallOverlayList.set(c, Integer.valueOf(0));
+                                InstallOverlayList.set(c, 0);
                             }
                             if (atleastOneIsClicked> 0) {
 
@@ -387,7 +392,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
         });
 
         //create the Theme folder
-        File ThemeDirectory = new File("/sdcard/Overlays/"+ThemeName.replaceAll(" ", "")+"/");
+        File ThemeDirectory = new File(Environment.getExternalStorageDirectory()+"/Overlays/"+ThemeName.replaceAll(" ", "")+"/");
         ThemeDirectory.mkdirs();
 
         fab2.setOnClickListener((new View.OnClickListener(){
@@ -414,7 +419,10 @@ public class OverlayDetailActivity extends AppCompatActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        int mDrawableResID = mApk1Resources.getIdentifier(mDrawableName, "drawable",packName);
+        int mDrawableResID = 0;
+        if (mApk1Resources != null) {
+            mDrawableResID = mApk1Resources.getIdentifier(mDrawableName, "drawable",packName);
+        }
         Drawable myDrawable = mApk1Resources.getDrawable( mDrawableResID );
         ImageView imageView = (ImageView) findViewById(R.id.backdrop);
         if( myDrawable != null ) {
@@ -462,7 +470,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
     class OpServiceConnection implements ServiceConnection {
         public void onServiceConnected(ComponentName className,
                                        IBinder boundService) {
-            opService = IOperation.Stub.asInterface((IBinder) boundService);
+            opService = IOperation.Stub.asInterface(boundService);
             Log.d(LOG_TAG, "onServiceConnected");
             loadBackdrop();
 
@@ -518,12 +526,13 @@ public class OverlayDetailActivity extends AppCompatActivity {
         String sSuCommand2;
 
         //install Normal Overlays
+        String appPath = null;
         for (int i=0; i <NumberOfOverlays; i++){
             if (InstallOverlayList.get(i) == 1) {
-                AppPath = OverlayPathList.get(i);
+                appPath = OverlayPathList.get(i);
                 InstallOverlayList.set(i,0);
-                sSUCommand = "cp " + ThemeFolderGeneral + AppPath + " " + TargetPath;
-                sSuCommand2 = "chmod 666 " + TargetPath + AppPath;
+                sSUCommand = "cp " + ThemeFolderGeneral + appPath + " " + TargetPath;
+                sSuCommand2 = "chmod 666 " + TargetPath + appPath;
                 installAPK(sSUCommand, sSuCommand2);
             }
         }
@@ -533,10 +542,10 @@ public class OverlayDetailActivity extends AppCompatActivity {
         for (int i4=NumberOfOverlays+1; i4 <NumberOfOverlays+NumberOfColorOverlays+1; i4++){
 
             if (InstallOverlayList.get(i4) == 1) {
-                AppPath = OverlayPathList.get(i4);
+                appPath = OverlayPathList.get(i4);
                 InstallOverlayList.set(i4,0);
-                sSUCommand = "cp " + ThemeFolder + whichColor + "/"+ AppPath + " " +  TargetPath;
-                sSuCommand2 = "chmod 666 " + TargetPath +AppPath;
+                sSUCommand = "cp " + ThemeFolder + whichColor + "/"+ appPath + " " +  TargetPath;
+                sSuCommand2 = "chmod 666 " + TargetPath + appPath;
                 installAPK(sSUCommand, sSuCommand2);
             }
         }
@@ -561,7 +570,10 @@ public class OverlayDetailActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        AssetManager am = otherContext.getAssets();
+        AssetManager am = null;
+        if (otherContext != null) {
+            am = otherContext.getAssets();
+        }
         System.out.println(am);
 
         String ThemeNameNoSpace = ThemeName.replaceAll(" ","");
@@ -574,7 +586,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
 
         String destinationGeneral = Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeNameNoSpace + "/General/";
         String destinationColor = Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeNameNoSpace + "/";
-        File ThemeDirectory = new File("/sdcard/Overlays/"+ThemeNameNoSpace+"/");
+        File ThemeDirectory = new File(Environment.getExternalStorageDirectory()+"/Overlays/"+ThemeNameNoSpace+"/");
         ThemeDirectory.mkdirs();
         CopyFolderToSDCard(OverlayDetailActivity.this, ThemeNameNoSpace,am);
     }
@@ -596,24 +608,19 @@ public class OverlayDetailActivity extends AppCompatActivity {
             InputStream in;
             OutputStream out;
 
-            for (int i=0; i < files.length; i++) {
+            for (String file : files) {
 
-                if (files[i].toString().equalsIgnoreCase("images")
-                        || files[i].toString().equalsIgnoreCase("js")) {
+                if (file.toString().equalsIgnoreCase("images")
+                        || file.toString().equalsIgnoreCase("js")) {
                     //nothing
                 } else {
-                    in= assetFiles.open("Files/" + files[i]);
-                    System.out.println(files[i]);
-                    out = new FileOutputStream(Environment.getExternalStorageDirectory()+"/Overlays/"+ThemeNameNoSpace+"/"+files[i]);
+                    in = assetFiles.open("Files/" + file);
+                    System.out.println(file);
+                    out = new FileOutputStream(Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeNameNoSpace + "/" + file);
                     copyAssetFiles(in, out);
                 }
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-
-        }catch (NullPointerException e) {
-            e.printStackTrace();
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -632,10 +639,6 @@ public class OverlayDetailActivity extends AppCompatActivity {
             out.flush();
             out.close();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -794,7 +797,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
 
                 if (dontShowAgain.isChecked()) {
-                    SharedPreferences myprefs = getSharedPreferences("myPrefs", MODE_WORLD_READABLE);
+                    SharedPreferences myprefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
                     SharedPreferences.Editor editor = myprefs.edit();
                     editor.putString("ConfirmInstallationDialog", "checked");
                     editor.commit();
@@ -811,7 +814,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
             }
         });
 
-        SharedPreferences myprefs = getSharedPreferences("myPrefs", MODE_WORLD_READABLE);
+        SharedPreferences myprefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
         String skipMessage = myprefs.getString("ConfirmInstallationDialog", "unchecked");
         if (!skipMessage.equals("checked")) {
             installdialog.show();
@@ -841,7 +844,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
             params.leftMargin= 66;
             params.topMargin= 2;
             params.bottomMargin= 2;
-            params.width= RadioGroup.LayoutParams.FILL_PARENT;
+            params.width= RadioGroup.LayoutParams.MATCH_PARENT;
 
             int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 44, getResources().getDisplayMetrics());
             params.height=height;
@@ -874,7 +877,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 int whichRadioButton = 0;
-                SharedPreferences myPrefs = OverlayDetailActivity.this.getSharedPreferences("myPrefs", MODE_WORLD_READABLE);
+                SharedPreferences myPrefs = OverlayDetailActivity.this.getSharedPreferences("myPrefs", MODE_PRIVATE);
                 for (int e = 0; e < NumberOfColors; e++){
                     if (whichColor.equals(OverlayColorListPublic.get(e))){
                         whichRadioButton = e;
@@ -923,17 +926,13 @@ public class OverlayDetailActivity extends AppCompatActivity {
             RootTools.remount("/system/", "RW");
 
             //initialize last part of root Commands
-            String SuperuserCommandOverlayFolderPermission = (String) "chmod 777 /vendor/overlay";
+            String SuperuserCommandOverlayFolderPermission = "chmod 777 /vendor/overlay";
             String SuperuserCommandCreateOverlayFolder = "mkdir /vendor/overlay";
 
             CommandCapture command4 = new CommandCapture(0, SuperuserCommandCreateOverlayFolder);
             try {
                 RootTools.getShell(true).add(command4);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (TimeoutException e) {
-                e.printStackTrace();
-            } catch (RootDeniedException e) {
+            } catch (IOException | TimeoutException | RootDeniedException e) {
                 e.printStackTrace();
             }
             while (!command4.isFinished()){
@@ -957,11 +956,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
             CommandCapture command3 = new CommandCapture(0, SuperuserCommandOverlayFolderPermission);
             try {
                 RootTools.getShell(true).add(command3);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (TimeoutException e) {
-                e.printStackTrace();
-            } catch (RootDeniedException e) {
+            } catch (IOException | TimeoutException | RootDeniedException e) {
                 e.printStackTrace();
             }
             while (!command3.isFinished()){
@@ -1020,7 +1015,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
                                 .exec(new String[]{"su", "-c", "busybox killall system_server"});
                     } catch (IOException e) {
                         e.printStackTrace();
-                    };
+                    }
                     dialog.dismiss();
                 }
             });
@@ -1059,7 +1054,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
                         .exec(new String[]{"su", "-c", "busybox killall system_server"});
             } catch (IOException e) {
                 e.printStackTrace();
-            };
+            }
         }
     }
 
@@ -1087,8 +1082,14 @@ public class OverlayDetailActivity extends AppCompatActivity {
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
-                int mDrawableResID = mApk1Resources.getIdentifier(mDrawableName, "drawable", packName);
-                Drawable myDrawable = mApk1Resources.getDrawable(mDrawableResID);
+                int mDrawableResID = 0;
+                if (mApk1Resources != null) {
+                    mDrawableResID = mApk1Resources.getIdentifier(mDrawableName, "drawable", packName);
+                }
+                Drawable myDrawable = null;
+                if (mApk1Resources != null) {
+                    myDrawable = mApk1Resources.getDrawable(mDrawableResID);
+                }
                 Screenshots[i] = myDrawable;
                 bitmap[i] = ((BitmapDrawable) Screenshots[i]).getBitmap();
 

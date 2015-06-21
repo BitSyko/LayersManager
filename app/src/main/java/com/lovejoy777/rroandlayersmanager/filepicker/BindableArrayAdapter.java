@@ -181,10 +181,10 @@ public class BindableArrayAdapter<T> extends ArrayAdapter<T> {
          * @param parent
          * @return
          */
-        public View inflateView(final int position,
-                                final int resource,
-                                final LayoutInflater inflater,
-                                final ViewGroup parent);
+        View inflateView(final int position,
+                         final int resource,
+                         final LayoutInflater inflater,
+                         final ViewGroup parent);
 
         /**
          * Used to determine the view's type. Returning false will use same
@@ -193,7 +193,7 @@ public class BindableArrayAdapter<T> extends ArrayAdapter<T> {
          * @param data
          * @return
          */
-        public boolean isDir(final int position, final T data);
+        boolean isDir(final int position, final T data);
 
         /**
          * Fill the content in the row
@@ -201,7 +201,7 @@ public class BindableArrayAdapter<T> extends ArrayAdapter<T> {
          * @param position
          * @param data
          */
-        public void setViewValue(final View view, final int position, final T
+        void setViewValue(final View view, final int position, final T
                 data);
     }
 }

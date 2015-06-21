@@ -2,19 +2,4 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="tool_bar_top_padding">0dp</dimen>
-    <dimen name="title_text_size">35sp</dimen>
-    <dimen name="setSubHead">40sp</dimen>
-    <dimen name="card_primary_text">20sp</dimen>
-
-
-    <!--Welcome sliding page  -->
-    <dimen name="welcome_images_size">360.0dip</dimen>
-    <dimen name="welcome_images_margin_top">0.0dip</dimen>
-    <dimen name="welcome_heading_margin_bottom">12.0dip</dimen>
-    <dimen name="welcome_text_margin">48.0dip</dimen>
-    <dimen name="welcome_heading">24.0sp</dimen>
-    <dimen name="welcome_text_margin_bottom">12.0dip</dimen>
-    <dimen name="welcome_content_min_height">96.0dip</dimen>
-    <dimen name="welcome_content">16.0sp</dimen>
 </resources>

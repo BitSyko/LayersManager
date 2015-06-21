@@ -313,21 +313,11 @@ public class Install extends AppCompatActivity{
                                         // CLOSE ALL SHELLS
                                         RootTools.closeAllShells();
 
-                                    }  catch (RootDeniedException e) {
-                                        e.printStackTrace();
-                                    } catch (TimeoutException e) {
-                                        e.printStackTrace();
-                                    } catch (InterruptedException e) {
+                                    }  catch (RootDeniedException | TimeoutException | InterruptedException e) {
                                         e.printStackTrace();
                                     }
 
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                } catch (RootDeniedException e) {
-                                    e.printStackTrace();
-                                } catch (TimeoutException e) {
-                                    e.printStackTrace();
-                                } catch (InterruptedException e) {
+                                } catch (IOException | RootDeniedException | InterruptedException | TimeoutException e) {
                                     e.printStackTrace();
                                 }
                             }
@@ -397,15 +387,8 @@ public class Install extends AppCompatActivity{
                                     // CLOSE ALL SHELLS
                                     RootTools.closeAllShells();
 
-                                } catch (IOException e) {
+                                } catch (IOException | RootDeniedException | TimeoutException | InterruptedException e) {
                                     e.printStackTrace();
-                                } catch (RootDeniedException e) {
-                                    e.printStackTrace();
-                                } catch (TimeoutException e) {
-                                    e.printStackTrace();
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-
                                 }
                             }
                         }

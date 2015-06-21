@@ -20,7 +20,7 @@
             android:layout_height="64dp"
             android:id="@+id/iv_themeImage"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_launcher"
+            android:src="@mipmap/ic_launcher"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="16dp"
@@ -70,7 +70,6 @@
             android:layout_marginEnd="8dp"
             android:layout_alignStart="@+id/textView"
             android:layout_alignTop="@+id/txtSurname"
-            android:layout_alignLeft="@+id/txtName"
             android:layout_marginBottom="16dp"
             android:textColor="@color/text_color_secondary" />
 

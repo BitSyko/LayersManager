@@ -266,13 +266,7 @@ public class Restore extends Activity{
                 // CLOSE ALL SHELLS
                 RootTools.closeAllShells();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (RootDeniedException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | RootDeniedException | TimeoutException | InterruptedException e) {
             e.printStackTrace();
         }
             return null;

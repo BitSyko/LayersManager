@@ -26,16 +26,16 @@ public class AboutActivity extends AppCompatActivity {
     ImageButton moreButton1, moreButton2;
 
     Integer[] listImage2 = {
-            R.drawable.steve,
+            R.drawable.about_steve,
     };
     Integer[] listImage3 = {
-            R.drawable.niklas,
+            R.drawable.about_niklas,
     };
     Integer[] listImage1 = {
-            R.drawable.bitsyko,
+            R.drawable.about_bitsyko,
     };
     Integer[] listImage4 = {
-            R.drawable.xda,
+            R.drawable.about_xda,
     };
 
     @Override

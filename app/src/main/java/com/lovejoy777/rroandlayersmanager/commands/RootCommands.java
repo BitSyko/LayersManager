@@ -244,10 +244,6 @@ public class RootCommands {
                 return null;
             }
             return reader;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }

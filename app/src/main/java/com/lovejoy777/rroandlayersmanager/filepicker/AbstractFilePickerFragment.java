@@ -611,11 +611,11 @@ public abstract class AbstractFilePickerFragment<T> extends ListFragment
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFilePickedListener {
-        public void onFilePicked(Uri file);
+        void onFilePicked(Uri file);
 
-        public void onFilesPicked(List<Uri> files);
+        void onFilesPicked(List<Uri> files);
 
-        public void onCancelled();
+        void onCancelled();
     }
 
     public class DefaultHashMap<K, V> extends HashMap<K, V> {

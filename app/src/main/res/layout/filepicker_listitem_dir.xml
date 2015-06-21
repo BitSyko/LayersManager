@@ -23,7 +23,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:minHeight="?android:listPreferredItemHeight"
     android:orientation="horizontal"
-    android:background="@drawable/selectable_background_filepickertheme">
+    >
 
 
     <ImageView

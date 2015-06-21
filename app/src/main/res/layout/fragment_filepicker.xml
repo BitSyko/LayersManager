@@ -40,7 +40,6 @@
         android:ellipsize="start"
         style="?android:textAppearanceMedium"
         android:background="@color/primary"
-        android:text="TEST"
         android:paddingStart="16dp"
         android:paddingEnd="48dp"
         android:gravity="center_vertical" />

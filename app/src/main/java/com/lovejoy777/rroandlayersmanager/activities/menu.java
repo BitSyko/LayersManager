@@ -75,7 +75,6 @@ public class menu extends AppCompatActivity
     private Boolean TestBoolean = false;
     static final String LOG_TAG = "PluginApp";
     private DrawerLayout mDrawerLayout;
-    private RecyclerView recyclerCardViewList = null;
     RecyclerView recList = null;
     CardViewAdapter ca = null;
     /** Called when the activity is first created. */
@@ -109,7 +108,7 @@ public class menu extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         //create RecyclerView
-        recyclerCardViewList = (RecyclerView) findViewById(R.id.cardList);
+        RecyclerView recyclerCardViewList = (RecyclerView) findViewById(R.id.cardList);
         recyclerCardViewList.setHasFixedSize(true);
         recyclerCardViewList.addOnItemTouchListener(
                 new RecyclerItemClickListener(menu.this, new RecyclerItemClickListener.OnItemClickListener() {
@@ -149,7 +148,7 @@ public class menu extends AppCompatActivity
         final android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_menu);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -238,7 +237,6 @@ public class menu extends AppCompatActivity
                                         } catch (IOException e) {
                                             e.printStackTrace();
                                         }
-                                        ;
                                         dialog.dismiss();
                                     }
                                 });
@@ -344,13 +342,7 @@ public class menu extends AppCompatActivity
                                                                 while (!command1.isFinished()) {
                                                                     Thread.sleep(1);
                                                                 }
-                                                            } catch (IOException e) {
-                                                                e.printStackTrace();
-                                                            } catch (TimeoutException e) {
-                                                                e.printStackTrace();
-                                                            } catch (RootDeniedException e) {
-                                                                e.printStackTrace();
-                                                            } catch (InterruptedException e) {
+                                                            } catch (IOException | TimeoutException | RootDeniedException | InterruptedException e) {
                                                                 e.printStackTrace();
                                                             }
                                                         }
@@ -408,13 +400,11 @@ public class menu extends AppCompatActivity
     private List createList(int size, String name[], String developer[], String packages[]) {
 
         List result = new ArrayList();
-        Drawable Image[] = new Drawable[size];
         for (int i=1; i <= size; i++) {
             CardViewContent ci = new CardViewContent();
             ci.themeName = name[i-1];
             ci.themeDeveloper = developer[i-1];
 
-            int j = i + 1;
             final String packName = packages[i-1];
             String mDrawableName = "icon";
             PackageManager manager = getPackageManager();
@@ -424,9 +414,11 @@ public class menu extends AppCompatActivity
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
-            int mDrawableResID = mApk1Resources.getIdentifier(mDrawableName, "drawable", packName);
+            int mDrawableResID = 0;
+            if (mApk1Resources != null) {
+                mDrawableResID = mApk1Resources.getIdentifier(mDrawableName, "drawable", packName);
+            }
             Drawable myDrawable = mApk1Resources.getDrawable(mDrawableResID);
-            Image[i-1] = myDrawable;
 
             ci.themeImage = myDrawable ;
 
@@ -447,7 +439,7 @@ public class menu extends AppCompatActivity
             ci.message1 = message1[i-1];
             ci.message2 = message2[i-1];
             Image[0] = getResources().getDrawable(R.drawable.toobad);
-            Image[1] = getResources().getDrawable(R.drawable.ic_launcher);
+            Image[1] = getResources().getDrawable(R.mipmap.ic_launcher);
             Image[2] = getResources().getDrawable(R.drawable.playstore);
             myDrawable = Image[i-1];
             ci.themeImage = myDrawable ;
@@ -473,15 +465,8 @@ public class menu extends AppCompatActivity
                     Thread.sleep(1);
                 }
 
-            } catch (IOException e) {
+            } catch (IOException | TimeoutException | InterruptedException | RootDeniedException e) {
                 e.printStackTrace();
-            } catch (TimeoutException e) {
-                e.printStackTrace();
-            } catch (RootDeniedException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-
             }
 
             String sdOverlays1 = Environment.getExternalStorageDirectory() + "/Overlays/Backup";
@@ -495,13 +480,7 @@ public class menu extends AppCompatActivity
                         Thread.sleep(1);
                     }
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (TimeoutException e) {
-                    e.printStackTrace();
-                } catch (RootDeniedException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
+                } catch (IOException | TimeoutException | InterruptedException | RootDeniedException e) {
                     e.printStackTrace();
                 }
             }
@@ -518,13 +497,7 @@ public class menu extends AppCompatActivity
                     Thread.sleep(1);
                 }
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (TimeoutException e) {
-                e.printStackTrace();
-            } catch (RootDeniedException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (IOException | TimeoutException | InterruptedException | RootDeniedException e) {
                 e.printStackTrace();
             }
         }
@@ -601,7 +574,10 @@ public class menu extends AppCompatActivity
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
-            Bundle bundle = ai.metaData;
+            Bundle bundle = null;
+            if (ai != null) {
+                bundle = ai.metaData;
+            }
             name[i] = bundle.getString("Layers_Name");
             developer[i] = bundle.getString("Layers_Developer");
 
@@ -708,11 +684,11 @@ public class menu extends AppCompatActivity
             File srcFile = new File(inputFolderPath);
             File[] files = srcFile.listFiles();
             Log.d("", "Zip directory: " + srcFile.getName());
-            for (int i = 0; i < files.length; i++) {
-                Log.d("", "Adding file: " + files[i].getName());
+            for (File file : files) {
+                Log.d("", "Adding file: " + file.getName());
                 byte[] buffer = new byte[1024];
-                FileInputStream fis = new FileInputStream(files[i]);
-                zos.putNextEntry(new ZipEntry(files[i].getName()));
+                FileInputStream fis = new FileInputStream(file);
+                zos.putNextEntry(new ZipEntry(file.getName()));
                 int length;
                 while ((length = fis.read(buffer)) > 0) {
                     zos.write(buffer, 0, length);
@@ -753,13 +729,7 @@ public class menu extends AppCompatActivity
                             while (!command.isFinished()) {
                                 Thread.sleep(1);
                             }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (TimeoutException e) {
-                            e.printStackTrace();
-                        } catch (RootDeniedException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
+                        } catch (IOException | TimeoutException | InterruptedException | RootDeniedException e) {
                             e.printStackTrace();
                         }
                     }
@@ -797,13 +767,7 @@ public class menu extends AppCompatActivity
                     // CLOSE ALL SHELLS
                     RootTools.closeAllShells();
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (RootDeniedException e) {
-                    e.printStackTrace();
-                } catch (TimeoutException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
+                } catch (IOException | RootDeniedException | TimeoutException | InterruptedException e) {
                     e.printStackTrace();
                 }
             return null;
