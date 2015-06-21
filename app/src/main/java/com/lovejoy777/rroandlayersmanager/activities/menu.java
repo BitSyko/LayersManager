@@ -162,31 +162,21 @@ public class menu extends AppCompatActivity
 
 
         //Get SuperSU permissions
-        (new SuperUser()).execute();
+        if (!RootTools.isAccessGiven()) {
 
-        RootTools.remount("/system", "RW");
-        String vendover = "/vendor/overlay";
-        // CREATES /VENDOR/OVERLAY
-        File dir2 = new File(vendover);
-        if (!dir2.exists() && !dir2.isDirectory()) {
-            CommandCapture command5 = new CommandCapture(0, "mkdir " + vendover);
-            try {
-                RootTools.getShell(true).add(command5);
-                while (!command5.isFinished()) {
-                    Thread.sleep(1);
-                }
+                    final View coordinatorLayoutView = findViewById(R.id.main_content2);
+                    Snackbar.make(coordinatorLayoutView, "No root access available", Snackbar.LENGTH_LONG)
+                            .setAction("Get Root", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (TimeoutException e) {
-                e.printStackTrace();
-            } catch (RootDeniedException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
+                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=eu.chainfire.supersu")));
+                                }
+                            })
+                            .show();
         }
+
+        createImportantDirectories();
 
         //Load plugins
         fillPluginList();
@@ -467,6 +457,79 @@ public class menu extends AppCompatActivity
     }
 
 
+    private void createImportantDirectories(){
+        String sdOverlays = Environment.getExternalStorageDirectory() + "/Overlays";
+        String sdcard = Environment.getExternalStorageDirectory() + "";
+
+        RootTools.remount(sdcard, "RW");
+
+        // CREATES /SDCARD/OVERLAYS
+        File dir = new File(sdOverlays);
+        if (!dir.exists() && !dir.isDirectory()) {
+            CommandCapture command3 = new CommandCapture(0, "mkdir " + sdOverlays);
+            try {
+                RootTools.getShell(true).add(command3);
+                while (!command3.isFinished()) {
+                    Thread.sleep(1);
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            } catch (RootDeniedException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+
+            }
+
+            String sdOverlays1 = Environment.getExternalStorageDirectory() + "/Overlays/Backup";
+            // CREATES /SDCARD/OVERLAYS/BACKUP
+            File dir1 = new File(sdOverlays1);
+            if (!dir1.exists() && !dir1.isDirectory()) {
+                CommandCapture command4 = new CommandCapture(0, "mkdir " + sdOverlays1);
+                try {
+                    RootTools.getShell(true).add(command4);
+                    while (!command4.isFinished()) {
+                        Thread.sleep(1);
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (TimeoutException e) {
+                    e.printStackTrace();
+                } catch (RootDeniedException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        RootTools.remount("/system", "RW");
+        String vendover = "/vendor/overlay";
+        // CREATES /VENDOR/OVERLAY
+        File dir2 = new File(vendover);
+        if (!dir2.exists() && !dir2.isDirectory()) {
+            CommandCapture command5 = new CommandCapture(0, "mkdir " + vendover);
+            try {
+                RootTools.getShell(true).add(command5);
+                while (!command5.isFinished()) {
+                    Thread.sleep(1);
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            } catch (RootDeniedException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     protected void onStart() {
         super.onStart();
         Log.d(LOG_TAG, "onStart");
@@ -663,99 +726,6 @@ public class menu extends AppCompatActivity
         }
     }
 
-    private class SuperUser extends AsyncTask<Void, Void, Void> {
-        ProgressDialog progressSuperSU;
-
-        protected void onPreExecute() {
-
-            progressSuperSU = ProgressDialog.show(menu.this, "Superuser Permission",
-                    "Gaining SuperUser permissions...", true);
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            // IF ROOT ACCESS IS GIVEN / ELSE LAUNCH PLAYSTORE FOR SUPERUSER APP
-            if (!RootTools.isAccessGiven()) {
-
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        final View coordinatorLayoutView = findViewById(R.id.main_content2);
-                        Snackbar.make(coordinatorLayoutView, "No root access available", Snackbar.LENGTH_LONG)
-                                .setAction("Get Root", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-
-                                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=eu.chainfire.supersu")));
-                                    }
-                                })
-                                .show();
-                    }
-                });
-
-            } else {
-
-                String sdOverlays = Environment.getExternalStorageDirectory() + "/Overlays";
-                String sdcard = Environment.getExternalStorageDirectory() + "";
-
-                RootTools.remount(sdcard, "RW");
-
-                // CREATES /SDCARD/OVERLAYS
-                File dir = new File(sdOverlays);
-                if (!dir.exists() && !dir.isDirectory()) {
-                    CommandCapture command3 = new CommandCapture(0, "mkdir " + sdOverlays);
-                    try {
-                        RootTools.getShell(true).add(command3);
-                        while (!command3.isFinished()) {
-                            Thread.sleep(1);
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (TimeoutException e) {
-                        e.printStackTrace();
-                    } catch (RootDeniedException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-
-                    }
-
-                    String sdOverlays1 = Environment.getExternalStorageDirectory() + "/Overlays/Backup";
-                    // CREATES /SDCARD/OVERLAYS/BACKUP
-                    File dir1 = new File(sdOverlays1);
-                    if (!dir1.exists() && !dir1.isDirectory()) {
-                        CommandCapture command4 = new CommandCapture(0, "mkdir " + sdOverlays1);
-                        try {
-                            RootTools.getShell(true).add(command4);
-                            while (!command4.isFinished()) {
-                                Thread.sleep(1);
-                            }
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (TimeoutException e) {
-                            e.printStackTrace();
-                        } catch (RootDeniedException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-
-
-
-
-                }
-            }
-            return null;
-        }
-
-        protected void onPostExecute(Void result) {
-            progressSuperSU.dismiss();
-        }
-    }
 
     private class BackupOverlays extends AsyncTask<String,String,Void> {
         ProgressDialog progressBackup;
