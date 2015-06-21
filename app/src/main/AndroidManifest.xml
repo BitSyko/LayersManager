@@ -117,6 +117,7 @@ xmlns:tools="http://schemas.android.com/tools"
         </activity>
 
         <activity android:name=".activities.Intro"
+            android:noHistory="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
     </application>

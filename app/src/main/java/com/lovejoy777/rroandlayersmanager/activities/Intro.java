@@ -25,8 +25,8 @@ public class Intro extends AppIntro2 {
         }
 
     private void loadMainActivity(){
-        Intent intent = new Intent(this, menu.class);
-        startActivity(intent);
+        
+        finish();
     }
 
     @Override
