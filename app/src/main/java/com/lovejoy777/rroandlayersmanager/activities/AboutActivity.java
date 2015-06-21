@@ -23,7 +23,7 @@ import com.lovejoy777.rroandlayersmanager.adapters.CustomListAdapter;
 public class AboutActivity extends AppCompatActivity {
 
     ListView list1, list2, list3, list4;
-    ImageButton moreButton1;
+    ImageButton moreButton1, moreButton2;
 
     Integer[] listImage2 = {
             R.drawable.steve,
@@ -121,6 +121,8 @@ public class AboutActivity extends AppCompatActivity {
         //i Buttons
         moreButton1 = (ImageButton) findViewById(R.id.imBu_more1);
         moreButton1.setOnClickListener(onclicklistener);
+        moreButton2 = (ImageButton) findViewById(R.id.imBu_more2);
+        moreButton2.setOnClickListener(onclicklistener);
 
     }
 
@@ -145,6 +147,17 @@ public class AboutActivity extends AppCompatActivity {
                     });
 
                     break;
+                case R.id.imBu_more2:
+                    dialogText = getResources().getString(R.string.License2more);
+                    dialogTitleText = getResources().getString(R.string.License2);
+                    dialog.setPositiveButton(R.string.VisitGithub, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.License2github)));
+                            startActivity(browserIntent);
+                        }
+                    });
+                    break;
+
             }
             dialog.setTitle(dialogTitleText);
             tv_license.setText(dialogText);
