@@ -4,7 +4,8 @@
     android:id="@+id/drawer_layout"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:background="@color/background_main">
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/main_content2"
         android:layout_width="match_parent"
