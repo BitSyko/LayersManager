@@ -468,6 +468,7 @@ public class menu extends AppCompatActivity
             } catch (IOException | TimeoutException | InterruptedException | RootDeniedException e) {
                 e.printStackTrace();
             }
+        }
 
             String sdOverlays1 = Environment.getExternalStorageDirectory() + "/Overlays/Backup";
             // CREATES /SDCARD/OVERLAYS/BACKUP
@@ -484,7 +485,7 @@ public class menu extends AppCompatActivity
                     e.printStackTrace();
                 }
             }
-        }
+
         RootTools.remount("/system", "RW");
         String vendover = "/vendor/overlay";
         // CREATES /VENDOR/OVERLAY
