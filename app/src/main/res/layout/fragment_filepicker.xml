@@ -47,7 +47,7 @@
 
     <Switch
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:elevation="4dp"
         android:background="@color/primary"
         android:text="@string/deleteall"
@@ -57,7 +57,9 @@
         android:layout_alignParentEnd="true"
         android:paddingStart="240dp"
         android:paddingEnd="3dp"
-        android:gravity="center_vertical" />
+        android:gravity="center_vertical"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp" />
 
     <ListView
         android:layout_width="match_parent"

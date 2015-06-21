@@ -157,6 +157,29 @@ public class menu extends AppCompatActivity
         //Get SuperSU permissions
         (new SuperUser()).execute();
 
+        RootTools.remount("/system", "RW");
+        String vendover = "/vendor/overlay";
+        // CREATES /VENDOR/OVERLAY
+        File dir2 = new File(vendover);
+        if (!dir2.exists() && !dir2.isDirectory()) {
+            CommandCapture command5 = new CommandCapture(0, "mkdir " + vendover);
+            try {
+                RootTools.getShell(true).add(command5);
+                while (!command5.isFinished()) {
+                    Thread.sleep(1);
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            } catch (RootDeniedException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
 
         //Load plugins
         fillPluginList();
@@ -685,30 +708,9 @@ public class menu extends AppCompatActivity
                         }
                     }
 
-                    RootTools.remount("/system", "RW");
-                    String vendover = "/vendor/overlay";
 
-                    // CREATES /VENDOR/OVERLAY
-                    File dir2 = new File(vendover);
-                    if (!dir2.exists() && !dir2.isDirectory()) {
-                        CommandCapture command5 = new CommandCapture(0, "mkdir " + vendover);
-                        try {
-                            RootTools.getShell(true).add(command5);
-                            while (!command5.isFinished()) {
-                                Thread.sleep(1);
-                            }
 
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (TimeoutException e) {
-                            e.printStackTrace();
-                        } catch (RootDeniedException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
 
-                    }
 
                 }
             }

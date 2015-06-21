@@ -134,7 +134,7 @@ public abstract class AbstractFilePickerFragment<T> extends ListFragment
         fab2 = (android.support.design.widget.FloatingActionButton) view.findViewById(R.id.fab4);
         fab2.setVisibility(View.INVISIBLE);
         mySwitch1 = (Switch) view.findViewById(R.id.switch1);
-        mySwitch1.setVisibility(View.INVISIBLE);
+        mySwitch1.setVisibility(View.GONE);
 
 
 
