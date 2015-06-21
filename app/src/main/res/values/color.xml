@@ -12,7 +12,9 @@
     <color name="app_text_accent">#42000000</color>
     <color name="app_text_secondary">#727272</color>
     <color name="app_text_primary">#212121</color>
-
+    <color name="actionbar_text_color">#ffffffff</color>
+    <color name="actionbar_text_secondary_color">#ffffffff</color>
+    
     <color name="splashtext">#FF2196F3</color>
     <color name="material_drawer_primary">#2196F3</color>
     <color name="material_drawer_primary_dark">#1976D2</color>
