@@ -27,13 +27,13 @@
     <string name="Slide1_Heading">Layers Manager</string>
     <string name="Slide1_Text">The central place to manage all your Overlays.</string>
     <string name="Slide2_Heading">Plugin Overlays</string>
-    <string name="Slide2_Text">Compatibel themes are directly integrated into the Layers Manager. Open them from the main page and directly install your favorite Overlays.</string>
-    <string name="Slide3_Heading">Apk / Zip Overlays</string>
+    <string name="Slide2_Text">Compatible themes are directly integrated into the Layers Manager. Open them from the main page and directly install your favorite Overlays.</string>
+    <string name="Slide3_Heading">APK / ZIP Overlays</string>
     <string name="Slide3_Text">Install themes available as apk´s or zip´s by clicking on the Floating Action Button.</string>
     <string name="Slide4_Heading">Uninstall Overlays</string>
     <string name="Slide4_Text">Uninstall the Overlays you do not want to use anymore.</string>
     <string name="Slide5_Heading">Backup &amp; Restore</string>
-    <string name="Slide5_Text">Backup your favorite Overlays and restore them afterwards.</string>
+    <string name="Slide5_Text">Backup your favorite Overlays to restore them later.</string>
 
     <!-- INSTRUCTIONS/TUTORIAL -->
     <string name="instructionstitle">Tutorial</string>
