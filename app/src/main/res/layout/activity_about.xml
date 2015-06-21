@@ -96,6 +96,15 @@
                 android:layout_marginTop="16dp"
                 android:layout_alignParentStart="true"
                 android:elevation="1dp"
+                android:layout_below="@+id/listView_Developer1.5" />
+
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/listView_Developer1.5"
+                android:layout_marginTop="16dp"
+                android:layout_alignParentStart="true"
+                android:elevation="1dp"
                 android:layout_below="@+id/listView_Developer1" />
 
             <ListView

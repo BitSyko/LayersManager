@@ -22,11 +22,14 @@ import com.lovejoy777.rroandlayersmanager.adapters.CustomListAdapter;
  */
 public class AboutActivity extends AppCompatActivity {
 
-    ListView list1, list2, list3, list4, list5,list6,list7;
+    ListView list1, list2, list3, list4, list5,list6,list7,list12;
     ImageButton moreButton1, moreButton2;
 
     Integer[] developerImage1 = {
             R.drawable.about_syko,
+    };
+    Integer[] developerImage12 = {
+            R.drawable.about_reinhard,
     };
     Integer[] developerImage2 = {
             R.drawable.about_brian,
@@ -59,6 +62,11 @@ public class AboutActivity extends AppCompatActivity {
         String[] Developer1 = {
                 "Syko Pompos"
         } ;
+
+        String[] Developer12 = {
+                "Reinhard Strauch"
+        } ;
+
         String[] Developer2 = {
                 "Brian Gill"
         } ;
@@ -103,6 +111,17 @@ public class AboutActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/u/0/+SykoPompos/posts")));
+            }
+        });
+
+        //Developer1,5
+        CustomListAdapter adapter12 = new CustomListAdapter(AboutActivity.this, Developer12,LeadDeveloper, developerImage12);
+        list12=(ListView)findViewById(R.id.listView_Developer1_5);
+        list12.setAdapter(adapter12);
+        list12.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/101549242713977412381/posts")));
             }
         });
 
