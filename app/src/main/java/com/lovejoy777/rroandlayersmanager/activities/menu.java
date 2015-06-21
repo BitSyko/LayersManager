@@ -307,7 +307,7 @@ public class menu extends AppCompatActivity
                                 final EditText input = new EditText(menu.this);
                                 alert.setTitle("Backup installed overlays");
                                 alert.setView(input);
-                                input.setHint("enter a backup name");
+                                input.setHint("Enter a backup name");
                                 alert.setInverseBackgroundForced(true);
 
                                 alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
