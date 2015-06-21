@@ -117,11 +117,6 @@ public class menu extends AppCompatActivity
                     public void onItemClick(View view, int position) {
                         onListItemClick(position);
                     }
-                    @Override
-                    public void onItemLongClick(View view, int position)
-                    {
-                        // ...
-                    }
                 })
         );
 
