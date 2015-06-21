@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+    android:gravity="center"
+    android:background="@color/background_main">
 
     <android.support.v7.widget.Toolbar
 
@@ -29,7 +30,7 @@
         android:layout_marginStart="56dp"
         android:textSize="18sp"
         android:elevation="4dp"
-        android:textColor="#ffffff"
+        android:textColor="@color/actionbar_text_color"
         android:layout_below="@+id/toolbar5"
         android:layout_alignParentEnd="false"
         android:layout_marginTop="16dp"
@@ -39,7 +40,7 @@
     android:id="@+id/layout1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/background_material_light"
+    android:background="@color/background_main"
     android:layout_below="@+id/toolbar5"
     android:fillViewport="true"
     android:scrollbarStyle="insideInset"
@@ -51,7 +52,7 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background_material_light"
+        android:background="@color/background_main"
         android:orientation="vertical">
 
         <android.support.v7.widget.CardView
