@@ -87,6 +87,20 @@ public class menu extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
 
+        if (!RootTools.isAccessGiven()) {
+
+            final View coordinatorLayoutView = findViewById(R.id.main_content2);
+            Snackbar.make(coordinatorLayoutView, "No root access available", Snackbar.LENGTH_LONG)
+                    .setAction("Get Root", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=eu.chainfire.supersu")));
+                        }
+                    })
+                    .show();
+        }
+
         // Get the app's shared preferences
         SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -161,19 +175,7 @@ public class menu extends AppCompatActivity
 
 
         //Get SuperSU permissions
-        if (!RootTools.isAccessGiven()) {
 
-                    final View coordinatorLayoutView = findViewById(R.id.main_content2);
-                    Snackbar.make(coordinatorLayoutView, "No root access available", Snackbar.LENGTH_LONG)
-                            .setAction("Get Root", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=eu.chainfire.supersu")));
-                                }
-                            })
-                            .show();
-        }
 
         createImportantDirectories();
 
