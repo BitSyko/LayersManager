@@ -29,6 +29,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -116,11 +117,22 @@ public class menu extends AppCompatActivity
                     public void onItemClick(View view, int position) {
                         onListItemClick(position);
                     }
+                    @Override
+                    public void onItemLongClick(View view, int position)
+                    {
+                        // ...
+                    }
                 })
         );
+
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerCardViewList.setLayoutManager(llm);
+
+
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerCardViewList);
 
         //create FAB
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab3);
@@ -253,6 +265,23 @@ public class menu extends AppCompatActivity
         }
     }
 
+    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+            //Remove swiped item from list and notify the RecyclerView
+            //System.out.println(viewHolder.getAdapterPosition());
+            String packageName = packages[viewHolder.getAdapterPosition()];
+            Uri packageURI = Uri.parse("package:"+packageName);
+            Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, packageURI);
+            startActivityForResult(uninstallIntent, 1);
+
+        }
+    };
 
     //navigationDrawerIcon Onclick
     @Override
@@ -379,6 +408,16 @@ public class menu extends AppCompatActivity
         });
     }
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        // check if the request code is same as what is passed  here it is 2
+        if(requestCode==1)
+        {
+            services.clear();
+            fillPluginList();
+        }
+    }
 
     //create List with all Plugins
     private List createList(int size, String name[], String developer[], String packages[]) {
@@ -461,6 +500,7 @@ public class menu extends AppCompatActivity
                 Bundle bndlanimation =
                         ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
                 startActivity(intent, bndlanimation);
+                System.out.println(package2);
 
             }
         }
