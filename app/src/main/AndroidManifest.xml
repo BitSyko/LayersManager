@@ -24,7 +24,7 @@ xmlns:tools="http://schemas.android.com/tools"
         >
 
         <activity
-            android:name=".activities.menu"
+            android:name=".menu"
             android:label="Layers Manager"
             android:theme="@style/Base.Theme.Toolbar.TransparentStatusBar">
             <intent-filter android:label="Layers Manager">
@@ -34,10 +34,10 @@ xmlns:tools="http://schemas.android.com/tools"
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.OverlayDetailActivity"
+            android:name=".OverlayDetailActivity"
             android:label="Operate"
             android:theme="@style/Theme.Toolbar"
-            android:parentActivityName=".activities.menu" />
+            android:parentActivityName=".menu" />
 
 
         <activity
@@ -45,7 +45,7 @@ xmlns:tools="http://schemas.android.com/tools"
             android:icon="@mipmap/ic_launcher"
             android:label="Install"
             android:theme="@style/Base.Theme.Toolbar"
-            android:parentActivityName=".activities.menu">
+            android:parentActivityName=".menu">
             <intent-filter>
                 <action android:name="com.lovejoy777.rroandlayersmanager.INSTALL" />
 
@@ -58,7 +58,7 @@ xmlns:tools="http://schemas.android.com/tools"
             android:icon="@mipmap/ic_launcher"
             android:label="Restore"
             android:theme="@style/LayersTheme"
-            android:parentActivityName=".activities.menu">
+            android:parentActivityName=".menu">
             <intent-filter>
                 <action android:name="com.lovejoy777.rroandlayersmanager.RESTORE" />
 
@@ -71,7 +71,7 @@ xmlns:tools="http://schemas.android.com/tools"
             android:icon="@mipmap/ic_launcher"
             android:label="Delete"
             android:theme="@style/LayersTheme"
-            android:parentActivityName=".activities.menu">
+            android:parentActivityName=".menu">
             <intent-filter>
                 <action android:name="com.lovejoy777.rroandlayersmanager.DELETE" />
 
@@ -85,7 +85,7 @@ xmlns:tools="http://schemas.android.com/tools"
             android:name="com.lovejoy777.rroandlayersmanager.filepicker.FilePickerActivity"
             android:label="Layers"
             android:theme="@style/Base.Theme.Toolbar"
-            android:parentActivityName=".activities.menu">
+            android:parentActivityName=".menu">
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -96,7 +96,7 @@ xmlns:tools="http://schemas.android.com/tools"
             android:name=".activities.DetailedTutorialActivity"
             android:icon="@mipmap/ic_launcher"
             android:label=""
-            android:parentActivityName=".activities.menu">
+            android:parentActivityName=".menu">
             <intent-filter>
                 <action android:name="android.intent.action.INSTRUCTIONS" />
 
@@ -108,7 +108,7 @@ xmlns:tools="http://schemas.android.com/tools"
             android:icon="@mipmap/ic_launcher"
             android:label=""
             android:theme="@style/Toolbar2"
-            android:parentActivityName=".activities.menu">
+            android:parentActivityName=".menu">
             <intent-filter>
                 <action android:name="android.intent.action.ABOUT" />
 

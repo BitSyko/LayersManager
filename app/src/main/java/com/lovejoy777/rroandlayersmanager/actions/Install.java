@@ -11,7 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.lovejoy777.rroandlayersmanager.R;
-import com.lovejoy777.rroandlayersmanager.activities.menu;
+import com.lovejoy777.rroandlayersmanager.menu;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 import com.lovejoy777.rroandlayersmanager.filepicker.FilePickerActivity;
 import com.stericson.RootTools.RootTools;
@@ -423,7 +423,7 @@ public class Install extends AppCompatActivity{
             Intent iIntent = new Intent(Install.this, menu.class);
             iIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             iIntent.putExtra("ShowSnackbar", true);
-            iIntent.putExtra("SnackbarText","To Install Now");
+            iIntent.putExtra("SnackbarText","Installed selected Overlays");
             startActivity(iIntent);
 
         }

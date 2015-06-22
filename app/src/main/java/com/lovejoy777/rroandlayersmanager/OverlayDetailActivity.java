@@ -1,4 +1,4 @@
-package com.lovejoy777.rroandlayersmanager.activities;
+package com.lovejoy777.rroandlayersmanager;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -43,8 +43,6 @@ import android.widget.Switch;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.lovejoy777.rroandlayersmanager.IOperation;
-import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.helper.CopyUnzipHelper;
 import com.lovejoy777.rroandlayersmanager.helper.RootCommandsInstallationHelper;
 import com.stericson.RootTools.RootTools;
@@ -52,7 +50,6 @@ import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -122,7 +119,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
         //get Intent from Main Activity
         Intent g = getIntent();
         if (g != null) {
-            category = g.getStringExtra(menu.BUNDLE_EXTRAS_CATEGORY);
+            category = g.getStringExtra(com.lovejoy777.rroandlayersmanager.menu.BUNDLE_EXTRAS_CATEGORY);
             package2 = g.getStringExtra(menu.BUNDLE_EXTRAS_PACKAGENAME);
         }
 

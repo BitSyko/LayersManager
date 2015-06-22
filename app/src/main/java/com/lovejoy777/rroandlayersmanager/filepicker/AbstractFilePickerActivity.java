@@ -30,7 +30,7 @@ import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-import com.lovejoy777.rroandlayersmanager.activities.menu;
+import com.lovejoy777.rroandlayersmanager.menu;
 import com.lovejoy777.rroandlayersmanager.R;
 
 

@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.lovejoy777.rroandlayersmanager.R;
-import com.lovejoy777.rroandlayersmanager.activities.menu;
+import com.lovejoy777.rroandlayersmanager.menu;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 import com.lovejoy777.rroandlayersmanager.filepicker.FilePickerActivity;
 import com.stericson.RootTools.RootTools;
@@ -170,7 +170,7 @@ public class Delete extends Activity{
             Intent iIntent = new Intent(Delete.this, menu.class);
             iIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             iIntent.putExtra("ShowSnackbar", true);
-            iIntent.putExtra("SnackbarText","To Delete Overlays");
+            iIntent.putExtra("SnackbarText","Uninstalled selected Overlays");
             startActivity(iIntent);
 
         }

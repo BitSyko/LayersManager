@@ -1,4 +1,4 @@
-package com.lovejoy777.rroandlayersmanager.activities;
+package com.lovejoy777.rroandlayersmanager;
 
 import android.app.ActivityOptions;
 import android.app.AlertDialog;
@@ -40,8 +40,10 @@ import android.widget.Toast;
 
 import com.lovejoy777.rroandlayersmanager.actions.Delete;
 import com.lovejoy777.rroandlayersmanager.actions.Install;
-import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.actions.Restore;
+import com.lovejoy777.rroandlayersmanager.activities.AboutActivity;
+import com.lovejoy777.rroandlayersmanager.activities.DetailedTutorialActivity;
+import com.lovejoy777.rroandlayersmanager.activities.Intro;
 import com.lovejoy777.rroandlayersmanager.adapters.CardViewAdapter;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 import com.lovejoy777.rroandlayersmanager.helper.CardViewContent;
@@ -528,7 +530,7 @@ public class menu extends AppCompatActivity
 
                 Intent intent = new Intent(menu.this, Delete.class);
                 intent.setClassName("com.lovejoy777.rroandlayersmanager",
-                        "com.lovejoy777.rroandlayersmanager.activities.OverlayDetailActivity");
+                        "com.lovejoy777.rroandlayersmanager.OverlayDetailActivity");
                 intent.putExtra(BUNDLE_EXTRAS_CATEGORY, category);
                 intent.putExtra(BUNDLE_EXTRAS_PACKAGENAME, package2);
                 Bundle bndlanimation =
