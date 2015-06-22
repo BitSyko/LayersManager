@@ -86,7 +86,7 @@ public class menu extends AppCompatActivity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_main);
         if (!RootTools.isAccessGiven()) {
 
             final View coordinatorLayoutView = findViewById(R.id.main_content2);
@@ -119,7 +119,7 @@ public class menu extends AppCompatActivity
         editor.putInt("counter", ++counter);
         editor.commit();
 
-        setContentView(R.layout.activity_main);
+
 
         //create RecyclerView
         RecyclerView recyclerCardViewList = (RecyclerView) findViewById(R.id.cardList);
