@@ -94,8 +94,11 @@ public class AboutActivity extends AppCompatActivity {
         String[] AppDeveloper = {
                 "App Developer"
         };
-        String[] Nothing = {
-                ""
+        String[] Nothing1 = {
+                "Find out whats new"
+        };
+        String[] Nothing2 = {
+                "Join the chat"
         };
 
         //set Toolbar
@@ -176,7 +179,7 @@ public class AboutActivity extends AppCompatActivity {
 
         //Link1
         CustomListAdapter adapter6 = new
-                CustomListAdapter(AboutActivity.this, Link1,Nothing, linkImage1);
+                CustomListAdapter(AboutActivity.this, Link1,Nothing1, linkImage1);
         list6=(ListView)findViewById(R.id.listView_link1);
         list6.setAdapter(adapter6);
         list6.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -188,7 +191,7 @@ public class AboutActivity extends AppCompatActivity {
 
         //Link1
         CustomListAdapter adapter7 = new
-                CustomListAdapter(AboutActivity.this, Link2,Nothing, linkImage2);
+                CustomListAdapter(AboutActivity.this, Link2,Nothing2, linkImage2);
         list7=(ListView)findViewById(R.id.listView_link2);
         list7.setAdapter(adapter7);
         list7.setOnItemClickListener(new AdapterView.OnItemClickListener() {

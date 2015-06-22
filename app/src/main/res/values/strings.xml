@@ -42,6 +42,8 @@
     <string name="instructionscard4">From the nav-drawer select "Backup overlays"\nEnter a name and click "OK"</string>
     <string name="instructionscard5header">Restore overlays</string>
     <string name="instructionscard5">From the nav-drawer select "Restore overlays"\nClick the FAB to Restore the selected backup file</string>
+    <string name="instructionscard6header">Replay Introduction</string>
+    <string name="instructionscard6">Click to start tutorial from the beginning</string>
 
     <!-- FILEPICKER -->
     <string name="new_folder">New folder</string>

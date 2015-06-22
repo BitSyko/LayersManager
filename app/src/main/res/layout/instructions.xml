@@ -275,7 +275,6 @@
             android:id="@+id/CardView_Instructions5"
             android:elegantTextHeight="false"
             android:elevation="5dp"
-            android:layout_marginBottom="16dp"
             android:background="@color/card_background"
             android:backgroundTint="@color/card_background"
             android:layout_marginStart="16dp"
@@ -308,6 +307,59 @@
                     android:layout_height="wrap_content"
                     android:text="@string/instructionscard5"
                     android:id="@+id/textview13"
+                    android:layout_gravity="start|top"
+                    android:layout_marginStart="16dp"
+                    android:textColor="@color/text_color_secondary"
+                    android:elevation="5dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="16dp" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            card_view:cardBackgroundColor="@color/card_background"
+
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:id="@+id/CardView_Instructions6"
+            android:elegantTextHeight="false"
+            android:elevation="5dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/card_background"
+            android:backgroundTint="@color/card_background"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="5.59"
+                >
+
+                <TextView
+                    android:textColor="@color/textColorPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instructionscard6header"
+                    android:id="@+id/textView14"
+                    android:layout_gravity="start|top"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:textStyle="bold"
+                    android:elevation="5dp" />
+
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instructionscard6"
+                    android:id="@+id/textview15"
                     android:layout_gravity="start|top"
                     android:layout_marginStart="16dp"
                     android:textColor="@color/text_color_secondary"
