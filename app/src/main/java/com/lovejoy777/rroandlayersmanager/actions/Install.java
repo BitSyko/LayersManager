@@ -260,7 +260,7 @@ public class Install extends AppCompatActivity{
                                             Thread.sleep(1);
                                         }
 
-                                        RootCommands.moveCopyRoot(path, layersdata + "/");
+                                       // RootCommands.moveCopyRoot(path, layersdata + "/");
                                         // ELSE NOT A .ZIP THEN COPY FILE TO LAYERSDATA
                                         // CommandCapture command5 = new CommandCapture(0, "cp -f " + SZP + " " + layersdata + "/");
                                         //RootTools.getShell(true).add(command5);
