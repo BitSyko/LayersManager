@@ -47,6 +47,11 @@
                 android:id="@+id/nav_about"
                 android:icon="@drawable/ic_action_about"
                 android:title="@string/About" />
+
+            <item
+                android:id="@+id/nav_showcase"
+                android:icon="@drawable/ic_action_about"
+                android:title="@string/Showcase" />
         </menu>
     </item>
 

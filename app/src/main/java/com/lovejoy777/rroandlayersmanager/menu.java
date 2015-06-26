@@ -383,10 +383,41 @@ public class menu extends AppCompatActivity
                                 startActivity(restore, bndlanimation);
                                 mDrawerLayout.closeDrawers();
                                 break;
+
+
+
+                            case R.id.nav_showcase:
+
+                                boolean installed = appInstalledOrNot("com.lovejoy777.showcase");
+                                if(installed) {
+                                    //This intent will help you to launch if the package is already installed
+                                    Intent showcase = getPackageManager().getLaunchIntentForPackage("com.lovejoy777.showcase");
+                                    startActivity(showcase, bndlanimation);
+                                    mDrawerLayout.closeDrawers();
+
+                                    break;
+                                } else {
+                                    Toast.makeText(menu.this, "Please install the layers showcase plugin", Toast.LENGTH_LONG).show();
+                                    System.out.println("App is not currently installed on your phone");
+                                }
+
                         }
                         return false;
                     }
         });
+    }
+
+    private boolean appInstalledOrNot(String uri) {
+        PackageManager pm = getPackageManager();
+        boolean app_installed;
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            app_installed = true;
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            app_installed = false;
+        }
+        return app_installed;
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data)

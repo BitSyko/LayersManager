@@ -13,7 +13,7 @@
     <string name="selectalloverlays">Select all Overlays</string>
     <string name="developedby">Layers developed by</string>
     <string name="usefullinks">Useful links</string>
-    <string name="deleteall">   Delete all</string>
+    <string name="deleteall">Delete all</string>
 
 
 
@@ -56,6 +56,7 @@
     <string name="More">More</string>
     <string name="Tutorial">Tutorial</string>
     <string name="About">About</string>
+    <string name="Showcase">Layers Showcase</string>
 
     <plurals
         name="select_dir">
