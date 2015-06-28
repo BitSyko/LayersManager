@@ -37,13 +37,12 @@ import java.util.List;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.Toast;
 
 /**
  * Created by lovejoy777 on 13/06/15.
@@ -144,6 +143,9 @@ private void loadFiles(){
     }
 }
 
+
+
+
     private class CardViewAdapter3 extends RecyclerView.Adapter<CardViewAdapter3.ViewHolder>{
 
         private ArrayList<String> themes;
@@ -167,6 +169,7 @@ private void loadFiles(){
 
             viewHolder.themeName.setText(themes.get(i));
             viewHolder.themeName.setTag(themes.get(i));
+            viewHolder.themeName.setId(i);
             if (InstallOverlayList.get(i)==1){
                 viewHolder.themeName.setChecked(true);
             }else{
@@ -316,5 +319,31 @@ private void loadFiles(){
             mAdapter.notifyDataSetChanged();
 
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_selectall:
+                if (item.isChecked()) item.setChecked(false);
+                else item.setChecked(true);
+                checkAll();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void checkAll(){
+
+        InstallOverlayList.clear();
+        for (int i =0; i< Files.size();i++){
+            InstallOverlayList.add(1);
+        }
+        atleastOneIsClicked = InstallOverlayList.size();
+        System.out.println(atleastOneIsClicked);
+        mAdapter.notifyDataSetChanged();
+        fab2.setVisibility(View.VISIBLE);
+        fab2.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
     }
 }
