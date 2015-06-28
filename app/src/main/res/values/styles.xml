@@ -50,7 +50,9 @@
     </style>
 
 
-
+    <style name="Toolbar_Popup" parent="Base.ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+    </style>
 
     <!-- Main Activity - Overflow Menu -->
     <style name="popupNew" parent="Theme.AppCompat.Light"/>                                      <!-- MaterialLight: Theme.AppCompat.Light | MaterialDark: Theme.AppCompat -->
