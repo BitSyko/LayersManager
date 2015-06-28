@@ -144,6 +144,8 @@ public class OverlayDetailActivity extends AppCompatActivity {
         //get important data from Plugin´s Manifest
         String Description;
         String OverlayNameString;
+        String NormalOverlayNameString;
+        String StyleSpecificOverlayString;
         String WhatsNew;
         String OverlayColorString;
         ApplicationInfo ai = null;
@@ -161,6 +163,8 @@ public class OverlayDetailActivity extends AppCompatActivity {
         OverlayNameString = bundle.getString("Layers_OverlayNames");
         OverlayColorString = bundle.getString("Layers_Colors");
         WhatsNew = bundle.getString("Layers_WhatsNew");
+        NormalOverlayNameString = bundle.getString("Layers_NormalOverlays");
+        StyleSpecificOverlayString = bundle.getString("Layers_StyleSpecificOverlays");
 
         //Use the received data
         ThemeFolder = Environment.getExternalStorageDirectory()+"/Overlays/"+ThemeName.replaceAll(" ", "")+"/";
@@ -169,14 +173,33 @@ public class OverlayDetailActivity extends AppCompatActivity {
         List<String> OverlayNameList = null;
         if (OverlayNameString != null) {
             OverlayNameList = new ArrayList<>(Arrays.asList(OverlayNameString.split(",")));
+        } else{
+            if (!NormalOverlayNameString.isEmpty()){
+                OverlayNameList = new ArrayList<>(Arrays.asList(NormalOverlayNameString.split(",")));
+                OverlayNameList.add(" ");
+                if (!StyleSpecificOverlayString.isEmpty()){
+                    OverlayNameList.addAll(Arrays.asList(StyleSpecificOverlayString.split(",")));
+                }
+            } else{
+                if (StyleSpecificOverlayString != null){
+                    OverlayNameList = new ArrayList<>();
+                    OverlayNameList.add(" ");
+                    OverlayNameList.addAll(Arrays.asList(StyleSpecificOverlayString.split(",")));
+                }
+            }
         }
+        System.out.println(OverlayNameList);
+        System.out.println(StyleSpecificOverlayString);
         List<String> OverlayColorList = null;
         if (OverlayColorString != null) {
             OverlayColorList = new ArrayList<>(Arrays.asList(OverlayColorString.split(",")));
         }
 
-        NumberOfOverlays = OverlayNameList.indexOf(" ");
-        NumberOfColorOverlays = OverlayNameList.size() - OverlayNameList.indexOf(" ")-1;
+        if (OverlayNameList != null){
+            NumberOfOverlays = OverlayNameList.indexOf(" ");
+            NumberOfColorOverlays = OverlayNameList.size() - OverlayNameList.indexOf(" ")-1;
+        }
+
 
         NumberOfColors = OverlayColorList.size();
 
