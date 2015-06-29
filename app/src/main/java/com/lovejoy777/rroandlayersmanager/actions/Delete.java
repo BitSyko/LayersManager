@@ -1,13 +1,9 @@
 package com.lovejoy777.rroandlayersmanager.actions;
 
-import android.app.Activity;
-import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -18,19 +14,15 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 
 import com.lovejoy777.rroandlayersmanager.R;
+import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 
 import com.stericson.RootTools.RootTools;
 
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -43,6 +35,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.CheckBox;
+import android.widget.ProgressBar;
 
 /**
  * Created by lovejoy777 on 13/06/15.
@@ -57,6 +50,7 @@ public class Delete extends AppCompatActivity{
     int atleastOneIsClicked = 0;
     private RecyclerView mRecyclerView;
     private CardViewAdapter3 mAdapter;
+    private ProgressBar spinner;
     List<Integer> InstallOverlayList = new ArrayList<Integer>();
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -84,15 +78,9 @@ public class Delete extends AppCompatActivity{
                 }
             });
 
-            // GET STRING SZP
-            final Intent extras = getIntent();
-            String SZP = null;
-            if (extras != null) {
-                SZP = extras.getStringExtra("key1");
-            }
 
-
-            loadFiles();
+            Commands command= new Commands();
+            Files = command.loadFiles("/system/vendor/overlay");
 
 
             mAdapter = new CardViewAdapter3(Files, R.layout.adapter_uninstalllayout, Delete.this);
@@ -103,46 +91,6 @@ public class Delete extends AppCompatActivity{
                 InstallOverlayList.add(0);
             }
         }
-
-
-
-
-private void loadFiles(){
-    try {
-        String line;
-        Process process = Runtime.getRuntime().exec("su");
-        OutputStream stdin = process.getOutputStream();
-        InputStream stderr = process.getErrorStream();
-        InputStream stdout = process.getInputStream();
-
-        stdin.write(("ls -a /system/vendor/overlay \n").getBytes());
-
-        stdin.write("exit\n".getBytes());
-        stdin.flush();   //flush stream
-        stdin.close(); //close stream
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(stdout));
-
-        while ((line = br.readLine()) != null) {
-
-            Files.add(line);
-        }
-        br.close();
-        br =
-                new BufferedReader(new InputStreamReader(stderr));
-        while ((line = br.readLine()) != null) {
-            Log.e("[Error]", line);
-        }
-        process.waitFor();//wait for process to finish
-        process.destroy();
-
-    } catch (IOException e) {
-        e.printStackTrace();
-    } catch (InterruptedException e) {
-        e.printStackTrace();
-    }
-}
-
 
 
 
@@ -179,24 +127,19 @@ private void loadFiles(){
                 public void onClick(View v) {
                     CheckBox cb = (CheckBox) v;
                     System.out.println(v.getTag());
-                    //themes.get(i).setSelected(cb.isChecked());
                     if (cb.isChecked()) {
                         InstallOverlayList.set(i, 1);
                         atleastOneIsClicked = atleastOneIsClicked + 1;
                     } else {
                         InstallOverlayList.set(i, 0);
-                        //InstallOverlay[c] = 0;
                         atleastOneIsClicked = atleastOneIsClicked - 1;
                     }
                     if (atleastOneIsClicked > 0) {
                         fab2.setVisibility(View.VISIBLE);
                         fab2.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
-
-
                     } else {
 
                         fab2.animate().translationY(fab2.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
-                        //fab2.setVisibility(View.INVISIBLE);
                     }
                 }
             });
@@ -248,24 +191,6 @@ private void loadFiles(){
                     RootCommands.DeleteFileRoot("system/vendor/overlay/"+Files.get(i));
                 }
             }
-            /*
-            if (paths != null) {
-                for (String path : paths) {
-                    if (path.startsWith("file://")) {
-                        path = path.substring(7);
-
-                        RootTools.remount("/system", "RW");
-                        RootCommands.DeleteFileRoot(path);
-                    }
-                }
-
-                //Toast.makeText(Delete.this, "deleted selected layers", Toast.LENGTH_LONG).show();
-                finish();
-
-            } else {
-
-                //Toast.makeText(Delete.this, "nothing to delete", Toast.LENGTH_LONG).show();
-            } */
             return null;
 
         }
@@ -273,6 +198,7 @@ private void loadFiles(){
         protected void onPostExecute(Void result) {
 
             progressDelete.dismiss();
+            RootTools.remount("/system", "RO");
 
             CoordinatorLayout coordinatorLayoutView = (CoordinatorLayout) findViewById(R.id.main_content3);
             Snackbar.make(coordinatorLayoutView, "Uninstalled selected Overlays", Snackbar.LENGTH_LONG)
@@ -308,8 +234,9 @@ private void loadFiles(){
                     })
                     .show();
 
-                    Files.clear();
-                    loadFiles();
+            Files.clear();
+            Commands command= new Commands();
+            Files = command.loadFiles("/system/vendor/overlay");
             int t = InstallOverlayList.size();
             InstallOverlayList.clear();
             for (int i =0; i< t;i++){

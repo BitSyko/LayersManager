@@ -13,7 +13,6 @@
     android:gravity="center">
 
     <android.support.v7.widget.Toolbar
-
         android:id="@+id/toolbar"
         android:layout_height="56dp"
         android:layout_width="match_parent"
@@ -29,13 +28,24 @@
     </android.support.v7.widget.Toolbar>
 
 
+<android.support.v7.widget.CardView
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="16dp"
+    android:layout_marginTop="16dp"
+    android:layout_below="@+id/toolbar"
+    >
         <android.support.v7.widget.RecyclerView
             android:id="@+id/cardList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
 
-            android:layout_below="@+id/toolbar"
-            android:paddingBottom="8dp" />
+            >
+    </android.support.v7.widget.RecyclerView>
+</android.support.v7.widget.CardView>
+
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,6 +59,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:tint="@color/white" />
-</RelativeLayout>
+    </RelativeLayout>
+
+
 
     </android.support.design.widget.CoordinatorLayout>
