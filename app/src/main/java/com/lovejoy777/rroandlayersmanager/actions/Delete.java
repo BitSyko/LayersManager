@@ -115,7 +115,7 @@ public class Delete extends AppCompatActivity{
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, final int i) {
 
-            viewHolder.themeName.setText(themes.get(i));
+            viewHolder.themeName.setText(themes.get(i).replace(".apk","").replace("_"," "));
             viewHolder.themeName.setTag(themes.get(i));
             viewHolder.themeName.setId(i);
             if (InstallOverlayList.get(i)==1){
