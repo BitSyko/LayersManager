@@ -20,6 +20,7 @@ xmlns:tools="http://schemas.android.com/tools"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="Layers"
+        tools:replace="android:label"
         android:theme="@style/Base.Theme.Toolbar"
         >
 
@@ -69,7 +70,7 @@ xmlns:tools="http://schemas.android.com/tools"
         <activity
             android:name=".actions.Delete"
             android:icon="@mipmap/ic_launcher"
-            android:label="Delete"
+            android:label=""
             android:theme="@style/Base.Theme.Toolbar"
             android:parentActivityName=".menu">
             <intent-filter>

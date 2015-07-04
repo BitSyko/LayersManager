@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
+import com.afollestad.materialcab.MaterialCab;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
@@ -40,7 +41,7 @@ import android.widget.ProgressBar;
 /**
  * Created by lovejoy777 on 13/06/15.
  */
-public class Delete extends AppCompatActivity{
+public class Delete extends AppCompatActivity implements MaterialCab.Callback {
 
         final String startDirvendor = "/vendor/overlay";
         private static final int CODE_SD = 0;
@@ -51,6 +52,7 @@ public class Delete extends AppCompatActivity{
     private RecyclerView mRecyclerView;
     private CardViewAdapter3 mAdapter;
     private ProgressBar spinner;
+    private MaterialCab mCab = null;
     List<Integer> InstallOverlayList = new ArrayList<Integer>();
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,6 @@ public class Delete extends AppCompatActivity{
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             toolbar.setNavigationIcon(R.drawable.ic_action_back);
             setSupportActionBar(toolbar);
-
             mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -92,6 +93,28 @@ public class Delete extends AppCompatActivity{
             }
         }
 
+    @Override
+    public boolean onCabCreated(MaterialCab materialCab, Menu menu) {
+        return true;
+    }
+
+    @Override
+    public boolean onCabItemClicked(MenuItem menuItem) {
+        switch (menuItem.getItemId()){
+            case R.id.menu_selectall:
+                if (menuItem.isChecked()) menuItem.setChecked(false);
+                else menuItem.setChecked(true);
+                checkAll();
+
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onCabFinished(MaterialCab materialCab) {
+        UncheckAll();
+        return true;
+    }
 
 
     private class CardViewAdapter3 extends RecyclerView.Adapter<CardViewAdapter3.ViewHolder>{
@@ -130,20 +153,35 @@ public class Delete extends AppCompatActivity{
                     if (cb.isChecked()) {
                         InstallOverlayList.set(i, 1);
                         atleastOneIsClicked = atleastOneIsClicked + 1;
+
                     } else {
                         InstallOverlayList.set(i, 0);
                         atleastOneIsClicked = atleastOneIsClicked - 1;
                     }
+                    if (mCab == null)
+                        mCab = new MaterialCab(Delete.this, R.id.cab_stub)
+                                .reset()
+                                .setCloseDrawableRes(R.drawable.ic_action_check)
+                                .setMenu(R.menu.overflow)
+                                .start(Delete.this);
+                    else if (!mCab.isActive())
+                        mCab
+                                .reset().start(Delete.this)
+                                .setCloseDrawableRes(R.drawable.ic_action_check)
+                                .setMenu(R.menu.overflow);
+                    mCab.setTitle(atleastOneIsClicked + " Overlays selected");
                     if (atleastOneIsClicked > 0) {
                         fab2.setVisibility(View.VISIBLE);
                         fab2.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
                     } else {
-
+                        mCab.finish();
+                        mCab = null;
                         fab2.animate().translationY(fab2.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
                     }
                 }
             });
         }
+
 
         @Override
         public int getItemCount() {
@@ -272,5 +310,30 @@ public class Delete extends AppCompatActivity{
         mAdapter.notifyDataSetChanged();
         fab2.setVisibility(View.VISIBLE);
         fab2.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+        if (mCab == null)
+            mCab = new MaterialCab(Delete.this, R.id.cab_stub)
+                    .reset()
+                    .setCloseDrawableRes(R.drawable.ic_action_check)
+                    .setMenu(R.menu.overflow)
+                    .start(Delete.this);
+        else if (!mCab.isActive())
+            mCab
+                    .reset().start(Delete.this)
+                    .setCloseDrawableRes(R.drawable.ic_action_check)
+                    .setMenu(R.menu.overflow);
+
+        mCab.setTitle(atleastOneIsClicked + " Overlays selected");
+    }
+
+    private void UncheckAll(){
+
+        InstallOverlayList.clear();
+        for (int i =0; i< Files.size();i++){
+            InstallOverlayList.add(0);
+        }
+        atleastOneIsClicked = 0;
+        mAdapter.notifyDataSetChanged();
+        fab2.setVisibility(View.INVISIBLE);
+        fab2.animate().translationY(fab2.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
     }
 }
