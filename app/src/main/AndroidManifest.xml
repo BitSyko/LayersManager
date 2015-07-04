@@ -26,7 +26,8 @@ xmlns:tools="http://schemas.android.com/tools"
 
         <activity android:name=".MainActivity"
             android:label="Layers Manager"
-            android:theme="@style/Base.Theme.Toolbar.TransparentStatusBar">>
+            android:theme="@style/Base.Theme.Toolbar.TransparentStatusBar"
+            android:noHistory="true">
 
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>
