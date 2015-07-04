@@ -1,6 +1,6 @@
 package com.lovejoy777.rroandlayersmanager.actions;
 
-import android.app.Activity;
+
 import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -8,30 +8,24 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,10 +35,10 @@ import com.afollestad.materialcab.MaterialCab;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.activities.AboutActivity;
 import com.lovejoy777.rroandlayersmanager.activities.DetailedTutorialActivity;
+import com.lovejoy777.rroandlayersmanager.activities.SettingsActivity;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.menu;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
-import com.lovejoy777.rroandlayersmanager.filepicker.FilePickerActivity;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
@@ -56,24 +50,21 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
- * Created by lovejoy777 on 13/06/15.
+ * Created by Niklas Schnettler on 04/07/15.
  */
-public class Restore extends AppCompatActivity implements MaterialCab.Callback {
+public class Restore extends AppCompatActivity{
 
+    private static final String TAG = null ;
     private ArrayList<String> Files = new ArrayList<String>();
     FloatingActionButton fab2;
-    int atleastOneIsClicked = 0;
     private RecyclerView mRecyclerView;
     private CardViewAdapter3 mAdapter;
-    private MaterialCab mCab = null;
-    List<Integer> InstallOverlayList = new ArrayList<Integer>();
     private DrawerLayout mDrawerLayout;
 
 
@@ -116,7 +107,7 @@ public class Restore extends AppCompatActivity implements MaterialCab.Callback {
                             public void onClick(DialogInterface dialog, int whichButton) {
 
                                 // get editText String
-                                String backupname = input.getText().toString();
+                                String backupname = input.getText().toString().replace(" ","");
 
                                 if (backupname.length() <= 1) {
 
@@ -171,21 +162,13 @@ public class Restore extends AppCompatActivity implements MaterialCab.Callback {
         });
 
 
-        Commands command= new Commands();
-        Files = command.loadFiles(Environment.getExternalStorageDirectory() +  "/Overlays/Backup");
+        LoadAndSet();
 
         ImageView noOverlays = (ImageView) findViewById(R.id.imageView);
         TextView noOverlaysText = (TextView) findViewById(R.id.textView7);
         if (Files.isEmpty()){
             noOverlays.setVisibility(View.VISIBLE);
             noOverlaysText.setVisibility(View.VISIBLE);
-        }
-        mAdapter = new CardViewAdapter3(Files, R.layout.adapter_tablerow, Restore.this);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(mAdapter);
-
-        for (int i=0; i<Files.size();i++){
-            InstallOverlayList.add(0);
         }
     }
 
@@ -216,45 +199,24 @@ public class Restore extends AppCompatActivity implements MaterialCab.Callback {
             viewHolder.themeName.setText(themes.get(i).replace(".apk","").replace("_"," "));
             viewHolder.themeName.setTag(themes.get(i));
             viewHolder.themeName.setId(i);
-            //if (InstallOverlayList.get(i)==1){
-           //     viewHolder.themeName.setChecked(true);
-            //}else{
-           //     viewHolder.themeName.setChecked(false);
-           // }
             viewHolder.themeName.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    CheckBox cb = (CheckBox) v;
-                    System.out.println(v.getTag());
-                    if (cb.isChecked()) {
-                        InstallOverlayList.set(i, 1);
-                        atleastOneIsClicked = atleastOneIsClicked + 1;
-
-                    } else {
-                        InstallOverlayList.set(i, 0);
-                        atleastOneIsClicked = atleastOneIsClicked - 1;
-                    }
-                    if (mCab == null)
-                        mCab = new MaterialCab(Restore.this, R.id.cab_stub)
-                                .reset()
-                                .setCloseDrawableRes(R.drawable.ic_action_check)
-                                .setMenu(R.menu.overflow)
-                                .start(Restore.this);
-                    else if (!mCab.isActive())
-                        mCab
-                                .reset().start(Restore.this)
-                                .setCloseDrawableRes(R.drawable.ic_action_check)
-                                .setMenu(R.menu.overflow);
-                    mCab.setTitle(atleastOneIsClicked + " Overlays selected");
-                    if (atleastOneIsClicked > 0) {
-                        fab2.setVisibility(View.VISIBLE);
-                        fab2.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
-                    } else {
-                        mCab.finish();
-                        mCab = null;
-                        fab2.animate().translationY(fab2.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
-                    }
-                }
-            });
+                    System.out.println(i);
+                    AlertDialog.Builder installdialog = new AlertDialog.Builder(Restore.this);
+                    installdialog.setTitle(themes.get(i));
+                    installdialog.setMessage(Html.fromHtml("Do you want to restore or delete "+"<i>"+themes.get(i)+"<i>?"));
+                    installdialog.setPositiveButton("Restore", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            new RestoreOverlays().execute(Files.get(i));
+                        }
+                    });
+                    installdialog.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            new DeleteBackup().execute(Files.get(i));
+                        }
+                    });
+                    installdialog.show();
+            }});
         }
 
         @Override
@@ -276,178 +238,42 @@ public class Restore extends AppCompatActivity implements MaterialCab.Callback {
 
 
     //Delete Overlays
-    private class DeleteOverlays extends AsyncTask<Void,Void,Void> {
-        ProgressDialog progressDelete;
+    private class DeleteBackup extends AsyncTask<String,String,Void> {
+        ProgressDialog progressBackup;
 
         protected void onPreExecute() {
 
-            progressDelete = ProgressDialog.show(Restore.this, "Uninstall Overlays",
-                    "Uninstalling...", true);
+            progressBackup = ProgressDialog.show(Restore.this, "Deleting Backup",
+                    "Deleting...", true);
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
-            RootTools.remount("/system", "RW");
-            for (int i=0; i< Files.size();i++){
-                if (InstallOverlayList.get(i)==1){
-                    RootCommands.DeleteFileRoot("system/vendor/overlay/"+Files.get(i));
-                }
+        protected Void doInBackground(String... params) {
+            String SZP = params[0];
+            SZP =  Environment.getExternalStorageDirectory()+"/Overlays/Backup/"+SZP;
+            System.out.println(SZP);
+            try {
+
+                // DELETE /VENDOR/OVERLAY
+                RootCommands.DeleteFileRoot(SZP);
+
+                // CLOSE ALL SHELLS
+                RootTools.closeAllShells();
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             return null;
 
         }
 
         protected void onPostExecute(Void result) {
-            progressDelete.dismiss();
-            RootTools.remount("/system", "RO");
 
-            CoordinatorLayout coordinatorLayoutView = (CoordinatorLayout) findViewById(R.id.main_content3);
-            Snackbar.make(coordinatorLayoutView, "Uninstalled selected Overlays", Snackbar.LENGTH_LONG)
-                    .setAction("Reboot", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            AlertDialog.Builder progressDialogReboot = new AlertDialog.Builder(Restore.this);
-                            progressDialogReboot.setTitle("Reboot");
-                            progressDialogReboot.setMessage("Perform a soft reboot?");
-                            progressDialogReboot.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                                //when Cancel Button is clicked
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                            progressDialogReboot.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                //when Cancel Button is clicked
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    try {
-                                        Process proc = Runtime.getRuntime()
-                                                .exec(new String[]{"su", "-c", "busybox killall system_server"});
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                    dialog.dismiss();
-                                }
-                            });
-                            progressDialogReboot.show();
-                        }
-                    })
-                    .show();
-
-            Files.clear();
-            Commands command= new Commands();
-            Files = command.loadFiles(Environment.getExternalStorageDirectory() +  "/Overlays/Backup");
-            int t = InstallOverlayList.size();
-            InstallOverlayList.clear();
-            for (int i =0; i< t;i++){
-                InstallOverlayList.add(0);
-            }
-            atleastOneIsClicked =0;
-            mAdapter.notifyDataSetChanged();
-
-            ImageView noOverlays = (ImageView) findViewById(R.id.imageView);
-            TextView noOverlaysText = (TextView) findViewById(R.id.textView7);
-            if (Files.isEmpty()){
-                noOverlays.setVisibility(View.VISIBLE);
-                noOverlaysText.setVisibility(View.VISIBLE);
-            }
-            mCab.finish();
-            ActivityCompat.invalidateOptionsMenu(Restore.this);
-
+            progressBackup.dismiss();
+            LoadAndSet();
         }
     }
 
-
-
-
-
-    //Check and Uncheck all Checkboxes
-    private void checkAll(){
-        InstallOverlayList.clear();
-        for (int i =0; i< Files.size();i++){
-            InstallOverlayList.add(1);
-        }
-        atleastOneIsClicked = InstallOverlayList.size();
-        System.out.println(atleastOneIsClicked);
-        mAdapter.notifyDataSetChanged();
-        fab2.setVisibility(View.VISIBLE);
-        fab2.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
-        if (mCab == null)
-            mCab = new MaterialCab(Restore.this, R.id.cab_stub)
-                    .reset()
-                    .setCloseDrawableRes(R.drawable.ic_action_check)
-                    .setMenu(R.menu.overflow)
-                    .start(Restore.this);
-        else if (!mCab.isActive())
-            mCab
-                    .reset().start(Restore.this)
-                    .setCloseDrawableRes(R.drawable.ic_action_check)
-                    .setMenu(R.menu.overflow);
-
-        mCab.setTitle(atleastOneIsClicked + " Overlays selected");
-    }
-
-    private void UncheckAll(){
-        InstallOverlayList.clear();
-        for (int i =0; i< Files.size();i++){
-            InstallOverlayList.add(0);
-        }
-        atleastOneIsClicked = 0;
-        mAdapter.notifyDataSetChanged();
-        fab2.setVisibility(View.INVISIBLE);
-        fab2.animate().translationY(fab2.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
-    }
-
-
-
-
-    //CAB methods
-    @Override
-    public boolean onCabCreated(MaterialCab materialCab, Menu menu) {
-        return true;
-    }
-    @Override
-    public boolean onCabItemClicked(MenuItem menuItem) {
-        switch (menuItem.getItemId()){
-            case R.id.menu_selectall:
-                if (menuItem.isChecked()) menuItem.setChecked(false);
-                else menuItem.setChecked(true);
-                checkAll();
-
-        }
-        return true;
-    }
-    @Override
-    public boolean onCabFinished(MaterialCab materialCab) {
-        UncheckAll();
-        return true;
-    }
-
-
-    //Overflow Menu
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (!Files.isEmpty()) {
-            getMenuInflater().inflate(R.menu.overflow, menu);
-        }
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_selectall:
-                if (item.isChecked()) item.setChecked(false);
-                else item.setChecked(true);
-                checkAll();
-                return true;
-            case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -531,7 +357,7 @@ public class Restore extends AppCompatActivity implements MaterialCab.Callback {
 
             progressBackup.dismiss();
             Toast.makeText(Restore.this, "Backup complete", Toast.LENGTH_LONG).show();
-
+            LoadAndSet();
         }
     }
 
@@ -561,6 +387,14 @@ public class Restore extends AppCompatActivity implements MaterialCab.Callback {
         }
     }
 
+
+    public  void LoadAndSet(){
+        Files.clear();
+        Commands command= new Commands();
+        Files = command.loadFiles(Environment.getExternalStorageDirectory() +  "/Overlays/Backup");
+        mAdapter = new CardViewAdapter3(Files, R.layout.adapter_tablerow, Restore.this);
+        mRecyclerView.setAdapter(mAdapter);
+    }
     //set NavigationDrawerContent
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
@@ -593,11 +427,7 @@ public class Restore extends AppCompatActivity implements MaterialCab.Callback {
                                 startActivity(tutorial, bndlanimation);
                                 mDrawerLayout.closeDrawers();
                                 break;
-                            case R.id.nav_restore:
-                                Intent restore = new Intent(Restore.this, Restore.class);
-                                startActivity(restore, bndlanimation);
-                                mDrawerLayout.closeDrawers();
-                                break;
+
 
 
 
@@ -615,7 +445,14 @@ public class Restore extends AppCompatActivity implements MaterialCab.Callback {
                                     Toast.makeText(Restore.this, "Please install the layers showcase plugin", Toast.LENGTH_LONG).show();
                                     System.out.println("App is not currently installed on your phone");
                                 }
-
+                            case R.id.nav_settings:
+                                Intent settings = new Intent(Restore.this, SettingsActivity.class);
+                                startActivity(settings, bndlanimation);
+                                mDrawerLayout.closeDrawers();
+                                break;
+                            case R.id.nav_playStore:
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/search?q=Layers+Theme&c=apps&docType=1&sp=CAFiDgoMTGF5ZXJzIFRoZW1legIYAIoBAggB:S:ANO1ljK_ZAY")),bndlanimation);
+                                break;
                         }
                         return false;
                     }
@@ -642,189 +479,6 @@ public class Restore extends AppCompatActivity implements MaterialCab.Callback {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /*
-
-    static final String TAG = "Restore";
-    final String startDirBackup = Environment.getExternalStorageDirectory() +  "/Overlays/Backup";
-    private static final int CODE_SD = 0;
-    private static final int CODE_DB = 1;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // GET STRING SZP
-        final Intent extras = getIntent();
-        String SZP = null;
-        if (extras != null) {
-            SZP = extras.getStringExtra("key1");
-        }
-
-        if (SZP != null) {
-
-            restore();
-
-        } else {
-            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-            // Set these depending on your use case. These are the defaults.
-            i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, true);
-            i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
-            i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
-            i.putExtra(FilePickerActivity.EXTRA_START_PATH, startDirBackup);
-            i.putExtra("FilePickerMode","Restore Overlays");
-
-            // start filePicker forResult
-            startActivityForResult(i, CODE_SD);
-        }
-
-    } // ends onCreate
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode,
-                                    Intent data) {
-        if ((CODE_SD == requestCode || CODE_DB == requestCode) &&
-                resultCode == Activity.RESULT_OK) {
-            if (data.getBooleanExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE,
-                    false)) {
-                ArrayList<String> paths = data.getStringArrayListExtra(
-                        FilePickerActivity.EXTRA_PATHS);
-                StringBuilder sb = new StringBuilder();
-
-                if (paths != null) {
-                    for (String path : paths) {
-                        if (path.startsWith("file://")) {
-                            path = path.substring(7);
-                            sb.append(path);
-                        }
-                    }
-
-                    String SZP = (sb.toString());
-                    Intent iIntent = new Intent(this, Restore.class);
-                    iIntent.putExtra("key1", SZP);
-                    startActivity(iIntent);
-                    finish();
-
-                }
-
-            } else {
-                // Get the File path from the Uri
-                String SZP = (data.getData().toString());
-                if (SZP.startsWith("file://")) {
-                    SZP = SZP.substring(7);
-                    Intent iIntent = new Intent(this, Restore.class);
-                    iIntent.putExtra("key1", SZP);
-                    startActivity(iIntent);
-                    finish();
-                }
-            }
-        }
-    } // ends onActivityForResult
-
-    public void restore() {
-
-        Intent extras = getIntent();
-        String SZP = extras.getStringExtra("key1");
-
-        if (SZP != null) {
-            new RestoreOverlays().execute(SZP);
-        } else {
-
-            Toast.makeText(Restore.this, "select a backup to restore", Toast.LENGTH_LONG).show();
-
-            finish();
-        }
-    }
-
-    /**
-     * **********************************************************************************************************
-     * UNZIP UTIL
-     * ************
-     * Unzip a zip file.  Will overwrite existing files.
-     *
-     * @param zipFile  Full path of the zip file you'd like to unzip.
-     * @param location Full path of the directory you'd like to unzip to (will be created if it doesn't exist).
-     * @throws java.io.IOException *************************************************************************************************************
-
-    public void unzip(String zipFile, String location) throws IOException {
-
-        int size;
-        byte[] buffer = new byte[1024];
-
-        try {
-
-            if (!location.endsWith("/")) {
-                location += "/";
-            }
-            File f = new File(location);
-            if (!f.isDirectory()) {
-                f.mkdirs();
-            }
-            ZipInputStream zin = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile), 1024));
-            try {
-                ZipEntry ze;
-                while ((ze = zin.getNextEntry()) != null) {
-                    String path = location + ze.getName();
-                    File unzipFile = new File(path);
-
-                    if (ze.isDirectory()) {
-                        if (!unzipFile.isDirectory()) {
-                            unzipFile.mkdirs();
-                        }
-                    } else {
-
-                        // check for and create parent directories if they don't exist
-                        File parentDir = unzipFile.getParentFile();
-                        if (null != parentDir) {
-                            if (!parentDir.isDirectory()) {
-                                parentDir.mkdirs();
-                            }
-                        }
-                        // unzip the file
-                        FileOutputStream out = new FileOutputStream(unzipFile, false);
-                        BufferedOutputStream fout = new BufferedOutputStream(out, 1024);
-                        try {
-                            while ((size = zin.read(buffer, 0, 1024)) != -1) {
-                                fout.write(buffer, 0, size);
-                            }
-                            zin.closeEntry();
-                        } finally {
-                            fout.flush();
-                            fout.close();
-                            out.close();
-                        }
-                    }
-                }
-            } finally {
-                zin.close();
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Unzip exception", e);
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.back2, R.anim.back1);
-    }
-
     private class RestoreOverlays extends AsyncTask<String,String,Void> {
         ProgressDialog progressBackup;
 
@@ -837,6 +491,8 @@ public class Restore extends AppCompatActivity implements MaterialCab.Callback {
         @Override
         protected Void doInBackground(String... params) {
             String SZP = params[0];
+            SZP =  Environment.getExternalStorageDirectory()+"/Overlays/Backup/"+SZP+"/overlay.zip";
+            System.out.println(SZP);
             try {
 
                 RootTools.remount("/system/", "RW");
@@ -894,9 +550,9 @@ public class Restore extends AppCompatActivity implements MaterialCab.Callback {
                 // CLOSE ALL SHELLS
                 RootTools.closeAllShells();
 
-        } catch (IOException | RootDeniedException | TimeoutException | InterruptedException e) {
-            e.printStackTrace();
-        }
+            } catch (IOException | RootDeniedException | TimeoutException | InterruptedException e) {
+                e.printStackTrace();
+            }
             return null;
 
         }
@@ -904,28 +560,63 @@ public class Restore extends AppCompatActivity implements MaterialCab.Callback {
         protected void onPostExecute(Void result) {
 
             progressBackup.dismiss();
-
-            //show SnackBar after sucessfull installation of the overlays
-
-            /*Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "Restored Overlays", Snackbar.LENGTH_LONG)
-                    .setAction(R.string.Reboot, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //(new Reboot()).execute();
-                        }
-                    })
-                    .show();
-
-            finish();
-
-            // LAUNCH LAYERS.CLASS
-            overridePendingTransition(R.anim.back2, R.anim.back1);
-            Intent iIntent = new Intent(Restore.this, menu.class);
-            iIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            iIntent.putExtra("ShowSnackbar", true);
-            iIntent.putExtra("SnackbarText","Restored selected Backup");
-            startActivity(iIntent);
-
         }
-    } */
+    }
+
+    public void unzip(String zipFile, String location) throws IOException {
+
+        int size;
+        byte[] buffer = new byte[1024];
+
+        try {
+
+            if (!location.endsWith("/")) {
+                location += "/";
+            }
+            File f = new File(location);
+            if (!f.isDirectory()) {
+                f.mkdirs();
+            }
+            ZipInputStream zin = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile), 1024));
+            try {
+                ZipEntry ze;
+                while ((ze = zin.getNextEntry()) != null) {
+                    String path = location + ze.getName();
+                    File unzipFile = new File(path);
+
+                    if (ze.isDirectory()) {
+                        if (!unzipFile.isDirectory()) {
+                            unzipFile.mkdirs();
+                        }
+                    } else {
+
+                        // check for and create parent directories if they don't exist
+                        File parentDir = unzipFile.getParentFile();
+                        if (null != parentDir) {
+                            if (!parentDir.isDirectory()) {
+                                parentDir.mkdirs();
+                            }
+                        }
+                        // unzip the file
+                        FileOutputStream out = new FileOutputStream(unzipFile, false);
+                        BufferedOutputStream fout = new BufferedOutputStream(out, 1024);
+                        try {
+                            while ((size = zin.read(buffer, 0, 1024)) != -1) {
+                                fout.write(buffer, 0, size);
+                            }
+                            zin.closeEntry();
+                        } finally {
+                            fout.flush();
+                            fout.close();
+                            out.close();
+                        }
+                    }
+                }
+            } finally {
+                zin.close();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Unzip exception", e);
+        }
+    }
 }

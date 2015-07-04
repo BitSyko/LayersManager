@@ -34,6 +34,19 @@
             android:title="@string/RestoreOverlays" />
     </group>
 
+    <item android:title="Discover">
+        <menu>
+            <item
+                android:id="@+id/nav_showcase"
+                android:icon="@drawable/ic_action_showcase"
+                android:title="@string/Showcase" />
+            <item
+                android:id="@+id/nav_playStore"
+                android:icon="@drawable/ic_action_playstore"
+                android:title="PlayStore" />
+        </menu>
+    </item>
+
     <item android:title="@string/More">
         <menu>
             <item
@@ -46,9 +59,10 @@
                 android:title="@string/About" />
 
             <item
-                android:id="@+id/nav_showcase"
-                android:icon="@drawable/ic_action_about"
-                android:title="@string/Showcase" />
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_action_settings"
+                android:title="Settings" />
+
         </menu>
     </item>
 

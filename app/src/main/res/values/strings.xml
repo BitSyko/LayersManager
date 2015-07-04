@@ -58,6 +58,7 @@
     <string name="About">About</string>
     <string name="Showcase">Layers Showcase</string>
     <string name="General">General</string>
+    <string name="Restore">Restore</string>
 
     <plurals
         name="select_dir">

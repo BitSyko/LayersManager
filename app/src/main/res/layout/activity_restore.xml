@@ -59,7 +59,9 @@
 
                 android:layout_marginTop="16dp"
                 android:layout_marginLeft="16dp"
-                android:textColor="@color/accent" />
+                android:textColor="@color/accent"
+                android:textStyle="bold"
+                android:paddingBottom="8dp" />
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/cardList"
                 android:layout_width="match_parent"

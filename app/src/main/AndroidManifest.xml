@@ -70,7 +70,7 @@ xmlns:tools="http://schemas.android.com/tools"
             android:name=".actions.Restore"
             android:icon="@mipmap/ic_launcher"
             android:label="Restore"
-            android:theme="@style/Base.Theme.Toolbar"
+            android:theme="@style/Base.Theme.Toolbar.TransparentStatusBar"
             android:parentActivityName=".menu">
             <intent-filter>
                 <action android:name="com.lovejoy777.rroandlayersmanager.RESTORE" />
@@ -107,7 +107,6 @@ xmlns:tools="http://schemas.android.com/tools"
 
         <activity
             android:name=".activities.DetailedTutorialActivity"
-            android:icon="@mipmap/ic_launcher"
             android:label=""
             android:parentActivityName=".menu">
             <intent-filter>
@@ -118,7 +117,6 @@ xmlns:tools="http://schemas.android.com/tools"
         </activity>
         <activity
             android:name=".activities.AboutActivity"
-            android:icon="@mipmap/ic_launcher"
             android:label=""
             android:theme="@style/Toolbar2"
             android:parentActivityName=".menu">

@@ -22,7 +22,8 @@ package com.lovejoy777.rroandlayersmanager.util;
 import android.content.Context;
 import android.media.MediaScannerConnection;
 
-import com.lovejoy777.rroandlayersmanager.Settings;
+import com.lovejoy777.rroandlayersmanager.activities.SettingsActivity;
+import com.lovejoy777.rroandlayersmanager.activities.SettingsActivity;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 
 import java.io.BufferedInputStream;
@@ -140,7 +141,7 @@ public class SimpleUtils {
                 for (String file : files) copyToDirectory(old + "/" + file, dir);
             }
         } else {
-            if (Settings.rootAccess())
+            if (SettingsActivity.rootAccess())
                 RootCommands.moveCopyRoot(old, newDir);
         }
     }
@@ -167,7 +168,7 @@ public class SimpleUtils {
 
         if (folder.mkdir())
             success = true;
-        else if (Settings.rootAccess()) {
+        else if (SettingsActivity.rootAccess()) {
             success = RootCommands.createRootdir(folder, path);
         }
 
@@ -203,7 +204,7 @@ public class SimpleUtils {
                 if (target.exists())
                     target.delete();
             } else if (target.exists() && !target.delete()) {
-                if (Settings.rootAccess())
+                if (SettingsActivity.rootAccess())
                     RootCommands.DeleteFileRoot(path);
             }
         }

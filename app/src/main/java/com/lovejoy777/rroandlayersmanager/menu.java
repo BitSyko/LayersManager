@@ -282,58 +282,46 @@ public class menu extends AppCompatActivity
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        mDrawerLayout.closeDrawers();
                         Bundle bndlanimation =
                                 ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
                         int id = menuItem.getItemId();
                         switch (id){
                             case R.id.nav_about:
                                 Intent about = new Intent(menu.this, AboutActivity.class);
-
                                 startActivity(about, bndlanimation);
-                                mDrawerLayout.closeDrawers();
                                 break;
                             case R.id.nav_delete:
                                 Intent delete = new Intent(menu.this, Delete.class);
                                 startActivity(delete, bndlanimation);
-                                mDrawerLayout.closeDrawers();
                                 break;
                             case R.id.nav_tutorial:
                                 Intent tutorial = new Intent(menu.this, DetailedTutorialActivity.class);
                                 startActivity(tutorial, bndlanimation);
-                                mDrawerLayout.closeDrawers();
                                 break;
                             case R.id.nav_restore:
                                 Intent restore = new Intent(menu.this, Restore.class);
                                 startActivity(restore, bndlanimation);
-                                mDrawerLayout.closeDrawers();
                                 break;
-
-
-
                             case R.id.nav_showcase:
-
                                 boolean installed = appInstalledOrNot("com.lovejoy777.showcase");
                                 if(installed) {
                                     //This intent will help you to launch if the package is already installed
                                     Intent intent = new Intent();
-                                    intent.setComponent(new ComponentName("com.lovejoy777.showcase", "com.lovejoy777.showcase.MainActivity1"));
+                                    intent.setComponent(new ComponentName("com.lovejoy777.showcase", "com.lovejoy777.showcase.MainActivity"));
                                     startActivity(intent);
-
-
-                                    mDrawerLayout.closeDrawers();
-
                                     break;
                                 } else {
                                     Toast.makeText(menu.this, "Please install the layers showcase plugin", Toast.LENGTH_LONG).show();
                                     System.out.println("App is not currently installed on your phone");
                                 }
-
                             case R.id.nav_settings:
                                 Intent settings = new Intent(menu.this, SettingsActivity.class);
                                 startActivity(settings, bndlanimation);
-                                mDrawerLayout.closeDrawers();
                                 break;
-
+                            case R.id.nav_playStore:
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/search?q=Layers+Theme&c=apps&docType=1&sp=CAFiDgoMTGF5ZXJzIFRoZW1legIYAIoBAggB:S:ANO1ljK_ZAY")),bndlanimation);
+                                break;
                         }
                         return false;
                     }
