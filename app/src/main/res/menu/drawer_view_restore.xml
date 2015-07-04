@@ -18,7 +18,7 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:checked="true"
+
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_action_install"
             android:title="@string/InstallOverlays2" />
@@ -29,22 +29,10 @@
             android:title="@string/UninstallOverlays" />
         <item
             android:id="@+id/nav_restore"
+            android:checked="true"
             android:icon="@drawable/ic_action_restore"
             android:title="@string/RestoreOverlays" />
     </group>
-
-    <item android:title="Discover">
-        <menu>
-            <item
-                android:id="@+id/nav_showcase"
-                android:icon="@drawable/ic_action_showcase"
-                android:title="@string/Showcase" />
-            <item
-                android:id="@+id/nav_playStore"
-                android:icon="@drawable/ic_action_playstore"
-                android:title="PlayStore" />
-        </menu>
-    </item>
 
     <item android:title="@string/More">
         <menu>
@@ -56,6 +44,11 @@
                 android:id="@+id/nav_about"
                 android:icon="@drawable/ic_action_about"
                 android:title="@string/About" />
+
+            <item
+                android:id="@+id/nav_showcase"
+                android:icon="@drawable/ic_action_about"
+                android:title="@string/Showcase" />
         </menu>
     </item>
 

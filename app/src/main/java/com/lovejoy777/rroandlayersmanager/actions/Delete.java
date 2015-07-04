@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,15 +20,10 @@ import com.afollestad.materialcab.MaterialCab;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
-
 import com.stericson.RootTools.RootTools;
-
-
 import java.io.IOException;
 import java.util.ArrayList;
-
 import java.util.List;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,28 +32,28 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.CheckBox;
-import android.widget.ProgressBar;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * Created by lovejoy777 on 13/06/15.
  */
 public class Delete extends AppCompatActivity implements MaterialCab.Callback {
 
-        final String startDirvendor = "/vendor/overlay";
-        private static final int CODE_SD = 0;
-        private static final int CODE_DB = 1;
     private ArrayList<String> Files = new ArrayList<String>();
     FloatingActionButton fab2;
     int atleastOneIsClicked = 0;
     private RecyclerView mRecyclerView;
     private CardViewAdapter3 mAdapter;
-    private ProgressBar spinner;
     private MaterialCab mCab = null;
     List<Integer> InstallOverlayList = new ArrayList<Integer>();
+
+
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.screen1);
+            setContentView(R.layout.activity_delete);
 
             // Handle Toolbar
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -83,8 +79,13 @@ public class Delete extends AppCompatActivity implements MaterialCab.Callback {
             Commands command= new Commands();
             Files = command.loadFiles("/system/vendor/overlay");
 
-
-            mAdapter = new CardViewAdapter3(Files, R.layout.adapter_uninstalllayout, Delete.this);
+            ImageView noOverlays = (ImageView) findViewById(R.id.imageView);
+            TextView noOverlaysText = (TextView) findViewById(R.id.textView7);
+            if (Files.isEmpty()){
+                noOverlays.setVisibility(View.VISIBLE);
+                noOverlaysText.setVisibility(View.VISIBLE);
+            }
+            mAdapter = new CardViewAdapter3(Files, R.layout.adapter_listlayout, Delete.this);
             mRecyclerView.setHasFixedSize(true);
             mRecyclerView.setAdapter(mAdapter);
 
@@ -93,30 +94,9 @@ public class Delete extends AppCompatActivity implements MaterialCab.Callback {
             }
         }
 
-    @Override
-    public boolean onCabCreated(MaterialCab materialCab, Menu menu) {
-        return true;
-    }
-
-    @Override
-    public boolean onCabItemClicked(MenuItem menuItem) {
-        switch (menuItem.getItemId()){
-            case R.id.menu_selectall:
-                if (menuItem.isChecked()) menuItem.setChecked(false);
-                else menuItem.setChecked(true);
-                checkAll();
-
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onCabFinished(MaterialCab materialCab) {
-        UncheckAll();
-        return true;
-    }
 
 
+    //Adapter
     private class CardViewAdapter3 extends RecyclerView.Adapter<CardViewAdapter3.ViewHolder>{
 
         private ArrayList<String> themes;
@@ -182,12 +162,10 @@ public class Delete extends AppCompatActivity implements MaterialCab.Callback {
             });
         }
 
-
         @Override
         public int getItemCount() {
             return themes == null ? 0 : themes.size();
         }
-
         public  class ViewHolder extends RecyclerView.ViewHolder {
             public CheckBox themeName;
 
@@ -196,22 +174,13 @@ public class Delete extends AppCompatActivity implements MaterialCab.Callback {
                 super(itemView);
                 themeName = (CheckBox) itemView.findViewById(R.id.deletecheckbox);
             }
-
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.overflow, menu);
-        return true;
-    }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.back2, R.anim.back1);
-    }
 
+
+    //Delete Overlays
     private class DeleteOverlays extends AsyncTask<Void,Void,Void> {
         ProgressDialog progressDelete;
 
@@ -234,7 +203,6 @@ public class Delete extends AppCompatActivity implements MaterialCab.Callback {
         }
 
         protected void onPostExecute(Void result) {
-
             progressDelete.dismiss();
             RootTools.remount("/system", "RO");
 
@@ -283,24 +251,24 @@ public class Delete extends AppCompatActivity implements MaterialCab.Callback {
             atleastOneIsClicked =0;
             mAdapter.notifyDataSetChanged();
 
+            ImageView noOverlays = (ImageView) findViewById(R.id.imageView);
+            TextView noOverlaysText = (TextView) findViewById(R.id.textView7);
+            if (Files.isEmpty()){
+                noOverlays.setVisibility(View.VISIBLE);
+                noOverlaysText.setVisibility(View.VISIBLE);
+            }
+            mCab.finish();
+            ActivityCompat.invalidateOptionsMenu(Delete.this);
+
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_selectall:
-                if (item.isChecked()) item.setChecked(false);
-                else item.setChecked(true);
-                checkAll();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
+
+
+
+    //Check and Uncheck all Checkboxes
     private void checkAll(){
-
         InstallOverlayList.clear();
         for (int i =0; i< Files.size();i++){
             InstallOverlayList.add(1);
@@ -326,7 +294,6 @@ public class Delete extends AppCompatActivity implements MaterialCab.Callback {
     }
 
     private void UncheckAll(){
-
         InstallOverlayList.clear();
         for (int i =0; i< Files.size();i++){
             InstallOverlayList.add(0);
@@ -335,5 +302,58 @@ public class Delete extends AppCompatActivity implements MaterialCab.Callback {
         mAdapter.notifyDataSetChanged();
         fab2.setVisibility(View.INVISIBLE);
         fab2.animate().translationY(fab2.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
+    }
+
+
+
+
+    //CAB methods
+    @Override
+    public boolean onCabCreated(MaterialCab materialCab, Menu menu) {
+        return true;
+    }
+    @Override
+    public boolean onCabItemClicked(MenuItem menuItem) {
+        switch (menuItem.getItemId()){
+            case R.id.menu_selectall:
+                if (menuItem.isChecked()) menuItem.setChecked(false);
+                else menuItem.setChecked(true);
+                checkAll();
+
+        }
+        return true;
+    }
+    @Override
+    public boolean onCabFinished(MaterialCab materialCab) {
+        UncheckAll();
+        return true;
+    }
+
+
+    //Overflow Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (!Files.isEmpty()) {
+            getMenuInflater().inflate(R.menu.overflow, menu);
+        }
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_selectall:
+                if (item.isChecked()) item.setChecked(false);
+                else item.setChecked(true);
+                checkAll();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.back2, R.anim.back1);
     }
 }

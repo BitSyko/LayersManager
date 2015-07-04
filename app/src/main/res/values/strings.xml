@@ -52,7 +52,7 @@
     <string name="InstallOverlays2">Install Overlays</string>
     <string name="UninstallOverlays">Uninstall Overlays</string>
     <string name="BackupOverlays">Backup Overlays</string>
-    <string name="RestoreOverlays">Restore Backups</string>
+    <string name="RestoreOverlays">Backup &amp; Restore</string>
     <string name="More">More</string>
     <string name="Tutorial">Tutorial</string>
     <string name="About">About</string>

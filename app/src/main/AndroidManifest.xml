@@ -58,7 +58,7 @@ xmlns:tools="http://schemas.android.com/tools"
             android:name=".actions.Restore"
             android:icon="@mipmap/ic_launcher"
             android:label="Restore"
-            android:theme="@style/LayersTheme"
+            android:theme="@style/Base.Theme.Toolbar"
             android:parentActivityName=".menu">
             <intent-filter>
                 <action android:name="com.lovejoy777.rroandlayersmanager.RESTORE" />
