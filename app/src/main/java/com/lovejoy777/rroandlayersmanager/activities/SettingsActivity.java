@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.menu;
+import com.stericson.RootTools.RootTools;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +22,10 @@ import java.io.InputStreamReader;
  * Created by Niklas on 04.07.2015.
  */
 public class SettingsActivity extends PreferenceActivity implements
+
        SharedPreferences.OnSharedPreferenceChangeListener {
+
+    private static boolean mRootAccess;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +54,7 @@ public class SettingsActivity extends PreferenceActivity implements
                 if (noIcon.length() >= 3) {
 
                     PackageManager p = getPackageManager();
-                    ComponentName componentName = new ComponentName(this, com.lovejoy777.rroandlayersmanager.Settings.class); // activity which is first time open in manifiest file which is declare as <category android:name="android.intent.category.LAUNCHER" />
+                    ComponentName componentName = new ComponentName(this, com.lovejoy777.rroandlayersmanager.activities.SettingsActivity.class); // activity which is first time open in manifiest file which is declare as <category android:name="android.intent.category.LAUNCHER" />
                     p.setComponentEnabledSetting(componentName,PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
                     Toast.makeText(SettingsActivity.this, "Launcher icon removed", Toast.LENGTH_SHORT).show();
 
@@ -123,6 +127,10 @@ public class SettingsActivity extends PreferenceActivity implements
         } else{
             ReviveLauncherIcon();
         }
+    }
+
+    public static boolean rootAccess() {
+        return mRootAccess && RootTools.isAccessGiven();
     }
 
 }

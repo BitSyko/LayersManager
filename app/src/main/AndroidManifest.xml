@@ -132,7 +132,7 @@ xmlns:tools="http://schemas.android.com/tools"
         <activity android:name=".activities.Intro"
             android:noHistory="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        
+
         <activity
             android:name=".activities.SettingsActivity"
             android:label="Layers"

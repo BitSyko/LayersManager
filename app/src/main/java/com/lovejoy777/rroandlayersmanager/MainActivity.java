@@ -1,73 +1,22 @@
 package com.lovejoy777.rroandlayersmanager;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.content.pm.ServiceInfo;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import com.afollestad.materialcab.MaterialCab;
-import com.lovejoy777.rroandlayersmanager.actions.Delete;
-import com.lovejoy777.rroandlayersmanager.actions.Install;
-import com.lovejoy777.rroandlayersmanager.actions.Restore;
-import com.lovejoy777.rroandlayersmanager.activities.AboutActivity;
-import com.lovejoy777.rroandlayersmanager.activities.DetailedTutorialActivity;
-import com.lovejoy777.rroandlayersmanager.activities.Intro;
-import com.lovejoy777.rroandlayersmanager.activities.SettingsActivity;
-import com.lovejoy777.rroandlayersmanager.adapters.CardViewAdapter;
-import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
-import com.lovejoy777.rroandlayersmanager.helper.CardViewContent;
-import com.lovejoy777.rroandlayersmanager.helper.RecyclerItemClickListener;
 import com.stericson.RootTools.RootTools;
-import com.stericson.RootTools.exceptions.RootDeniedException;
-import com.stericson.RootTools.execution.CommandCapture;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.TimeoutException;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 public class MainActivity extends Activity
 {

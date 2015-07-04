@@ -21,7 +21,7 @@ package com.lovejoy777.rroandlayersmanager.commands;
 
 import android.util.Log;
 
-import com.lovejoy777.rroandlayersmanager.Settings;
+import com.lovejoy777.rroandlayersmanager.activities.SettingsActivity;
 import com.stericson.RootTools.RootTools;
 
 import java.io.BufferedReader;
@@ -285,7 +285,7 @@ public class RootCommands {
         String[] info = null;
         String line;
 
-        if (!Settings.rootAccess())
+        if (!SettingsActivity.rootAccess())
             return null;
 
         try {
