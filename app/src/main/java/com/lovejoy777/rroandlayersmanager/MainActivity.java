@@ -38,7 +38,6 @@ import android.widget.EditText;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-
 import com.lovejoy777.rroandlayersmanager.actions.Delete;
 import com.lovejoy777.rroandlayersmanager.actions.Install;
 import com.lovejoy777.rroandlayersmanager.actions.Restore;
@@ -53,10 +52,12 @@ import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -65,7 +66,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class menu extends AppCompatActivity
+public class MainActivity extends AppCompatActivity
 {
 
     public static final String ACTION_PICK_PLUGIN = "com.layers.plugins.PICK_OVERLAYS";
@@ -112,7 +113,7 @@ public class menu extends AppCompatActivity
 
         if (counter < 1){
 
-            Intent intent = new Intent(menu.this,Intro.class);
+            Intent intent = new Intent(MainActivity.this,Intro.class);
             startActivity(intent);
 
         }
@@ -128,7 +129,7 @@ public class menu extends AppCompatActivity
         RecyclerView recyclerCardViewList = (RecyclerView) findViewById(R.id.cardList);
         recyclerCardViewList.setHasFixedSize(true);
         recyclerCardViewList.addOnItemTouchListener(
-                new RecyclerItemClickListener(menu.this, new RecyclerItemClickListener.OnItemClickListener() {
+                new RecyclerItemClickListener(MainActivity.this, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         onListItemClick(position);
@@ -150,7 +151,7 @@ public class menu extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent Installactivity = new Intent(menu.this, Install.class);
+                Intent Installactivity = new Intent(MainActivity.this, Install.class);
 
                 Bundle bndlanimation =
                         ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
@@ -222,7 +223,7 @@ public class menu extends AppCompatActivity
                         .setAction("Reboot", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                AlertDialog.Builder progressDialogReboot = new AlertDialog.Builder(menu.this);
+                                AlertDialog.Builder progressDialogReboot = new AlertDialog.Builder(MainActivity.this);
                                 progressDialogReboot.setTitle("Reboot");
                                 progressDialogReboot.setMessage("Perform a soft reboot?");
                                 progressDialogReboot.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -284,6 +285,7 @@ public class menu extends AppCompatActivity
 
 
     //set NavigationDrawerContent
+    //set NavigationDrawerContent
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -294,23 +296,23 @@ public class menu extends AppCompatActivity
                         int id = menuItem.getItemId();
                         switch (id){
                             case R.id.nav_about:
-                                Intent about = new Intent(menu.this, AboutActivity.class);
+                                Intent about = new Intent(MainActivity.this, AboutActivity.class);
 
                                 startActivity(about, bndlanimation);
                                 mDrawerLayout.closeDrawers();
                                 break;
                             case R.id.nav_delete:
-                                Intent delete = new Intent(menu.this, Delete.class);
+                                Intent delete = new Intent(MainActivity.this, Delete.class);
                                 startActivity(delete, bndlanimation);
                                 mDrawerLayout.closeDrawers();
                                 break;
                             case R.id.nav_tutorial:
-                                Intent tutorial = new Intent(menu.this, DetailedTutorialActivity.class);
+                                Intent tutorial = new Intent(MainActivity.this, DetailedTutorialActivity.class);
                                 startActivity(tutorial, bndlanimation);
                                 mDrawerLayout.closeDrawers();
                                 break;
                             case R.id.nav_restore:
-                                Intent restore = new Intent(menu.this, Restore.class);
+                                Intent restore = new Intent(MainActivity.this, Restore.class);
                                 startActivity(restore, bndlanimation);
                                 mDrawerLayout.closeDrawers();
                                 break;
@@ -331,12 +333,12 @@ public class menu extends AppCompatActivity
 
                                     break;
                                 } else {
-                                    Toast.makeText(menu.this, "Please install the layers showcase plugin", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(MainActivity.this, "Please install the layers showcase plugin", Toast.LENGTH_LONG).show();
                                     System.out.println("App is not currently installed on your phone");
                                 }
 
                             case R.id.nav_settings:
-                                Intent settings = new Intent(menu.this, Settings.class);
+                                Intent settings = new Intent(MainActivity.this, Settings.class);
                                 startActivity(settings, bndlanimation);
                                 mDrawerLayout.closeDrawers();
                                 break;
@@ -344,7 +346,7 @@ public class menu extends AppCompatActivity
                         }
                         return false;
                     }
-        });
+                });
     }
 
     private boolean appInstalledOrNot(String uri) {
@@ -445,21 +447,21 @@ public class menu extends AppCompatActivity
             }
         }
 
-            String sdOverlays1 = Environment.getExternalStorageDirectory() + "/Overlays/Backup";
-            // CREATES /SDCARD/OVERLAYS/BACKUP
-            File dir1 = new File(sdOverlays1);
-            if (!dir1.exists() && !dir1.isDirectory()) {
-                CommandCapture command4 = new CommandCapture(0, "mkdir " + sdOverlays1);
-                try {
-                    RootTools.getShell(true).add(command4);
-                    while (!command4.isFinished()) {
-                        Thread.sleep(1);
-                    }
-
-                } catch (IOException | TimeoutException | InterruptedException | RootDeniedException e) {
-                    e.printStackTrace();
+        String sdOverlays1 = Environment.getExternalStorageDirectory() + "/Overlays/Backup";
+        // CREATES /SDCARD/OVERLAYS/BACKUP
+        File dir1 = new File(sdOverlays1);
+        if (!dir1.exists() && !dir1.isDirectory()) {
+            CommandCapture command4 = new CommandCapture(0, "mkdir " + sdOverlays1);
+            try {
+                RootTools.getShell(true).add(command4);
+                while (!command4.isFinished()) {
+                    Thread.sleep(1);
                 }
+
+            } catch (IOException | TimeoutException | InterruptedException | RootDeniedException e) {
+                e.printStackTrace();
             }
+        }
 
         RootTools.remount("/system", "RW");
         String vendover = "/vendor/overlay";
@@ -499,7 +501,7 @@ public class menu extends AppCompatActivity
             String category = categories.get(position);
             if( category.length() > 0 ) {
 
-                Intent intent = new Intent(menu.this, Delete.class);
+                Intent intent = new Intent(MainActivity.this, Delete.class);
                 intent.setClassName("com.lovejoy777.rroandlayersmanager",
                         "com.lovejoy777.rroandlayersmanager.OverlayDetailActivity");
                 intent.putExtra(BUNDLE_EXTRAS_CATEGORY, category);
