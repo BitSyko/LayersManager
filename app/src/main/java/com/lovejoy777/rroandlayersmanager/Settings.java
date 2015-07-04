@@ -35,6 +35,7 @@ public class Settings  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings);
 
+
         // Handle Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
@@ -159,4 +160,8 @@ public class Settings  extends AppCompatActivity {
     public static boolean rootAccess() {
         return mRootAccess && RootTools.isAccessGiven();
     }
+
+
+
+
 }

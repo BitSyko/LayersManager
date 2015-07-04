@@ -38,12 +38,14 @@ import android.widget.EditText;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.afollestad.materialcab.MaterialCab;
 import com.lovejoy777.rroandlayersmanager.actions.Delete;
 import com.lovejoy777.rroandlayersmanager.actions.Install;
 import com.lovejoy777.rroandlayersmanager.actions.Restore;
 import com.lovejoy777.rroandlayersmanager.activities.AboutActivity;
 import com.lovejoy777.rroandlayersmanager.activities.DetailedTutorialActivity;
 import com.lovejoy777.rroandlayersmanager.activities.Intro;
+import com.lovejoy777.rroandlayersmanager.activities.SettingsActivity;
 import com.lovejoy777.rroandlayersmanager.adapters.CardViewAdapter;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 import com.lovejoy777.rroandlayersmanager.helper.CardViewContent;
@@ -338,7 +340,7 @@ public class MainActivity extends AppCompatActivity
                                 }
 
                             case R.id.nav_settings:
-                                Intent settings = new Intent(MainActivity.this, Settings.class);
+                                Intent settings = new Intent(MainActivity.this, SettingsActivity.class);
                                 startActivity(settings, bndlanimation);
                                 mDrawerLayout.closeDrawers();
                                 break;

@@ -57,6 +57,7 @@
     <string name="Tutorial">Tutorial</string>
     <string name="About">About</string>
     <string name="Showcase">Layers Showcase</string>
+    <string name="General">General</string>
 
     <plurals
         name="select_dir">
