@@ -308,7 +308,7 @@ public class menu extends AppCompatActivity
                                 if(installed) {
                                     //This intent will help you to launch if the package is already installed
                                     Intent intent = new Intent();
-                                    intent.setComponent(new ComponentName("com.lovejoy777.showcase", "com.lovejoy777.showcase.MainActivity"));
+                                    intent.setComponent(new ComponentName("com.lovejoy777.showcase", "com.lovejoy777.showcase.MainActivity1"));
                                     startActivity(intent);
                                     break;
                                 } else {
