@@ -60,6 +60,7 @@ public class SettingsActivity extends PreferenceActivity implements
                     SharedPreferences myPrefs = this.getSharedPreferences("myPrefs", MODE_WORLD_READABLE);
                     SharedPreferences.Editor editor = myPrefs.edit();
                     editor.putBoolean("switch1", false);
+                    editor.commit();
 
                 }
 
@@ -69,6 +70,7 @@ public class SettingsActivity extends PreferenceActivity implements
                 SharedPreferences myPrefs = this.getSharedPreferences("myPrefs", MODE_WORLD_READABLE);
                 SharedPreferences.Editor editor = myPrefs.edit();
                 editor.putBoolean("switch1", false);
+                editor.commit();
             }
             p1.destroy();
         } catch (IOException e) {
