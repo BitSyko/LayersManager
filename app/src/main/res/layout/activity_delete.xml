@@ -32,19 +32,19 @@
             android:layout_height="match_parent"
             android:gravity="center">
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:id="@+id/imageView"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/brush"
+            android:src="@drawable/ic_uninstall"
             android:tint="#727272"
             android:layout_gravity="center_horizontal"
             android:visibility="invisible" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No Overlays installed"
+                android:text="No Overlays installed.\nInstall some on the main page."
                 android:id="@+id/textView7"
                 android:layout_below="@+id/imageView"
                 android:layout_centerHorizontal="true"

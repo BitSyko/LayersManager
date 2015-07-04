@@ -32,22 +32,23 @@
             android:gravity="center"
             android:background="@color/white">
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:id="@+id/imageView"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/brush"
+            android:src="@drawable/ic_restore"
             android:tint="#727272"
             android:layout_gravity="center_horizontal"
             android:visibility="invisible" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No Overlays installed"
+                android:text="No Backups available.\nMake one by clicking the FAB."
                 android:id="@+id/textView7"
                 android:layout_below="@+id/imageView"
                 android:layout_centerHorizontal="true"
+                android:gravity="center"
                 android:layout_marginTop="200dp"
                 android:textSize="16sp"
                 android:visibility="invisible" />
@@ -61,7 +62,8 @@
                 android:layout_marginLeft="16dp"
                 android:textColor="@color/accent"
                 android:textStyle="bold"
-                android:paddingBottom="8dp" />
+                android:paddingBottom="8dp"
+                android:gravity="center"/>
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/cardList"
                 android:layout_width="match_parent"

@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -334,16 +335,7 @@ public class Delete extends AppCompatActivity implements MaterialCab.Callback {
                     })
                     .show();
 
-            Files.clear();
-            Commands command= new Commands();
-            Files = command.loadFiles("/system/vendor/overlay");
-            int t = InstallOverlayList.size();
-            InstallOverlayList.clear();
-            for (int i =0; i< t;i++){
-                InstallOverlayList.add(0);
-            }
-            atleastOneIsClicked =0;
-            mAdapter.notifyDataSetChanged();
+            LoadAndSet();
 
             ImageView noOverlays = (ImageView) findViewById(R.id.imageView);
             TextView noOverlaysText = (TextView) findViewById(R.id.textView7);
@@ -357,7 +349,19 @@ public class Delete extends AppCompatActivity implements MaterialCab.Callback {
         }
     }
 
-
+    public  void LoadAndSet(){
+        Files.clear();
+        Commands command= new Commands();
+        Files = command.loadFiles("/system/vendor/overlay");
+        int t = InstallOverlayList.size();
+        InstallOverlayList.clear();
+        for (int i =0; i< t;i++){
+            InstallOverlayList.add(0);
+        }
+        atleastOneIsClicked =0;
+        mAdapter = new CardViewAdapter3(Files, R.layout.adapter_listlayout, Delete.this);
+        mRecyclerView.setAdapter(mAdapter);
+    }
 
 
 

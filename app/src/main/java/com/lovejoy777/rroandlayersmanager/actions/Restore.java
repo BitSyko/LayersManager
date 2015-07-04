@@ -271,6 +271,12 @@ public class Restore extends AppCompatActivity{
 
             progressBackup.dismiss();
             LoadAndSet();
+            ImageView noOverlays = (ImageView) findViewById(R.id.imageView);
+            TextView noOverlaysText = (TextView) findViewById(R.id.textView7);
+            if (Files.isEmpty()){
+                noOverlays.setVisibility(View.VISIBLE);
+                noOverlaysText.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -358,6 +364,12 @@ public class Restore extends AppCompatActivity{
             progressBackup.dismiss();
             Toast.makeText(Restore.this, "Backup complete", Toast.LENGTH_LONG).show();
             LoadAndSet();
+            ImageView noOverlays = (ImageView) findViewById(R.id.imageView);
+            TextView noOverlaysText = (TextView) findViewById(R.id.textView7);
+            if (!Files.isEmpty()){
+                noOverlays.setVisibility(View.INVISIBLE);
+                noOverlaysText.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
