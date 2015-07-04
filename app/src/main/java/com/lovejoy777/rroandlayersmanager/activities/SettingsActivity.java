@@ -90,7 +90,8 @@ public class SettingsActivity extends PreferenceActivity implements
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, menu.class));
+        super.onBackPressed();
+        overridePendingTransition(R.anim.back2, R.anim.back1);
     }
 
 

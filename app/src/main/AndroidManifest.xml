@@ -132,17 +132,7 @@ xmlns:tools="http://schemas.android.com/tools"
         <activity android:name=".activities.Intro"
             android:noHistory="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-
-        <activity
-        android:name=".Settings"
-        android:label="Layers"
-        android:theme="@style/Base.Theme.Toolbar"
-        android:parentActivityName=".menu">
-        <intent-filter>
-            <action android:name="android.intent.action.SETTINGS" />
-            <category android:name="android.intent.category.DEFAULT" />
-        </intent-filter>
-    </activity>
+        
         <activity
             android:name=".activities.SettingsActivity"
             android:label="Layers"
