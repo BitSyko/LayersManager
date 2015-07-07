@@ -43,14 +43,19 @@ import android.widget.Switch;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.lovejoy777.rroandlayersmanager.actions.Install;
 import com.lovejoy777.rroandlayersmanager.helper.CopyUnzipHelper;
 import com.lovejoy777.rroandlayersmanager.helper.RootCommandsInstallationHelper;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -90,6 +95,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
     int atleastOneIsClicked = 0;
 
     List<Integer> InstallOverlayList = new ArrayList<Integer>();
+    List<String> InstalledOverlays = new ArrayList<String>();
     List<String> OverlayPathList = new ArrayList<String>();
     List<String> OverlayColorListPublic = new ArrayList<String>();
 
@@ -106,7 +112,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
 
     private Switch installEverything = null;
     private FloatingActionButton  fab2 = null;
-
+    private List<String> OverlayNameList = null;
     public OverlayDetailActivity() {
     }
 
@@ -170,7 +176,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
         ThemeFolder = Environment.getExternalStorageDirectory()+"/Overlays/"+ThemeName.replaceAll(" ", "")+"/";
         ThemeFolderGeneral = ThemeFolder+"General/";
 
-        List<String> OverlayNameList = null;
+
         if (OverlayNameString != null) {
             OverlayNameList = new ArrayList<>(Arrays.asList(OverlayNameString.split(",")));
         } else{
@@ -997,7 +1003,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
 
             UncheckAllCheckBoxes("Uncheck");
             installEverything.setChecked(false);
-
+            appendLog(OverlayNameList);
 
             progress2.dismiss();
             installationFinishedSnackBar(); //show snackbar with option to reboot
@@ -1124,5 +1130,79 @@ public class OverlayDetailActivity extends AppCompatActivity {
                 ScreenshotimageView[i].setImageBitmap(Bitmap.createScaledBitmap(bitmap[i], (int) (bitmap[i].getWidth() * 0.4), (int) (bitmap[i].getHeight() * 0.4), true));
             }
         }
+    }
+
+
+    public void appendLog(List<String> text)
+    {
+        String filename = "OverlayLog";
+        File logFile = new File(OverlayDetailActivity.this.getFilesDir(), filename);
+        if (!logFile.exists())
+        {
+            try
+            {
+                logFile.createNewFile();
+            }
+            catch (IOException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        try
+        {
+            //BufferedWriter for performance, true to set append to file flag
+            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
+            buf.append(" // "+ThemeName + " ,"+text.toString()+" // "/*.replace(ThemeName+"_","").replace(" ", "")*/);
+            //buf.newLine();
+            buf.close();
+        }
+        catch (IOException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        readLog();
+    }
+
+    public  void readLog() {
+        String filename = "OverlayLog";
+
+        //Get the text file
+        File logFile = new File(OverlayDetailActivity.this.getFilesDir(), filename);
+
+        //Read text from file
+        StringBuilder text = new StringBuilder();
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(logFile));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+                text.append('\n');
+            }
+            br.close();
+        } catch (IOException e) {
+            //You'll need to add proper error handling here
+        }
+        String test = text.toString().replaceAll("\\[","").replaceAll("\\]","").replaceAll(" , ","");
+        System.out.println("Test "+test);
+        InstalledOverlays = new ArrayList<>(Arrays.asList(test.split("//")));
+        System.out.println(InstalledOverlays.get(0));
+        //String Splitted = InstalledOverlays.toString();
+        //int position = -1;
+        for (int i = 0; i < InstalledOverlays.size()-2; i++){
+            String Splitted = InstalledOverlays.get(i+1).toString();
+            List<String> SplitedList = new ArrayList<>(Arrays.asList(Splitted.replaceAll(" ","").split(",")));
+            if (SplitedList.get(0).contains(ThemeName.replaceAll(" ",""))){
+                i = InstalledOverlays.size()-2;
+                SplitedList.remove(0);
+                System.out.println("YEAHHH"+SplitedList);
+            }
+        }
+
+
+
     }
 }

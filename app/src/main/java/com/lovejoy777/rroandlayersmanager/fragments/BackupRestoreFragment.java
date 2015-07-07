@@ -1,19 +1,19 @@
-package com.lovejoy777.rroandlayersmanager.actions;
+package com.lovejoy777.rroandlayersmanager.fragments;
 
 
-import android.app.ActivityOptions;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -31,13 +31,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialcab.MaterialCab;
 import com.lovejoy777.rroandlayersmanager.R;
-import com.lovejoy777.rroandlayersmanager.activities.AboutActivity;
-import com.lovejoy777.rroandlayersmanager.activities.DetailedTutorialActivity;
-import com.lovejoy777.rroandlayersmanager.activities.SettingsActivity;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
-import com.lovejoy777.rroandlayersmanager.menu;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
@@ -58,7 +53,7 @@ import java.util.zip.ZipOutputStream;
 /**
  * Created by Niklas Schnettler on 04/07/15.
  */
-public class Restore extends AppCompatActivity{
+public class BackupRestoreFragment extends Fragment{
 
     private static final String TAG = null ;
     private ArrayList<String> Files = new ArrayList<String>();
@@ -66,37 +61,43 @@ public class Restore extends AppCompatActivity{
     private RecyclerView mRecyclerView;
     private CardViewAdapter3 mAdapter;
     private DrawerLayout mDrawerLayout;
+    private CoordinatorLayout cordLayout = null;
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+
+        FragmentActivity    faActivity  = (FragmentActivity)    super.getActivity();
+           cordLayout = (CoordinatorLayout)    inflater.inflate(R.layout.fragment_backuprestore, container, false);
+
+        loadToolbarRecyclerViewFab();
+
+        new LoadAndSet().execute();
+
+    return cordLayout;
+    }
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_restore);
 
+
+    private void loadToolbarRecyclerViewFab() {
         // Handle Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) cordLayout.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_action_menu);
-        setSupportActionBar(toolbar);
-
-        //set NavigationDrawer
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if (navigationView != null) {
-            setupDrawerContent(navigationView);
-        }
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView = (RecyclerView) cordLayout.findViewById(R.id.cardList);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        fab2 = (android.support.design.widget.FloatingActionButton) findViewById(R.id.fab6);
+        fab2 = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab6);
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AlertDialog.Builder alert = new AlertDialog.Builder(Restore.this);
-                final EditText input = new EditText(Restore.this);
+                final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                final EditText input = new EditText(getActivity());
                 alert.setTitle("Backup installed overlays");
                 alert.setView(input);
                 input.setHint("Enter a backup name");
@@ -111,9 +112,9 @@ public class Restore extends AppCompatActivity{
 
                                 if (backupname.length() <= 1) {
 
-                                    Toast.makeText(Restore.this, "input a name", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), "input a name", Toast.LENGTH_LONG).show();
 
-                                    finish();
+                                    //finish();
 
                                 } else {
                                     File directory = new File("/vendor/overlay");
@@ -122,9 +123,9 @@ public class Restore extends AppCompatActivity{
                                     // Folder is empty
                                     if (contents.length == 0) {
 
-                                        Toast.makeText(Restore.this, "nothing to backup", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getActivity(), "nothing to backup", Toast.LENGTH_LONG).show();
 
-                                        finish();
+                                        //finish();
                                     } else {
                                         // CREATES /SDCARD/OVERLAYS/BACKUP/BACKUPNAME
                                         String sdOverlays = Environment.getExternalStorageDirectory() + "/Overlays";
@@ -160,18 +161,17 @@ public class Restore extends AppCompatActivity{
                 alert.show();
             }
         });
-
-
-        LoadAndSet();
-
-        ImageView noOverlays = (ImageView) findViewById(R.id.imageView);
-        TextView noOverlaysText = (TextView) findViewById(R.id.textView7);
-        if (Files.isEmpty()){
-            noOverlays.setVisibility(View.VISIBLE);
-            noOverlaysText.setVisibility(View.VISIBLE);
-        }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 
     //Adapter
@@ -202,7 +202,7 @@ public class Restore extends AppCompatActivity{
             viewHolder.themeName.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     System.out.println(i);
-                    AlertDialog.Builder installdialog = new AlertDialog.Builder(Restore.this);
+                    AlertDialog.Builder installdialog = new AlertDialog.Builder(getActivity());
                     installdialog.setTitle(themes.get(i));
                     installdialog.setMessage(Html.fromHtml("Do you want to restore or delete "+"<i>"+themes.get(i)+"<i>?"));
                     installdialog.setPositiveButton("Restore", new DialogInterface.OnClickListener() {
@@ -243,7 +243,7 @@ public class Restore extends AppCompatActivity{
 
         protected void onPreExecute() {
 
-            progressBackup = ProgressDialog.show(Restore.this, "Deleting Backup",
+            progressBackup = ProgressDialog.show(getActivity(), "Deleting Backup",
                     "Deleting...", true);
         }
 
@@ -271,8 +271,8 @@ public class Restore extends AppCompatActivity{
 
             progressBackup.dismiss();
             LoadAndSet();
-            ImageView noOverlays = (ImageView) findViewById(R.id.imageView);
-            TextView noOverlaysText = (TextView) findViewById(R.id.textView7);
+            ImageView noOverlays = (ImageView)cordLayout.findViewById(R.id.imageView);
+            TextView noOverlaysText = (TextView) cordLayout.findViewById(R.id.textView7);
             if (Files.isEmpty()){
                 noOverlays.setVisibility(View.VISIBLE);
                 noOverlaysText.setVisibility(View.VISIBLE);
@@ -281,11 +281,11 @@ public class Restore extends AppCompatActivity{
     }
 
 
-    @Override
+    /*@Override
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.back2, R.anim.back1);
-    }
+    } */
 
 
     private class BackupOverlays extends AsyncTask<String,String,Void> {
@@ -293,7 +293,7 @@ public class Restore extends AppCompatActivity{
 
         protected void onPreExecute() {
 
-            progressBackup = ProgressDialog.show(Restore.this, "Backup Overlays",
+            progressBackup = ProgressDialog.show(getActivity(), "Backup Overlays",
                     "Backing up...", true);
         }
 
@@ -362,10 +362,10 @@ public class Restore extends AppCompatActivity{
         protected void onPostExecute(Void result) {
 
             progressBackup.dismiss();
-            Toast.makeText(Restore.this, "Backup complete", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Backup complete", Toast.LENGTH_LONG).show();
             LoadAndSet();
-            ImageView noOverlays = (ImageView) findViewById(R.id.imageView);
-            TextView noOverlaysText = (TextView) findViewById(R.id.textView7);
+            ImageView noOverlays = (ImageView) cordLayout.findViewById(R.id.imageView);
+            TextView noOverlaysText = (TextView) cordLayout.findViewById(R.id.textView7);
             if (!Files.isEmpty()){
                 noOverlays.setVisibility(View.INVISIBLE);
                 noOverlaysText.setVisibility(View.INVISIBLE);
@@ -404,75 +404,19 @@ public class Restore extends AppCompatActivity{
         Files.clear();
         Commands command= new Commands();
         Files = command.loadFiles(Environment.getExternalStorageDirectory() +  "/Overlays/Backup");
-        mAdapter = new CardViewAdapter3(Files, R.layout.adapter_tablerow, Restore.this);
+        mAdapter = new CardViewAdapter3(Files, R.layout.adapter_tablerow, getActivity());
         mRecyclerView.setAdapter(mAdapter);
-    }
-    //set NavigationDrawerContent
-    private void setupDrawerContent(NavigationView navigationView) {
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        Bundle bndlanimation =
-                                ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
-                        int id = menuItem.getItemId();
-                        switch (id){
-                            case R.id.nav_home:
-                                Intent menu = new Intent(Restore.this,menu.class);
 
-                                startActivity(menu, bndlanimation);
-                                mDrawerLayout.closeDrawers();
-                                break;
-                            case R.id.nav_about:
-                                Intent about = new Intent(Restore.this, AboutActivity.class);
-
-                                startActivity(about, bndlanimation);
-                                mDrawerLayout.closeDrawers();
-                                break;
-                            case R.id.nav_delete:
-                                Intent delete = new Intent(Restore.this, Delete.class);
-                                startActivity(delete, bndlanimation);
-                                mDrawerLayout.closeDrawers();
-                                break;
-                            case R.id.nav_tutorial:
-                                Intent tutorial = new Intent(Restore.this, DetailedTutorialActivity.class);
-                                startActivity(tutorial, bndlanimation);
-                                mDrawerLayout.closeDrawers();
-                                break;
-
-
-
-
-                            case R.id.nav_showcase:
-
-                                boolean installed = appInstalledOrNot("com.lovejoy777.showcase");
-                                if(installed) {
-                                    //This intent will help you to launch if the package is already installed
-                                    Intent showcase = getPackageManager().getLaunchIntentForPackage("com.lovejoy777.showcase");
-                                    startActivity(showcase, bndlanimation);
-                                    mDrawerLayout.closeDrawers();
-
-                                    break;
-                                } else {
-                                    Toast.makeText(Restore.this, "Please install the layers showcase plugin", Toast.LENGTH_LONG).show();
-                                    System.out.println("App is not currently installed on your phone");
-                                }
-                            case R.id.nav_settings:
-                                Intent settings = new Intent(Restore.this, SettingsActivity.class);
-                                startActivity(settings, bndlanimation);
-                                mDrawerLayout.closeDrawers();
-                                break;
-                            case R.id.nav_playStore:
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/search?q=Layers+Theme&c=apps&docType=1&sp=CAFiDgoMTGF5ZXJzIFRoZW1legIYAIoBAggB:S:ANO1ljK_ZAY")),bndlanimation);
-                                break;
-                        }
-                        return false;
-                    }
-                });
+        ImageView noOverlays = (ImageView)cordLayout.findViewById(R.id.imageView);
+        TextView noOverlaysText = (TextView) cordLayout.findViewById(R.id.textView7);
+        if (Files.isEmpty()){
+            noOverlays.setVisibility(View.VISIBLE);
+            noOverlaysText.setVisibility(View.VISIBLE);
+        }
     }
 
     private boolean appInstalledOrNot(String uri) {
-        PackageManager pm = getPackageManager();
+        PackageManager pm = getActivity().getPackageManager();
         boolean app_installed;
         try {
             pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
@@ -496,7 +440,7 @@ public class Restore extends AppCompatActivity{
 
         protected void onPreExecute() {
 
-            progressBackup = ProgressDialog.show(Restore.this, "Restore Overlays",
+            progressBackup = ProgressDialog.show(getActivity(), "Restore Overlays",
                     "Restoring...", true);
         }
 
@@ -572,6 +516,36 @@ public class Restore extends AppCompatActivity{
         protected void onPostExecute(Void result) {
 
             progressBackup.dismiss();
+            new LoadAndSet().execute();
+        }
+    }
+
+
+    private class LoadAndSet extends AsyncTask<String,String,Void> {
+        ProgressDialog progressBackup;
+
+        protected void onPreExecute() {
+
+
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+            Files.clear();
+            Commands command= new Commands();
+            Files = command.loadFiles(Environment.getExternalStorageDirectory() +  "/Overlays/Backup");
+
+
+
+            return null;
+
+        }
+
+        protected void onPostExecute(Void result) {
+
+            mAdapter = new CardViewAdapter3(Files, R.layout.adapter_tablerow, getActivity());
+            mRecyclerView.setAdapter(mAdapter);
         }
     }
 

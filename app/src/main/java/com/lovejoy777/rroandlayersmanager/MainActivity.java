@@ -27,7 +27,8 @@ public class MainActivity extends Activity
 
         if (!RootTools.isAccessGiven()) {
 
-            final View coordinatorLayoutView = findViewById(R.id.main_content2);
+            Toast.makeText(MainActivity.this, "No root access available", Toast.LENGTH_LONG).show();
+           /* final View coordinatorLayoutView = findViewById(R.id.main_content2);
             Snackbar.make(coordinatorLayoutView, "No root access available", Snackbar.LENGTH_LONG)
                     .setAction("Get Root", new View.OnClickListener() {
                         @Override
@@ -36,7 +37,7 @@ public class MainActivity extends Activity
                             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=eu.chainfire.supersu")));
                         }
                     })
-                    .show();
+                    .show(); */
         }
 
 

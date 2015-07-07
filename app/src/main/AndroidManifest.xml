@@ -67,7 +67,7 @@ xmlns:tools="http://schemas.android.com/tools"
         </activity>
 
         <activity
-            android:name=".actions.Restore"
+            android:name=".fragments.BackupRestoreFragment"
             android:icon="@mipmap/ic_launcher"
             android:label="Restore"
             android:theme="@style/Base.Theme.Toolbar.TransparentStatusBar"
@@ -80,7 +80,7 @@ xmlns:tools="http://schemas.android.com/tools"
         </activity>
 
         <activity
-            android:name=".actions.Delete"
+            android:name=".fragments.UninstallFragment"
             android:icon="@mipmap/ic_launcher"
             android:label=""
             android:theme="@style/Base.Theme.Toolbar"
