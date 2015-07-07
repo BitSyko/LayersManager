@@ -1003,7 +1003,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
 
             UncheckAllCheckBoxes("Uncheck");
             installEverything.setChecked(false);
-            appendLog(OverlayNameList);
+            //appendLog(OverlayNameList);
 
             progress2.dismiss();
             installationFinishedSnackBar(); //show snackbar with option to reboot
@@ -1133,7 +1133,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
     }
 
 
-    public void appendLog(List<String> text)
+    /*public void appendLog(List<String> text)
     {
         String filename = "OverlayLog";
         File logFile = new File(OverlayDetailActivity.this.getFilesDir(), filename);
@@ -1153,7 +1153,7 @@ public class OverlayDetailActivity extends AppCompatActivity {
         {
             //BufferedWriter for performance, true to set append to file flag
             BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
-            buf.append(" // "+ThemeName + " ,"+text.toString()+" // "/*.replace(ThemeName+"_","").replace(" ", "")*/);
+            buf.append(" // "+ThemeName + " ,"+text.toString()+" // "/*.replace(ThemeName+"_","").replace(" ", ""));
             //buf.newLine();
             buf.close();
         }
@@ -1204,5 +1204,5 @@ public class OverlayDetailActivity extends AppCompatActivity {
 
 
 
-    }
+    }*/
 }
