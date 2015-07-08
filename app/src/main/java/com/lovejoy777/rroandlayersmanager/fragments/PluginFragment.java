@@ -2,6 +2,7 @@ package com.lovejoy777.rroandlayersmanager.fragments;
 
 import android.app.ActivityOptions;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -39,6 +40,7 @@ import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.lovejoy777.rroandlayersmanager.OverlayDetailActivity;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.actions.Install;
 import com.lovejoy777.rroandlayersmanager.activities.Intro;
@@ -262,15 +264,29 @@ public class PluginFragment extends Fragment {
             String category = categories.get(position);
             if( category.length() > 0 ) {
 
-                Intent intent = new Intent(getActivity(), UninstallFragment.class);
-                intent.setClassName("com.lovejoy777.rroandlayersmanager",
-                        "com.lovejoy777.rroandlayersmanager.OverlayDetailActivity");
-                intent.putExtra(BUNDLE_EXTRAS_CATEGORY, category);
-                intent.putExtra(BUNDLE_EXTRAS_PACKAGENAME, package2);
-                Bundle bndlanimation =
-                        ActivityOptions.makeCustomAnimation(getActivity().getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
-                startActivity(intent, bndlanimation);
-                System.out.println(package2);
+                Fragment fragment = null;
+                Bundle args = new Bundle();
+                args.putString(BUNDLE_EXTRAS_CATEGORY, category);
+                args.putString(BUNDLE_EXTRAS_PACKAGENAME, package2);
+                fragment = new OverlayDetailActivity();
+
+                fragment.setArguments(args);
+                // Insert the fragment by replacing any existing fragment
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .addToBackStack("test")
+                        .commit();
+
+                //Intent intent = new Intent(getActivity(), UninstallFragment.class);
+                //intent.setClassName("com.lovejoy777.rroandlayersmanager",
+                //        "com.lovejoy777.rroandlayersmanager.OverlayDetailActivity");
+                //intent.putExtra(BUNDLE_EXTRAS_CATEGORY, category);
+                //intent.putExtra(BUNDLE_EXTRAS_PACKAGENAME, package2);
+                //Bundle bndlanimation =
+                //        ActivityOptions.makeCustomAnimation(getActivity().getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
+                //startActivity(intent, bndlanimation);
+                //System.out.println(package2);
 
             }
         }

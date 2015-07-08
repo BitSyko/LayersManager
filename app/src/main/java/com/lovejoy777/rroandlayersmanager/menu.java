@@ -135,7 +135,14 @@ public class menu extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
+                FragmentManager fragmentManager = getFragmentManager();
+                Fragment currentFragment = menu.this.getFragmentManager().findFragmentById(R.id.fragment_container);
+                System.out.println(currentFragment);
+                if (currentFragment instanceof OverlayDetailActivity){
+                    changeFragment(1);
+                }else {
+                    mDrawerLayout.openDrawer(GravityCompat.START);
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -223,6 +230,7 @@ public class menu extends AppCompatActivity
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
+                .addToBackStack(null)
                 .replace(R.id.fragment_container, fragment)
                 .commit();
 

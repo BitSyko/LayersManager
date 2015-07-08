@@ -38,6 +38,7 @@ xmlns:tools="http://schemas.android.com/tools"
         <activity
             android:name=".menu"
             android:label="Layers Manager"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Base.Theme.Toolbar.TransparentStatusBar">
             <intent-filter android:label="Layers Manager">
                 <action android:name="android.intent.action.MAIN1" />
