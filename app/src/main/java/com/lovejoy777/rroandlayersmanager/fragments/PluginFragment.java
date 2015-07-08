@@ -2,6 +2,7 @@ package com.lovejoy777.rroandlayersmanager.fragments;
 
 import android.app.ActivityOptions;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,12 +15,14 @@ import android.content.pm.ServiceInfo;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -32,12 +35,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.actions.Install;
 import com.lovejoy777.rroandlayersmanager.activities.Intro;
 import com.lovejoy777.rroandlayersmanager.adapters.CardViewAdapter;
+import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.helper.CardViewContent;
 import com.lovejoy777.rroandlayersmanager.helper.RecyclerItemClickListener;
 import com.stericson.RootTools.RootTools;
@@ -91,7 +97,7 @@ public class PluginFragment extends Fragment {
 
         //createImportantDirectories();
 
-        fillPluginList();
+        new fillPluginList().execute();
 
         packageBroadcastReceiver = new PackageBroadcastReceiver();
         packageFilter = new IntentFilter();
@@ -147,7 +153,7 @@ public class PluginFragment extends Fragment {
             @Override
             public void onRefresh() {
                 services.clear();
-                fillPluginList();
+                new fillPluginList().execute();
                 onItemsLoadComplete();
             }
             void onItemsLoadComplete(){
@@ -235,60 +241,6 @@ public class PluginFragment extends Fragment {
         return result;
     }
 
-    private void createImportantDirectories(){
-        String sdOverlays = Environment.getExternalStorageDirectory() + "/Overlays";
-        String sdcard = Environment.getExternalStorageDirectory() + "";
-
-        RootTools.remount(sdcard, "RW");
-
-        // CREATES /SDCARD/OVERLAYS
-        File dir = new File(sdOverlays);
-        if (!dir.exists() && !dir.isDirectory()) {
-            CommandCapture command3 = new CommandCapture(0, "mkdir " + sdOverlays);
-            try {
-                RootTools.getShell(true).add(command3);
-                while (!command3.isFinished()) {
-                    Thread.sleep(1);
-                }
-
-            } catch (IOException | TimeoutException | InterruptedException | RootDeniedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        String sdOverlays1 = Environment.getExternalStorageDirectory() + "/Overlays/Backup";
-        // CREATES /SDCARD/OVERLAYS/BACKUP
-        File dir1 = new File(sdOverlays1);
-        if (!dir1.exists() && !dir1.isDirectory()) {
-            CommandCapture command4 = new CommandCapture(0, "mkdir " + sdOverlays1);
-            try {
-                RootTools.getShell(true).add(command4);
-                while (!command4.isFinished()) {
-                    Thread.sleep(1);
-                }
-
-            } catch (IOException | TimeoutException | InterruptedException | RootDeniedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        RootTools.remount("/system", "RW");
-        String vendover = "/vendor/overlay";
-        // CREATES /VENDOR/OVERLAY
-        File dir2 = new File(vendover);
-        if (!dir2.exists() && !dir2.isDirectory()) {
-            CommandCapture command5 = new CommandCapture(0, "mkdir " + vendover);
-            try {
-                RootTools.getShell(true).add(command5);
-                while (!command5.isFinished()) {
-                    Thread.sleep(1);
-                }
-
-            } catch (IOException | TimeoutException | InterruptedException | RootDeniedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     public void onStart() {
         super.onStart();
@@ -332,101 +284,6 @@ public class PluginFragment extends Fragment {
         }
     }
 
-    //fill the list containing all Plugins
-    private void fillPluginList()  {
-
-        services = new ArrayList<HashMap<String,String>>();
-        categories = new ArrayList<String>();
-
-        PackageManager packageManager = getActivity().getPackageManager();
-        Intent baseIntent = new Intent( ACTION_PICK_PLUGIN );
-        baseIntent.setFlags( Intent.FLAG_DEBUG_LOG_RESOLUTION );
-        List<ResolveInfo> list = packageManager.queryIntentServices(baseIntent,
-                PackageManager.GET_RESOLVED_FILTER );
-
-        final String name[] = new String[list.size()];
-        final String developer[] = new String[list.size()];
-
-        for( int i = 0 ; i < list.size() ; ++i ) {
-
-            ResolveInfo info = list.get( i );
-            ServiceInfo sinfo = info.serviceInfo;
-            IntentFilter filter = info.filter;
-            Log.d(LOG_TAG, "fillPluginList: i: " + i + "; sinfo: " + sinfo + ";filter: " + filter);
-
-            ApplicationInfo ai = null;
-            try {
-                ai = getActivity().getPackageManager().getApplicationInfo(sinfo.packageName, PackageManager.GET_META_DATA);
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
-            Bundle bundle = null;
-            if (ai != null) {
-                bundle = ai.metaData;
-            }
-            name[i] = bundle.getString("Layers_Name");
-            developer[i] = bundle.getString("Layers_Developer");
-
-            if( sinfo != null ) {
-                HashMap<String,String> item = new HashMap<String,String>();
-                item.put( KEY_PKG, name[i] );
-                item.put( KEY_SERVICENAME, developer[i] );
-
-                String firstCategory = null;
-                if( filter != null ) {
-                    StringBuilder actions = new StringBuilder();
-                    for( Iterator<String> actionIterator = filter.actionsIterator() ; actionIterator.hasNext() ; ) {
-                        String action = actionIterator.next();
-                        if( actions.length() > 0 )
-                            actions.append( "," );
-                        actions.append( action );
-                    }
-                    StringBuilder categories = new StringBuilder();
-                    for( Iterator<String> categoryIterator = filter.categoriesIterator() ;
-                         categoryIterator.hasNext() ; ) {
-                        String category = categoryIterator.next();
-                        if( firstCategory == null )
-                            firstCategory = category;
-                        if( categories.length() > 0 )
-                            categories.append( "," );
-                        categories.append( category );
-                    }
-                    try {
-                        packages[i] = getActivity().getPackageManager().getApplicationInfo(sinfo.packageName,0).packageName;
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    item.put(KEY_ACTIONS, "<null>");
-                    item.put(KEY_CATEGORIES, "<null>");
-                }
-                if( firstCategory == null )
-                    firstCategory = "";
-                categories.add( firstCategory );
-                services.add( item );
-            }
-        }
-
-        String Test1[] = new String[3];
-        String Test2[] = new String[3];
-
-        Test1[0] = "Too bad.";
-        Test2[0] = "You don't have any compatible plugins yet, Use the FAB button for none plugin type overlays.";
-        Test1[1] = "Layers Overlays Showcase";
-        Test2[1] = "Find some new beautiful overlays. Coming Soon.";
-        Test1[2] = "Play Store";
-        Test2[2] = "Have a look on the PlayStore.";
-
-        if (list.size()>0) {
-            ca = new CardViewAdapter(createList(list.size(), name, developer, packages));
-        }else {
-            ca = new CardViewAdapter(createList2(3, Test1, Test2));
-            TestBoolean = true;
-        }
-        recList = (RecyclerView) cordLayout.findViewById(R.id.cardList);
-        recList.setHasFixedSize(true);
-        recList.setAdapter(ca);
-    }
 
     class PackageBroadcastReceiver extends BroadcastReceiver {
         private static final String LOG_TAG = "PackageBroadcastReceiver";
@@ -435,7 +292,7 @@ public class PluginFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             Log.d(LOG_TAG, "onReceive: " + intent);
             services.clear();
-            fillPluginList();
+            new fillPluginList().execute();
 
             ca.notifyDataSetChanged();
             System.out.println("TEST");
@@ -455,9 +312,117 @@ public class PluginFragment extends Fragment {
         if(requestCode==1)
         {
             services.clear();
-            fillPluginList();
+            new fillPluginList().execute();
         }
     }
 
+    private class fillPluginList extends AsyncTask<Void,Void,Void> {
 
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            services = new ArrayList<HashMap<String,String>>();
+            categories = new ArrayList<String>();
+
+            PackageManager packageManager = getActivity().getPackageManager();
+            Intent baseIntent = new Intent( ACTION_PICK_PLUGIN );
+            baseIntent.setFlags( Intent.FLAG_DEBUG_LOG_RESOLUTION );
+            List<ResolveInfo> list = packageManager.queryIntentServices(baseIntent,
+                    PackageManager.GET_RESOLVED_FILTER );
+
+            final String name[] = new String[list.size()];
+            final String developer[] = new String[list.size()];
+
+            for( int i = 0 ; i < list.size() ; ++i ) {
+
+                ResolveInfo info = list.get( i );
+                ServiceInfo sinfo = info.serviceInfo;
+                IntentFilter filter = info.filter;
+                Log.d(LOG_TAG, "fillPluginList: i: " + i + "; sinfo: " + sinfo + ";filter: " + filter);
+
+                ApplicationInfo ai = null;
+                try {
+                    ai = getActivity().getPackageManager().getApplicationInfo(sinfo.packageName, PackageManager.GET_META_DATA);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+                Bundle bundle = null;
+                if (ai != null) {
+                    bundle = ai.metaData;
+                }
+                name[i] = bundle.getString("Layers_Name");
+                developer[i] = bundle.getString("Layers_Developer");
+
+                if( sinfo != null ) {
+                    HashMap<String,String> item = new HashMap<String,String>();
+                    item.put( KEY_PKG, name[i] );
+                    item.put( KEY_SERVICENAME, developer[i] );
+
+                    String firstCategory = null;
+                    if( filter != null ) {
+                        StringBuilder actions = new StringBuilder();
+                        for( Iterator<String> actionIterator = filter.actionsIterator() ; actionIterator.hasNext() ; ) {
+                            String action = actionIterator.next();
+                            if( actions.length() > 0 )
+                                actions.append( "," );
+                            actions.append( action );
+                        }
+                        StringBuilder categories = new StringBuilder();
+                        for( Iterator<String> categoryIterator = filter.categoriesIterator() ;
+                             categoryIterator.hasNext() ; ) {
+                            String category = categoryIterator.next();
+                            if( firstCategory == null )
+                                firstCategory = category;
+                            if( categories.length() > 0 )
+                                categories.append( "," );
+                            categories.append( category );
+                        }
+                        try {
+                            packages[i] = getActivity().getPackageManager().getApplicationInfo(sinfo.packageName,0).packageName;
+                        } catch (PackageManager.NameNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        item.put(KEY_ACTIONS, "<null>");
+                        item.put(KEY_CATEGORIES, "<null>");
+                    }
+                    if( firstCategory == null )
+                        firstCategory = "";
+                    categories.add( firstCategory );
+                    services.add( item );
+                }
+            }
+
+            String Test1[] = new String[3];
+            String Test2[] = new String[3];
+
+            Test1[0] = "Too bad.";
+            Test2[0] = "You don't have any compatible plugins yet, Use the FAB button for none plugin type overlays.";
+            Test1[1] = "Layers Overlays Showcase";
+            Test2[1] = "Find some new beautiful overlays. Coming Soon.";
+            Test1[2] = "Play Store";
+            Test2[2] = "Have a look on the PlayStore.";
+
+            if (list.size()>0) {
+                ca = new CardViewAdapter(createList(list.size(), name, developer, packages));
+            }else {
+                ca = new CardViewAdapter(createList2(3, Test1, Test2));
+                TestBoolean = true;
+            }
+
+
+            return null;
+
+        }
+
+        protected void onPostExecute(Void result) {
+
+            recList = (RecyclerView) cordLayout.findViewById(R.id.cardList);
+            recList.setHasFixedSize(true);
+            recList.setAdapter(ca);
+        }
+    }
 }
