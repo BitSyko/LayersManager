@@ -5,7 +5,8 @@
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+    android:background="@color/background">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
@@ -54,7 +55,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:id="@+id/lin2">
+                android:id="@+id/lin2"
+                android:visibility="invisible">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -62,7 +64,10 @@
                     android:orientation="vertical"
                     android:weightSum="1"
                     android:background="@color/background"
-                    android:paddingBottom="8dp">
+                    android:paddingBottom="8dp"
+                    android:animateLayoutChanges="true"
+
+                    android:id="@+id/linCardWN">
 
 
                     <TextView
@@ -72,11 +77,11 @@
                         android:paddingStart="@dimen/activity_horizontal_margin"
                         android:paddingEnd="@dimen/activity_horizontal_margin"
                         android:paddingTop="32dp"
-                        android:text="@string/error"
                         android:id="@+id/HeX1"
                         android:textSize="20sp"
                         android:gravity="center_horizontal"
                         android:textColor="@color/textColorPrimary"
+                        android:animateLayoutChanges="true"
                         />
 
 
@@ -94,13 +99,15 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="8dp"
-                        android:paddingBottom="20dp">
+                        android:paddingBottom="20dp"
+                        android:animateLayoutChanges="true">
 
                         <LinearLayout
                             android:orientation="vertical"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="5.59"
+                            android:animateLayoutChanges="true"
                             >
 
                             <TextView
@@ -113,21 +120,22 @@
                                 android:layout_marginStart="16dp"
                                 android:layout_marginTop="16dp"
                                 android:textStyle="bold"
-                                android:elevation="5dp" />
+                                android:elevation="5dp"
+                                android:animateLayoutChanges="true"/>
 
 
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/anerroroccurred"
                                 android:id="@+id/tv_whatsNew"
                                 android:layout_gravity="start|top"
                                 android:layout_marginStart="16dp"
                                 android:textColor="@color/text_color_secondary"
                                 android:elevation="5dp"
                                 android:layout_marginTop="12dp"
-                                android:layout_marginBottom="16dp" />
+                                android:layout_marginBottom="16dp"
+                                android:animateLayoutChanges="true"/>
 
                         </LinearLayout>
                     </android.support.v7.widget.CardView>

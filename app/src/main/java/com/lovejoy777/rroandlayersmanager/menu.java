@@ -70,7 +70,7 @@ public class menu extends AppCompatActivity
         setContentView(R.layout.fragment_container);
         if (!RootTools.isAccessGiven()) {
 
-            final View coordinatorLayoutView = findViewById(R.id.main_content2);
+            /*final View coordinatorLayoutView = findViewById(R.id.main_content2);
             Snackbar.make(coordinatorLayoutView, "No root access available", Snackbar.LENGTH_LONG)
                     .setAction("Get Root", new View.OnClickListener() {
                         @Override
@@ -79,7 +79,7 @@ public class menu extends AppCompatActivity
                             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=eu.chainfire.supersu")));
                         }
                     })
-                    .show();
+                    .show(); */
         }
 
         loadToolbarNavDrawer();
@@ -135,9 +135,7 @@ public class menu extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                FragmentManager fragmentManager = getFragmentManager();
                 Fragment currentFragment = menu.this.getFragmentManager().findFragmentById(R.id.fragment_container);
-                System.out.println(currentFragment);
                 if (currentFragment instanceof OverlayDetailActivity){
                     changeFragment(1);
                 }else {
@@ -214,6 +212,7 @@ public class menu extends AppCompatActivity
     private void changeFragment(int position) {
         Fragment fragment = null;
         Bundle args = new Bundle();
+        FragmentManager fragmentManager = getFragmentManager();
         switch (position){
             case 1:
                 fragment = new PluginFragment();
@@ -228,7 +227,7 @@ public class menu extends AppCompatActivity
 
         fragment.setArguments(args);
         // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getFragmentManager();
+
         fragmentManager.beginTransaction()
                 .addToBackStack(null)
                 .replace(R.id.fragment_container, fragment)
@@ -304,5 +303,17 @@ public class menu extends AppCompatActivity
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        Fragment currentFragment = menu.this.getFragmentManager().findFragmentById(R.id.fragment_container);
+        if (currentFragment instanceof OverlayDetailActivity) {
+            changeFragment(1);
+        }else {
+            super.onBackPressed();
+        }
+
     }
 }

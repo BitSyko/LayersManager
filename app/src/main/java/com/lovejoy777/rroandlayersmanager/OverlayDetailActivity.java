@@ -1,5 +1,6 @@
 package com.lovejoy777.rroandlayersmanager;
 
+import android.animation.Animator;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -15,6 +16,7 @@ import android.content.pm.ResolveInfo;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -29,6 +31,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
@@ -38,6 +41,8 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -51,11 +56,14 @@ import android.widget.TextView;
 
 import com.lovejoy777.rroandlayersmanager.helper.CopyUnzipHelper;
 import com.lovejoy777.rroandlayersmanager.helper.RootCommandsInstallationHelper;
+import com.squareup.picasso.Picasso;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,7 +73,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
-import static com.lovejoy777.rroandlayersmanager.R.*;
 
 /**
  * Created by Niklas on 02.06.2015.
@@ -122,7 +129,7 @@ public class OverlayDetailActivity extends Fragment {
         public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle
         savedInstanceState){
             FragmentActivity faActivity = (FragmentActivity) super.getActivity();
-            cordLayout = (CoordinatorLayout) inflater.inflate(layout.activity_overlaydetail, container, false);
+            cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.activity_overlaydetail, container, false);
             setHasOptionsMenu(true);
 
             getIntent();
@@ -131,15 +138,15 @@ public class OverlayDetailActivity extends Fragment {
 
             createLayouts();
 
-            receiveAndUseData();
+            //receiveAndUseData();
 
             generateFilepaths();
 
-            loadScreenshotCardview();
+            //loadScreenshotCardview();
 
-            loadOverlayCardviews();
+            //loadOverlayCardviews();
 
-            createThemeFolder();
+            //createThemeFolder();
 
 
             return cordLayout;
@@ -160,16 +167,16 @@ public class OverlayDetailActivity extends Fragment {
         if (NumberOfOverlays >= NumberOfColorOverlays) {
             CardViewCategory1 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory1);
             CardViewCategory2 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory2);
-            Category1Name = (TextView) cordLayout.findViewById(id.Tv_Category1Name);
+            Category1Name = (TextView) cordLayout.findViewById(R.id.Tv_Category1Name);
             Category1Name.setText(getResources().getString(R.string.Category1Name));
-            Category2Name = (TextView) cordLayout.findViewById(id.Tv_Category2Name);
+            Category2Name = (TextView) cordLayout.findViewById(R.id.Tv_Category2Name);
             Category2Name.setText(getResources().getString(R.string.Category2Name));
         } else {
             CardViewCategory1 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory2);
             CardViewCategory2 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory1);
-            Category1Name = (TextView) cordLayout.findViewById(id.Tv_Category2Name);
+            Category1Name = (TextView) cordLayout.findViewById(R.id.Tv_Category2Name);
             Category1Name.setText(getResources().getString(R.string.Category1Name));
-            Category2Name = (TextView) cordLayout.findViewById(id.Tv_Category1Name);
+            Category2Name = (TextView) cordLayout.findViewById(R.id.Tv_Category1Name);
             Category2Name.setText(getResources().getString(R.string.Category2Name));
         }
 
@@ -401,7 +408,7 @@ public class OverlayDetailActivity extends Fragment {
 
     private void createLayouts() {
         //switch
-        installEverything = (Switch) cordLayout.findViewById(id.allswitch);
+        installEverything = (Switch) cordLayout.findViewById(R.id.allswitch);
 
         //Hide the FAB
         fab2 = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab2);
@@ -410,12 +417,12 @@ public class OverlayDetailActivity extends Fragment {
 
         //Initialize Layout
         Toolbar toolbar = (Toolbar) cordLayout.findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(drawable.ic_action_back);
+        toolbar.setNavigationIcon(R.drawable.ic_action_back);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        View mFab = cordLayout.findViewById(id.fab);
+        View mFab = cordLayout.findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -455,13 +462,45 @@ public class OverlayDetailActivity extends Fragment {
     private void loadBackdrop() {
         ImageView imageView = (ImageView) cordLayout.findViewById(R.id.backdrop);
 
-        ViewAnimationUtils.createCircularReveal(imageView,
-                imageView.getWidth()/2,
-                imageView.getHeight()/2,
+        Animator reveal = ViewAnimationUtils.createCircularReveal(imageView,
+                imageView.getWidth() / 2,
+                imageView.getHeight() / 2,
                 0,
-                imageView.getHeight() * 2)
-                .setDuration(750)
-                .start();
+                imageView.getHeight() * 2);
+                reveal.setDuration(750);
+                reveal.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        loadScreenshotCardview();
+                        receiveAndUseData();
+                        Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fadein);
+                        LinearLayout WN = (LinearLayout) cordLayout.findViewById(R.id.lin2);
+                        WN.setVisibility(View.VISIBLE);
+                        WN.startAnimation(fadeInAnimation);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+
+
+
+                        loadOverlayCardviews();
+                        createThemeFolder();
+
+
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+                reveal.start();
         final String packName = package2;
         String mDrawableName = "heroimage";
         PackageManager manager = getActivity().getPackageManager();
@@ -494,10 +533,6 @@ public class OverlayDetailActivity extends Fragment {
 
     }
 
-    public void onDestroy() {
-        super.onDestroy();
-        releaseOpService();
-    }
 
     private void bindOpService() {
         if (category != null) {
@@ -525,6 +560,7 @@ public class OverlayDetailActivity extends Fragment {
             opService = IOperation.Stub.asInterface(boundService);
             Log.d(LOG_TAG, "onServiceConnected");
             loadBackdrop();
+
 
         }
 
@@ -791,15 +827,15 @@ public class OverlayDetailActivity extends Fragment {
     //Snackbars
     private void selectOverlaysFirstSnackbar() {
 
-        Snackbar.make(getActivity().getWindow().getDecorView().findViewById(android.R.id.content), string.selectOverlayFirst, Snackbar.LENGTH_SHORT)
+        Snackbar.make(getActivity().getWindow().getDecorView().findViewById(android.R.id.content), R.string.selectOverlayFirst, Snackbar.LENGTH_SHORT)
                 .show();
     }
 
     private void installationFinishedSnackBar() {
 
         //show SnackBar after sucessfull installation of the overlays
-        final View coordinatorLayoutView = cordLayout.findViewById(id.main_content);
-        Snackbar.make(coordinatorLayoutView, string.OverlaysInstalled, Snackbar.LENGTH_LONG)
+        final View coordinatorLayoutView = cordLayout.findViewById(R.id.main_content);
+        Snackbar.make(coordinatorLayoutView, R.string.OverlaysInstalled, Snackbar.LENGTH_LONG)
                 .setAction(R.string.Reboot, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -860,13 +896,13 @@ public class OverlayDetailActivity extends Fragment {
 
         final AlertDialog.Builder colorDialog = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();
-        colorDialog.setTitle(string.pick_color);
-        View colordialogView = inflater.inflate(layout.dialog_colors, null);
+        colorDialog.setTitle(R.string.pick_color);
+        View colordialogView = inflater.inflate(R.layout.dialog_colors, null);
         colorDialog.setView(colordialogView);
 
         for (int i = 0; i < NumberOfColors; i++) {
 
-            RadioGroup my_layout = (RadioGroup) colordialogView.findViewById(id.radiogroup);
+            RadioGroup my_layout = (RadioGroup) colordialogView.findViewById(R.id.radiogroup);
 
             RadioGroup.LayoutParams params
                     = new RadioGroup.LayoutParams(getActivity(), null);
@@ -1098,6 +1134,9 @@ public class OverlayDetailActivity extends Fragment {
         protected Void doInBackground(Void... params) {
 
             for (int i = 0; i < NumberOfScreenshotsMain; i++) {
+
+
+
                 Drawable Screenshots[] = new Drawable[NumberOfScreenshotsMain];
                 int j = i + 1;
                 final String packName = package2;
@@ -1109,13 +1148,16 @@ public class OverlayDetailActivity extends Fragment {
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
+
                 int mDrawableResID = 0;
                 if (mApk1Resources != null) {
                     mDrawableResID = mApk1Resources.getIdentifier(mDrawableName, "drawable", packName);
                 }
                 Drawable myDrawable = null;
                 if (mApk1Resources != null) {
+                    //InputStream is = getResources().openRawResource(mApk1Resources.getDrawable(mDrawableResID));
                     myDrawable = mApk1Resources.getDrawable(mDrawableResID);
+                    //Bitmap b1 = BitmapFactory.decodeResource(mApk1Resources.getDrawable(mDrawableResID));
                 }
                 Screenshots[i] = myDrawable;
                 bitmap[i] = ((BitmapDrawable) Screenshots[i]).getBitmap();
@@ -1128,11 +1170,36 @@ public class OverlayDetailActivity extends Fragment {
         protected void onPostExecute(Void result) {
 
             for (int i = 0; i < NumberOfScreenshotsMain; i++) {
+
                 ScreenshotimageView[i].setImageBitmap(Bitmap.createScaledBitmap(bitmap[i], (int) (bitmap[i].getWidth() * 0.4), (int) (bitmap[i].getHeight() * 0.4), true));
+                Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fadein);
+                ScreenshotimageView[i].startAnimation(fadeInAnimation);
             }
         }
     }
 
+    private Bitmap decodeFile(File f){
+        Bitmap b = null;
+
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(f);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        b = BitmapFactory.decodeStream(fis,null,o);
+        try {
+            fis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return b;
+    }
 
     /*public void appendLog(List<String> text)
     {
@@ -1206,6 +1273,20 @@ public class OverlayDetailActivity extends Fragment {
 
 
     }*/
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        releaseOpService();
+        for (int i= 0; i < NumberOfScreenshotsMain;i++){
+            ScreenshotimageView[i].setImageDrawable(null);
+        }
+
+        //unbindDrawables(mGridView);
+        //gridAdapter = null;
+        System.gc();
+        Runtime.getRuntime().gc();
+    }
 
 
 }

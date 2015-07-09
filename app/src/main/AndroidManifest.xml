@@ -3,7 +3,8 @@
 xmlns:tools="http://schemas.android.com/tools"
     package="com.lovejoy777.rroandlayersmanager"
     android:sharedUserId="android.uid.Manager"
-    android:process="com.android.Layers">
+    android:process="com.android.Layers"
+    android:largeHeap="true">
 
 <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
