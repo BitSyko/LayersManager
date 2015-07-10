@@ -197,6 +197,7 @@ public class menu extends AppCompatActivity
                                 } else {
                                     Toast.makeText(menu.this, "Please install the layers showcase plugin", Toast.LENGTH_LONG).show();
                                     System.out.println("App is not currently installed on your phone");
+                                    break;
                                 }
                             case R.id.nav_settings:
                                 Intent settings = new Intent(menu.this, SettingsActivity.class);
