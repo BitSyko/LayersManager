@@ -137,7 +137,9 @@ public class menu extends AppCompatActivity
             case android.R.id.home:
                 Fragment currentFragment = menu.this.getFragmentManager().findFragmentById(R.id.fragment_container);
                 if (currentFragment instanceof OverlayDetailActivity){
-                    changeFragment(1);
+                    FragmentManager fm = getFragmentManager();
+                    fm.popBackStack();
+                    //changeFragment(1);
                 }else {
                     mDrawerLayout.openDrawer(GravityCompat.START);
                 }
@@ -229,10 +231,26 @@ public class menu extends AppCompatActivity
         // Insert the fragment by replacing any existing fragment
 
         fragmentManager.beginTransaction()
-                .addToBackStack(null)
                 .replace(R.id.fragment_container, fragment)
                 .commit();
 
+    }
+
+    public void changeFragment2(String category, String package2){
+        Fragment fragment = null;
+        Bundle args = new Bundle();
+        args.putString(BUNDLE_EXTRAS_CATEGORY, category);
+        args.putString(BUNDLE_EXTRAS_PACKAGENAME, package2);
+        fragment = new OverlayDetailActivity();
+
+        fragment.setArguments(args);
+
+
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .addToBackStack("test")
+                .replace(R.id.fragment_container, fragment)
+                .commit();
     }
 
 
@@ -307,10 +325,11 @@ public class menu extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-
+        FragmentManager fm = getFragmentManager();
         Fragment currentFragment = menu.this.getFragmentManager().findFragmentById(R.id.fragment_container);
         if (currentFragment instanceof OverlayDetailActivity) {
-            changeFragment(1);
+            fm.popBackStack();
+            //changeFragment(1);
         }else {
             super.onBackPressed();
         }

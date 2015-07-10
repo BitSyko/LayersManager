@@ -59,6 +59,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
+import com.lovejoy777.rroandlayersmanager.menu;
 
 /**
  * Created by Niklas on 07.07.2015.
@@ -264,7 +265,9 @@ public class PluginFragment extends Fragment {
             String category = categories.get(position);
             if( category.length() > 0 ) {
 
-                Fragment fragment = null;
+                ((menu) getActivity()).changeFragment2(category,package2);
+
+                /*Fragment fragment = null;
                 Bundle args = new Bundle();
                 args.putString(BUNDLE_EXTRAS_CATEGORY, category);
                 args.putString(BUNDLE_EXTRAS_PACKAGENAME, package2);
@@ -272,11 +275,14 @@ public class PluginFragment extends Fragment {
 
                 fragment.setArguments(args);
                 // Insert the fragment by replacing any existing fragment
+
+
+
+
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, fragment)
-                        .addToBackStack("test")
-                        .commit();
+                        .commit(); */
 
                 //Intent intent = new Intent(getActivity(), UninstallFragment.class);
                 //intent.setClassName("com.lovejoy777.rroandlayersmanager",

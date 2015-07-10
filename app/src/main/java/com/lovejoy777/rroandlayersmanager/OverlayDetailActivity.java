@@ -80,8 +80,9 @@ import java.util.concurrent.TimeoutException;
 public class OverlayDetailActivity extends Fragment {
 
     int NumberOfOverlays = 0;
-    int NumberOfColorOverlays = 0;
 
+    int NumberOfColorOverlays = 0;
+    private Drawable myDrawable = null;
     //Variables you SHOULD NOT CHANGE!
 
     private final static int BUFFER_SIZE = 1024;
@@ -97,6 +98,7 @@ public class OverlayDetailActivity extends Fragment {
 
 
     final ImageView ScreenshotimageView[] = new ImageView[NumberOfScreenshotsMain];
+    private Drawable Screenshots[] = new Drawable[NumberOfScreenshotsMain];
 
     public CheckBox dontShowAgain;
 
@@ -481,11 +483,10 @@ public class OverlayDetailActivity extends Fragment {
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
-
-
-
-                        loadOverlayCardviews();
-                        createThemeFolder();
+                        if (isAdded()) {
+                            loadOverlayCardviews();
+                            createThemeFolder();
+                        }
 
 
                     }
@@ -733,7 +734,7 @@ public class OverlayDetailActivity extends Fragment {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(getActivity());
+                //NavUtils.navigateUpFromSameTask(getActivity());
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -1039,14 +1040,14 @@ public class OverlayDetailActivity extends Fragment {
         }
 
         protected void onPostExecute(Void result) {
-
+        if (isAdded()) {
             UncheckAllCheckBoxes("Uncheck");
             installEverything.setChecked(false);
             //appendLog(OverlayNameList);
 
             progress2.dismiss();
             installationFinishedSnackBar(); //show snackbar with option to reboot
-
+        }
         }
     }
 
@@ -1108,15 +1109,17 @@ public class OverlayDetailActivity extends Fragment {
         }
 
         protected void onPostExecute(Void result) {
-            //close Dialog
-            progressDialogReboot.dismiss();
+            if (isAdded()) {
+                //close Dialog
+                progressDialogReboot.dismiss();
 
-            //softreboot phone
-            try {
-                Process proc = Runtime.getRuntime()
-                        .exec(new String[]{"su", "-c", "busybox killall system_server"});
-            } catch (IOException e) {
-                e.printStackTrace();
+                //softreboot phone
+                try {
+                    Process proc = Runtime.getRuntime()
+                            .exec(new String[]{"su", "-c", "busybox killall system_server"});
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -1153,14 +1156,17 @@ public class OverlayDetailActivity extends Fragment {
                 if (mApk1Resources != null) {
                     mDrawableResID = mApk1Resources.getIdentifier(mDrawableName, "drawable", packName);
                 }
-                Drawable myDrawable = null;
+
                 if (mApk1Resources != null) {
                     //InputStream is = getResources().openRawResource(mApk1Resources.getDrawable(mDrawableResID));
                     myDrawable = mApk1Resources.getDrawable(mDrawableResID);
                     //Bitmap b1 = BitmapFactory.decodeResource(mApk1Resources.getDrawable(mDrawableResID));
                 }
-                Screenshots[i] = myDrawable;
-                bitmap[i] = ((BitmapDrawable) Screenshots[i]).getBitmap();
+                //Screenshots[i] = myDrawable;
+                //myDrawable = null;
+                bitmap[i] = ((BitmapDrawable) myDrawable).getBitmap();
+                myDrawable = null;
+                //Screenshots[i] = null;
 
             }
             return null;
@@ -1168,12 +1174,14 @@ public class OverlayDetailActivity extends Fragment {
         }
 
         protected void onPostExecute(Void result) {
+            if (isAdded()) {
+                for (int i = 0; i < NumberOfScreenshotsMain; i++) {
 
-            for (int i = 0; i < NumberOfScreenshotsMain; i++) {
-
-                ScreenshotimageView[i].setImageBitmap(Bitmap.createScaledBitmap(bitmap[i], (int) (bitmap[i].getWidth() * 0.4), (int) (bitmap[i].getHeight() * 0.4), true));
-                Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fadein);
-                ScreenshotimageView[i].startAnimation(fadeInAnimation);
+                    ScreenshotimageView[i].setImageBitmap(bitmap[i]);
+                    bitmap[i] = null;
+                    Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fadein);
+                    ScreenshotimageView[i].startAnimation(fadeInAnimation);
+                }
             }
         }
     }
@@ -1275,17 +1283,20 @@ public class OverlayDetailActivity extends Fragment {
     }*/
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         releaseOpService();
-        for (int i= 0; i < NumberOfScreenshotsMain;i++){
+        /*for (int i= 0; i < NumberOfScreenshotsMain;i++){
             ScreenshotimageView[i].setImageDrawable(null);
+            Screenshots[i]= null;
         }
-
+        myDrawable = null;
+System.out.println("DESTORYED");
         //unbindDrawables(mGridView);
         //gridAdapter = null;
         System.gc();
-        Runtime.getRuntime().gc();
+        Runtime.getRuntime().gc(); */
+
     }
 
 
