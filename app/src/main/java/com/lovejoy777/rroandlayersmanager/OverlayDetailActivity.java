@@ -72,7 +72,6 @@ public class OverlayDetailActivity extends Fragment {
 
     int NumberOfColorOverlays = 0;
     private Drawable myDrawable = null;
-    //Variables you SHOULD NOT CHANGE!
 
     private final static int BUFFER_SIZE = 1024;
 
@@ -83,7 +82,6 @@ public class OverlayDetailActivity extends Fragment {
     private ArrayList<String> paths = new ArrayList<String>();
 
     private String whichColor = null;
-
 
     final ImageView ScreenshotimageView[] = new ImageView[NumberOfScreenshotsMain];
 

@@ -270,13 +270,7 @@ public class BackupRestoreFragment extends Fragment{
         protected void onPostExecute(Void result) {
 
             progressBackup.dismiss();
-            LoadAndSet();
-            ImageView noOverlays = (ImageView)cordLayout.findViewById(R.id.imageView);
-            TextView noOverlaysText = (TextView) cordLayout.findViewById(R.id.textView7);
-            if (Files.isEmpty()){
-                noOverlays.setVisibility(View.VISIBLE);
-                noOverlaysText.setVisibility(View.VISIBLE);
-            }
+            new LoadAndSet().execute();
         }
     }
 
@@ -363,13 +357,7 @@ public class BackupRestoreFragment extends Fragment{
 
             progressBackup.dismiss();
             Toast.makeText(getActivity(), "Backup complete", Toast.LENGTH_LONG).show();
-            LoadAndSet();
-            ImageView noOverlays = (ImageView) cordLayout.findViewById(R.id.imageView);
-            TextView noOverlaysText = (TextView) cordLayout.findViewById(R.id.textView7);
-            if (!Files.isEmpty()){
-                noOverlays.setVisibility(View.INVISIBLE);
-                noOverlaysText.setVisibility(View.INVISIBLE);
-            }
+            new LoadAndSet().execute();
         }
     }
 
@@ -398,42 +386,6 @@ public class BackupRestoreFragment extends Fragment{
             Log.e("", ioe.getMessage());
         }
     }
-
-
-    public  void LoadAndSet(){
-        Files.clear();
-        Commands command= new Commands();
-        Files = command.loadFiles(Environment.getExternalStorageDirectory() +  "/Overlays/Backup");
-        mAdapter = new CardViewAdapter3(Files, R.layout.adapter_tablerow, getActivity());
-        mRecyclerView.setAdapter(mAdapter);
-
-        ImageView noOverlays = (ImageView)cordLayout.findViewById(R.id.imageView);
-        TextView noOverlaysText = (TextView) cordLayout.findViewById(R.id.textView7);
-        if (Files.isEmpty()){
-            noOverlays.setVisibility(View.VISIBLE);
-            noOverlaysText.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private boolean appInstalledOrNot(String uri) {
-        PackageManager pm = getActivity().getPackageManager();
-        boolean app_installed;
-        try {
-            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
-            app_installed = true;
-        }
-        catch (PackageManager.NameNotFoundException e) {
-            app_installed = false;
-        }
-        return app_installed;
-    }
-
-
-
-
-
-
-
 
     private class RestoreOverlays extends AsyncTask<String,String,Void> {
         ProgressDialog progressBackup;
@@ -522,11 +474,9 @@ public class BackupRestoreFragment extends Fragment{
 
 
     private class LoadAndSet extends AsyncTask<String,String,Void> {
-        ProgressDialog progressBackup;
+
 
         protected void onPreExecute() {
-
-
         }
 
         @Override
@@ -536,8 +486,6 @@ public class BackupRestoreFragment extends Fragment{
             Commands command= new Commands();
             Files = command.loadFiles(Environment.getExternalStorageDirectory() +  "/Overlays/Backup");
 
-
-
             return null;
 
         }
@@ -546,6 +494,12 @@ public class BackupRestoreFragment extends Fragment{
 
             mAdapter = new CardViewAdapter3(Files, R.layout.adapter_tablerow, getActivity());
             mRecyclerView.setAdapter(mAdapter);
+            if (Files.isEmpty()){
+                ImageView noOverlays = (ImageView)cordLayout.findViewById(R.id.imageView);
+                TextView noOverlaysText = (TextView) cordLayout.findViewById(R.id.textView7);
+                noOverlays.setVisibility(View.VISIBLE);
+                noOverlaysText.setVisibility(View.VISIBLE);
+            }
         }
     }
 

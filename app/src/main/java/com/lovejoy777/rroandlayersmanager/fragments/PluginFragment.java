@@ -212,7 +212,7 @@ public class PluginFragment extends Fragment {
             CardViewContent ci = new CardViewContent();
             ci.message1 = message1[i-1];
             ci.message2 = message2[i-1];
-            Image[0] = getResources().getDrawable(R.drawable.toobad);
+            Image[0] = getResources().getDrawable(R.drawable.ic_noplugin);
             Image[1] = getResources().getDrawable(R.mipmap.ic_launcher);
             Image[2] = getResources().getDrawable(R.drawable.playstore);
             myDrawable = Image[i-1];

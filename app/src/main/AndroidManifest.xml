@@ -5,7 +5,7 @@ xmlns:tools="http://schemas.android.com/tools"
     android:sharedUserId="android.uid.Manager"
     android:process="com.android.Layers">
 
-<uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
+    <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -47,12 +47,6 @@ xmlns:tools="http://schemas.android.com/tools"
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".OverlayDetailActivity"
-            android:label="Operate"
-            android:theme="@style/Theme.Toolbar"
-            android:parentActivityName=".menu" />
-
 
         <activity
             android:name=".activities.Install"
@@ -66,34 +60,6 @@ xmlns:tools="http://schemas.android.com/tools"
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".fragments.BackupRestoreFragment"
-            android:icon="@mipmap/ic_launcher"
-            android:label="Restore"
-            android:theme="@style/Base.Theme.Toolbar.TransparentStatusBar"
-            android:parentActivityName=".menu">
-            <intent-filter>
-                <action android:name="com.lovejoy777.rroandlayersmanager.RESTORE" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".fragments.UninstallFragment"
-            android:icon="@mipmap/ic_launcher"
-            android:label=""
-            android:theme="@style/Base.Theme.Toolbar"
-            android:parentActivityName=".menu">
-            <intent-filter>
-                <action android:name="com.lovejoy777.rroandlayersmanager.DELETE" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-
 
         <activity
             android:name="com.lovejoy777.rroandlayersmanager.filepicker.FilePickerActivity"

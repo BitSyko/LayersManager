@@ -267,7 +267,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="8dp"
                     android:layout_gravity="center_vertical|end"
-                    android:src="@drawable/ic_action_info"
+                    android:src="@drawable/ic_drawer_about"
                     android:background="@color/button_background"
                     android:padding="8dp"
                     android:nestedScrollingEnabled="false" />
@@ -337,7 +337,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="8dp"
                     android:layout_gravity="center_vertical|end"
-                    android:src="@drawable/ic_action_info"
+                    android:src="@drawable/ic_drawer_about"
                     android:background="@color/button_background"
                     android:padding="8dp"
                     android:nestedScrollingEnabled="false" />

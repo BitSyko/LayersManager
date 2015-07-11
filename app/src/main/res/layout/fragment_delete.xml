@@ -43,12 +43,25 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="200dp"
                 android:textSize="16sp"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                android:gravity="center" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Applied Overlays:"
+                android:id="@+id/textView8"
+
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:textColor="@color/accent"
+                android:textStyle="bold"
+                android:paddingBottom="8dp"
+                android:gravity="center"/>
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/cardList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+                android:layout_below="@+id/textView8"
                 >
         </android.support.v7.widget.RecyclerView>
         </RelativeLayout>
@@ -93,7 +106,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:scaleType="center"
-        android:src="@drawable/ic_action_delete"
+        android:src="@drawable/ic_drawer_delete"
         android:layout_margin="16dp"
         android:clickable="true"
         android:id="@+id/fab6"
