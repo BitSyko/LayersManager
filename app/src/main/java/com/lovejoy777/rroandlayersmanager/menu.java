@@ -92,7 +92,7 @@ public class menu extends AppCompatActivity
         // Increment the counter
         SharedPreferences.Editor editor = app_preferences.edit();
         editor.putInt("counter", ++counter);
-        editor.commit();
+        editor.apply();
     }
 
     private void loadToolbarNavDrawer() {

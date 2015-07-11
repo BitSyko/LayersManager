@@ -44,7 +44,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No Backups available.\nMake one by clicking the FAB."
+                android:text="@string/noBackups"
                 android:id="@+id/textView7"
                 android:layout_below="@+id/imageView"
                 android:layout_centerHorizontal="true"
@@ -55,11 +55,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Backups:"
+                android:text="@string/Backups"
                 android:id="@+id/textView8"
 
                 android:layout_marginTop="16dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:textColor="@color/accent"
                 android:textStyle="bold"
                 android:paddingBottom="8dp"
@@ -90,7 +90,7 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Backup &amp; Restore"
+            android:text="@string/BackupRestore"
             android:id="@+id/textView9"
             android:textStyle="bold"
             android:textColor="@color/white"

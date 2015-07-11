@@ -8,15 +8,14 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New CheckBox"
+            android:text=""
             android:id="@+id/deletecheckbox"
-            android:layout_column="2"
             android:layout_centerVertical="true"
             android:paddingStart="8dp"
             android:textSize="17sp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:layout_marginLeft="16dp" />
+            android:layout_marginStart="16dp" />
     </RelativeLayout>
 
 

@@ -34,8 +34,8 @@
             android:layout_height="wrap_content"
             android:textStyle="normal"
             android:textSize="14sp"
-            android:text="TextView"
-            android:layout_marginLeft="16dp"
+            android:text=""
+            android:layout_marginStart="16dp"
             android:textColor="@color/text_color_secondary" />
         </LinearLayout>
     </TableRow>

@@ -103,10 +103,6 @@ xmlns:tools="http://schemas.android.com/tools"
             android:label="Layers"
             android:theme="@style/AppTheme"
             android:parentActivityName=".menu">
-            <intent-filter>
-                <action android:name="android.intent.action.SETTINGS" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
         </activity>
 
     </application>

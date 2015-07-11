@@ -823,7 +823,7 @@ public class OverlayDetailActivity extends Fragment {
                     SharedPreferences myprefs = getActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = myprefs.edit();
                     editor.putString("ConfirmInstallationDialog", "checked");
-                    editor.commit();
+                    editor.apply();
                 }
 
                 //start async task to install the Overlays
@@ -909,7 +909,7 @@ public class OverlayDetailActivity extends Fragment {
                 }
                 SharedPreferences.Editor editor = myPrefs.edit();
                 editor.putInt("ColorDialogRadioButton", whichRadioButton);
-                editor.commit();
+                editor.apply();
                 installDialog();
             }
         });

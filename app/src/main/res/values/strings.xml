@@ -7,8 +7,6 @@
     <string name="niklasschnettler">Niklas Schnettler</string>
     <string name="name">Name</string>
     <string name="surname">Surname</string>
-    <string name="error">Error</string>
-    <string name="anerroroccurred">An Error Occurred</string>
     <string name="installeverything">Install everything</string>
     <string name="selectalloverlays">Select all Overlays</string>
     <string name="developedby">Layers developed by</string>
@@ -51,14 +49,24 @@
     <string name="select_something_first">Nothing Selected</string>
     <string name="InstallOverlays2">Install Overlays</string>
     <string name="UninstallOverlays">Uninstall Overlays</string>
-    <string name="BackupOverlays">Backup Overlays</string>
     <string name="RestoreOverlays">Backup &amp; Restore</string>
     <string name="More">More</string>
     <string name="Tutorial">Tutorial</string>
     <string name="About">About</string>
     <string name="Showcase">Layers Showcase</string>
     <string name="General">General</string>
-    <string name="Restore">Restore</string>
+    <string name="selectAll">Select all</string>
+    <string name="discover">Discover</string>
+    <string name="nothingApplied">No Overlays applied.\nInstall some on the main page.</string>
+    <string name="PlayStore">PlayStore</string>
+    <string name="noBackups">No Backups available.\nMake one by clicking the FAB.</string>
+    <string name="appliedOverlays">Applied Overlays:</string>
+    <string name="Backups">Backups:</string>
+    <string name="Settings">Settings</string>
+    <string name="SettingLauncherIcon">Launcher Icon</string>
+    <string name="BackupRestore">Backup &amp; Restore</string>
+    <string name="SettingLauncherIconDetail">Remove Launcher Icon</string>
+    <string name="SettingLauncherIconWarning">Warning: you may not be able to launch this app unless your rom as it in the settings</string>
 
     <plurals
         name="select_dir">

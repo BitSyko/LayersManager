@@ -1,17 +1,14 @@
 package com.lovejoy777.rroandlayersmanager.activities;
 
 import android.content.ComponentName;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.lovejoy777.rroandlayersmanager.R;
-import com.lovejoy777.rroandlayersmanager.menu;
 import com.stericson.RootTools.RootTools;
 
 import java.io.BufferedReader;
@@ -64,7 +61,7 @@ public class SettingsActivity extends PreferenceActivity implements
                     SharedPreferences myPrefs = this.getSharedPreferences("myPrefs", MODE_WORLD_READABLE);
                     SharedPreferences.Editor editor = myPrefs.edit();
                     editor.putBoolean("switch1", false);
-                    editor.commit();
+                    editor.apply();
 
                 }
 
@@ -74,7 +71,7 @@ public class SettingsActivity extends PreferenceActivity implements
                 SharedPreferences myPrefs = this.getSharedPreferences("myPrefs", MODE_WORLD_READABLE);
                 SharedPreferences.Editor editor = myPrefs.edit();
                 editor.putBoolean("switch1", false);
-                editor.commit();
+                editor.apply();
             }
             p1.destroy();
         } catch (IOException e) {

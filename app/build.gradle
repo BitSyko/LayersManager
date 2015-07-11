@@ -28,7 +28,4 @@ dependencies {
     compile 'com.android.support:design:22.2.0'
     compile 'com.github.paolorotolo:appintro:1.4.0'
     compile 'com.afollestad:material-cab:0.1.4'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-
-
 }

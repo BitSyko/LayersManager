@@ -4,5 +4,5 @@
     <item
         android:id="@+id/menu_selectall"
         android:orderInCategory="1"
-        android:title="Select all"/>
+        android:title="@string/selectAll"/>
 </menu>
