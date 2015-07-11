@@ -3,8 +3,7 @@
 xmlns:tools="http://schemas.android.com/tools"
     package="com.lovejoy777.rroandlayersmanager"
     android:sharedUserId="android.uid.Manager"
-    android:process="com.android.Layers"
-    android:largeHeap="true">
+    android:process="com.android.Layers">
 
 <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -56,7 +55,7 @@ xmlns:tools="http://schemas.android.com/tools"
 
 
         <activity
-            android:name=".actions.Install"
+            android:name=".activities.Install"
             android:icon="@mipmap/ic_launcher"
             android:label="Install"
             android:theme="@style/Base.Theme.Toolbar"

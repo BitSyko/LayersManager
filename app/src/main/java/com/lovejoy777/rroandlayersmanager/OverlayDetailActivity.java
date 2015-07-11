@@ -16,7 +16,6 @@ import android.content.pm.ResolveInfo;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -28,10 +27,8 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
@@ -55,15 +52,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.lovejoy777.rroandlayersmanager.helper.CopyUnzipHelper;
-import com.lovejoy777.rroandlayersmanager.helper.RootCommandsInstallationHelper;
-import com.squareup.picasso.Picasso;
-import com.stericson.RootTools.RootTools;
-import com.stericson.RootTools.exceptions.RootDeniedException;
-import com.stericson.RootTools.execution.CommandCapture;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -71,7 +61,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 
 
 /**
@@ -91,21 +80,18 @@ public class OverlayDetailActivity extends Fragment {
 
     public static final int NumberOfScreenshotsMain = 3;
 
+    private ArrayList<String> paths = new ArrayList<String>();
 
     private String whichColor = null;
 
-    final String TargetPath = "/system/vendor/overlay/";
-
 
     final ImageView ScreenshotimageView[] = new ImageView[NumberOfScreenshotsMain];
-    private Drawable Screenshots[] = new Drawable[NumberOfScreenshotsMain];
 
     public CheckBox dontShowAgain;
 
     int atleastOneIsClicked = 0;
 
     List<Integer> InstallOverlayList = new ArrayList<Integer>();
-    List<String> InstalledOverlays = new ArrayList<String>();
     List<String> OverlayPathList = new ArrayList<String>();
     List<String> OverlayColorListPublic = new ArrayList<String>();
 
@@ -114,7 +100,6 @@ public class OverlayDetailActivity extends Fragment {
     private String ThemeFolderGeneral = null;
     private int NumberOfColors = 0;
 
-    private View mFab2;
 
     private String category;
     private String package2;
@@ -131,7 +116,7 @@ public class OverlayDetailActivity extends Fragment {
         public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle
         savedInstanceState){
             FragmentActivity faActivity = (FragmentActivity) super.getActivity();
-            cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.activity_overlaydetail, container, false);
+            cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_plugindetail, container, false);
             setHasOptionsMenu(true);
 
             getIntent();
@@ -139,17 +124,6 @@ public class OverlayDetailActivity extends Fragment {
             bindOpService();
 
             createLayouts();
-
-            //receiveAndUseData();
-
-            generateFilepaths();
-
-            //loadScreenshotCardview();
-
-            //loadOverlayCardviews();
-
-            //createThemeFolder();
-
 
             return cordLayout;
         }
@@ -314,14 +288,15 @@ public class OverlayDetailActivity extends Fragment {
         if (NumberOfOverlays == 0) {
             for (int i = 1; i < NumberOfOverlays + NumberOfColorOverlays + 1; i++) {
                 String CurrentOverlyName = OverlayNameList.get(i).replaceAll(" ", "");
-                OverlayPathList.set(i, ThemeName.replaceAll(" ", "") + "_" + CurrentOverlyName + ".apk");
+                OverlayPathList.add(i, ThemeName.replaceAll(" ", "") + "_" + CurrentOverlyName + ".apk");
             }
         } else {
             for (int i = 0; i < NumberOfOverlays + NumberOfColorOverlays + 1; i++) {
                 String CurrentOverlyName = OverlayNameList.get(i).replaceAll(" ", "");
-                OverlayPathList.set(i, ThemeName.replaceAll(" ", "") + "_" + CurrentOverlyName + ".apk");
+                OverlayPathList.add(i, ThemeName.replaceAll(" ", "") + "_" + CurrentOverlyName + ".apk");
             }
         }
+
     }
 
 
@@ -374,8 +349,7 @@ public class OverlayDetailActivity extends Fragment {
                 }
             }
         }
-        System.out.println(OverlayNameList);
-        System.out.println(StyleSpecificOverlayString);
+
         List<String> OverlayColorList = null;
         if (OverlayColorString != null) {
             OverlayColorList = new ArrayList<>(Arrays.asList(OverlayColorString.split(",")));
@@ -403,7 +377,7 @@ public class OverlayDetailActivity extends Fragment {
             OverlayColorListPublic.add(OverlayColorList.get(i));
         }
         for (int i = 0; i < NumberOfColorOverlays + NumberOfOverlays + 1; i++) {
-            OverlayPathList.add(null);
+            //OverlayPathList.add(null);
             InstallOverlayList.add(0);
         }
     }
@@ -486,6 +460,7 @@ public class OverlayDetailActivity extends Fragment {
                         if (isAdded()) {
                             loadOverlayCardviews();
                             createThemeFolder();
+                            generateFilepaths();
                         }
 
 
@@ -608,42 +583,27 @@ public class OverlayDetailActivity extends Fragment {
 
     //Preperation of Installation Of Overlays
     protected void InstallOverlays() throws InterruptedException {
-        String sSUCommand;
-        String sSuCommand2;
 
         //install Normal Overlays
-        String appPath = null;
         for (int i = 0; i < NumberOfOverlays; i++) {
             if (InstallOverlayList.get(i) == 1) {
-                appPath = OverlayPathList.get(i);
                 InstallOverlayList.set(i, 0);
-                sSUCommand = "cp " + ThemeFolderGeneral + appPath + " " + TargetPath;
-                sSuCommand2 = "chmod 666 " + TargetPath + appPath;
-                installAPK(sSUCommand, sSuCommand2);
+                paths.add("file://"+ThemeFolderGeneral + OverlayPathList.get(i));
             }
         }
-
 
         //install Color Specific Overlays
         for (int i4 = NumberOfOverlays + 1; i4 < NumberOfOverlays + NumberOfColorOverlays + 1; i4++) {
-
             if (InstallOverlayList.get(i4) == 1) {
-                appPath = OverlayPathList.get(i4);
                 InstallOverlayList.set(i4, 0);
-                sSUCommand = "cp " + ThemeFolder + whichColor + "/" + appPath + " " + TargetPath;
-                sSuCommand2 = "chmod 666 " + TargetPath + appPath;
-                installAPK(sSUCommand, sSuCommand2);
+                paths.add("file://"+ThemeFolder+whichColor+"/"+OverlayPathList.get(i4));
             }
         }
+
+        ((menu) getActivity()).InstallOverlays(getActivity(), paths);
     }
 
 
-    public void installAPK(String sSUCommand, String sSuCommand2) throws InterruptedException {
-
-        RootCommandsInstallationHelper cls2 = new RootCommandsInstallationHelper();
-        cls2.installOverlays(sSUCommand, sSuCommand2);
-
-    }
 
 
     private void CopyFolderToSDCard() {
@@ -659,7 +619,6 @@ public class OverlayDetailActivity extends Fragment {
         if (otherContext != null) {
             am = otherContext.getAssets();
         }
-        System.out.println(am);
 
         String ThemeNameNoSpace = ThemeName.replaceAll(" ", "");
         ApplicationInfo ai = null;
@@ -699,7 +658,6 @@ public class OverlayDetailActivity extends Fragment {
                     //nothing
                 } else {
                     in = assetFiles.open("Files/" + file);
-                    System.out.println(file);
                     out = new FileOutputStream(Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeNameNoSpace + "/" + file);
                     copyAssetFiles(in, out);
                 }
@@ -765,7 +723,7 @@ public class OverlayDetailActivity extends Fragment {
 
 
         CopyUnzipHelper cls2 = new CopyUnzipHelper();
-        cls2.unzip(ThemeName.replaceAll(" ", ""), NumberOfSelectedNormalOverlays, NumberOfSelectedColorOverlays, whichColor/*,NumberOfSelectedAdditionalOveerlays*/);
+        cls2.unzip(ThemeName.replaceAll(" ", ""), NumberOfSelectedNormalOverlays, NumberOfSelectedColorOverlays, whichColor);
 
     }
 
@@ -989,25 +947,25 @@ public class OverlayDetailActivity extends Fragment {
         protected Void doInBackground(Void... params) {
 
             //Mount System to Read / Write
-            RootTools.remount("/system/", "RW");
+           // RootTools.remount("/system/", "RW");
 
             //initialize last part of root Commands
             String SuperuserCommandOverlayFolderPermission = "chmod 777 /vendor/overlay";
             String SuperuserCommandCreateOverlayFolder = "mkdir /vendor/overlay";
 
-            CommandCapture command4 = new CommandCapture(0, SuperuserCommandCreateOverlayFolder);
-            try {
-                RootTools.getShell(true).add(command4);
-            } catch (IOException | TimeoutException | RootDeniedException e) {
-                e.printStackTrace();
-            }
-            while (!command4.isFinished()) {
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+            //CommandCapture command4 = new CommandCapture(0, SuperuserCommandCreateOverlayFolder);
+            //try {
+            //    RootTools.getShell(true).add(command4);
+            //} catch (IOException | TimeoutException | RootDeniedException e) {
+           ///     e.printStackTrace();
+           // }
+            //while (!command4.isFinished()) {
+            //    try {
+            //        Thread.sleep(1);
+            //    } catch (InterruptedException e) {
+            //        e.printStackTrace();
+            //    }
+           // }
 
             CopyFolderToSDCard();  //copy Overlay Files to SD Card
 
@@ -1019,21 +977,21 @@ public class OverlayDetailActivity extends Fragment {
                 e.printStackTrace();
             }
 
-            CommandCapture command3 = new CommandCapture(0, SuperuserCommandOverlayFolderPermission);
-            try {
-                RootTools.getShell(true).add(command3);
-            } catch (IOException | TimeoutException | RootDeniedException e) {
-                e.printStackTrace();
-            }
-            while (!command3.isFinished()) {
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+            //CommandCapture command3 = new CommandCapture(0, SuperuserCommandOverlayFolderPermission);
+            //try {
+            //    RootTools.getShell(true).add(command3);
+            //} catch (IOException | TimeoutException | RootDeniedException e) {
+            //    e.printStackTrace();
+            //}
+            //while (!command3.isFinished()) {
+           //     try {
+           //         Thread.sleep(1);
+           //     } catch (InterruptedException e) {
+           //         e.printStackTrace();
+           //     }
+          //  }
 
-            RootTools.remount("/system/", "RO");  //remount /system back to RO
+           // RootTools.remount("/system/", "RO");  //remount /system back to RO
 
             return null;
 
@@ -1186,28 +1144,6 @@ public class OverlayDetailActivity extends Fragment {
         }
     }
 
-    private Bitmap decodeFile(File f){
-        Bitmap b = null;
-
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(f);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        b = BitmapFactory.decodeStream(fis,null,o);
-        try {
-            fis.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return b;
-    }
 
     /*public void appendLog(List<String> text)
     {
@@ -1286,17 +1222,6 @@ public class OverlayDetailActivity extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         releaseOpService();
-        /*for (int i= 0; i < NumberOfScreenshotsMain;i++){
-            ScreenshotimageView[i].setImageDrawable(null);
-            Screenshots[i]= null;
-        }
-        myDrawable = null;
-System.out.println("DESTORYED");
-        //unbindDrawables(mGridView);
-        //gridAdapter = null;
-        System.gc();
-        Runtime.getRuntime().gc(); */
-
     }
 
 

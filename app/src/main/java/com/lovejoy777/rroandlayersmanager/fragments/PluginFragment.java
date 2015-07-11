@@ -2,13 +2,10 @@ package com.lovejoy777.rroandlayersmanager.fragments;
 
 import android.app.ActivityOptions;
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -18,14 +15,10 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,29 +29,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
 
-import com.lovejoy777.rroandlayersmanager.OverlayDetailActivity;
 import com.lovejoy777.rroandlayersmanager.R;
-import com.lovejoy777.rroandlayersmanager.actions.Install;
-import com.lovejoy777.rroandlayersmanager.activities.Intro;
+import com.lovejoy777.rroandlayersmanager.activities.Install;
 import com.lovejoy777.rroandlayersmanager.adapters.CardViewAdapter;
-import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.helper.CardViewContent;
 import com.lovejoy777.rroandlayersmanager.helper.RecyclerItemClickListener;
-import com.stericson.RootTools.RootTools;
-import com.stericson.RootTools.exceptions.RootDeniedException;
-import com.stericson.RootTools.execution.CommandCapture;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
+
 import com.lovejoy777.rroandlayersmanager.menu;
 
 /**
@@ -71,7 +53,6 @@ public class PluginFragment extends Fragment {
     private IntentFilter packageFilter;
     private ArrayList<HashMap<String,String>> services;
     private ArrayList<String> categories;
-    private SimpleAdapter itemAdapter;
     private String[] packages = new String[100];
 
     public static final String ACTION_PICK_PLUGIN = "com.layers.plugins.PICK_OVERLAYS";
@@ -79,11 +60,8 @@ public class PluginFragment extends Fragment {
     static final String KEY_SERVICENAME = "servicename";
     static final String KEY_ACTIONS = "actions";
     static final String KEY_CATEGORIES = "categories";
-    static final String BUNDLE_EXTRAS_CATEGORY = "category";
-    static final String BUNDLE_EXTRAS_PACKAGENAME = "packageName";
     private Boolean TestBoolean = false;
     static final String LOG_TAG = "PluginApp";
-    private DrawerLayout mDrawerLayout;
     RecyclerView recList = null;
     CardViewAdapter ca = null;
 
@@ -267,33 +245,6 @@ public class PluginFragment extends Fragment {
 
                 ((menu) getActivity()).changeFragment2(category,package2);
 
-                /*Fragment fragment = null;
-                Bundle args = new Bundle();
-                args.putString(BUNDLE_EXTRAS_CATEGORY, category);
-                args.putString(BUNDLE_EXTRAS_PACKAGENAME, package2);
-                fragment = new OverlayDetailActivity();
-
-                fragment.setArguments(args);
-                // Insert the fragment by replacing any existing fragment
-
-
-
-
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, fragment)
-                        .commit(); */
-
-                //Intent intent = new Intent(getActivity(), UninstallFragment.class);
-                //intent.setClassName("com.lovejoy777.rroandlayersmanager",
-                //        "com.lovejoy777.rroandlayersmanager.OverlayDetailActivity");
-                //intent.putExtra(BUNDLE_EXTRAS_CATEGORY, category);
-                //intent.putExtra(BUNDLE_EXTRAS_PACKAGENAME, package2);
-                //Bundle bndlanimation =
-                //        ActivityOptions.makeCustomAnimation(getActivity().getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
-                //startActivity(intent, bndlanimation);
-                //System.out.println(package2);
-
             }
         }
         else{
@@ -315,9 +266,7 @@ public class PluginFragment extends Fragment {
             Log.d(LOG_TAG, "onReceive: " + intent);
             services.clear();
             new fillPluginList().execute();
-
             ca.notifyDataSetChanged();
-            System.out.println("TEST");
         }
     }
 

@@ -28,7 +28,7 @@
 
         <!-- description and headline texts -->
 
-        <string name="CreateHeXFolder">Install Overlays to /system/vendor/overlay?</string>
+        <string name="CreateHeXFolder">Apply selected Overlays?</string>
         <string name="rebooting">Rebooting</string>
 
     <!-- SnackBar texts -->
