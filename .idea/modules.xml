@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Layers Manager 4.0.iml" filepath="$PROJECT_DIR$/Layers Manager 4.0.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/LayersManager.iml" filepath="$PROJECT_DIR$/.idea/LayersManager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
 </project>
