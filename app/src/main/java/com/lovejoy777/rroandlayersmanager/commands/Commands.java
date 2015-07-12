@@ -159,14 +159,14 @@ public class Commands {
                                     RootCommands.moveCopyRoot(layersdata + "/", overlaypath);
 
                                     // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 666
-                                    CommandCapture command9 = new CommandCapture(0, "chmod -R 666 /vendor/overlay");
+                                    CommandCapture command9 = new CommandCapture(0, "chmod -R 644 /vendor/overlay");
                                     RootTools.getShell(true).add(command9);
                                     while (!command9.isFinished()) {
                                         Thread.sleep(1);
                                     }
 
                                     // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER BACK TO 777
-                                    CommandCapture command10 = new CommandCapture(0, "chmod 777 /vendor/overlay");
+                                    CommandCapture command10 = new CommandCapture(0, "chmod 755 /vendor/overlay");
                                     RootTools.getShell(true).add(command10);
                                     while (!command10.isFinished()) {
                                         Thread.sleep(1);
@@ -233,14 +233,14 @@ public class Commands {
                                 RootCommands.moveCopyRoot(layersdata + "/", overlaypath);
 
                                 // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 666 RECURING
-                                CommandCapture command9 = new CommandCapture(0, "chmod -R 666 /vendor/overlay");
+                                CommandCapture command9 = new CommandCapture(0, "chmod -R 644 /vendor/overlay");
                                 RootTools.getShell(true).add(command9);
                                 while (!command9.isFinished()) {
                                     Thread.sleep(1);
                                 }
 
                                 // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER BACK TO 777
-                                CommandCapture command10 = new CommandCapture(0, "chmod 777 /vendor/overlay");
+                                CommandCapture command10 = new CommandCapture(0, "chmod 755 /vendor/overlay");
                                 RootTools.getShell(true).add(command10);
                                 while (!command10.isFinished()) {
                                     Thread.sleep(1);
