@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,6 +18,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.Toast;
 
 
@@ -122,7 +124,8 @@ public class menu extends AppCompatActivity
                 if (currentFragment instanceof OverlayDetailActivity){
                     FragmentManager fm = getFragmentManager();
                     fm.popBackStack();
-                    //changeFragment(1);
+                    Window window = getWindow();
+                    window.setStatusBarColor(getResources().getColor(R.color.transparent));
                 }else {
                     mDrawerLayout.openDrawer(GravityCompat.START);
                 }
@@ -313,6 +316,8 @@ public class menu extends AppCompatActivity
         Fragment currentFragment = menu.this.getFragmentManager().findFragmentById(R.id.fragment_container);
         if (currentFragment instanceof OverlayDetailActivity) {
             fm.popBackStack();
+            Window window = getWindow();
+            window.setStatusBarColor(getResources().getColor(R.color.transparent));
             //changeFragment(1);
         }else {
             super.onBackPressed();

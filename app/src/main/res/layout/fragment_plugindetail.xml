@@ -327,7 +327,8 @@
             android:layout_margin="16dp"
             android:clickable="true"
             android:id="@+id/fab"
-            app:borderWidth="0dp"/>
+            app:borderWidth="0dp"
+            android:visibility="invisible"/>
 
         <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"

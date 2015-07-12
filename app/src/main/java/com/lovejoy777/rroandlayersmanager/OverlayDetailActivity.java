@@ -14,8 +14,11 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.AssetManager;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -28,6 +31,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -37,6 +41,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -58,6 +63,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -436,45 +442,7 @@ public class OverlayDetailActivity extends Fragment {
     private void loadBackdrop() {
         ImageView imageView = (ImageView) cordLayout.findViewById(R.id.backdrop);
 
-        Animator reveal = ViewAnimationUtils.createCircularReveal(imageView,
-                imageView.getWidth() / 2,
-                imageView.getHeight() / 2,
-                0,
-                imageView.getHeight() * 2);
-                reveal.setDuration(750);
-                reveal.addListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                        loadScreenshotCardview();
-                        receiveAndUseData();
-                        Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fadein);
-                        LinearLayout WN = (LinearLayout) cordLayout.findViewById(R.id.lin2);
-                        WN.setVisibility(View.VISIBLE);
-                        WN.startAnimation(fadeInAnimation);
-                    }
 
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        if (isAdded()) {
-                            loadOverlayCardviews();
-                            createThemeFolder();
-                            generateFilepaths();
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-
-                    }
-                });
-                reveal.start();
         final String packName = package2;
         String mDrawableName = "heroimage";
         PackageManager manager = getActivity().getPackageManager();
@@ -493,6 +461,73 @@ public class OverlayDetailActivity extends Fragment {
         if (myDrawable != null) {
             imageView.setImageDrawable(myDrawable);
         }
+        final CollapsingToolbarLayout Collapsingtoolbar = (CollapsingToolbarLayout) cordLayout.findViewById(R.id.collapsing_toolbar);
+
+
+        Palette.from(((BitmapDrawable) myDrawable).getBitmap()).generate(new Palette.PaletteAsyncListener() {
+            public void onGenerated(Palette palette) {
+                Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
+                Palette.Swatch test = palette.getLightVibrantSwatch();
+                FloatingActionButton mFab = (FloatingActionButton) cordLayout.findViewById(R.id.fab);
+                if (vibrantSwatch != null) {
+                    Collapsingtoolbar.setContentScrimColor(vibrantSwatch.getRgb());
+                    float[] hsv = new float[3];
+                    Color.colorToHSV(vibrantSwatch.getRgb(), hsv);
+                    hsv[2] *= 0.8f;
+                    //int colorPrimaryDark = Color.HSVToColor(hsv);
+                    Window window = getActivity().getWindow();
+                    window.setStatusBarColor(Color.HSVToColor(hsv));
+
+
+
+                }
+                if (test!=null) {
+                    mFab.setBackgroundTintList(ColorStateList.valueOf(test.getRgb()));
+                }
+                mFab.setVisibility(View.VISIBLE);
+                Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fadein);
+                mFab.startAnimation(fadeInAnimation);
+            }
+        });
+        Animator reveal = ViewAnimationUtils.createCircularReveal(imageView,
+                imageView.getWidth() / 2,
+                imageView.getHeight() / 2,
+                0,
+                imageView.getHeight() * 2);
+        reveal.setDuration(750);
+        reveal.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                loadScreenshotCardview();
+                receiveAndUseData();
+                Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fadein);
+                LinearLayout WN = (LinearLayout) cordLayout.findViewById(R.id.lin2);
+                WN.setVisibility(View.VISIBLE);
+                WN.startAnimation(fadeInAnimation);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (isAdded()) {
+                    loadOverlayCardviews();
+                    createThemeFolder();
+                    generateFilepaths();
+                }
+
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        reveal.start();
     }
 
     private void loadBackdrop2() {
@@ -1133,7 +1168,12 @@ public class OverlayDetailActivity extends Fragment {
             if (isAdded()) {
                 for (int i = 0; i < NumberOfScreenshotsMain; i++) {
 
-                    ScreenshotimageView[i].setImageBitmap(bitmap[i]);
+                    if (bitmap[i].getHeight() > 1000){
+                        ScreenshotimageView[i].setImageBitmap(Bitmap.createScaledBitmap(bitmap[i], (int) (bitmap[i].getWidth() * 0.4), (int) (bitmap[i].getHeight() * 0.4), true));
+                    }else{
+                        ScreenshotimageView[i].setImageBitmap(bitmap[i]);
+                    }
+
                     bitmap[i] = null;
                     Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fadein);
                     ScreenshotimageView[i].startAnimation(fadeInAnimation);
