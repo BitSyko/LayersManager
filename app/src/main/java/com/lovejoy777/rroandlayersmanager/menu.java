@@ -22,6 +22,7 @@ import android.view.Window;
 import android.widget.Toast;
 
 
+import com.lovejoy777.rroandlayersmanager.activities.Install;
 import com.lovejoy777.rroandlayersmanager.activities.Intro;
 import com.lovejoy777.rroandlayersmanager.fragments.UninstallFragment;
 import com.lovejoy777.rroandlayersmanager.fragments.BackupRestoreFragment;
@@ -198,7 +199,7 @@ public class menu extends AppCompatActivity
         });
     }
 
-    private void changeFragment(int position) {
+    public void changeFragment(int position) {
         Fragment fragment = null;
         Bundle args = new Bundle();
         FragmentManager fragmentManager = getFragmentManager();
@@ -211,6 +212,8 @@ public class menu extends AppCompatActivity
                 break;
             case 3:
                 fragment = new BackupRestoreFragment();
+                break;
+            case 4: fragment = new Install();
                 break;
         }
 

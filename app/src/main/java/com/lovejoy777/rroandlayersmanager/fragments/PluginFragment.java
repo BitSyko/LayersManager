@@ -118,11 +118,12 @@ public class PluginFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent Installactivity = new Intent(getActivity(), Install.class);
+                //Intent Installactivity = new Intent(getActivity(), Install.class);
 
-                Bundle bndlanimation =
-                        ActivityOptions.makeCustomAnimation(getActivity().getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
-                startActivity(Installactivity, bndlanimation);
+                //Bundle bndlanimation =
+                //        ActivityOptions.makeCustomAnimation(getActivity().getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
+                //startActivity(Installactivity, bndlanimation);
+                ((menu) getActivity()).changeFragment(4);
             }
 
 
