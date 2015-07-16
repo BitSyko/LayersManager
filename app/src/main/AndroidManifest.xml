@@ -49,7 +49,7 @@ xmlns:tools="http://schemas.android.com/tools"
 
 
         <activity
-            android:name=".activities.Install"
+            android:name=".fragments.InstallFragment"
             android:icon="@mipmap/ic_launcher"
             android:label="Install"
             android:theme="@style/Base.Theme.Toolbar"

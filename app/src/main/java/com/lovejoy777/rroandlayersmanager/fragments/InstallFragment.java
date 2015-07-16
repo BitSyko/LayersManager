@@ -1,12 +1,12 @@
-package com.lovejoy777.rroandlayersmanager.activities;
+package com.lovejoy777.rroandlayersmanager.fragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,7 +22,8 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,34 +32,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.CheckBox;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.afollestad.materialcab.MaterialCab;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
-import com.lovejoy777.rroandlayersmanager.menu;
-import com.lovejoy777.rroandlayersmanager.filepicker.FilePickerActivity;
 import com.stericson.RootTools.RootTools;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 /**
  * Created by lovejoy777 on 10/06/15.
  */
-public class Install extends Fragment {
+public class InstallFragment extends Fragment {
 
     private ArrayList<String> Files = new ArrayList<>();
     private ArrayList<String> Directories = new ArrayList<>();
@@ -79,9 +75,10 @@ public class Install extends Fragment {
 
         BaseDir = Environment.getExternalStorageDirectory()+"";
         currentDir =null;
+        Filedirectories.add("SD Card");
         Filedirectories.add("/Overlays");
         FragmentActivity faActivity  = (FragmentActivity)    super.getActivity();
-        cordLayout = (CoordinatorLayout)    inflater.inflate(R.layout.fragment_delete, container, false);
+        cordLayout = (CoordinatorLayout)    inflater.inflate(R.layout.fragment_install, container, false);
 
         setHasOptionsMenu(true);
 
@@ -107,11 +104,10 @@ public class Install extends Fragment {
             Directories.clear();
             currentDir = "";
             Commands command= new Commands();
-            for (int i=0; i<Filedirectories.size();i++){
+            for (int i=1; i<Filedirectories.size();i++){
                 currentDir = currentDir+Filedirectories.get(i);
             }
             currentDir = BaseDir +currentDir;
-            System.out.println("DIR: "+currentDir);
 
             File f = new File(currentDir);
 
@@ -121,14 +117,17 @@ public class Install extends Fragment {
                 return null;
             else {
                 for (int i=0; i<files.length; i++) {
-                    System.out.println(files[i].getName());
                     if (files[i].isDirectory()) {
                         Directories.add(files[i].getName());
+
                     } else {
                         Files.add(files[i].getName());
+
                     }
                 }
             }
+            Collections.sort(Directories, String.CASE_INSENSITIVE_ORDER);
+            Collections.sort(Files, String.CASE_INSENSITIVE_ORDER);
         //}
             //Files = command.loadFiles(currentDir+directories.get(0));
 
@@ -153,13 +152,74 @@ public class Install extends Fragment {
             mAdapter = new CardViewAdapter3(Files,Directories, R.layout.adapter_install_layout, getActivity());
             mRecyclerView.setAdapter(mAdapter);
             ActivityCompat.invalidateOptionsMenu(getActivity());
+
+            LinearLayout HscrollView = (LinearLayout) cordLayout.findViewById(R.id.horizontalScrollView2);
+            HscrollView.removeAllViews();
+
+
+
+            for (int i =0; i <Filedirectories.size();i++) {
+
+
+                TextView tv = new TextView(getActivity().getApplicationContext());
+                tv.setText(Filedirectories.get(i).replaceAll("/", "").toUpperCase());
+                tv.setTextColor(getResources().getColor(R.color.white));
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                //int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getActivity().getResources().getDisplayMetrics());
+                //params.setMarginEnd(margin);
+                //params.setMarginStart(margin);
+
+                tv.setLayoutParams(params);
+                tv.setTag(Filedirectories.get(i));
+                tv.setBackground(getActivity().getResources().getDrawable(R.drawable.ripple));
+
+                int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getActivity().getResources().getDisplayMetrics());
+                tv.setPadding(padding, padding, padding, padding);
+                HscrollView.addView(tv);
+
+                tv.setOnClickListener(onclicklistener);
+
+
+                final HorizontalScrollView scroller = (HorizontalScrollView) cordLayout.findViewById(R.id.horizontalScrollView3);
+
+                scroller.post(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        scroller.fullScroll(View.FOCUS_RIGHT);
+                    }
+                });
+                if (Filedirectories.size() > 1 && i != Filedirectories.size()-1){
+                    ImageView img = new ImageView(getActivity().getApplicationContext());
+                    img.setBackgroundResource(R.drawable.ic_action_up2);
+                    HscrollView.addView(img);
+                    ViewGroup.LayoutParams iv_params_b = img.getLayoutParams();
+                    LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                    params2.gravity = Gravity.CENTER;
+
+                    img.setLayoutParams(params2);
+                }
+            }
+            System.out.println("DIR: "+currentDir);
         }
     }
+
+    View.OnClickListener onclicklistener = new View.OnClickListener() {
+        public void onClick(View v) {
+            Object clickedOn = v.getTag()/*.toString()*/;
+            Filedirectories.subList(Filedirectories.indexOf(clickedOn)+1, Filedirectories.size()).clear();
+            //System.out.println(Filedirectories.indexOf(clickedOn));
+            LinearLayout HscrollView = (LinearLayout) cordLayout.findViewById(R.id.horizontalScrollView2);
+
+new LoadAndSet().execute();
+        }
+    };
 
     private void loadToolbarRecylcerViewFab() {
         // Handle Toolbar
         Toolbar toolbar = (Toolbar) cordLayout.findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_action_menu);
+        toolbar.setNavigationIcon(R.drawable.ic_action_back);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -174,7 +234,6 @@ public class Install extends Fragment {
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println(InstallOverlayList);
                 fab2.animate().translationY(fab2.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
                 new DeleteOverlays().execute();
             }
@@ -206,15 +265,14 @@ public class Install extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, final int i) {
-            System.out.print(i);
-            if (i< themes.size()) {
-                viewHolder.image.setImageResource(R.drawable.ic_file);
-                viewHolder.themeName.setText(themes.get(i).replace(".apk", "").replace("_", " "));
+            if (i< directories.size()) {
+                viewHolder.image.setImageResource(R.drawable.ic_folder);
+                viewHolder.themeName.setText(directories.get(i));
                 viewHolder.rel.setTag(i);
                 viewHolder.themeName.setId(i);
             } else{
-                viewHolder.image.setImageResource(R.drawable.ic_folder);
-                viewHolder.themeName.setText(directories.get(i-themes.size()));
+                viewHolder.image.setImageResource(R.drawable.ic_file);
+                viewHolder.themeName.setText(themes.get(i- directories.size()).replace(".apk", "").replace("_", " "));
                 viewHolder.rel.setTag(i);
                 viewHolder.themeName.setId(i);
             }
@@ -243,12 +301,12 @@ public class Install extends Fragment {
                     } else {
                         fab2.animate().translationY(fab2.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
                     } */
-                    if (Integer.parseInt(v.getTag().toString())>=themes.size()){
-                        Filedirectories.add("/"+directories.get(i-themes.size()));
+                    if (Integer.parseInt(v.getTag().toString())<directories.size()){
+                        Filedirectories.add("/"+directories.get(i));
                         new LoadAndSet().execute();
 
                     }else{
-                        v.setBackgroundColor(getResources().getColor(R.color.divider));
+                        v.setBackgroundColor(getResources().getColor(R.color.select));
                     }
                 }
             });
@@ -352,54 +410,9 @@ public class Install extends Fragment {
 
 
 
-
-
-    //Check and Uncheck all Checkboxes
-    private void checkAll(){
-        InstallOverlayList.clear();
-        for (int i =0; i< Files.size();i++){
-            InstallOverlayList.add(1);
-        }
-        atleastOneIsClicked = InstallOverlayList.size();
-        System.out.println(atleastOneIsClicked);
-        mAdapter.notifyDataSetChanged();
-        fab2.setVisibility(View.VISIBLE);
-        fab2.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
-
-    }
-
-    private void UncheckAll(){
-        InstallOverlayList.clear();
-        for (int i =0; i< Files.size();i++){
-            InstallOverlayList.add(0);
-        }
-        atleastOneIsClicked = 0;
-        mAdapter.notifyDataSetChanged();
-        fab2.setVisibility(View.INVISIBLE);
-        fab2.animate().translationY(fab2.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
-    }
-
-
-
-
-
-
-
-    //Overflow Menu
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (!Files.isEmpty()) {
-            inflater.inflate(R.menu.overflow, menu);
-        }
-        super.onCreateOptionsMenu(menu, inflater);
-    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_selectall:
-               Filedirectories.remove(Filedirectories.size()-1);
-                new LoadAndSet().execute();
-                return true;
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;

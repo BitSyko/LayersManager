@@ -34,4 +34,5 @@
     <!-- other colors -->
     <color name="white">#ffffff</color>
     <color name="divider">#B6B6B6</color>
+    <color name="select">#dcdcdc</color>
 </resources>

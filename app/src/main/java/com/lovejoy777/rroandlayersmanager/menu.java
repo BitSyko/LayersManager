@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,7 +21,7 @@ import android.view.Window;
 import android.widget.Toast;
 
 
-import com.lovejoy777.rroandlayersmanager.activities.Install;
+import com.lovejoy777.rroandlayersmanager.fragments.InstallFragment;
 import com.lovejoy777.rroandlayersmanager.activities.Intro;
 import com.lovejoy777.rroandlayersmanager.fragments.UninstallFragment;
 import com.lovejoy777.rroandlayersmanager.fragments.BackupRestoreFragment;
@@ -122,11 +121,12 @@ public class menu extends AppCompatActivity
         switch (item.getItemId()) {
             case android.R.id.home:
                 Fragment currentFragment = menu.this.getFragmentManager().findFragmentById(R.id.fragment_container);
-                if (currentFragment instanceof OverlayDetailActivity){
+                if (currentFragment instanceof OverlayDetailActivity||currentFragment instanceof InstallFragment){
                     FragmentManager fm = getFragmentManager();
                     fm.popBackStack();
                     Window window = getWindow();
                     window.setStatusBarColor(getResources().getColor(R.color.transparent));
+                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 }else {
                     mDrawerLayout.openDrawer(GravityCompat.START);
                 }
@@ -213,16 +213,26 @@ public class menu extends AppCompatActivity
             case 3:
                 fragment = new BackupRestoreFragment();
                 break;
-            case 4: fragment = new Install();
+            case 4: fragment = new InstallFragment();
                 break;
         }
 
         fragment.setArguments(args);
         // Insert the fragment by replacing any existing fragment
+        if (position == 4) {
+            fragmentManager.beginTransaction()
+                    .addToBackStack("test")
+                    .replace(R.id.fragment_container, fragment)
+                    .commit();
+                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
+
+        }else{
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commit();
+        }
+
 
     }
 
@@ -241,6 +251,7 @@ public class menu extends AppCompatActivity
                 .addToBackStack("test")
                 .replace(R.id.fragment_container, fragment)
                 .commit();
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
 
 
@@ -317,10 +328,11 @@ public class menu extends AppCompatActivity
     public void onBackPressed() {
         FragmentManager fm = getFragmentManager();
         Fragment currentFragment = menu.this.getFragmentManager().findFragmentById(R.id.fragment_container);
-        if (currentFragment instanceof OverlayDetailActivity) {
+        if (currentFragment instanceof OverlayDetailActivity ||currentFragment instanceof InstallFragment ) {
             fm.popBackStack();
             Window window = getWindow();
             window.setStatusBarColor(getResources().getColor(R.color.transparent));
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             //changeFragment(1);
         }else {
             super.onBackPressed();
