@@ -36,7 +36,7 @@ public class DetailedTutorialActivity extends AppCompatActivity {
         card1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent menuactivity = new Intent(DetailedTutorialActivity.this, Intro.class);
+                Intent menuactivity = new Intent(DetailedTutorialActivity.this, IntroActivity.class);
 
                 Bundle bndlanimation =
                         ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();

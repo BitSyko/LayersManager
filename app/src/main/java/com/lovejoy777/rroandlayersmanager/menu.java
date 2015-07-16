@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 
 import com.lovejoy777.rroandlayersmanager.fragments.InstallFragment;
-import com.lovejoy777.rroandlayersmanager.activities.Intro;
+import com.lovejoy777.rroandlayersmanager.activities.IntroActivity;
 import com.lovejoy777.rroandlayersmanager.fragments.UninstallFragment;
 import com.lovejoy777.rroandlayersmanager.fragments.BackupRestoreFragment;
 import com.lovejoy777.rroandlayersmanager.activities.AboutActivity;
@@ -87,7 +87,7 @@ public class menu extends AppCompatActivity
 
         if (counter < 1){
 
-            Intent intent = new Intent(this,Intro.class);
+            Intent intent = new Intent(this,IntroActivity.class);
             startActivity(intent);
 
         }

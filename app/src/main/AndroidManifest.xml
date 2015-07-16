@@ -94,7 +94,7 @@ xmlns:tools="http://schemas.android.com/tools"
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.Intro"
+        <activity android:name=".activities.IntroActivity"
             android:noHistory="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
