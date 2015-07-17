@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <RelativeLayout
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="match_parent">
 
-        <CheckBox
+    <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
@@ -15,8 +14,18 @@
             android:textSize="17sp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:layout_marginStart="16dp" />
-    </RelativeLayout>
+            android:layout_marginStart="16dp"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AAAA"
+            android:id="@+id/textcheckbox"
+            android:textSize="17sp"
+            android:layout_marginStart="60dp"
+            android:layout_centerVertical="true" android:layout_toEndOf="@+id/deletecheckbox"/>
+
+</RelativeLayout>
 
 
 
