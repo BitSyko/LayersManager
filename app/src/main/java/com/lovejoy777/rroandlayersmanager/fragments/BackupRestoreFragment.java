@@ -483,7 +483,7 @@ public class BackupRestoreFragment extends Fragment{
 
             Files.clear();
             Commands command= new Commands();
-            Files = command.loadFiles(Environment.getExternalStorageDirectory() +  "/Overlays/Backup");
+            Files = command.loadFolders(Environment.getExternalStorageDirectory() + "/Overlays/Backup");
 
             return null;
 

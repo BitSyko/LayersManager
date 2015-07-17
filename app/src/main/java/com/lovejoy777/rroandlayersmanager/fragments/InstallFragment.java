@@ -32,15 +32,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.CheckBox;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialcab.MaterialCab;
 import com.lovejoy777.rroandlayersmanager.R;
+import com.lovejoy777.rroandlayersmanager.beans.UninstallFile;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 import com.stericson.RootTools.RootTools;
@@ -56,7 +59,8 @@ import java.util.List;
  */
 public class InstallFragment extends Fragment {
 
-    private ArrayList<String> Files = new ArrayList<>();
+    private ArrayList<UninstallFile> Files = new ArrayList<>();
+    //private ArrayList<String> Files = new ArrayList<>();
     private ArrayList<String> Directories = new ArrayList<>();
     FloatingActionButton fab2;
     int atleastOneIsClicked = 0;
@@ -100,8 +104,12 @@ public class InstallFragment extends Fragment {
         @Override
         protected Void doInBackground(String... params) {
 
-            Files.clear();
-            Directories.clear();
+            if (Files!=null){
+                Files.clear();
+            }
+            if (Directories!=null) {
+                Directories.clear();
+            }
             currentDir = "";
             Commands command= new Commands();
             for (int i=1; i<Filedirectories.size();i++){
@@ -109,27 +117,24 @@ public class InstallFragment extends Fragment {
             }
             currentDir = BaseDir +currentDir;
 
-            File f = new File(currentDir);
+            ArrayList<String> loadedFiles = new ArrayList<String>();
 
-            f.mkdirs();
-            File[] files = f.listFiles();
-            if (files.length == 0)
-                return null;
-            else {
-                for (int i=0; i<files.length; i++) {
-                    if (files[i].isDirectory()) {
-                        Directories.add(files[i].getName());
 
-                    } else {
-                        Files.add(files[i].getName());
+            loadedFiles.addAll(command.loadFiles(currentDir));
 
-                    }
-                }
+            System.out.println(loadedFiles);
+
+            for (String /*file*/ currentDir : loadedFiles) {
+                Files.add(new UninstallFile(/*file*/currentDir));
+
             }
-            Collections.sort(Directories, String.CASE_INSENSITIVE_ORDER);
-            Collections.sort(Files, String.CASE_INSENSITIVE_ORDER);
-        //}
-            //Files = command.loadFiles(currentDir+directories.get(0));
+            //Files = command.loadFiles(currentDir);
+            Directories = command.loadFolders(currentDir);
+
+            if (Directories!=null){
+                Collections.sort(Directories, String.CASE_INSENSITIVE_ORDER);
+            }
+
 
             return null;
 
@@ -137,19 +142,14 @@ public class InstallFragment extends Fragment {
 
         protected void onPostExecute(Void result) {
 
-            ImageView noOverlays = (ImageView) cordLayout.findViewById(R.id.imageView);
-            TextView noOverlaysText = (TextView) cordLayout.findViewById(R.id.textView7);
-            //if (Files.isEmpty()){
-           //     noOverlays.setVisibility(View.VISIBLE);
-           //     noOverlaysText.setVisibility(View.VISIBLE);
-           // }
-            InstallOverlayList.clear();
-            for (int i =0; i< Files.size();i++){
-                InstallOverlayList.add(0);
-            }
+
+            //InstallOverlayList.clear();
+            //for (int i =0; i< Files.size();i++){
+            //    InstallOverlayList.add(0);
+            //}
 
             atleastOneIsClicked =0;
-            mAdapter = new CardViewAdapter3(Files,Directories, R.layout.adapter_install_layout, getActivity());
+            mAdapter = new CardViewAdapter3(Files,Directories, R.layout.adapter_install_layout,R.layout.adapter_listlayout, getActivity());
             mRecyclerView.setAdapter(mAdapter);
             ActivityCompat.invalidateOptionsMenu(getActivity());
 
@@ -201,7 +201,7 @@ public class InstallFragment extends Fragment {
                     img.setLayoutParams(params2);
                 }
             }
-            System.out.println("DIR: "+currentDir);
+            System.out.println("DIR: " + currentDir);
         }
     }
 
@@ -229,184 +229,185 @@ new LoadAndSet().execute();
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         fab2 = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab6);
-        fab2.setVisibility(View.INVISIBLE);
-        fab2.animate().translationY(218).setInterpolator(new AccelerateInterpolator(2)).start();
+        fab2.hide();
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fab2.animate().translationY(fab2.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
-                new DeleteOverlays().execute();
+                ArrayList<String> test = new ArrayList<String>();
+                for (UninstallFile file : Files) {
+                    if (file.isChecked()) {
+                        test.add(file.getLocation());
+                    }
+                }
+                fab2.hide();
+                new InstallOverlays().execute();
+                System.out.println(test);
+
+                //fab2.animate().translationY(fab2.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
+                //new DeleteOverlays().execute();
             }
         });
     }
 
 
     //Adapter
-    private class CardViewAdapter3 extends RecyclerView.Adapter<CardViewAdapter3.ViewHolder>{
+    private class CardViewAdapter3 extends RecyclerView.Adapter<CardViewAdapter3.MyViewHolder>{
 
-        private ArrayList<String> themes;
+        private ArrayList<UninstallFile> themes;
+        //private ArrayList<String> themes;
         private ArrayList<String> directories;
         private int rowLayout;
+        private  int checkboxLayout;
         private Context mContext;
 
-        public CardViewAdapter3(ArrayList<String> themes,ArrayList<String> directories, int rowLayout, Context context) {
+        public CardViewAdapter3(ArrayList<UninstallFile> themes,ArrayList<String> directories, int rowLayout, int checkboxLayout, Context context) {
             this.directories = directories;
             this.themes = themes;
             this.rowLayout = rowLayout;
             this.mContext = context;
+            this.checkboxLayout = checkboxLayout;
             //themes.addAll(directories);
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            View v = LayoutInflater.from(viewGroup.getContext()).inflate(rowLayout, viewGroup, false);
-            return new ViewHolder(v);
+        public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        MyViewHolder myViewholder;
+            View v;
+            Context context = viewGroup.getContext();
+
+            if (viewType == 1) {
+                v = LayoutInflater.from(viewGroup.getContext()).inflate(rowLayout, viewGroup, false);
+                myViewholder = new MyViewHolder(v, 1);
+            } else {
+                v = LayoutInflater.from(viewGroup.getContext()).inflate(checkboxLayout, viewGroup, false);
+                myViewholder = new MyViewHolder(v, 0);
+            }
+
+            return myViewholder;
+
+
+
+            /*View v = null;
+            switch (getItemViewType(i)) {
+                case 0:
+                    v = LayoutInflater.from(viewGroup.getContext()).inflate(checkboxLayout, viewGroup, false);
+
+                case 1:
+                    //v = LayoutInflater.from(viewGroup.getContext()).inflate(checkboxLayout, viewGroup, false);
+                    v = LayoutInflater.from(viewGroup.getContext()).inflate(rowLayout, viewGroup, false);
+            }
+           // System.out.println(getItemViewType(i));
+            return new ViewHolder(v); */
         }
 
+
+       // private UninstallFile theme2 = null;
         @Override
-        public void onBindViewHolder(ViewHolder viewHolder, final int i) {
-            if (i< directories.size()) {
+        public void onBindViewHolder(MyViewHolder viewHolder, final int i) {
+
+
+
+
+
+            if (isFolder(i)) {
                 viewHolder.image.setImageResource(R.drawable.ic_folder);
                 viewHolder.themeName.setText(directories.get(i));
                 viewHolder.rel.setTag(i);
                 viewHolder.themeName.setId(i);
-            } else{
-                viewHolder.image.setImageResource(R.drawable.ic_file);
-                viewHolder.themeName.setText(themes.get(i- directories.size()).replace(".apk", "").replace("_", " "));
-                viewHolder.rel.setTag(i);
-                viewHolder.themeName.setId(i);
-            }
+                viewHolder.rel.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
 
-            //if (InstallOverlayList.get(i)==1){
-                //viewHolder.themeName.setChecked(true);
-            //}else{
-                //viewHolder.themeName.setChecked(false);
-            //}
-            viewHolder.rel.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    /*CheckBox cb = (CheckBox) v;
-                    //System.out.println(v.getTag());
-                    /if (cb.isChecked()) {
-                        InstallOverlayList.set(i, 1);
-                        atleastOneIsClicked = atleastOneIsClicked + 1;
-
-                    } else {
-                        InstallOverlayList.set(i, 0);
-                        atleastOneIsClicked = atleastOneIsClicked - 1;
-                    }
-
-                    if (atleastOneIsClicked > 0) {
-                        fab2.setVisibility(View.VISIBLE);
-                        fab2.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
-                    } else {
-                        fab2.animate().translationY(fab2.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
-                    } */
-                    if (Integer.parseInt(v.getTag().toString())<directories.size()){
                         Filedirectories.add("/"+directories.get(i));
                         new LoadAndSet().execute();
-
-                    }else{
-                        v.setBackgroundColor(getResources().getColor(R.color.select));
                     }
-                }
-            });
+                });
+            } else{
+                final UninstallFile theme2 = themes.get(i - directories.size());
+                viewHolder.check.setText(theme2.getFullName());
+                viewHolder.check.setTag(i);
+                viewHolder.check.setId(i);
+                viewHolder.check.setChecked(theme2.isChecked());
+                viewHolder.check.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        CheckBox cb = (CheckBox) v;
+                        if (cb.isChecked()) {
+                            theme2.setChecked(true);
+                            atleastOneIsClicked = atleastOneIsClicked + 1;
+
+                        } else {
+                            theme2.setChecked(false);
+                            atleastOneIsClicked = atleastOneIsClicked - 1;
+                        }
+
+                        if (atleastOneIsClicked > 0) {
+                            fab2.show();
+                        } else {
+                           fab2.hide();
+                        }
+                        System.out.println(theme2.getName()+" Is checked "+theme2.isChecked());
+                    }
+                });
+            }
+
         }
 
         @Override
         public int getItemCount() {
-            return themes.size() + directories.size() /*themes == null ? 0 : themes.size()*/;
+            if (themes!=null) {
+                return themes.size() + directories.size() /*themes == null ? 0 : themes.size()*/;
+            } else
+                return 0;
         }
-        public  class ViewHolder extends RecyclerView.ViewHolder {
+
+        public boolean isFolder(int i){
+            if (i< directories.size()){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        public  class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView themeName;
             public ImageView image;
             public RelativeLayout rel;
+            public CheckBox check;
 
 
-            public ViewHolder(View itemView) {
+
+            public MyViewHolder(View itemView, int type) {
                 super(itemView);
-                themeName = (TextView) itemView.findViewById(R.id.txt);
-                image =  (ImageView)itemView.findViewById(R.id.img);
-                rel = (RelativeLayout)itemView.findViewById(R.id.rel);
+
+                if (type == 1) {
+                    themeName = (TextView) itemView.findViewById(R.id.txt);
+                    image =  (ImageView)itemView.findViewById(R.id.img);
+                    rel = (RelativeLayout)itemView.findViewById(R.id.rel);
+                } else if (type == 0) {
+                    check = (CheckBox)itemView.findViewById(R.id.deletecheckbox);
+                }
+
+
             }
-        }
-    }
 
 
-
-
-    //Delete Overlays
-    private class DeleteOverlays extends AsyncTask<Void,Void,Void> {
-        ProgressDialog progressDelete;
-
-        protected void onPreExecute() {
-
-            progressDelete = ProgressDialog.show(getActivity(), "Uninstall Overlays",
-                    "Uninstalling...", true);
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
-            RootTools.remount("/system", "RW");
-            for (int i=0; i< Files.size();i++){
-                if (InstallOverlayList.get(i)==1){
-                    RootCommands.DeleteFileRoot("system/vendor/overlay/" + Files.get(i));
-                }
+        public int getItemViewType(int position) {
+            System.out.println(isFolder(position));
+            if (isFolder(position)){
+                return 1;
+            } else{
+                return 0;
             }
-            return null;
 
-        }
-
-        protected void onPostExecute(Void result) {
-            progressDelete.dismiss();
-            RootTools.remount("/system", "RO");
-
-            CoordinatorLayout coordinatorLayoutView = (CoordinatorLayout) cordLayout.findViewById(R.id.main_content3);
-            Snackbar.make(coordinatorLayoutView, "Uninstalled selected Overlays", Snackbar.LENGTH_LONG)
-                    .setAction("Reboot", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            AlertDialog.Builder progressDialogReboot = new AlertDialog.Builder(getActivity());
-                            progressDialogReboot.setTitle("Reboot");
-                            progressDialogReboot.setMessage("Perform a soft reboot?");
-                            progressDialogReboot.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                                //when Cancel Button is clicked
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                            progressDialogReboot.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                //when Cancel Button is clicked
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    try {
-                                        Process proc = Runtime.getRuntime()
-                                                .exec(new String[]{"su", "-c", "busybox killall system_server"});
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                    dialog.dismiss();
-                                }
-                            });
-                            progressDialogReboot.show();
-                        }
-                    })
-                    .show();
-
-            new LoadAndSet().execute();
-
-            ImageView noOverlays = (ImageView) cordLayout.findViewById(R.id.imageView);
-            TextView noOverlaysText = (TextView) cordLayout.findViewById(R.id.textView7);
-            if (Files.isEmpty()){
-                noOverlays.setVisibility(View.VISIBLE);
-                noOverlaysText.setVisibility(View.VISIBLE);
-            }
-            mCab.finish();
-            ActivityCompat.invalidateOptionsMenu(getActivity());
 
         }
     }
+
+
+
+
+
 
 
 
@@ -583,36 +584,35 @@ new LoadAndSet().execute();
         super.onBackPressed();
         overridePendingTransition(R.anim.back2, R.anim.back1);
     }
-
+*/
     private class InstallOverlays extends AsyncTask<Void,Void,Void> {
         ProgressDialog progressDelete;
 
         protected void onPreExecute() {
-
-            progressDelete = ProgressDialog.show(Install.this, "Install Overlays",
-                    "installing...", true);
+System.out.println("TEST");
+            progressDelete = ProgressDialog.show(getActivity(), "Install Overlays",
+                    "Installing...", true);
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-
+            ArrayList<String> paths = new ArrayList<String>();
             Commands command = new Commands();
-            command.InstallOverlays(Install.this, paths);
+            for (UninstallFile file : Files) {
+                if (file.isChecked()) {
+                    paths.add(currentDir+"/"+file.getFullName());
+                }
+            }
+System.out.println(paths);
+            command.InstallOverlays(getActivity(), paths);
             return null;
         }
 
         protected void onPostExecute(Void result) {
 
             progressDelete.dismiss();
-            finish();
-            // LAUNCH LAYERS.CLASS
-            overridePendingTransition(R.anim.back2, R.anim.back1);
-            Intent iIntent = new Intent(Install.this, menu.class);
-            iIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            iIntent.putExtra("ShowSnackbar", true);
-            iIntent.putExtra("SnackbarText","Installed selected Overlays");
-            startActivity(iIntent);
+
 
         }
-    } */
+    }
 }

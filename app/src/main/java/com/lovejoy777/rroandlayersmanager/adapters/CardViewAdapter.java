@@ -44,7 +44,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Contac
     public ContactViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
-                inflate(R.layout.adapter_card_layout, viewGroup, false);
+                inflate(R.layout.adapter_cardview, viewGroup, false);
 
         return new ContactViewHolder(itemView);
     }

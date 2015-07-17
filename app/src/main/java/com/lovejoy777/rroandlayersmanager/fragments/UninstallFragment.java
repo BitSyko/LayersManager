@@ -79,7 +79,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
             ArrayList<String> loadedFiles = new ArrayList<String>();
             Commands command = new Commands();
 
-            loadedFiles.addAll(command.loadFiles("/system/vendor/overlay"));
+            loadedFiles.addAll(command.RootloadFiles("/system/vendor/overlay"));
 
             for (String file : loadedFiles) {
                 files.add(new UninstallFile(file));

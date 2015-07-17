@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.TimeoutException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -28,9 +29,10 @@ import java.util.zip.ZipInputStream;
  */
 public class Commands {
     private ArrayList<String> Files = new ArrayList<String>();
+    private ArrayList<String> Folders = new ArrayList<String>();
 
 
-   public ArrayList<String> loadFiles(String directory){
+   public ArrayList<String> RootloadFiles(String directory){
         try {
             String line;
             Process process = Runtime.getRuntime().exec("su");
@@ -65,6 +67,41 @@ public class Commands {
             e.printStackTrace();
         }
         return Files;
+    }
+
+    public ArrayList<String> loadFiles(String directory){
+        File f = new File(directory);
+
+        f.mkdirs();
+        File[] files = f.listFiles();
+        if (files.length == 0)
+            return null;
+        else {
+            for (int i=0; i<files.length; i++) {
+                if (!files[i].isDirectory()) {
+                    Files.add(files[i].getName());
+                }
+            }
+        }
+        Collections.sort(Files, String.CASE_INSENSITIVE_ORDER);
+        return  Files;
+    }
+
+    public ArrayList<String> loadFolders(String directory){
+        File f = new File(directory);
+
+        f.mkdirs();
+        File[] files = f.listFiles();
+        if (files.length == 0)
+            return null;
+        else {
+            for (int i=0; i<files.length; i++) {
+                if (files[i].isDirectory()) {
+                   Folders.add(files[i].getName());
+                }
+            }
+        }
+        return  Folders;
     }
 
     public void InstallOverlays(Context context,ArrayList<String> paths) {

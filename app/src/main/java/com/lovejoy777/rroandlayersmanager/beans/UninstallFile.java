@@ -4,11 +4,13 @@ public class UninstallFile {
 
     private final String location;
     private final String name;
+    private final String fullname;
     private boolean checked;
 
     public UninstallFile(String location) {
         this.location = location;
         this.name = location.replace(".apk","").replace("_"," ");
+        this.fullname = location;
     }
 
     public boolean isChecked() {
@@ -25,5 +27,9 @@ public class UninstallFile {
 
     public String getName() {
         return name;
+    }
+
+    public String getFullName() {
+        return fullname;
     }
 }
