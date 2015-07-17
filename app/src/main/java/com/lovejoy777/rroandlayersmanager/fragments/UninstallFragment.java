@@ -19,60 +19,54 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-
-import com.afollestad.materialcab.MaterialCab;
-import com.lovejoy777.rroandlayersmanager.R;
-import com.lovejoy777.rroandlayersmanager.commands.Commands;
-import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
-import com.stericson.RootTools.RootTools;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.afollestad.materialcab.MaterialCab;
+import com.lovejoy777.rroandlayersmanager.R;
+import com.lovejoy777.rroandlayersmanager.beans.UninstallFile;
+import com.lovejoy777.rroandlayersmanager.commands.Commands;
+import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
+import com.stericson.RootTools.RootTools;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by lovejoy777 on 13/06/15.
  */
 public class UninstallFragment extends Fragment implements MaterialCab.Callback {
 
-    private ArrayList<String> Files = new ArrayList<String>();
+    private ArrayList<UninstallFile> files = new ArrayList<>();
     FloatingActionButton fab2;
     int atleastOneIsClicked = 0;
     private RecyclerView mRecyclerView;
     private CardViewAdapter3 mAdapter;
     private MaterialCab mCab = null;
-    List<Integer> InstallOverlayList = new ArrayList<Integer>();
     private DrawerLayout mDrawerLayout;
     private CoordinatorLayout cordLayout = null;
 
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-            FragmentActivity faActivity  = (FragmentActivity)    super.getActivity();
-            cordLayout = (CoordinatorLayout)    inflater.inflate(R.layout.fragment_delete, container, false);
+        FragmentActivity faActivity = (FragmentActivity) super.getActivity();
+        cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_delete, container, false);
 
-            setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
 
-            loadToolbarRecylcerViewFab();
+        loadToolbarRecylcerViewFab();
 
-            new LoadAndSet().execute();
+        new LoadAndSet().execute();
 
-            return cordLayout;
-        }
+        return cordLayout;
+    }
 
 
-    private class LoadAndSet extends AsyncTask<String,String,Void> {
+    private class LoadAndSet extends AsyncTask<String, String, Void> {
         ProgressDialog progressBackup;
 
         protected void onPreExecute() {
@@ -82,9 +76,14 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
         @Override
         protected Void doInBackground(String... params) {
 
-            Files.clear();
-            Commands command= new Commands();
-            Files = command.loadFiles("/system/vendor/overlay");
+            ArrayList<String> loadedFiles = new ArrayList<String>();
+            Commands command = new Commands();
+
+            loadedFiles.addAll(command.loadFiles("/system/vendor/overlay"));
+
+            for (String file : loadedFiles) {
+                files.add(new UninstallFile(file));
+            }
 
             return null;
 
@@ -94,17 +93,13 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
 
             ImageView noOverlays = (ImageView) cordLayout.findViewById(R.id.imageView);
             TextView noOverlaysText = (TextView) cordLayout.findViewById(R.id.textView7);
-            if (Files.isEmpty()){
+            if (files.isEmpty()) {
                 noOverlays.setVisibility(View.VISIBLE);
                 noOverlaysText.setVisibility(View.VISIBLE);
             }
-            InstallOverlayList.clear();
-            for (int i =0; i< Files.size();i++){
-                InstallOverlayList.add(0);
-            }
 
-            atleastOneIsClicked =0;
-            mAdapter = new CardViewAdapter3(Files, R.layout.adapter_listlayout, getActivity());
+            atleastOneIsClicked = 0;
+            mAdapter = new CardViewAdapter3(files, R.layout.adapter_listlayout, getActivity());
             mRecyclerView.setAdapter(mAdapter);
             ActivityCompat.invalidateOptionsMenu(getActivity());
         }
@@ -128,7 +123,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println(InstallOverlayList);
+                //System.out.println(InstallOverlayList);
                 fab2.animate().translationY(fab2.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
                 new DeleteOverlays().execute();
             }
@@ -137,13 +132,13 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
 
 
     //Adapter
-    private class CardViewAdapter3 extends RecyclerView.Adapter<CardViewAdapter3.ViewHolder>{
+    private class CardViewAdapter3 extends RecyclerView.Adapter<CardViewAdapter3.ViewHolder> {
 
-        private ArrayList<String> themes;
+        private ArrayList<UninstallFile> themes;
         private int rowLayout;
         private Context mContext;
 
-        public CardViewAdapter3(ArrayList<String> themes, int rowLayout, Context context) {
+        public CardViewAdapter3(ArrayList<UninstallFile> themes, int rowLayout, Context context) {
             this.themes = themes;
             this.rowLayout = rowLayout;
             this.mContext = context;
@@ -158,38 +153,38 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, final int i) {
 
-            viewHolder.themeName.setText(themes.get(i).replace(".apk","").replace("_"," "));
-            viewHolder.themeName.setTag(themes.get(i));
+            final UninstallFile theme = themes.get(i);
+
+            viewHolder.themeName.setText(theme.getName());
+            viewHolder.themeName.setTag(theme.getLocation());
             viewHolder.themeName.setId(i);
-            if (InstallOverlayList.get(i)==1){
-                viewHolder.themeName.setChecked(true);
-            }else{
-                viewHolder.themeName.setChecked(false);
-            }
+            viewHolder.themeName.setChecked(theme.isChecked());
+
             viewHolder.themeName.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     CheckBox cb = (CheckBox) v;
                     System.out.println(v.getTag());
                     if (cb.isChecked()) {
-                        InstallOverlayList.set(i, 1);
+                        theme.setChecked(true);
                         atleastOneIsClicked = atleastOneIsClicked + 1;
 
                     } else {
-                        InstallOverlayList.set(i, 0);
+                        theme.setChecked(false);
                         atleastOneIsClicked = atleastOneIsClicked - 1;
                     }
-                    if (mCab == null)
-
+                    if (mCab == null) {
                         mCab = new MaterialCab((AppCompatActivity) getActivity(), R.id.cab_stub)
                                 .reset()
                                 .setCloseDrawableRes(R.drawable.ic_action_check)
                                 .setMenu(R.menu.overflow)
                                 .start(UninstallFragment.this);
-                    else if (!mCab.isActive())
+                    } else if (!mCab.isActive()) {
                         mCab
                                 .reset().start(UninstallFragment.this)
                                 .setCloseDrawableRes(R.drawable.ic_action_check)
                                 .setMenu(R.menu.overflow);
+                    }
+
                     mCab.setTitle(atleastOneIsClicked + " Overlays selected");
                     if (atleastOneIsClicked > 0) {
                         fab2.setVisibility(View.VISIBLE);
@@ -207,7 +202,8 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
         public int getItemCount() {
             return themes == null ? 0 : themes.size();
         }
-        public  class ViewHolder extends RecyclerView.ViewHolder {
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
             public CheckBox themeName;
 
 
@@ -219,10 +215,8 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
     }
 
 
-
-
     //Delete Overlays
-    private class DeleteOverlays extends AsyncTask<Void,Void,Void> {
+    private class DeleteOverlays extends AsyncTask<Void, Void, Void> {
         ProgressDialog progressDelete;
 
         protected void onPreExecute() {
@@ -234,9 +228,9 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
         @Override
         protected Void doInBackground(Void... params) {
             RootTools.remount("/system", "RW");
-            for (int i=0; i< Files.size();i++){
-                if (InstallOverlayList.get(i)==1){
-                    RootCommands.DeleteFileRoot("system/vendor/overlay/"+Files.get(i));
+            for (UninstallFile file : files) {
+                if (file.isChecked()) {
+                    RootCommands.DeleteFileRoot("system/vendor/overlay/" + file.getLocation());
                 }
             }
             return null;
@@ -285,7 +279,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
 
             ImageView noOverlays = (ImageView) cordLayout.findViewById(R.id.imageView);
             TextView noOverlaysText = (TextView) cordLayout.findViewById(R.id.textView7);
-            if (Files.isEmpty()){
+            if (files.isEmpty()) {
                 noOverlays.setVisibility(View.VISIBLE);
                 noOverlaysText.setVisibility(View.VISIBLE);
             }
@@ -296,17 +290,15 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
     }
 
 
-
-
-
     //Check and Uncheck all Checkboxes
-    private void checkAll(){
-        InstallOverlayList.clear();
-        for (int i =0; i< Files.size();i++){
-            InstallOverlayList.add(1);
+    private void checkAll() {
+
+        for (UninstallFile file : files) {
+            file.setChecked(true);
         }
-        atleastOneIsClicked = InstallOverlayList.size();
-        System.out.println(atleastOneIsClicked);
+
+        atleastOneIsClicked = files.size();
+        // System.out.println(atleastOneIsClicked);
         mAdapter.notifyDataSetChanged();
         fab2.setVisibility(View.VISIBLE);
         fab2.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
@@ -325,11 +317,12 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
         mCab.setTitle(atleastOneIsClicked + " Overlays selected");
     }
 
-    private void UncheckAll(){
-        InstallOverlayList.clear();
-        for (int i =0; i< Files.size();i++){
-            InstallOverlayList.add(0);
+    private void UncheckAll() {
+
+        for (UninstallFile file : files) {
+            file.setChecked(false);
         }
+
         atleastOneIsClicked = 0;
         mAdapter.notifyDataSetChanged();
         fab2.setVisibility(View.INVISIBLE);
@@ -337,16 +330,15 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
     }
 
 
-
-
     //CAB methods
     @Override
     public boolean onCabCreated(MaterialCab materialCab, Menu menu) {
         return true;
     }
+
     @Override
     public boolean onCabItemClicked(MenuItem menuItem) {
-        switch (menuItem.getItemId()){
+        switch (menuItem.getItemId()) {
             case R.id.menu_selectall:
                 if (menuItem.isChecked()) menuItem.setChecked(false);
                 else menuItem.setChecked(true);
@@ -355,6 +347,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
         }
         return true;
     }
+
     @Override
     public boolean onCabFinished(MaterialCab materialCab) {
         UncheckAll();
@@ -363,13 +356,14 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
 
 
     //Overflow Menu
-   @Override
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (!Files.isEmpty()) {
+        if (!files.isEmpty()) {
             inflater.inflate(R.menu.overflow, menu);
         }
-       super.onCreateOptionsMenu(menu, inflater);
+        super.onCreateOptionsMenu(menu, inflater);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
