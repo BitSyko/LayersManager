@@ -55,7 +55,6 @@
             android:layout_margin="16dp"
             android:clickable="true"
             android:id="@+id/fab3"
-            app:borderWidth="0dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true" />
     </android.support.design.widget.CoordinatorLayout>

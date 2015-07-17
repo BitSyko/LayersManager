@@ -117,7 +117,6 @@
         android:layout_margin="16dp"
         android:clickable="true"
         android:id="@+id/fab6"
-        app:borderWidth="0dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:tint="@color/white" />
@@ -130,13 +129,3 @@
 
 
   </android.support.design.widget.CoordinatorLayout>
-    <!--   <android.support.design.widget.NavigationView
-         android:id="@+id/nav_view"
-         android:layout_height="match_parent"
-         android:layout_width="wrap_content"
-         android:layout_gravity="start"
-         android:fitsSystemWindows="true"
-         app:headerLayout="@layout/nav_header"
-         app:menu="@menu/drawer_view_restore"
-         app:theme="@style/NavigationViewTheme"/>
-     </android.support.v4.widget.DrawerLayout> -->

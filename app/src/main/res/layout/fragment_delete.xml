@@ -110,7 +110,6 @@
         android:layout_margin="16dp"
         android:clickable="true"
         android:id="@+id/fab6"
-        app:borderWidth="0dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:tint="@color/white" />

@@ -327,7 +327,6 @@
             android:layout_margin="16dp"
             android:clickable="true"
             android:id="@+id/fab"
-            app:borderWidth="0dp"
             android:visibility="invisible"/>
 
         <android.support.design.widget.FloatingActionButton
@@ -338,7 +337,6 @@
             android:src="@drawable/ic_drawer_install"
             android:layout_margin="16dp"
             android:clickable="true"
-            android:id="@+id/fab2"
-            app:borderWidth="0dp"/>
+            android:id="@+id/fab2" />
 
     </android.support.design.widget.CoordinatorLayout>
