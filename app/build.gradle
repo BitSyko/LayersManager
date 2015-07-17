@@ -29,4 +29,5 @@ dependencies {
     compile 'com.github.paolorotolo:appintro:3.0.0'
     compile 'com.afollestad:material-cab:0.1.4'
     compile 'com.android.support:palette-v7:22.2.0'
+    compile 'com.jereksel:listviewslide:0.2.1'
 }

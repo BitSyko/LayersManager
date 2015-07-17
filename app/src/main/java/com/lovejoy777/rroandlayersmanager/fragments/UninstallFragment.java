@@ -15,17 +15,16 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.afollestad.materialcab.MaterialCab;
+import com.jereksel.listviewslide.SlidableListView;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.beans.UninstallFile;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
@@ -34,16 +33,14 @@ import com.stericson.RootTools.RootTools;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Created by lovejoy777 on 13/06/15.
- */
 public class UninstallFragment extends Fragment implements MaterialCab.Callback {
 
     private ArrayList<UninstallFile> files = new ArrayList<>();
     FloatingActionButton fab2;
     int atleastOneIsClicked = 0;
-    private RecyclerView mRecyclerView;
+    private SlidableListView mListView;
     private CardViewAdapter3 mAdapter;
     private MaterialCab mCab = null;
     private DrawerLayout mDrawerLayout;
@@ -99,8 +96,11 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
             }
 
             atleastOneIsClicked = 0;
-            mAdapter = new CardViewAdapter3(files, R.layout.adapter_listlayout, getActivity());
-            mRecyclerView.setAdapter(mAdapter);
+            mAdapter = new CardViewAdapter3(getActivity(), R.layout.adapter_listlayout, files);
+            mListView.setAdapter(mAdapter);
+            mListView.addClass(android.support.v7.widget.AppCompatCheckBox.class);
+            //   mListView.setMode(SlidableListView.Mode.TWO_FINGERS);
+
             ActivityCompat.invalidateOptionsMenu(getActivity());
         }
     }
@@ -113,9 +113,9 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mRecyclerView = (RecyclerView) cordLayout.findViewById(R.id.cardList);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mListView = (SlidableListView) cordLayout.findViewById(R.id.cardList);
+        //mListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        //  mListView.setItemAnimator(new DefaultItemAnimator());
 
         fab2 = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab6);
         fab2.setVisibility(View.INVISIBLE);
@@ -130,37 +130,48 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
         });
     }
 
+    private class CardViewAdapter3 extends ArrayAdapter<UninstallFile> {
 
-    //Adapter
-    private class CardViewAdapter3 extends RecyclerView.Adapter<CardViewAdapter3.ViewHolder> {
+        private final Context context;
+        private final List<UninstallFile> themes;
+        private int layout;
 
-        private ArrayList<UninstallFile> themes;
-        private int rowLayout;
-        private Context mContext;
-
-        public CardViewAdapter3(ArrayList<UninstallFile> themes, int rowLayout, Context context) {
+        public CardViewAdapter3(Context activity, int layout, List<UninstallFile> themes) {
+            super(activity, layout, themes);
+            this.context = activity;
             this.themes = themes;
-            this.rowLayout = rowLayout;
-            this.mContext = context;
+            this.layout = layout;
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            View v = LayoutInflater.from(viewGroup.getContext()).inflate(rowLayout, viewGroup, false);
-            return new ViewHolder(v);
-        }
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            View rowView = convertView;
+            // reuse views
+            if (rowView == null) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                rowView = inflater.inflate(layout, null);
+                // configure view holder
+                ViewHolder viewHolder = new ViewHolder();
+                viewHolder.button = (CheckBox) rowView
+                        .findViewById(R.id.deletecheckbox);
+                viewHolder.text = (TextView) rowView
+                        .findViewById(R.id.textcheckbox);
+                rowView.setTag(viewHolder);
+            }
 
-        @Override
-        public void onBindViewHolder(ViewHolder viewHolder, final int i) {
 
-            final UninstallFile theme = themes.get(i);
+            // fill data
+            ViewHolder viewHolder = (ViewHolder) rowView.getTag();
 
-            viewHolder.themeName.setText(theme.getName());
-            viewHolder.themeName.setTag(theme.getLocation());
-            viewHolder.themeName.setId(i);
-            viewHolder.themeName.setChecked(theme.isChecked());
+            final UninstallFile theme = themes.get(position);
 
-            viewHolder.themeName.setOnClickListener(new View.OnClickListener() {
+            //viewHolder.button.setText(theme.getName());
+            viewHolder.text.setText(theme.getName());
+            viewHolder.button.setTag(theme.getLocation());
+            viewHolder.button.setId(position);
+            viewHolder.button.setChecked(theme.isChecked());
+
+            viewHolder.button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     CheckBox cb = (CheckBox) v;
                     System.out.println(v.getTag());
@@ -196,22 +207,15 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
                     }
                 }
             });
+
+            return rowView;
         }
 
-        @Override
-        public int getItemCount() {
-            return themes == null ? 0 : themes.size();
-        }
+    }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public CheckBox themeName;
-
-
-            public ViewHolder(View itemView) {
-                super(itemView);
-                themeName = (CheckBox) itemView.findViewById(R.id.deletecheckbox);
-            }
-        }
+    static class ViewHolder {
+        public CheckBox button;
+        public TextView text;
     }
 
 
