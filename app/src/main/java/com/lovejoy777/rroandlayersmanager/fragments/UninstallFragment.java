@@ -185,7 +185,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
                                 .setMenu(R.menu.overflow);
                     }
 
-                    mCab.setTitle(atleastOneIsClicked + " "+R.string.OverlaysSelected);
+                    mCab.setTitle(atleastOneIsClicked + " "+getResources().getString(R.string.OverlaysSelected));
                     if (atleastOneIsClicked > 0) {
                         fab2.setVisibility(View.VISIBLE);
                         fab2.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();

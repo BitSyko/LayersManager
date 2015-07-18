@@ -589,7 +589,7 @@ new LoadAndSet().execute();
         ProgressDialog progressDelete;
 
         protected void onPreExecute() {
-System.out.println("TEST");
+
             progressDelete = ProgressDialog.show(getActivity(), getString(R.string.InstallOverlays),
                     getString(R.string.installing)+"...", true);
         }
@@ -600,19 +600,30 @@ System.out.println("TEST");
             Commands command = new Commands();
             for (UninstallFile file : Files) {
                 if (file.isChecked()) {
-                    paths.add(currentDir+"/"+file.getFullName());
+                    paths.add("file://"+currentDir+"/"+file.getFullName());
                 }
             }
-System.out.println(paths);
+
             command.InstallOverlays(getActivity(), paths);
             return null;
         }
 
         protected void onPostExecute(Void result) {
 
+            UncheckAll();
             progressDelete.dismiss();
 
-
         }
+    }
+
+    private void UncheckAll() {
+
+        for (UninstallFile file : Files) {
+            file.setChecked(false);
+        }
+
+        atleastOneIsClicked = 0;
+        mAdapter.notifyDataSetChanged();
+
     }
 }
