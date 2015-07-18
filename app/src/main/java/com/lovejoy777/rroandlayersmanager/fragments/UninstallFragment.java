@@ -70,7 +70,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
         ProgressDialog progressBackup;
 
         protected void onPreExecute() {
-
+            files.clear();
         }
 
         @Override
@@ -91,17 +91,19 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
 
         protected void onPostExecute(Void result) {
 
+
+
+            atleastOneIsClicked = 0;
+            mAdapter = new CardViewAdapter3(files, R.layout.adapter_listlayout, getActivity());
+            mRecyclerView.setAdapter(mAdapter);
+            ActivityCompat.invalidateOptionsMenu(getActivity());
+
             ImageView noOverlays = (ImageView) cordLayout.findViewById(R.id.imageView);
             TextView noOverlaysText = (TextView) cordLayout.findViewById(R.id.textView7);
             if (files.isEmpty()) {
                 noOverlays.setVisibility(View.VISIBLE);
                 noOverlaysText.setVisibility(View.VISIBLE);
             }
-
-            atleastOneIsClicked = 0;
-            mAdapter = new CardViewAdapter3(files, R.layout.adapter_listlayout, getActivity());
-            mRecyclerView.setAdapter(mAdapter);
-            ActivityCompat.invalidateOptionsMenu(getActivity());
         }
     }
 
@@ -118,13 +120,12 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         fab2 = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab6);
-        fab2.setVisibility(View.INVISIBLE);
-        fab2.animate().translationY(218).setInterpolator(new AccelerateInterpolator(2)).start();
+        fab2.hide();
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //System.out.println(InstallOverlayList);
-                fab2.animate().translationY(fab2.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
+                fab2.hide();
                 new DeleteOverlays().execute();
             }
         });
@@ -187,12 +188,11 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
 
                     mCab.setTitle(atleastOneIsClicked + " "+getResources().getString(R.string.OverlaysSelected));
                     if (atleastOneIsClicked > 0) {
-                        fab2.setVisibility(View.VISIBLE);
-                        fab2.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+                        fab2.show();
                     } else {
                         mCab.finish();
                         mCab = null;
-                        fab2.animate().translationY(fab2.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
+                        fab2.hide();
                     }
                 }
             });
@@ -276,13 +276,6 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
                     .show();
 
             new LoadAndSet().execute();
-
-            ImageView noOverlays = (ImageView) cordLayout.findViewById(R.id.imageView);
-            TextView noOverlaysText = (TextView) cordLayout.findViewById(R.id.textView7);
-            if (files.isEmpty()) {
-                noOverlays.setVisibility(View.VISIBLE);
-                noOverlaysText.setVisibility(View.VISIBLE);
-            }
             mCab.finish();
             ActivityCompat.invalidateOptionsMenu(getActivity());
 
@@ -300,8 +293,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
         atleastOneIsClicked = files.size();
         // System.out.println(atleastOneIsClicked);
         mAdapter.notifyDataSetChanged();
-        fab2.setVisibility(View.VISIBLE);
-        fab2.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+        fab2.show();
         if (mCab == null)
             mCab = new MaterialCab((AppCompatActivity) getActivity(), R.id.cab_stub)
                     .reset()
@@ -314,7 +306,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
                     .setCloseDrawableRes(R.drawable.ic_action_check)
                     .setMenu(R.menu.overflow);
 
-        mCab.setTitle(atleastOneIsClicked + " "+R.string.OverlaysSelected);
+        mCab.setTitle(atleastOneIsClicked + " "+getResources().getString(R.string.OverlaysSelected));
     }
 
     private void UncheckAll() {
@@ -325,8 +317,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
 
         atleastOneIsClicked = 0;
         mAdapter.notifyDataSetChanged();
-        fab2.setVisibility(View.INVISIBLE);
-        fab2.animate().translationY(fab2.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
+        fab2.hide();
     }
 
 

@@ -15,7 +15,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
                 android:textColor="@color/textColorPrimary"
                 android:textSize="16sp"
-                android:background="@drawable/ripple"
+                android:background="@drawable/ripplewhite"
                 android:paddingStart="16dp"/>
 
 

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -203,7 +204,7 @@ public class BackupRestoreFragment extends Fragment{
                     System.out.println(i);
                     AlertDialog.Builder installdialog = new AlertDialog.Builder(getActivity());
                     installdialog.setTitle(themes.get(i));
-                    installdialog.setMessage(Html.fromHtml(R.string.DoYouWantToRestore+" "+"<i>"+themes.get(i)+"<i>?"));
+                    installdialog.setMessage(Html.fromHtml(getResources().getString(R.string.DoYouWantToRestore)+" "+"<i>"+themes.get(i)+"<i>?"));
                     installdialog.setPositiveButton(R.string.restore, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             new RestoreOverlays().execute(Files.get(i));
@@ -269,16 +270,13 @@ public class BackupRestoreFragment extends Fragment{
         protected void onPostExecute(Void result) {
 
             progressBackup.dismiss();
+            CoordinatorLayout coordinatorLayoutView = (CoordinatorLayout) cordLayout.findViewById(R.id.main_content4);
+            Snackbar.make(coordinatorLayoutView, R.string.deletedBackup, Snackbar.LENGTH_LONG)
+                    .show();
             new LoadAndSet().execute();
         }
     }
 
-
-    /*@Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.back2, R.anim.back1);
-    } */
 
 
     private class BackupOverlays extends AsyncTask<String,String,Void> {
@@ -355,7 +353,9 @@ public class BackupRestoreFragment extends Fragment{
         protected void onPostExecute(Void result) {
 
             progressBackup.dismiss();
-            Toast.makeText(getActivity(), getString(R.string.backupComplete), Toast.LENGTH_LONG).show();
+            CoordinatorLayout coordinatorLayoutView = (CoordinatorLayout) cordLayout.findViewById(R.id.main_content4);
+            Snackbar.make(coordinatorLayoutView, R.string.backupComplete, Snackbar.LENGTH_LONG)
+                    .show();
             new LoadAndSet().execute();
         }
     }
@@ -467,6 +467,39 @@ public class BackupRestoreFragment extends Fragment{
         protected void onPostExecute(Void result) {
 
             progressBackup.dismiss();
+            CoordinatorLayout coordinatorLayoutView = (CoordinatorLayout) cordLayout.findViewById(R.id.main_content4);
+            Snackbar.make(coordinatorLayoutView, getResources().getString(R.string.restored), Snackbar.LENGTH_LONG)
+                    .setAction(R.string.Reboot, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            AlertDialog.Builder progressDialogReboot = new AlertDialog.Builder(getActivity());
+                            progressDialogReboot.setTitle(R.string.Reboot);
+                            progressDialogReboot.setMessage(R.string.PreformReboot);
+                            progressDialogReboot.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                //when Cancel Button is clicked
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            progressDialogReboot.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                //when Cancel Button is clicked
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    try {
+                                        Process proc = Runtime.getRuntime()
+                                                .exec(new String[]{"su", "-c", "busybox killall system_server"});
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    dialog.dismiss();
+                                }
+                            });
+                            progressDialogReboot.show();
+                        }
+                    })
+                    .show();
             new LoadAndSet().execute();
         }
     }

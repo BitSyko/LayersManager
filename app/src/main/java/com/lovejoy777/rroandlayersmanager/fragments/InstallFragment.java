@@ -5,8 +5,6 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -25,30 +23,21 @@ import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.CheckBox;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialcab.MaterialCab;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.beans.UninstallFile;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
-import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
-import com.stericson.RootTools.RootTools;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -171,7 +160,7 @@ public class InstallFragment extends Fragment {
 
                 tv.setLayoutParams(params);
                 tv.setTag(Filedirectories.get(i));
-                tv.setBackground(getActivity().getResources().getDrawable(R.drawable.ripple));
+                tv.setBackground(getActivity().getResources().getDrawable(R.drawable.rippleprimary));
 
                 int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getActivity().getResources().getDisplayMetrics());
                 tv.setPadding(padding, padding, padding, padding);
@@ -612,6 +601,39 @@ new LoadAndSet().execute();
 
             UncheckAll();
             progressDelete.dismiss();
+            CoordinatorLayout coordinatorLayoutView = (CoordinatorLayout) cordLayout.findViewById(R.id.main_content3);
+            Snackbar.make(coordinatorLayoutView, R.string.installed, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.Reboot, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            AlertDialog.Builder progressDialogReboot = new AlertDialog.Builder(getActivity());
+                            progressDialogReboot.setTitle(R.string.Reboot);
+                            progressDialogReboot.setMessage(R.string.PreformReboot);
+                            progressDialogReboot.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                //when Cancel Button is clicked
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            progressDialogReboot.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                //when Cancel Button is clicked
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    try {
+                                        Process proc = Runtime.getRuntime()
+                                                .exec(new String[]{"su", "-c", "busybox killall system_server"});
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    dialog.dismiss();
+                                }
+                            });
+                            progressDialogReboot.show();
+                        }
+                    })
+                    .show();
 
         }
     }

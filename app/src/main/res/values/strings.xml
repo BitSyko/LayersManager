@@ -148,9 +148,10 @@
         <!-- SnackBar texts -->
         <string name="selectOverlayFirst">Select Overlays first</string>
         <string name="OverlaysInstalled">Overlays installed!</string>
-
-
-
+    <string name="installed">Installed selected Overlays</string>
+    <string name="backedUp">Backup complete</string>
+    <string name="deletedBackup">Deleted selected Backup</string>
+    <string name="restored">Restored selected Backup</string>
 
 
 </resources>
