@@ -113,7 +113,7 @@ public class AboutActivity extends AppCompatActivity {
         list1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/u/0/+SykoPompos/posts")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.linkSyko))));
             }
         });
 
@@ -124,7 +124,7 @@ public class AboutActivity extends AppCompatActivity {
         list12.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/101549242713977412381/posts")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.linkReinhard))));
             }
         });
 
@@ -136,7 +136,7 @@ public class AboutActivity extends AppCompatActivity {
         list2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/u/0/+BrianGill55/posts")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.linkBrian))));
             }
         });
 
@@ -149,7 +149,7 @@ public class AboutActivity extends AppCompatActivity {
         list3.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/u/0/+AldrinHolmes20/posts")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.linkAldrin))));
             }
         });
 
@@ -161,7 +161,7 @@ public class AboutActivity extends AppCompatActivity {
         list4.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/u/0/+SteveLovejoy/posts")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.linkSteve))));
             }
         });
 
@@ -173,7 +173,7 @@ public class AboutActivity extends AppCompatActivity {
         list5.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/u/0/+NiklasSchnettler/posts")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.linkNiklas))));
             }
         });
 
@@ -185,7 +185,7 @@ public class AboutActivity extends AppCompatActivity {
         list6.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://plus.google.com/u/0/communities/102261717366580091389")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.linkCommunity))));
             }
         });
 
@@ -197,7 +197,7 @@ public class AboutActivity extends AppCompatActivity {
         list7.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://forum.xda-developers.com/android/apps-games/official-layers-bitsyko-apps-rro-t3012172")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.linkXda))));
             }
         });
 
@@ -206,7 +206,7 @@ public class AboutActivity extends AppCompatActivity {
         try {
             String versionName = AboutActivity.this.getPackageManager()
                     .getPackageInfo(AboutActivity.this.getPackageName(), 0).versionName;
-            tv_version.setText("Version " + versionName);
+            tv_version.setText(getResources().getString(R.string.version)+" " + versionName);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -254,7 +254,7 @@ public class AboutActivity extends AppCompatActivity {
             }
             dialog.setTitle(dialogTitleText);
             tv_license.setText(dialogText);
-            dialog.setNegativeButton(R.string.Close, new DialogInterface.OnClickListener() {
+            dialog.setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                 }
             });

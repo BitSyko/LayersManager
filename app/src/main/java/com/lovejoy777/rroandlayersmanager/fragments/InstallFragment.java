@@ -590,8 +590,8 @@ new LoadAndSet().execute();
 
         protected void onPreExecute() {
 System.out.println("TEST");
-            progressDelete = ProgressDialog.show(getActivity(), "Install Overlays",
-                    "Installing...", true);
+            progressDelete = ProgressDialog.show(getActivity(), getString(R.string.InstallOverlays),
+                    getString(R.string.installing)+"...", true);
         }
 
         @Override

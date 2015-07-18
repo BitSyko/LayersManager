@@ -24,7 +24,7 @@ public class MainActivity extends Activity
 
         if (!RootTools.isAccessGiven()) {
 
-            Toast.makeText(MainActivity.this, "No root access available", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, R.string.noRoot, Toast.LENGTH_LONG).show();
            /* final View coordinatorLayoutView = findViewById(R.id.main_content2);
             Snackbar.make(coordinatorLayoutView, "No root access available", Snackbar.LENGTH_LONG)
                     .setAction("Get Root", new View.OnClickListener() {

@@ -114,7 +114,7 @@
                                 android:textColor="@color/textColorPrimary"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/WhatsNew0"
+                                android:text="@string/WhatsNew"
                                 android:id="@+id/textView52"
                                 android:layout_gravity="start|top"
                                 android:layout_marginStart="16dp"

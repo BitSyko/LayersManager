@@ -248,7 +248,7 @@ public class PluginFragment extends Fragment {
         }
         else{
             if(position==2) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/search?q=Layers+Theme&c=apps&docType=1&sp=CAFiDgoMTGF5ZXJzIFRoZW1legIYAIoBAggB:S:ANO1ljK_ZAY")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.PlaystoreSearch))));
             } if(position==1){
                 NotAvailableSnackbar();
             }
@@ -369,12 +369,12 @@ public class PluginFragment extends Fragment {
             String Test1[] = new String[3];
             String Test2[] = new String[3];
 
-            Test1[0] = "Too bad.";
-            Test2[0] = "You don't have any compatible plugins yet, Use the FAB button for none plugin type overlays.";
-            Test1[1] = "Layers Overlays Showcase";
-            Test2[1] = "Find some new beautiful overlays. Coming Soon.";
-            Test1[2] = "Play Store";
-            Test2[2] = "Have a look on the PlayStore.";
+            Test1[0] = getString(R.string.tooBad);
+            Test2[0] = getString(R.string.noPlugins);
+            Test1[1] = getString(R.string.Showcase);
+            Test2[1] = getString(R.string.ShowCaseMore);
+            Test1[2] = getString(R.string.PlayStore);
+            Test2[2] = getString(R.string.PlayStoreMore);
 
             if (list.size()>0) {
                 ca = new CardViewAdapter(createList(list.size(), name, developer, packages));

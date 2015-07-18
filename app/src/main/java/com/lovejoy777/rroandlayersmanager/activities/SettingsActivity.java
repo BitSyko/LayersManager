@@ -53,11 +53,11 @@ public class SettingsActivity extends PreferenceActivity implements
                     PackageManager p = getPackageManager();
                     ComponentName componentName = new ComponentName(this, com.lovejoy777.rroandlayersmanager.MainActivity.class); // activity which is first time open in manifiest file which is declare as <category android:name="android.intent.category.LAUNCHER" />
                     p.setComponentEnabledSetting(componentName,PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-                    Toast.makeText(SettingsActivity.this, "Launcher icon removed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingsActivity.this, getResources().getString(R.string.launcherIconRemoved), Toast.LENGTH_SHORT).show();
 
                 } else{
 
-                    Toast.makeText(SettingsActivity.this, "Your rom needs support for this function", Toast.LENGTH_LONG).show();
+                    Toast.makeText(SettingsActivity.this, getResources().getString(R.string.romNeedsSupport), Toast.LENGTH_LONG).show();
                     SharedPreferences myPrefs = this.getSharedPreferences("myPrefs", MODE_WORLD_READABLE);
                     SharedPreferences.Editor editor = myPrefs.edit();
                     editor.putBoolean("switch1", false);
@@ -67,7 +67,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
             } else {
 
-                Toast.makeText(SettingsActivity.this, "null build.prop commit", Toast.LENGTH_LONG).show();
+                Toast.makeText(SettingsActivity.this, getResources().getString(R.string.noBuildPropCommit), Toast.LENGTH_LONG).show();
                 SharedPreferences myPrefs = this.getSharedPreferences("myPrefs", MODE_WORLD_READABLE);
                 SharedPreferences.Editor editor = myPrefs.edit();
                 editor.putBoolean("switch1", false);

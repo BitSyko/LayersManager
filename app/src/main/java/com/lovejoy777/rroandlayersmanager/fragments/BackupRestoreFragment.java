@@ -97,9 +97,9 @@ public class BackupRestoreFragment extends Fragment{
             public void onClick(View v) {
                 final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
                 final EditText input = new EditText(getActivity());
-                alert.setTitle("Backup installed overlays");
+                alert.setTitle(R.string.backupInstalledOverlays);
                 alert.setView(input);
-                input.setHint("Enter a backup name");
+                input.setHint(R.string.enterBackupName);
                 alert.setInverseBackgroundForced(true);
 
                 alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -111,7 +111,7 @@ public class BackupRestoreFragment extends Fragment{
 
                                 if (backupname.length() <= 1) {
 
-                                    Toast.makeText(getActivity(), "input a name", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), R.string.noInputName, Toast.LENGTH_LONG).show();
 
                                     //finish();
 
@@ -122,7 +122,7 @@ public class BackupRestoreFragment extends Fragment{
                                     // Folder is empty
                                     if (contents.length == 0) {
 
-                                        Toast.makeText(getActivity(), "nothing to backup", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getActivity(), R.string.nothingToBackup, Toast.LENGTH_LONG).show();
 
                                         //finish();
                                     } else {
@@ -203,13 +203,13 @@ public class BackupRestoreFragment extends Fragment{
                     System.out.println(i);
                     AlertDialog.Builder installdialog = new AlertDialog.Builder(getActivity());
                     installdialog.setTitle(themes.get(i));
-                    installdialog.setMessage(Html.fromHtml("Do you want to restore or delete "+"<i>"+themes.get(i)+"<i>?"));
-                    installdialog.setPositiveButton("Restore", new DialogInterface.OnClickListener() {
+                    installdialog.setMessage(Html.fromHtml(R.string.DoYouWantToRestore+" "+"<i>"+themes.get(i)+"<i>?"));
+                    installdialog.setPositiveButton(R.string.restore, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             new RestoreOverlays().execute(Files.get(i));
                         }
                     });
-                    installdialog.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+                    installdialog.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             new DeleteBackup().execute(Files.get(i));
                         }
@@ -242,8 +242,8 @@ public class BackupRestoreFragment extends Fragment{
 
         protected void onPreExecute() {
 
-            progressBackup = ProgressDialog.show(getActivity(), "Deleting Backup",
-                    "Deleting...", true);
+            progressBackup = ProgressDialog.show(getActivity(), getString(R.string.DeleteBackup),
+                    getString(R.string.deleting)+"...", true);
         }
 
         @Override
@@ -286,8 +286,8 @@ public class BackupRestoreFragment extends Fragment{
 
         protected void onPreExecute() {
 
-            progressBackup = ProgressDialog.show(getActivity(), "Backup Overlays",
-                    "Backing up...", true);
+            progressBackup = ProgressDialog.show(getActivity(), getString(R.string.BackupOverlays),
+                    getString(R.string.backingUp)+"...", true);
         }
 
         @Override
@@ -355,7 +355,7 @@ public class BackupRestoreFragment extends Fragment{
         protected void onPostExecute(Void result) {
 
             progressBackup.dismiss();
-            Toast.makeText(getActivity(), "Backup complete", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getString(R.string.backupComplete), Toast.LENGTH_LONG).show();
             new LoadAndSet().execute();
         }
     }
@@ -391,8 +391,8 @@ public class BackupRestoreFragment extends Fragment{
 
         protected void onPreExecute() {
 
-            progressBackup = ProgressDialog.show(getActivity(), "Restore Overlays",
-                    "Restoring...", true);
+            progressBackup = ProgressDialog.show(getActivity(), getString(R.string.Restore),
+                    getString(R.string.restoring)+"...", true);
         }
 
         @Override

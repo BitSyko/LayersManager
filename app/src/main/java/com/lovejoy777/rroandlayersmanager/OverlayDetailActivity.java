@@ -17,7 +17,6 @@ import android.content.res.AssetManager;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -63,7 +62,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -850,7 +848,7 @@ public class OverlayDetailActivity extends Fragment {
 
         installdialog.setView(dontShowAgainLayout);
         installdialog.setTitle(R.string.MoveOverlays);
-        installdialog.setMessage(R.string.CreateHeXFolder);
+        installdialog.setMessage(R.string.ApplyOverlays);
         installdialog.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
@@ -972,8 +970,8 @@ public class OverlayDetailActivity extends Fragment {
 
         protected void onPreExecute() {
 
-            progress2 = ProgressDialog.show(getActivity(), "Install overlays",
-                    "Installing...", true);
+            progress2 = ProgressDialog.show(getActivity(), getString(R.string.InstallOverlays),
+                    getString(R.string.installing)+"...", true);
         }
 
         @Override
@@ -1050,9 +1048,9 @@ public class OverlayDetailActivity extends Fragment {
         protected void onPreExecute() {
             //progressDialog rebooting / 10 seconds
             progressDialogReboot.setTitle(R.string.rebooting);
-            progressDialogReboot.setMessage("Rebooting in 10 seconds...");
+            progressDialogReboot.setMessage(getString(R.string.rebootIn)+"...");
             progressDialogReboot.setCanceledOnTouchOutside(false);
-            progressDialogReboot.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
+            progressDialogReboot.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
                 //when Cancel Button is clicked
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -1061,7 +1059,7 @@ public class OverlayDetailActivity extends Fragment {
                 }
             });
 
-            progressDialogReboot.setButton(DialogInterface.BUTTON_POSITIVE, "Reboot Now", new DialogInterface.OnClickListener() {
+            progressDialogReboot.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.RebootNow), new DialogInterface.OnClickListener() {
                 //when Cancel Button is clicked
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

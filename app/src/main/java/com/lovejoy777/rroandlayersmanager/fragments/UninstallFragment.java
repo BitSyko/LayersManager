@@ -185,7 +185,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
                                 .setMenu(R.menu.overflow);
                     }
 
-                    mCab.setTitle(atleastOneIsClicked + " Overlays selected");
+                    mCab.setTitle(atleastOneIsClicked + " "+R.string.OverlaysSelected);
                     if (atleastOneIsClicked > 0) {
                         fab2.setVisibility(View.VISIBLE);
                         fab2.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
@@ -221,8 +221,8 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
 
         protected void onPreExecute() {
 
-            progressDelete = ProgressDialog.show(getActivity(), "Uninstall Overlays",
-                    "Uninstalling...", true);
+            progressDelete = ProgressDialog.show(getActivity(), getString(R.string.UninstallOverlays),
+                    getString(R.string.uninstalling)+"...", true);
         }
 
         @Override
@@ -242,14 +242,14 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
             RootTools.remount("/system", "RO");
 
             CoordinatorLayout coordinatorLayoutView = (CoordinatorLayout) cordLayout.findViewById(R.id.main_content3);
-            Snackbar.make(coordinatorLayoutView, "Uninstalled selected Overlays", Snackbar.LENGTH_LONG)
-                    .setAction("Reboot", new View.OnClickListener() {
+            Snackbar.make(coordinatorLayoutView, R.string.uninstalled, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.Reboot, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
 
                             AlertDialog.Builder progressDialogReboot = new AlertDialog.Builder(getActivity());
-                            progressDialogReboot.setTitle("Reboot");
-                            progressDialogReboot.setMessage("Perform a soft reboot?");
+                            progressDialogReboot.setTitle(R.string.Reboot);
+                            progressDialogReboot.setMessage(R.string.PreformReboot);
                             progressDialogReboot.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                                 //when Cancel Button is clicked
                                 @Override
@@ -314,7 +314,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
                     .setCloseDrawableRes(R.drawable.ic_action_check)
                     .setMenu(R.menu.overflow);
 
-        mCab.setTitle(atleastOneIsClicked + " Overlays selected");
+        mCab.setTitle(atleastOneIsClicked + " "+R.string.OverlaysSelected);
     }
 
     private void UncheckAll() {

@@ -30,7 +30,7 @@
         <item
             android:id="@+id/nav_restore"
             android:icon="@drawable/ic_drawer_restore"
-            android:title="@string/RestoreOverlays" />
+            android:title="@string/BackupRestore" />
     </group>
 
     <item android:title="@string/discover">
