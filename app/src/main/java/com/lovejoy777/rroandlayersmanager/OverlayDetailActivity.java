@@ -4,12 +4,7 @@ import android.animation.Animator;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -17,7 +12,6 @@ import android.content.res.AssetManager;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -36,34 +30,15 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.ViewGroup;
-import android.view.Window;
+import android.view.*;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Switch;
-import android.widget.TableRow;
-import android.widget.TextView;
-
+import android.widget.*;
 import com.lovejoy777.rroandlayersmanager.helper.CopyUnzipHelper;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.annotation.Target;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -77,19 +52,14 @@ public class OverlayDetailActivity extends Fragment {
     int NumberOfOverlays = 0;
 
     int NumberOfColorOverlays = 0;
-    private Drawable myDrawable = null;
 
     private final static int BUFFER_SIZE = 1024;
-
-    Bitmap bitmap[] = new Bitmap[NumberOfScreenshotsMain];
 
     public static final int NumberOfScreenshotsMain = 3;
 
     private ArrayList<String> paths = new ArrayList<String>();
 
     private String whichColor = null;
-
-    final ImageView ScreenshotimageView[] = new ImageView[NumberOfScreenshotsMain];
 
     public CheckBox dontShowAgain;
 
@@ -115,23 +85,24 @@ public class OverlayDetailActivity extends Fragment {
     private CoordinatorLayout cordLayout = null;
 
 
-        /** Called when the activity is first created. */
-        @Override
-        public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle
-        savedInstanceState){
-            FragmentActivity faActivity = (FragmentActivity) super.getActivity();
-            cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_plugindetail, container, false);
-            setHasOptionsMenu(true);
+    /**
+     * Called when the activity is first created.
+     */
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
+        FragmentActivity faActivity = (FragmentActivity) super.getActivity();
+        cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_plugindetail, container, false);
+        setHasOptionsMenu(true);
 
-            getIntent();
+        getIntent();
 
-            bindOpService();
+        bindOpService();
 
-            createLayouts();
+        createLayouts();
 
-            return cordLayout;
-        }
-
+        return cordLayout;
+    }
 
 
     private void createThemeFolder() {
@@ -263,28 +234,7 @@ public class OverlayDetailActivity extends Fragment {
     }
 
     private void loadScreenshotCardview() {
-        //Scroll view with screenshots
-        LinearLayout screenshotLayout = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutScreenshots);
-
-        for (int i = 0; i < NumberOfScreenshotsMain; i++) {
-            LinearLayout linear = new LinearLayout(getActivity());
-
-            int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
-
-            LinearLayout.LayoutParams params
-                    = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-            params.rightMargin = margin;
-
-            ScreenshotimageView[i] = new ImageView(getActivity());
-            ScreenshotimageView[i].setBackgroundColor(getResources().getColor(R.color.accent));
-
-            linear.setLayoutParams(params);
-
-            linear.addView(ScreenshotimageView[i]);
-            screenshotLayout.addView(linear);
-        }
-        loadScreenshots();
+        (new LoadDrawables()).execute();
     }
 
     private void generateFilepaths() {
@@ -479,9 +429,8 @@ public class OverlayDetailActivity extends Fragment {
                     window.setStatusBarColor(Color.HSVToColor(hsv));
 
 
-
                 }
-                if (test!=null) {
+                if (test != null) {
                     mFab.setBackgroundTintList(ColorStateList.valueOf(test.getRgb()));
                 }
                 mFab.setVisibility(View.VISIBLE);
@@ -533,12 +482,6 @@ public class OverlayDetailActivity extends Fragment {
     private void loadBackdrop2() {
         final ImageView imageView = (ImageView) cordLayout.findViewById(R.id.backdrop);
         imageView.setBackgroundResource(R.drawable.no_heroimage);
-
-    }
-
-    private void loadScreenshots() {
-
-        (new LoadDrawables()).execute();
 
     }
 
@@ -621,7 +564,7 @@ public class OverlayDetailActivity extends Fragment {
         for (int i = 0; i < NumberOfOverlays; i++) {
             if (InstallOverlayList.get(i) == 1) {
                 InstallOverlayList.set(i, 0);
-                paths.add("file://"+ThemeFolderGeneral + OverlayPathList.get(i));
+                paths.add("file://" + ThemeFolderGeneral + OverlayPathList.get(i));
             }
         }
 
@@ -629,14 +572,12 @@ public class OverlayDetailActivity extends Fragment {
         for (int i4 = NumberOfOverlays + 1; i4 < NumberOfOverlays + NumberOfColorOverlays + 1; i4++) {
             if (InstallOverlayList.get(i4) == 1) {
                 InstallOverlayList.set(i4, 0);
-                paths.add("file://"+ThemeFolder+whichColor+"/"+OverlayPathList.get(i4));
+                paths.add("file://" + ThemeFolder + whichColor + "/" + OverlayPathList.get(i4));
             }
         }
 
         ((menu) getActivity()).InstallOverlays(getActivity(), paths);
     }
-
-
 
 
     private void CopyFolderToSDCard() {
@@ -814,7 +755,6 @@ public class OverlayDetailActivity extends Fragment {
     }
 
 
-
     ///////////
     //Snackbars
     private void selectOverlaysFirstSnackbar() {
@@ -980,7 +920,7 @@ public class OverlayDetailActivity extends Fragment {
         protected Void doInBackground(Void... params) {
 
             //Mount System to Read / Write
-           // RootTools.remount("/system/", "RW");
+            // RootTools.remount("/system/", "RW");
 
             //initialize last part of root Commands
             String SuperuserCommandOverlayFolderPermission = "chmod 777 /vendor/overlay";
@@ -990,15 +930,15 @@ public class OverlayDetailActivity extends Fragment {
             //try {
             //    RootTools.getShell(true).add(command4);
             //} catch (IOException | TimeoutException | RootDeniedException e) {
-           ///     e.printStackTrace();
-           // }
+            ///     e.printStackTrace();
+            // }
             //while (!command4.isFinished()) {
             //    try {
             //        Thread.sleep(1);
             //    } catch (InterruptedException e) {
             //        e.printStackTrace();
             //    }
-           // }
+            // }
 
             CopyFolderToSDCard();  //copy Overlay Files to SD Card
 
@@ -1017,28 +957,28 @@ public class OverlayDetailActivity extends Fragment {
             //    e.printStackTrace();
             //}
             //while (!command3.isFinished()) {
-           //     try {
-           //         Thread.sleep(1);
-           //     } catch (InterruptedException e) {
-           //         e.printStackTrace();
-           //     }
-          //  }
+            //     try {
+            //         Thread.sleep(1);
+            //     } catch (InterruptedException e) {
+            //         e.printStackTrace();
+            //     }
+            //  }
 
-           // RootTools.remount("/system/", "RO");  //remount /system back to RO
+            // RootTools.remount("/system/", "RO");  //remount /system back to RO
 
             return null;
 
         }
 
         protected void onPostExecute(Void result) {
-        if (isAdded()) {
-            UncheckAllCheckBoxes("Uncheck");
-            installEverything.setChecked(false);
-            //appendLog(OverlayNameList);
+            if (isAdded()) {
+                UncheckAllCheckBoxes("Uncheck");
+                installEverything.setChecked(false);
+                //appendLog(OverlayNameList);
 
-            progress2.dismiss();
-            installationFinishedSnackBar(); //show snackbar with option to reboot
-        }
+                progress2.dismiss();
+                installationFinishedSnackBar(); //show snackbar with option to reboot
+            }
         }
     }
 
@@ -1116,70 +1056,80 @@ public class OverlayDetailActivity extends Fragment {
     }
 
 
-    private class LoadDrawables extends AsyncTask<Void, Void, Void> {
+    private class LoadDrawables extends AsyncTask<Void, Bitmap, Void> {
 
+        LinearLayout screenshotLayout;
 
-        protected void onPreExecute() {
+        public LoadDrawables() {
+            screenshotLayout = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutScreenshots);
+
+            int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
+
+            FrameLayout.LayoutParams params
+                    = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            params.rightMargin = margin;
+
+            screenshotLayout.setLayoutParams(params);
 
         }
 
+        @Override
+        protected void onProgressUpdate(Bitmap... bitmap) {
+
+            ImageView imageView = new ImageView(getActivity());
+
+            if (bitmap[0].getHeight() > 1000) {
+                imageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap[0], (int) (bitmap[0].getWidth() * 0.4), (int) (bitmap[0].getHeight() * 0.4), true));
+            } else {
+                imageView.setImageBitmap(bitmap[0]);
+            }
+
+            imageView.setBackgroundColor(getResources().getColor(R.color.accent));
+
+
+            Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fadein);
+            screenshotLayout.addView(imageView);
+            imageView.startAnimation(fadeInAnimation);
+        }
 
         @Override
         protected Void doInBackground(Void... params) {
 
-            for (int i = 0; i < NumberOfScreenshotsMain; i++) {
+            for (int i = 1; i <= NumberOfScreenshotsMain; i++) {
 
-
-
-                Drawable Screenshots[] = new Drawable[NumberOfScreenshotsMain];
-                int j = i + 1;
                 final String packName = package2;
-                String mDrawableName = "screenshot" + j;
+                String mDrawableName = "screenshot" + i;
                 PackageManager manager = getActivity().getPackageManager();
                 Resources mApk1Resources = null;
+
                 try {
                     mApk1Resources = manager.getResourcesForApplication(packName);
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
 
+                if (mApk1Resources == null) {
+                    //No more screenshots
+                    return null;
+                }
+
                 int mDrawableResID = 0;
-                if (mApk1Resources != null) {
-                    mDrawableResID = mApk1Resources.getIdentifier(mDrawableName, "drawable", packName);
-                }
 
-                if (mApk1Resources != null) {
-                    //InputStream is = getResources().openRawResource(mApk1Resources.getDrawable(mDrawableResID));
-                    myDrawable = mApk1Resources.getDrawable(mDrawableResID);
-                    //Bitmap b1 = BitmapFactory.decodeResource(mApk1Resources.getDrawable(mDrawableResID));
-                }
-                //Screenshots[i] = myDrawable;
-                //myDrawable = null;
-                bitmap[i] = ((BitmapDrawable) myDrawable).getBitmap();
+                mDrawableResID = mApk1Resources.getIdentifier(mDrawableName, "drawable", packName);
+
+                //InputStream is = getResources().openRawResource(mApk1Resources.getDrawable(mDrawableResID));
+                Drawable myDrawable = mApk1Resources.getDrawable(mDrawableResID);
+                //Bitmap b1 = BitmapFactory.decodeResource(mApk1Resources.getDrawable(mDrawableResID));
+
+                publishProgress(((BitmapDrawable) myDrawable).getBitmap());
+
                 myDrawable = null;
-                //Screenshots[i] = null;
-
             }
             return null;
 
         }
 
-        protected void onPostExecute(Void result) {
-            if (isAdded()) {
-                for (int i = 0; i < NumberOfScreenshotsMain; i++) {
-
-                    if (bitmap[i].getHeight() > 1000){
-                        ScreenshotimageView[i].setImageBitmap(Bitmap.createScaledBitmap(bitmap[i], (int) (bitmap[i].getWidth() * 0.4), (int) (bitmap[i].getHeight() * 0.4), true));
-                    }else{
-                        ScreenshotimageView[i].setImageBitmap(bitmap[i]);
-                    }
-
-                    bitmap[i] = null;
-                    Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fadein);
-                    ScreenshotimageView[i].startAnimation(fadeInAnimation);
-                }
-            }
-        }
     }
 
 
