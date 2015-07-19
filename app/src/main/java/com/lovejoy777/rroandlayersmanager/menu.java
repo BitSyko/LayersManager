@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -52,7 +53,9 @@ public class menu extends AppCompatActivity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.fragment_container);
+
         if (!RootTools.isAccessGiven()) {
 
             /*final View coordinatorLayoutView = findViewById(R.id.main_content2);
@@ -201,6 +204,7 @@ public class menu extends AppCompatActivity
 
     public void changeFragment(int position) {
         Fragment fragment = null;
+        Fragment oldFragment = null;
         Bundle args = new Bundle();
         FragmentManager fragmentManager = getFragmentManager();
         switch (position){
@@ -221,11 +225,11 @@ public class menu extends AppCompatActivity
         // Insert the fragment by replacing any existing fragment
         if (position == 4) {
             fragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.enter_right,0,0,R.anim.exit_right)
                     .addToBackStack("test")
-                    .replace(R.id.fragment_container, fragment)
+                    .add(R.id.fragment_container, fragment)
                     .commit();
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-
 
         }else{
             fragmentManager.beginTransaction()

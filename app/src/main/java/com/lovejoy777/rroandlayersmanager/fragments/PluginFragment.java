@@ -24,17 +24,24 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.transition.ChangeBounds;
+import android.transition.ChangeImageTransform;
+import android.transition.ChangeTransform;
+import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.lovejoy777.rroandlayersmanager.OverlayDetailActivity;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.adapters.CardViewAdapter;
 import com.lovejoy777.rroandlayersmanager.helper.CardViewContent;
 import com.lovejoy777.rroandlayersmanager.helper.RecyclerItemClickListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -62,7 +69,8 @@ public class PluginFragment extends Fragment {
     static final String LOG_TAG = "PluginApp";
     RecyclerView recList = null;
     CardViewAdapter ca = null;
-
+    static final String BUNDLE_EXTRAS_CATEGORY = "category";
+    static final String BUNDLE_EXTRAS_PACKAGENAME = "packageName";
     private CoordinatorLayout cordLayout = null;
 
 
@@ -242,9 +250,33 @@ public class PluginFragment extends Fragment {
             String category = categories.get(position);
             if( category.length() > 0 ) {
 
-                ((menu) getActivity()).changeFragment2(category,package2);
+                TransitionSet transitionSet = new TransitionSet();
+                transitionSet.addTransition(new ChangeImageTransform());
+                transitionSet.addTransition(new ChangeBounds());
+                transitionSet.addTransition(new ChangeTransform());
+                transitionSet.setDuration(300);
 
+                Fragment fragment2 = new OverlayDetailActivity();
+                fragment2.setSharedElementEnterTransition(transitionSet);
+                fragment2.setSharedElementReturnTransition(transitionSet);
+
+
+                Bundle args = new Bundle();
+                args.putString(BUNDLE_EXTRAS_CATEGORY, category);
+                args.putString(BUNDLE_EXTRAS_PACKAGENAME, package2);
+                //fragment = new OverlayDetailActivity();
+                FloatingActionButton fab = (FloatingActionButton) cordLayout.findViewById(R.id.fab3);
+                fragment2.setArguments(args);
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, fragment2)
+                        .addSharedElement(fab, "fab")
+                        .addToBackStack("test")
+                        .commit();
             }
+
+           //     ((menu) getActivity()).changeFragment2(category,package2);
+
+           // }
         }
         else{
             if(position==2) {
@@ -299,8 +331,8 @@ public class PluginFragment extends Fragment {
 
             PackageManager packageManager = getActivity().getPackageManager();
             Intent baseIntent = new Intent( ACTION_PICK_PLUGIN );
-            baseIntent.setFlags( Intent.FLAG_DEBUG_LOG_RESOLUTION );
-            List<ResolveInfo> list = packageManager.queryIntentServices(baseIntent,
+            baseIntent.setFlags(Intent.FLAG_DEBUG_LOG_RESOLUTION);
+            ArrayList<ResolveInfo> list = (ArrayList<ResolveInfo>) packageManager.queryIntentServices(baseIntent,
                     PackageManager.GET_RESOLVED_FILTER );
 
             final String name[] = new String[list.size()];

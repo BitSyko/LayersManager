@@ -1,7 +1,10 @@
 package com.lovejoy777.rroandlayersmanager.fragments;
 
+import android.animation.Animator;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,6 +28,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.HorizontalScrollView;
@@ -72,6 +76,7 @@ public class InstallFragment extends Fragment {
         Filedirectories.add("/Overlays");
         FragmentActivity faActivity  = (FragmentActivity)    super.getActivity();
         cordLayout = (CoordinatorLayout)    inflater.inflate(R.layout.fragment_install, container, false);
+
 
         setHasOptionsMenu(true);
 

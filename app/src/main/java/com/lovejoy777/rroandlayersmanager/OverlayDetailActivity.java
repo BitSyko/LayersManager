@@ -482,9 +482,9 @@ public class OverlayDetailActivity extends Fragment {
                 if (test!=null) {
                     mFab.setBackgroundTintList(ColorStateList.valueOf(test.getRgb()));
                 }
-                mFab.setVisibility(View.VISIBLE);
-                Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fadein);
-                mFab.startAnimation(fadeInAnimation);
+                //mFab.setVisibility(View.VISIBLE);
+                //Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fadein);
+               // mFab.startAnimation(fadeInAnimation);
             }
         });
         Animator reveal = ViewAnimationUtils.createCircularReveal(imageView,

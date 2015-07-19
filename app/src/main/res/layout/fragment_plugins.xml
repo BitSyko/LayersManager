@@ -56,5 +56,6 @@
             android:clickable="true"
             android:id="@+id/fab3"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true" />
+            android:layout_alignParentBottom="true"
+            android:transitionName="fab"/>
     </android.support.design.widget.CoordinatorLayout>

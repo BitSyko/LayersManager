@@ -83,6 +83,7 @@
         <string name="InstallOverlays2">Install Overlays</string>
         <string name="InstallOverlays">Install Overlays</string>
         <string name="installing">Installing</string>
+        <string name="installed">Installed selected Overlays</string>
 
         <!-- UnInstall Fragment -->
         <string name="UninstallOverlays">Uninstall Overlays</string>
@@ -112,6 +113,9 @@
         <string name="backupComplete">Backup complete</string>
         <string name="Restore">Restore Overlays</string>
         <string name="restoring">Restoring</string>
+        <string name="backedUp">Backup complete</string>
+        <string name="deletedBackup">Deleted selected Backup</string>
+        <string name="restored">Restored selected Backup</string>
 
     <!-- NavDrawer -->
     <string name="More">More</string>
@@ -148,10 +152,8 @@
         <!-- SnackBar texts -->
         <string name="selectOverlayFirst">Select Overlays first</string>
         <string name="OverlaysInstalled">Overlays installed!</string>
-    <string name="installed">Installed selected Overlays</string>
-    <string name="backedUp">Backup complete</string>
-    <string name="deletedBackup">Deleted selected Backup</string>
-    <string name="restored">Restored selected Backup</string>
+
+
 
 
 </resources>
