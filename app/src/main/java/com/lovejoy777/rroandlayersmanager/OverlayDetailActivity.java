@@ -112,6 +112,8 @@ public class OverlayDetailActivity extends Fragment {
     private List<String> OverlayNameList = null;
     private CoordinatorLayout cordLayout = null;
 
+    private LoadDrawables imageLoader;
+
 
         /** Called when the activity is first created. */
         @Override
@@ -131,6 +133,13 @@ public class OverlayDetailActivity extends Fragment {
         }
 
 
+    @Override
+    public void onDestroy() {
+        if (imageLoader.getStatus() != AsyncTask.Status.FINISHED) {
+            imageLoader.cancel(true);
+        }
+        super.onDestroy();
+    }
 
     private void createThemeFolder() {
         //create the Theme folder
@@ -536,8 +545,8 @@ public class OverlayDetailActivity extends Fragment {
 
     private void loadScreenshots() {
 
-        (new LoadDrawables()).execute();
-
+        imageLoader = new LoadDrawables();
+        imageLoader.execute();
     }
 
 
