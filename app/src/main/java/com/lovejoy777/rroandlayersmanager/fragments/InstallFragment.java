@@ -161,7 +161,7 @@ public class InstallFragment extends Fragment {
 
                 tv.setLayoutParams(params);
                 tv.setTag(Filedirectories.get(i));
-                tv.setBackground(getActivity().getResources().getDrawable(R.drawable.rippleprimary));
+                tv.setBackground(getActivity().getResources().getDrawable(R.drawable.rippleprimarys));
 
                 int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getActivity().getResources().getDisplayMetrics());
                 tv.setPadding(padding, padding, padding, padding);
