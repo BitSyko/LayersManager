@@ -22,8 +22,8 @@ import com.lovejoy777.rroandlayersmanager.adapters.CustomListAdapter;
  */
 public class AboutActivity extends AppCompatActivity {
 
-    ListView list1, list2, list3, list4, list5,list6,list7,list12;
-    ImageButton moreButton1, moreButton2;
+    ListView list1, list2, list3, list4, list5,list6,list7,list8,list9,list12;
+    ImageButton moreButton1, moreButton2,moreButton3;
 
     Integer[] developerImage1 = {
             R.drawable.about_syko,
@@ -42,6 +42,12 @@ public class AboutActivity extends AppCompatActivity {
     };
     Integer[] developerImage5 = {
             R.drawable.about_niklas,
+    };
+    Integer[] developerImage6 = {
+            R.drawable.about_branden,
+    };
+    Integer[] developerImage7 = {
+            R.drawable.about_denis,
     };
     Integer[] linkImage1 = {
             R.drawable.about_bitsyko,
@@ -79,6 +85,15 @@ public class AboutActivity extends AppCompatActivity {
         String[] Developer5 = {
                 "Niklas Schnettler"
         } ;
+        String[] Developer6 = {
+                "Branden Manibusan"
+        } ;
+
+        String[] Developer7 = {
+                "Denis Suarez"
+        } ;
+
+
         String[] Link1 = {
                 "Layers on Google Plus"
         } ;
@@ -86,19 +101,27 @@ public class AboutActivity extends AppCompatActivity {
                 "Layers on XDA"
         } ;
         String[] LeadDeveloper = {
-                "Layers Lead Developer"
+                getString(R.string.LayersLeadDeveloper)
         };
         String[] Developer = {
-                "Layers Developer"
+                getString(R.string.LayersDeveloper)
         };
         String[] AppDeveloper = {
-                "App Developer"
+                getString(R.string.AppDeveloper)
         };
         String[] Nothing1 = {
-                "Find out whats new"
+                getString(R.string.findOutWhatsNew)
         };
         String[] Nothing2 = {
-                "Join the chat"
+                getString(R.string.joinTheChat)
+        };
+
+        String[] AdditionalDeveloper = {
+                getString(R.string.AditionalLayersDev)
+        };
+
+        String[] ShowcaseDeveloper = {
+                getString(R.string.ShowcaseDeveloper)
         };
 
         //set Toolbar
@@ -177,6 +200,30 @@ public class AboutActivity extends AppCompatActivity {
             }
         });
 
+        //Developer6
+        CustomListAdapter adapter8 = new
+                CustomListAdapter(AboutActivity.this, Developer6,AdditionalDeveloper, developerImage6);
+        list8=(ListView)findViewById(R.id.listView_Developer6);
+        list8.setAdapter(adapter8);
+        list8.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.linkBranden))));
+            }
+        });
+
+        //Developer7
+        CustomListAdapter adapter9 = new
+                CustomListAdapter(AboutActivity.this, Developer7,ShowcaseDeveloper, developerImage7);
+        list8=(ListView)findViewById(R.id.listView_Developer7);
+        list8.setAdapter(adapter9);
+        list8.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.linkDenis))));
+            }
+        });
+
         //Link1
         CustomListAdapter adapter6 = new
                 CustomListAdapter(AboutActivity.this, Link1,Nothing1, linkImage1);
@@ -216,6 +263,8 @@ public class AboutActivity extends AppCompatActivity {
         moreButton1.setOnClickListener(onclicklistener);
         moreButton2 = (ImageButton) findViewById(R.id.imBu_more2);
         moreButton2.setOnClickListener(onclicklistener);
+        moreButton3 = (ImageButton) findViewById(R.id.imBu_more3);
+        moreButton3.setOnClickListener(onclicklistener);
 
     }
 
@@ -246,6 +295,16 @@ public class AboutActivity extends AppCompatActivity {
                     dialog.setPositiveButton(R.string.VisitGithub, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.License2github)));
+                            startActivity(browserIntent);
+                        }
+                    });
+                    break;
+                case R.id.imBu_more3:
+                    dialogText = getResources().getString(R.string.License3more);
+                    dialogTitleText = getResources().getString(R.string.License3);
+                    dialog.setPositiveButton(R.string.VisitGithub, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.License3github)));
                             startActivity(browserIntent);
                         }
                     });

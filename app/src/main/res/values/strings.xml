@@ -24,19 +24,35 @@
     <string name="developedby">Layers developed by</string>
     <string name="usefullinks">Useful links</string>
     <string name="version">Version</string>
+    <string name="AditionalLayersDev">Additional Layers commits</string>
+    <string name="findOutWhatsNew">Find out whats new</string>
+    <string name="joinTheChat">Join the chat</string>
+    <string name="AppDeveloper">App Developer</string>
+    <string name="LayersDeveloper">Layers Developer</string>
+    <string name="LayersLeadDeveloper">Layers Lead Developer</string>
+    <string name="ShowcaseDeveloper">Showcase Developer</string>
+
 
 
         <!-- Licenses -->
         <string name="OpenSourceLicenses">Open Source Licenses:</string>
         <string name="ApacheLicense" translatable="false">Apache License, Version 2.0</string>
+        <string name="MITLicense" translatable="false">MIT License</string>
         <string name="License1">Root Tools</string>
         <string name="License1about" translatable="false">Stephen Erickson, Chris Ravenscroft, Dominik Schuermann, Adam Shanks</string>
         <string name="License1more" translatable="false">Copyright © 2012 Stephen Erickson, \nChris Ravenscroft, \nDominik Schuermann, \nAdam Shanks\n\nLicensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
         <string name="License1github" translatable="false">https://github.com/Stericson/RootTools</string>
-        <string name="License2">AppIntro</string>
+        <string name="License2">App Intro</string>
         <string name="License2about" translatable="false">Paolo Rotolo</string>
         <string name="License2more">Copyright © 2015 Paolo Rotolo\n\nLicensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
         <string name="License2github">https://github.com/PaoloRotolo/AppIntro</string>
+        <string name="License3">Material CAB</string>
+        <string name="License3about" translatable="false">Aidan Follestad</string>
+        <string name="License3more">The MIT License (MIT)
+
+Copyright (c) 2015 Aidan Michael Follestad\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\n THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+</string>
+        <string name="License3github">https://github.com/afollestad/material-cab</string>
 
         <!-- Links -->
         <string name="linkXda">http://forum.xda-developers.com/android/apps-games/official-layers-bitsyko-apps-rro-t3012172</string>
@@ -47,6 +63,8 @@
         <string name="linkBrian">https://plus.google.com/u/0/+BrianGill55/posts</string>
         <string name="linkReinhard">https://plus.google.com/101549242713977412381/posts</string>
         <string name="linkSyko">https://plus.google.com/u/0/+SykoPompos/posts</string>
+        <string name="linkBranden">https://plus.google.com/u/0/101729058057775926785/posts</string>
+        <string name="linkDenis">https://plus.google.com/u/0/+DenisSuarez98/posts</string>
 
 
     <!-- PRODUCT TOUR -->
@@ -103,7 +121,7 @@
         <string name="enterBackupName">Enter a backup name</string>
         <string name="noInputName">Please enter a name</string>
         <string name="nothingToBackup">Nothing available to backup</string>
-        <string name="DoYouWantToRestore">Do you want to restore or delete</string>
+        <string name="DoYouWantToRestore">Do you want to restore or delete the selected Backup?</string>
         <string name="restore">Restore</string>
         <string name="delete">Delete</string>
         <string name="DeleteBackup">Deleting Backup</string>
@@ -152,7 +170,6 @@
         <!-- SnackBar texts -->
         <string name="selectOverlayFirst">Select Overlays first</string>
         <string name="OverlaysInstalled">Overlays installed!</string>
-
 
 
 

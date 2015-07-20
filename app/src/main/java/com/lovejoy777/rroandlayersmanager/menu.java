@@ -1,13 +1,18 @@
 package com.lovejoy777.rroandlayersmanager;
 
+import android.animation.Animator;
 import android.app.ActivityOptions;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,6 +23,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
@@ -204,7 +210,6 @@ public class menu extends AppCompatActivity
 
     public void changeFragment(int position) {
         Fragment fragment = null;
-        Fragment oldFragment = null;
         Bundle args = new Bundle();
         FragmentManager fragmentManager = getFragmentManager();
         switch (position){
@@ -224,10 +229,22 @@ public class menu extends AppCompatActivity
         fragment.setArguments(args);
         // Insert the fragment by replacing any existing fragment
         if (position == 4) {
+
+            /*View v = findViewById(R.id.fragment_container);
+            Bitmap b = Bitmap.createBitmap(v.getWidth(),
+                    v.getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas c = new Canvas(b);
+            v.layout(0, 0, v.getWidth(),
+                    v.getHeight());
+            v.draw(c);
+            BitmapDrawable bd = new BitmapDrawable(b);
+            findViewById(R.id.fragment_container).setBackground(bd); */
+
+
             fragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.enter_right,0,0,R.anim.exit_right)
+                    //.setCustomAnimations(R.anim.enter_right,0,0,R.anim.exit_right)
                     .addToBackStack("test")
-                    .add(R.id.fragment_container, fragment)
+                    .replace(R.id.fragment_container, fragment)
                     .commit();
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 

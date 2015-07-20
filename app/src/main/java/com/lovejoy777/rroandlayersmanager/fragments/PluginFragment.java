@@ -250,6 +250,8 @@ public class PluginFragment extends Fragment {
             String category = categories.get(position);
             if( category.length() > 0 ) {
 
+
+
                 TransitionSet transitionSet = new TransitionSet();
                 transitionSet.addTransition(new ChangeImageTransform());
                 transitionSet.addTransition(new ChangeBounds());

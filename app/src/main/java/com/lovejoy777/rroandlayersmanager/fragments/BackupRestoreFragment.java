@@ -204,7 +204,7 @@ public class BackupRestoreFragment extends Fragment{
                     System.out.println(i);
                     AlertDialog.Builder installdialog = new AlertDialog.Builder(getActivity());
                     installdialog.setTitle(themes.get(i));
-                    installdialog.setMessage(Html.fromHtml(getResources().getString(R.string.DoYouWantToRestore)+" "+"<i>"+themes.get(i)+"<i>?"));
+                    installdialog.setMessage(Html.fromHtml(getResources().getString(R.string.DoYouWantToRestore)));
                     installdialog.setPositiveButton(R.string.restore, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             new RestoreOverlays().execute(Files.get(i));

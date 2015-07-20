@@ -9,7 +9,7 @@
     <android.support.v7.widget.Toolbar
 
         android:id="@+id/toolbar4"
-        android:layout_height="160dp"
+        android:layout_height="80dp"
         android:layout_width="match_parent"
         android:minHeight="?android:attr/actionBarSize"
         android:background="?android:attr/colorPrimary"
@@ -19,15 +19,6 @@
     </android.support.v7.widget.Toolbar>
 
 
-    <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:id="@+id/imVie_AppLogo"
-        android:src="@mipmap/ic_launcher"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:elevation="5dp"
-        android:layout_marginTop="16dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -38,7 +29,7 @@
         android:layout_below="@+id/imVie_AppLogo"
         android:layout_centerHorizontal="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:elevation="5dp" />
 
     <TextView
@@ -60,6 +51,11 @@
         android:background="@color/background">
 
         <RelativeLayout  android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:id="@+id/General1">
+
+            <RelativeLayout  android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingStart="@dimen/activity_horizontal_margin"
             android:paddingEnd="@dimen/activity_horizontal_margin"
@@ -137,11 +133,29 @@
             <ListView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/listView_ThemeDeveloper"
+                android:id="@+id/listView_Developer6"
                 android:layout_marginTop="16dp"
                 android:layout_alignParentStart="true"
                 android:elevation="1dp"
                 android:layout_below="@+id/listView_Developer5" />
+
+
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/listView_Developer7"
+                android:layout_marginTop="16dp"
+                android:layout_alignParentStart="true"
+                android:elevation="1dp"
+                android:layout_below="@+id/listView_Developer6" />
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/listView_ThemeDeveloper"
+                android:layout_marginTop="16dp"
+                android:layout_alignParentStart="true"
+                android:elevation="1dp"
+                android:layout_below="@+id/listView_Developer7" />
 
             <View  android:layout_width="fill_parent"
                 android:layout_height="1.0dip"
@@ -203,6 +217,11 @@
                 android:textColor="@color/accent"
                 android:layout_marginTop="16dp"
                 android:layout_below="@+id/divider3" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/General">
 
             <android.support.v7.widget.CardView
                 card_view:cardBackgroundColor="@color/card_background"
@@ -211,13 +230,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:id="@+id/CardView_License1"
                 android:elegantTextHeight="false"
                 android:elevation="5dp"
                 android:layout_marginBottom="8dp"
                 android:background="@color/card_background"
                 android:backgroundTint="@color/card_background"
-                android:layout_below="@+id/tv_caption4">
+                >
 
                 <TextView
                     android:textStyle="bold"
@@ -274,6 +295,8 @@
 
             </android.support.v7.widget.CardView>
 
+
+
             <android.support.v7.widget.CardView
                 card_view:cardBackgroundColor="@color/card_background"
 
@@ -284,6 +307,8 @@
                 android:id="@+id/CardView_License2"
                 android:elegantTextHeight="false"
                 android:elevation="5dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:background="@color/card_background"
                 android:backgroundTint="@color/card_background"
@@ -344,6 +369,78 @@
 
             </android.support.v7.widget.CardView>
 
+            <android.support.v7.widget.CardView
+                card_view:cardBackgroundColor="@color/card_background"
+
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:id="@+id/CardView_License3"
+                android:elegantTextHeight="false"
+                android:elevation="5dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/card_background"
+                android:backgroundTint="@color/card_background"
+                android:layout_below="@+id/CardView_License2">
+
+                <TextView
+                    android:textStyle="bold"
+                    android:paddingStart="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:text="@string/License3"
+                    android:id="@+id/tv_license3"
+                    android:layout_marginTop="16dp"
+                    android:textSize="16sp"
+                    android:paddingEnd="16dp"
+                    android:textColor="@color/about_text" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/License3about"
+                    android:id="@+id/tv_license3about"
+                    android:layout_marginTop="36dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="48dp"
+
+                    android:textColor="@color/text_color_secondary"
+                    android:textSize="14sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/MITLicense"
+                    android:id="@+id/tv_license3license"
+                    android:layout_gravity="start"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="16dp"
+
+
+                    android:layout_marginTop="72dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imBu_more3"
+                    android:layout_alignBottom="@+id/CradViewWhatsNew"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="8dp"
+                    android:layout_gravity="center_vertical|end"
+                    android:src="@drawable/ic_drawer_about"
+                    android:background="@color/button_background"
+                    android:padding="8dp"
+                    android:nestedScrollingEnabled="false" />
+
+            </android.support.v7.widget.CardView>
+        </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>
