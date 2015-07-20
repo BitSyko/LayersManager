@@ -13,7 +13,6 @@
     <color name="text_color_inverse">#ffffffff</color>
     <color name="text_color_secondary">#ff727272</color>
     <color name="chooser_text_color">@color/textColorPrimary</color>
-    <color name="app_text_secondary">#727272</color>
     <color name="actionbar_text_color">#ffffffff</color>
     <color name="actionbar_text_secondary_color">#ffffffff</color>
     <color name="tutorial_text_primary_color">#ffffffff</color>
@@ -34,5 +33,4 @@
     <!-- other colors -->
     <color name="white">#ffffff</color>
     <color name="divider">#B6B6B6</color>
-    <color name="select">#dcdcdc</color>
 </resources>

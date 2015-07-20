@@ -131,7 +131,6 @@ Copyright (c) 2015 Aidan Michael Follestad\n\nPermission is hereby granted, free
         <string name="backupComplete">Backup complete</string>
         <string name="Restore">Restore Overlays</string>
         <string name="restoring">Restoring</string>
-        <string name="backedUp">Backup complete</string>
         <string name="deletedBackup">Deleted selected Backup</string>
         <string name="restored">Restored selected Backup</string>
 

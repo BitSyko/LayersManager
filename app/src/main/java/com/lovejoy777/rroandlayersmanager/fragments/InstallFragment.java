@@ -1,10 +1,7 @@
 package com.lovejoy777.rroandlayersmanager.fragments;
 
-import android.animation.Animator;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,7 +25,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.HorizontalScrollView;
@@ -185,7 +181,7 @@ public class InstallFragment extends Fragment {
                 });
                 if (Filedirectories.size() > 1 && i != Filedirectories.size()-1){
                     ImageView img = new ImageView(getActivity().getApplicationContext());
-                    img.setBackgroundResource(R.drawable.ic_action_up2);
+                    img.setBackgroundResource(R.drawable.ic_action_up);
                     HscrollView.addView(img);
                     ViewGroup.LayoutParams iv_params_b = img.getLayoutParams();
                     LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -354,11 +350,7 @@ new LoadAndSet().execute();
         }
 
         public boolean isFolder(int i){
-            if (i< directories.size()){
-                return true;
-            }else{
-                return false;
-            }
+            return i < directories.size();
         }
         public  class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView themeName;
