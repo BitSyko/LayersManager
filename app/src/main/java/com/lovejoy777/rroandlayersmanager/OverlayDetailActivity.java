@@ -790,7 +790,7 @@ public class OverlayDetailActivity extends Fragment {
 
         installdialog.setView(dontShowAgainLayout);
         installdialog.setTitle(R.string.MoveOverlays);
-        installdialog.setMessage(R.string.CreateHeXFolder);
+        installdialog.setMessage(R.string.ApplyOverlays);
         installdialog.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 
