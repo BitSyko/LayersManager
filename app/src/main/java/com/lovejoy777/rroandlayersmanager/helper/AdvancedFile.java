@@ -1,13 +1,13 @@
-package com.lovejoy777.rroandlayersmanager.beans;
+package com.lovejoy777.rroandlayersmanager.helper;
 
-public class UninstallFile {
+public class AdvancedFile {
 
     private final String location;
     private final String name;
     private final String fullname;
     private boolean checked;
 
-    public UninstallFile(String location) {
+    public AdvancedFile(String location) {
         this.location = location;
         this.name = location.replace(".apk","").replace("_"," ");
         this.fullname = location;

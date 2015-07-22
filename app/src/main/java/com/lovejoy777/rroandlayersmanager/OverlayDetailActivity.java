@@ -612,27 +612,7 @@ public class OverlayDetailActivity extends Fragment {
     }
 
 
-    //Preperation of Installation Of Overlays
-    protected void InstallOverlays() throws InterruptedException {
 
-        //install Normal Overlays
-        for (int i = 0; i < NumberOfOverlays; i++) {
-            if (InstallOverlayList.get(i) == 1) {
-                InstallOverlayList.set(i, 0);
-                paths.add("file://"+ThemeFolderGeneral + OverlayPathList.get(i));
-            }
-        }
-
-        //install Color Specific Overlays
-        for (int i4 = NumberOfOverlays + 1; i4 < NumberOfOverlays + NumberOfColorOverlays + 1; i4++) {
-            if (InstallOverlayList.get(i4) == 1) {
-                InstallOverlayList.set(i4, 0);
-                paths.add("file://"+ThemeFolder+whichColor+"/"+OverlayPathList.get(i4));
-            }
-        }
-
-        ((menu) getActivity()).InstallOverlays(getActivity(), paths);
-    }
 
 
 
@@ -977,52 +957,27 @@ public class OverlayDetailActivity extends Fragment {
         @Override
         protected Void doInBackground(Void... params) {
 
-            //Mount System to Read / Write
-            // RootTools.remount("/system/", "RW");
-
-            //initialize last part of root Commands
-            String SuperuserCommandOverlayFolderPermission = "chmod 777 /vendor/overlay";
-            String SuperuserCommandCreateOverlayFolder = "mkdir /vendor/overlay";
-
-            //CommandCapture command4 = new CommandCapture(0, SuperuserCommandCreateOverlayFolder);
-            //try {
-            //    RootTools.getShell(true).add(command4);
-            //} catch (IOException | TimeoutException | RootDeniedException e) {
-            ///     e.printStackTrace();
-            // }
-            //while (!command4.isFinished()) {
-            //    try {
-            //        Thread.sleep(1);
-            //    } catch (InterruptedException e) {
-            //        e.printStackTrace();
-            //    }
-            // }
-
             CopyFolderToSDCard();  //copy Overlay Files to SD Card
 
             unzip();  //unzip Overlay ZIP´s
 
-            try {
-                InstallOverlays();  //open Method to install Overlays
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            //install Normal Overlays
+            for (int i = 0; i < NumberOfOverlays; i++) {
+                if (InstallOverlayList.get(i) == 1) {
+                    InstallOverlayList.set(i, 0);
+                    paths.add("file://"+ThemeFolderGeneral + OverlayPathList.get(i));
+                }
             }
 
-            //CommandCapture command3 = new CommandCapture(0, SuperuserCommandOverlayFolderPermission);
-            //try {
-            //    RootTools.getShell(true).add(command3);
-            //} catch (IOException | TimeoutException | RootDeniedException e) {
-            //    e.printStackTrace();
-            //}
-            //while (!command3.isFinished()) {
-            //     try {
-            //         Thread.sleep(1);
-            //     } catch (InterruptedException e) {
-            //         e.printStackTrace();
-            //     }
-            //  }
+            //install Color Specific Overlays
+            for (int i4 = NumberOfOverlays + 1; i4 < NumberOfOverlays + NumberOfColorOverlays + 1; i4++) {
+                if (InstallOverlayList.get(i4) == 1) {
+                    InstallOverlayList.set(i4, 0);
+                    paths.add("file://"+ThemeFolder+whichColor+"/"+OverlayPathList.get(i4));
+                }
+            }
 
-            // RootTools.remount("/system/", "RO");  //remount /system back to RO
+            ((menu) getActivity()).InstallOverlays(getActivity(), paths);
 
             return null;
 

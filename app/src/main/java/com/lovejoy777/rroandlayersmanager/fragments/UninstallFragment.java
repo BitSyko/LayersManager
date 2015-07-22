@@ -20,14 +20,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.*;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.afollestad.materialcab.MaterialCab;
 import com.lovejoy777.rroandlayersmanager.R;
-import com.lovejoy777.rroandlayersmanager.beans.UninstallFile;
+import com.lovejoy777.rroandlayersmanager.helper.AdvancedFile;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 import com.stericson.RootTools.RootTools;
@@ -40,7 +38,7 @@ import java.util.ArrayList;
  */
 public class UninstallFragment extends Fragment implements MaterialCab.Callback {
 
-    private ArrayList<UninstallFile> files = new ArrayList<>();
+    private ArrayList<AdvancedFile> files = new ArrayList<>();
     FloatingActionButton fab2;
     int atleastOneIsClicked = 0;
     private RecyclerView mRecyclerView;
@@ -82,7 +80,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
             loadedFiles.addAll(command.RootloadFiles("/system/vendor/overlay"));
 
             for (String file : loadedFiles) {
-                files.add(new UninstallFile(file));
+                files.add(new AdvancedFile(file));
             }
 
             return null;
@@ -135,11 +133,11 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
     //Adapter
     private class CardViewAdapter3 extends RecyclerView.Adapter<CardViewAdapter3.ViewHolder> {
 
-        private ArrayList<UninstallFile> themes;
+        private ArrayList<AdvancedFile> themes;
         private int rowLayout;
         private Context mContext;
 
-        public CardViewAdapter3(ArrayList<UninstallFile> themes, int rowLayout, Context context) {
+        public CardViewAdapter3(ArrayList<AdvancedFile> themes, int rowLayout, Context context) {
             this.themes = themes;
             this.rowLayout = rowLayout;
             this.mContext = context;
@@ -154,7 +152,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, final int i) {
 
-            final UninstallFile theme = themes.get(i);
+            final AdvancedFile theme = themes.get(i);
 
             viewHolder.themeName.setText(theme.getName());
             viewHolder.themeName.setTag(theme.getLocation());
@@ -228,7 +226,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
         @Override
         protected Void doInBackground(Void... params) {
             RootTools.remount("/system", "RW");
-            for (UninstallFile file : files) {
+            for (AdvancedFile file : files) {
                 if (file.isChecked()) {
                     RootCommands.DeleteFileRoot("system/vendor/overlay/" + file.getLocation());
                 }
@@ -286,7 +284,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
     //Check and Uncheck all Checkboxes
     private void checkAll() {
 
-        for (UninstallFile file : files) {
+        for (AdvancedFile file : files) {
             file.setChecked(true);
         }
 
@@ -311,7 +309,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
 
     private void UncheckAll() {
 
-        for (UninstallFile file : files) {
+        for (AdvancedFile file : files) {
             file.setChecked(false);
         }
 
