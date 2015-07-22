@@ -18,7 +18,7 @@
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
         <item name="android:elevation">4dp</item>
-        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorPrimary">@color/actionbar_text_color</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_action_menu</item>
     </style>
 
