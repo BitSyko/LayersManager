@@ -961,11 +961,13 @@ public class OverlayDetailActivity extends Fragment {
 
             unzip();  //unzip Overlay ZIP´s
 
+            System.out.println("UNZIPPED");
+
             //install Normal Overlays
             for (int i = 0; i < NumberOfOverlays; i++) {
                 if (InstallOverlayList.get(i) == 1) {
                     InstallOverlayList.set(i, 0);
-                    paths.add("file://"+ThemeFolderGeneral + OverlayPathList.get(i));
+                    paths.add(ThemeFolderGeneral + OverlayPathList.get(i));
                 }
             }
 
@@ -973,10 +975,11 @@ public class OverlayDetailActivity extends Fragment {
             for (int i4 = NumberOfOverlays + 1; i4 < NumberOfOverlays + NumberOfColorOverlays + 1; i4++) {
                 if (InstallOverlayList.get(i4) == 1) {
                     InstallOverlayList.set(i4, 0);
-                    paths.add("file://"+ThemeFolder+whichColor+"/"+OverlayPathList.get(i4));
+                    paths.add(ThemeFolder+whichColor+"/"+OverlayPathList.get(i4));
                 }
             }
 
+            System.out.println("STARTED MOVING");
             ((menu) getActivity()).InstallOverlays(getActivity(), paths);
 
             return null;

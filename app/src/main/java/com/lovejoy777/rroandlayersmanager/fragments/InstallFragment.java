@@ -35,7 +35,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialcab.MaterialCab;
 import com.lovejoy777.rroandlayersmanager.R;
-import com.lovejoy777.rroandlayersmanager.beans.UninstallFile;
+import com.lovejoy777.rroandlayersmanager.helper.AdvancedFile;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 
 import java.io.IOException;
@@ -48,7 +48,7 @@ import java.util.List;
  */
 public class InstallFragment extends Fragment {
 
-    private ArrayList<UninstallFile> Files = new ArrayList<>();
+    private ArrayList<AdvancedFile> Files = new ArrayList<>();
     //private ArrayList<String> Files = new ArrayList<>();
     private ArrayList<String> Directories = new ArrayList<>();
     FloatingActionButton fab2;
@@ -115,7 +115,7 @@ public class InstallFragment extends Fragment {
             System.out.println(loadedFiles);
 
             for (String /*file*/ currentDir : loadedFiles) {
-                Files.add(new UninstallFile(/*file*/currentDir));
+                Files.add(new AdvancedFile(/*file*/currentDir));
 
             }
             //Files = command.loadFiles(currentDir);
@@ -224,7 +224,7 @@ new LoadAndSet().execute();
             @Override
             public void onClick(View v) {
                 ArrayList<String> test = new ArrayList<String>();
-                for (UninstallFile file : Files) {
+                for (AdvancedFile file : Files) {
                     if (file.isChecked()) {
                         test.add(file.getLocation());
                     }
@@ -243,14 +243,14 @@ new LoadAndSet().execute();
     //Adapter
     private class CardViewAdapter3 extends RecyclerView.Adapter<CardViewAdapter3.MyViewHolder>{
 
-        private ArrayList<UninstallFile> themes;
+        private ArrayList<AdvancedFile> themes;
         //private ArrayList<String> themes;
         private ArrayList<String> directories;
         private int rowLayout;
         private  int checkboxLayout;
         private Context mContext;
 
-        public CardViewAdapter3(ArrayList<UninstallFile> themes,ArrayList<String> directories, int rowLayout, int checkboxLayout, Context context) {
+        public CardViewAdapter3(ArrayList<AdvancedFile> themes,ArrayList<String> directories, int rowLayout, int checkboxLayout, Context context) {
             this.directories = directories;
             this.themes = themes;
             this.rowLayout = rowLayout;
@@ -312,7 +312,7 @@ new LoadAndSet().execute();
                     }
                 });
             } else{
-                final UninstallFile theme2 = themes.get(i - directories.size());
+                final AdvancedFile theme2 = themes.get(i - directories.size());
                 viewHolder.check.setText(theme2.getFullName());
                 viewHolder.check.setTag(i);
                 viewHolder.check.setId(i);
@@ -584,9 +584,9 @@ new LoadAndSet().execute();
         protected Void doInBackground(Void... params) {
             ArrayList<String> paths = new ArrayList<String>();
             Commands command = new Commands();
-            for (UninstallFile file : Files) {
+            for (AdvancedFile file : Files) {
                 if (file.isChecked()) {
-                    paths.add("file://"+currentDir+"/"+file.getFullName());
+                    paths.add(currentDir+"/"+file.getFullName());
                 }
             }
 
@@ -637,7 +637,7 @@ new LoadAndSet().execute();
 
     private void UncheckAll() {
 
-        for (UninstallFile file : Files) {
+        for (AdvancedFile file : Files) {
             file.setChecked(false);
         }
 
