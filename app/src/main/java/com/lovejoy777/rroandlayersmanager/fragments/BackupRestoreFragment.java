@@ -526,7 +526,7 @@ public class BackupRestoreFragment extends Fragment{
 
             mAdapter = new CardViewAdapter3(Files, R.layout.adapter_tablerow, getActivity());
             mRecyclerView.setAdapter(mAdapter);
-            if (Files.isEmpty()){
+            if (Files == null){
                 ImageView noOverlays = (ImageView)cordLayout.findViewById(R.id.imageView);
                 TextView noOverlaysText = (TextView) cordLayout.findViewById(R.id.textView7);
                 noOverlays.setVisibility(View.VISIBLE);
