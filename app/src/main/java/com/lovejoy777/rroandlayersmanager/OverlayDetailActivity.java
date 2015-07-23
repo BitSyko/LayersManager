@@ -111,6 +111,7 @@ public class OverlayDetailActivity extends Fragment {
     private FloatingActionButton fab2 = null;
     private List<String> OverlayNameList = null;
     private CoordinatorLayout cordLayout = null;
+    private LoadDrawables imageLoader;
 
 
     /** Called when the activity is first created. */
@@ -129,6 +130,14 @@ public class OverlayDetailActivity extends Fragment {
 
         return cordLayout;
     }
+
+    @Override
+        public void onDestroy() {
+                if (imageLoader.getStatus() != AsyncTask.Status.FINISHED) {
+                        imageLoader.cancel(true);
+                    }
+                super.onDestroy();
+            }
 
 
 
@@ -536,7 +545,8 @@ public class OverlayDetailActivity extends Fragment {
 
     private void loadScreenshots() {
 
-        (new LoadDrawables()).execute();
+        imageLoader = new LoadDrawables();
+        imageLoader.execute();
 
     }
 
