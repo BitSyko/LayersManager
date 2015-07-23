@@ -1,9 +1,12 @@
 package com.lovejoy777.rroandlayersmanager.commands;
 
+import android.app.Activity;
 import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.lovejoy777.rroandlayersmanager.R;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
@@ -32,8 +35,9 @@ public class Commands {
     private ArrayList<String> Folders = new ArrayList<String>();
 
 
-   public ArrayList<String> RootloadFiles(String directory){
-        try {
+   public ArrayList<String> RootloadFiles(final Context context, final Activity act, String directory){
+       if (RootTools.isAccessGiven()) {
+       try {
             String line;
             Process process = Runtime.getRuntime().exec("su");
             OutputStream stdin = process.getOutputStream();
@@ -61,12 +65,20 @@ public class Commands {
             process.waitFor();//wait for process to finish
             process.destroy();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-        return Files;
+       } else{
+           act.runOnUiThread(new Runnable() {
+               @Override
+               public void run() {
+                   Toast toast = Toast.makeText(context, R.string.noRoot, Toast.LENGTH_LONG);
+                   toast.show();
+               }
+           });
+
+       }
+       return Files;
     }
 
     public ArrayList<String> loadFiles(String directory){
