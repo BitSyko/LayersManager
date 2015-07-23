@@ -32,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialcab.MaterialCab;
 import com.lovejoy777.rroandlayersmanager.R;
@@ -110,9 +111,20 @@ public class InstallFragment extends Fragment {
             ArrayList<String> loadedFiles = new ArrayList<String>();
 
 
-            loadedFiles.addAll(command.loadFiles(currentDir));
+            try {
+                loadedFiles.addAll(command.loadFiles(currentDir));
+            } catch(NullPointerException e){
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Snackbar.make(getActivity().getWindow().getDecorView().findViewById(android.R.id.content), R.string.emptydirectory, Snackbar.LENGTH_SHORT)
+                                .show();
+                    }
+                });
 
-            System.out.println(loadedFiles);
+            }
+
+
 
             for (String /*file*/ currentDir : loadedFiles) {
                 Files.add(new AdvancedFile(/*file*/currentDir));
@@ -132,11 +144,6 @@ public class InstallFragment extends Fragment {
 
         protected void onPostExecute(Void result) {
 
-
-            //InstallOverlayList.clear();
-            //for (int i =0; i< Files.size();i++){
-            //    InstallOverlayList.add(0);
-            //}
 
             atleastOneIsClicked =0;
             mAdapter = new CardViewAdapter3(Files,Directories, R.layout.adapter_install_layout,R.layout.adapter_listlayout, getActivity());
@@ -232,9 +239,6 @@ new LoadAndSet().execute();
                 fab2.hide();
                 new InstallOverlays().execute();
                 System.out.println(test);
-
-                //fab2.animate().translationY(fab2.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
-                //new DeleteOverlays().execute();
             }
         });
     }
@@ -274,20 +278,6 @@ new LoadAndSet().execute();
             }
 
             return myViewholder;
-
-
-
-            /*View v = null;
-            switch (getItemViewType(i)) {
-                case 0:
-                    v = LayoutInflater.from(viewGroup.getContext()).inflate(checkboxLayout, viewGroup, false);
-
-                case 1:
-                    //v = LayoutInflater.from(viewGroup.getContext()).inflate(checkboxLayout, viewGroup, false);
-                    v = LayoutInflater.from(viewGroup.getContext()).inflate(rowLayout, viewGroup, false);
-            }
-           // System.out.println(getItemViewType(i));
-            return new ViewHolder(v); */
         }
 
 
@@ -343,10 +333,14 @@ new LoadAndSet().execute();
 
         @Override
         public int getItemCount() {
+            int Size = 0;
             if (themes!=null) {
-                return themes.size() + directories.size() /*themes == null ? 0 : themes.size()*/;
-            } else
-                return 0;
+                Size = Size + themes.size();
+            }
+            if (directories != null){
+                Size = Size + directories.size();
+            }
+                return Size;
         }
 
         public boolean isFolder(int i){
@@ -389,14 +383,7 @@ new LoadAndSet().execute();
 
         }
     }
-
-
-
-
-
-
-
-
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -410,167 +397,6 @@ new LoadAndSet().execute();
 
 
 
-    /*
-    static final String TAG = "Install";
-    private String previewimageszip = null;
-
-    final String startDirInstall = Environment.getExternalStorageDirectory() +  "/Overlays";
-    private static final int CODE_SD = 0;
-    private static final int CODE_DB = 1;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        previewimageszip = getApplicationInfo().dataDir + "/overlay/previewimages.zip";
-        // GET STRING SZP
-        final Intent extras = getIntent();
-        String SZP = null;
-        if (extras != null) {
-            SZP = extras.getStringExtra("key1");
-        }
-
-        if (SZP != null) {
-
-            installmultiplecommand();
-
-        } else {
-            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-            // Set these depending on your use case. These are the defaults.
-            i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, true);
-            i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
-            i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
-            i.putExtra(FilePickerActivity.EXTRA_START_PATH, startDirInstall);
-            i.putExtra("FilePickerMode","Install Overlays");
-
-            // start filePicker forResult
-            startActivityForResult(i, CODE_SD);
-        }
-    } // ends onCreate
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode,
-                                    Intent data) {
-        if ((CODE_SD == requestCode || CODE_DB == requestCode) &&
-                resultCode == Activity.RESULT_OK) {
-            if (data.getBooleanExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE,
-                    false)) {
-                ArrayList<String> paths = data.getStringArrayListExtra(
-                        FilePickerActivity.EXTRA_PATHS);
-                StringBuilder sb = new StringBuilder();
-
-                if (paths != null) {
-                    for (String path : paths) {
-                        if (path.startsWith("file://")) {
-                            path = path.substring(7);
-                            sb.append(path);
-                        }
-                    }
-
-                    String SZP = (sb.toString());
-                    Intent iIntent = new Intent(this, Install.class);
-                    iIntent.putExtra("key1", SZP);
-                    iIntent.putStringArrayListExtra("key2", paths);
-                    startActivity(iIntent);
-                    finish();
-
-                }
-
-            } else {
-                // Get the File path from the Uri
-                String SZP = (data.getData().toString());
-                if (SZP.startsWith("file://")) {
-                    SZP = SZP.substring(7);
-                    Intent iIntent = new Intent(this, Install.class);
-                    iIntent.putExtra("key1", SZP);
-                    startActivity(iIntent);
-                    finish();
-                }
-            }
-        }
-    } // ends onActivityForResult
-
-    /**
-     * **********************************************************************************************************
-     * UNZIP UTIL
-     * ************
-     * Unzip a zip file.  Will overwrite existing files.
-     *
-     * @param zipFile  Full path of the zip file you'd like to unzip.
-     * @param location Full path of the directory you'd like to unzip to (will be created if it doesn't exist).
-     * @throws java.io.IOException *************************************************************************************************************
-
-    public void unzip(String zipFile, String location) throws IOException {
-
-        int size;
-        byte[] buffer = new byte[1024];
-
-        try {
-
-            if (!location.endsWith("/")) {
-                location += "/";
-            }
-            File f = new File(location);
-            if (!f.isDirectory()) {
-                f.mkdirs();
-            }
-            ZipInputStream zin = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile), 1024));
-            try {
-                ZipEntry ze;
-                while ((ze = zin.getNextEntry()) != null) {
-                    String path = location + ze.getName();
-                    File unzipFile = new File(path);
-
-                    if (ze.isDirectory()) {
-                        if (!unzipFile.isDirectory()) {
-                            unzipFile.mkdirs();
-                        }
-                    } else {
-
-                        // check for and create parent directories if they don't exist
-                        File parentDir = unzipFile.getParentFile();
-                        if (null != parentDir) {
-                            if (!parentDir.isDirectory()) {
-                                parentDir.mkdirs();
-                            }
-                        }
-                        // unzip the file
-                        FileOutputStream out = new FileOutputStream(unzipFile, false);
-                        BufferedOutputStream fout = new BufferedOutputStream(out, 1024);
-                        try {
-                            while ((size = zin.read(buffer, 0, 1024)) != -1) {
-                                fout.write(buffer, 0, size);
-                            }
-                            zin.closeEntry();
-                        } finally {
-                            fout.flush();
-                            fout.close();
-                            out.close();
-                        }
-                    }
-                }
-            } finally {
-                zin.close();
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Unzip exception", e);
-        }
-    }
-        private ArrayList<String> paths;
-        public void installmultiplecommand () {
-
-            //ArrayList<String> paths;
-            paths = getIntent().getStringArrayListExtra("key2");
-            new InstallOverlays().execute();
-
-        }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.back2, R.anim.back1);
-    }
-*/
     private class InstallOverlays extends AsyncTask<Void,Void,Void> {
         ProgressDialog progressDelete;
 
