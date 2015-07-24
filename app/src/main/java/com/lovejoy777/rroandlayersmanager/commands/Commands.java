@@ -103,7 +103,7 @@ public class Commands {
         f.mkdirs();
 
         for (File file : f.listFiles()) {
-            if(!file.isDirectory()) {
+            if(file.isDirectory()) {
                 folders.add(file.getName());
             }
         }
