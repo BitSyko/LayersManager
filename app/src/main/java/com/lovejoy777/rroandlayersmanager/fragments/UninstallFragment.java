@@ -25,7 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.afollestad.materialcab.MaterialCab;
 import com.lovejoy777.rroandlayersmanager.R;
-import com.lovejoy777.rroandlayersmanager.helper.AdvancedFile;
+import com.lovejoy777.rroandlayersmanager.helper.FileBean;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 import com.stericson.RootTools.RootTools;
@@ -38,7 +38,7 @@ import java.util.ArrayList;
  */
 public class UninstallFragment extends Fragment implements MaterialCab.Callback {
 
-    private ArrayList<AdvancedFile> files = new ArrayList<>();
+    private ArrayList<FileBean> files = new ArrayList<>();
     FloatingActionButton fab2;
     int atleastOneIsClicked = 0;
     private RecyclerView mRecyclerView;
@@ -75,12 +75,11 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
         protected Void doInBackground(String... params) {
 
             ArrayList<String> loadedFiles = new ArrayList<String>();
-            Commands command = new Commands();
 
-            loadedFiles.addAll(command.RootloadFiles(getActivity(),getActivity(),"/system/vendor/overlay"));
+            loadedFiles.addAll(Commands.RootloadFiles(getActivity(),getActivity(),"/system/vendor/overlay"));
 
             for (String file : loadedFiles) {
-                files.add(new AdvancedFile(file));
+                files.add(new FileBean(file));
             }
 
             return null;
@@ -133,11 +132,11 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
     //Adapter
     private class CardViewAdapter3 extends RecyclerView.Adapter<CardViewAdapter3.ViewHolder> {
 
-        private ArrayList<AdvancedFile> themes;
+        private ArrayList<FileBean> themes;
         private int rowLayout;
         private Context mContext;
 
-        public CardViewAdapter3(ArrayList<AdvancedFile> themes, int rowLayout, Context context) {
+        public CardViewAdapter3(ArrayList<FileBean> themes, int rowLayout, Context context) {
             this.themes = themes;
             this.rowLayout = rowLayout;
             this.mContext = context;
@@ -152,7 +151,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, final int i) {
 
-            final AdvancedFile theme = themes.get(i);
+            final FileBean theme = themes.get(i);
 
             viewHolder.themeName.setText(theme.getName());
             viewHolder.themeName.setTag(theme.getLocation());
@@ -226,7 +225,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
         @Override
         protected Void doInBackground(Void... params) {
             RootTools.remount("/system", "RW");
-            for (AdvancedFile file : files) {
+            for (FileBean file : files) {
                 if (file.isChecked()) {
                     RootCommands.DeleteFileRoot("system/vendor/overlay/" + file.getLocation());
                 }
@@ -284,7 +283,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
     //Check and Uncheck all Checkboxes
     private void checkAll() {
 
-        for (AdvancedFile file : files) {
+        for (FileBean file : files) {
             file.setChecked(true);
         }
 
@@ -309,7 +308,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
 
     private void UncheckAll() {
 
-        for (AdvancedFile file : files) {
+        for (FileBean file : files) {
             file.setChecked(false);
         }
 

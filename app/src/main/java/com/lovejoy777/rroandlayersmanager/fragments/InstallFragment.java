@@ -21,23 +21,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.view.*;
+import android.widget.*;
 import com.afollestad.materialcab.MaterialCab;
 import com.lovejoy777.rroandlayersmanager.R;
-import com.lovejoy777.rroandlayersmanager.helper.AdvancedFile;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
+import com.lovejoy777.rroandlayersmanager.helper.FileBean;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,8 +38,7 @@ import java.util.List;
  */
 public class InstallFragment extends Fragment {
 
-    private ArrayList<AdvancedFile> Files = new ArrayList<>();
-    //private ArrayList<String> Files = new ArrayList<>();
+    private ArrayList<FileBean> Files = new ArrayList<>();
     private ArrayList<String> Directories = new ArrayList<>();
     FloatingActionButton fab2;
     int atleastOneIsClicked = 0;
@@ -60,19 +48,19 @@ public class InstallFragment extends Fragment {
     List<Integer> InstallOverlayList = new ArrayList<Integer>();
     private DrawerLayout mDrawerLayout;
     private CoordinatorLayout cordLayout = null;
-    String currentDir= null;
-    String BaseDir=null;
+    String currentDir = null;
+    String BaseDir = null;
     ArrayList<String> Filedirectories = new ArrayList<>();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        BaseDir = Environment.getExternalStorageDirectory()+"";
-        currentDir =null;
+        BaseDir = Environment.getExternalStorageDirectory() + "";
+        currentDir = null;
         Filedirectories.add("SD Card");
         Filedirectories.add("/Overlays");
-        FragmentActivity faActivity  = (FragmentActivity)    super.getActivity();
-        cordLayout = (CoordinatorLayout)    inflater.inflate(R.layout.fragment_install, container, false);
+        FragmentActivity faActivity = (FragmentActivity) super.getActivity();
+        cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_install, container, false);
 
 
         setHasOptionsMenu(true);
@@ -85,7 +73,7 @@ public class InstallFragment extends Fragment {
     }
 
 
-    private class LoadAndSet extends AsyncTask<String,String,Void> {
+    private class LoadAndSet extends AsyncTask<String, String, Void> {
         ProgressDialog progressBackup;
 
         protected void onPreExecute() {
@@ -95,25 +83,21 @@ public class InstallFragment extends Fragment {
         @Override
         protected Void doInBackground(String... params) {
 
-            if (Files!=null){
-                Files.clear();
-            }
-            if (Directories!=null) {
-                Directories.clear();
-            }
+            Files.clear();
+            Directories.clear();
+
             currentDir = "";
-            Commands command= new Commands();
-            for (int i=1; i<Filedirectories.size();i++){
-                currentDir = currentDir+Filedirectories.get(i);
+            for (int i = 1; i < Filedirectories.size(); i++) {
+                currentDir = currentDir + Filedirectories.get(i);
             }
-            currentDir = BaseDir +currentDir;
+            currentDir = BaseDir + currentDir;
 
             ArrayList<String> loadedFiles = new ArrayList<String>();
 
 
             try {
-                loadedFiles.addAll(command.loadFiles(currentDir));
-            } catch(NullPointerException e){
+                loadedFiles.addAll(Commands.loadFiles(currentDir));
+            } catch (NullPointerException e) {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -125,17 +109,14 @@ public class InstallFragment extends Fragment {
             }
 
 
-
             for (String /*file*/ currentDir : loadedFiles) {
-                Files.add(new AdvancedFile(/*file*/currentDir));
+                Files.add(new FileBean(/*file*/currentDir));
 
             }
             //Files = command.loadFiles(currentDir);
-            Directories = command.loadFolders(currentDir);
+            Directories = Commands.loadFolders(currentDir);
 
-            if (Directories!=null){
-                Collections.sort(Directories, String.CASE_INSENSITIVE_ORDER);
-            }
+            Collections.sort(Directories, String.CASE_INSENSITIVE_ORDER);
 
 
             return null;
@@ -145,8 +126,8 @@ public class InstallFragment extends Fragment {
         protected void onPostExecute(Void result) {
 
 
-            atleastOneIsClicked =0;
-            mAdapter = new CardViewAdapter3(Files,Directories, R.layout.adapter_install_layout,R.layout.adapter_listlayout, getActivity());
+            atleastOneIsClicked = 0;
+            mAdapter = new CardViewAdapter3(Files, Directories, R.layout.adapter_install_layout, R.layout.adapter_listlayout, getActivity());
             mRecyclerView.setAdapter(mAdapter);
             ActivityCompat.invalidateOptionsMenu(getActivity());
 
@@ -154,8 +135,7 @@ public class InstallFragment extends Fragment {
             HscrollView.removeAllViews();
 
 
-
-            for (int i =0; i <Filedirectories.size();i++) {
+            for (int i = 0; i < Filedirectories.size(); i++) {
 
 
                 TextView tv = new TextView(getActivity().getApplicationContext());
@@ -186,7 +166,7 @@ public class InstallFragment extends Fragment {
                         scroller.fullScroll(View.FOCUS_RIGHT);
                     }
                 });
-                if (Filedirectories.size() > 1 && i != Filedirectories.size()-1){
+                if (Filedirectories.size() > 1 && i != Filedirectories.size() - 1) {
                     ImageView img = new ImageView(getActivity().getApplicationContext());
                     img.setBackgroundResource(R.drawable.ic_action_up);
                     HscrollView.addView(img);
@@ -205,11 +185,11 @@ public class InstallFragment extends Fragment {
     View.OnClickListener onclicklistener = new View.OnClickListener() {
         public void onClick(View v) {
             Object clickedOn = v.getTag()/*.toString()*/;
-            Filedirectories.subList(Filedirectories.indexOf(clickedOn)+1, Filedirectories.size()).clear();
+            Filedirectories.subList(Filedirectories.indexOf(clickedOn) + 1, Filedirectories.size()).clear();
             //System.out.println(Filedirectories.indexOf(clickedOn));
             LinearLayout HscrollView = (LinearLayout) cordLayout.findViewById(R.id.horizontalScrollView2);
 
-new LoadAndSet().execute();
+            new LoadAndSet().execute();
         }
     };
 
@@ -231,7 +211,7 @@ new LoadAndSet().execute();
             @Override
             public void onClick(View v) {
                 ArrayList<String> test = new ArrayList<String>();
-                for (AdvancedFile file : Files) {
+                for (FileBean file : Files) {
                     if (file.isChecked()) {
                         test.add(file.getLocation());
                     }
@@ -245,16 +225,16 @@ new LoadAndSet().execute();
 
 
     //Adapter
-    private class CardViewAdapter3 extends RecyclerView.Adapter<CardViewAdapter3.MyViewHolder>{
+    private class CardViewAdapter3 extends RecyclerView.Adapter<CardViewAdapter3.MyViewHolder> {
 
-        private ArrayList<AdvancedFile> themes;
+        private ArrayList<FileBean> themes;
         //private ArrayList<String> themes;
         private ArrayList<String> directories;
         private int rowLayout;
-        private  int checkboxLayout;
+        private int checkboxLayout;
         private Context mContext;
 
-        public CardViewAdapter3(ArrayList<AdvancedFile> themes,ArrayList<String> directories, int rowLayout, int checkboxLayout, Context context) {
+        public CardViewAdapter3(ArrayList<FileBean> themes, ArrayList<String> directories, int rowLayout, int checkboxLayout, Context context) {
             this.directories = directories;
             this.themes = themes;
             this.rowLayout = rowLayout;
@@ -265,7 +245,7 @@ new LoadAndSet().execute();
 
         @Override
         public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        MyViewHolder myViewholder;
+            MyViewHolder myViewholder;
             View v;
             Context context = viewGroup.getContext();
 
@@ -281,12 +261,9 @@ new LoadAndSet().execute();
         }
 
 
-       // private UninstallFile theme2 = null;
+        // private UninstallFile theme2 = null;
         @Override
         public void onBindViewHolder(MyViewHolder viewHolder, final int i) {
-
-
-
 
 
             if (isFolder(i)) {
@@ -297,12 +274,12 @@ new LoadAndSet().execute();
                 viewHolder.rel.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
 
-                        Filedirectories.add("/"+directories.get(i));
+                        Filedirectories.add("/" + directories.get(i));
                         new LoadAndSet().execute();
                     }
                 });
-            } else{
-                final AdvancedFile theme2 = themes.get(i - directories.size());
+            } else {
+                final FileBean theme2 = themes.get(i - directories.size());
                 viewHolder.check.setText(theme2.getFullName());
                 viewHolder.check.setTag(i);
                 viewHolder.check.setId(i);
@@ -322,9 +299,9 @@ new LoadAndSet().execute();
                         if (atleastOneIsClicked > 0) {
                             fab2.show();
                         } else {
-                           fab2.hide();
+                            fab2.hide();
                         }
-                        System.out.println(theme2.getName()+" Is checked "+theme2.isChecked());
+                        System.out.println(theme2.getName() + " Is checked " + theme2.isChecked());
                     }
                 });
             }
@@ -333,25 +310,18 @@ new LoadAndSet().execute();
 
         @Override
         public int getItemCount() {
-            int Size = 0;
-            if (themes!=null) {
-                Size = Size + themes.size();
-            }
-            if (directories != null){
-                Size = Size + directories.size();
-            }
-                return Size;
+            return themes.size() + directories.size();
         }
 
-        public boolean isFolder(int i){
+        public boolean isFolder(int i) {
             return i < directories.size();
         }
-        public  class MyViewHolder extends RecyclerView.ViewHolder {
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView themeName;
             public ImageView image;
             public RelativeLayout rel;
             public CheckBox check;
-
 
 
             public MyViewHolder(View itemView, int type) {
@@ -359,10 +329,10 @@ new LoadAndSet().execute();
 
                 if (type == 1) {
                     themeName = (TextView) itemView.findViewById(R.id.txt);
-                    image =  (ImageView)itemView.findViewById(R.id.img);
-                    rel = (RelativeLayout)itemView.findViewById(R.id.rel);
+                    image = (ImageView) itemView.findViewById(R.id.img);
+                    rel = (RelativeLayout) itemView.findViewById(R.id.rel);
                 } else if (type == 0) {
-                    check = (CheckBox)itemView.findViewById(R.id.deletecheckbox);
+                    check = (CheckBox) itemView.findViewById(R.id.deletecheckbox);
                 }
 
 
@@ -374,16 +344,16 @@ new LoadAndSet().execute();
         @Override
         public int getItemViewType(int position) {
             System.out.println(isFolder(position));
-            if (isFolder(position)){
+            if (isFolder(position)) {
                 return 1;
-            } else{
+            } else {
                 return 0;
             }
 
 
         }
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -396,27 +366,25 @@ new LoadAndSet().execute();
     }
 
 
-
-    private class InstallOverlays extends AsyncTask<Void,Void,Void> {
+    private class InstallOverlays extends AsyncTask<Void, Void, Void> {
         ProgressDialog progressDelete;
 
         protected void onPreExecute() {
 
             progressDelete = ProgressDialog.show(getActivity(), getString(R.string.InstallOverlays),
-                    getString(R.string.installing)+"...", true);
+                    getString(R.string.installing) + "...", true);
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             ArrayList<String> paths = new ArrayList<String>();
-            Commands command = new Commands();
-            for (AdvancedFile file : Files) {
+            for (FileBean file : Files) {
                 if (file.isChecked()) {
-                    paths.add(currentDir+"/"+file.getFullName());
+                    paths.add(currentDir + "/" + file.getFullName());
                 }
             }
 
-            command.InstallOverlays(getActivity(), paths);
+            Commands.InstallOverlays(getActivity(), paths);
             return null;
         }
 
@@ -463,7 +431,7 @@ new LoadAndSet().execute();
 
     private void UncheckAll() {
 
-        for (AdvancedFile file : Files) {
+        for (FileBean file : Files) {
             file.setChecked(false);
         }
 

@@ -1,13 +1,13 @@
 package com.lovejoy777.rroandlayersmanager.helper;
 
-public class AdvancedFile {
+public class FileBean {
 
     private final String location;
     private final String name;
     private final String fullname;
     private boolean checked;
 
-    public AdvancedFile(String location) {
+    public FileBean(String location) {
         this.location = location;
         this.name = location.replace(".apk","").replace("_"," ");
         this.fullname = location;
