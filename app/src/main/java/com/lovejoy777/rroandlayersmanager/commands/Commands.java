@@ -2,7 +2,6 @@ package com.lovejoy777.rroandlayersmanager.commands;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -31,11 +30,14 @@ import java.util.zip.ZipInputStream;
  * Created by Niklas on 29.06.2015.
  */
 public class Commands {
-    private ArrayList<String> Files = new ArrayList<String>();
-    private ArrayList<String> Folders = new ArrayList<String>();
+    //No instances
+    private Commands() {
+
+    }
 
 
-   public ArrayList<String> RootloadFiles(final Context context, final Activity act, String directory){
+   public static ArrayList<String> RootloadFiles(final Context context, final Activity act, String directory){
+       ArrayList<String> files = new ArrayList<String>();
        if (RootTools.isAccessGiven()) {
        try {
             String line;
@@ -54,11 +56,10 @@ public class Commands {
 
             while ((line = br.readLine()) != null) {
 
-                Files.add(line);
+                files.add(line);
             }
             br.close();
-            br =
-                    new BufferedReader(new InputStreamReader(stderr));
+            br = new BufferedReader(new InputStreamReader(stderr));
             while ((line = br.readLine()) != null) {
                 Log.e("[Error]", line);
             }
@@ -78,45 +79,39 @@ public class Commands {
            });
 
        }
-       return Files;
-    }
+       return files;
+   }
 
-    public ArrayList<String> loadFiles(String directory){
+    public static ArrayList<String> loadFiles(String directory){
+
         File f = new File(directory);
-
+        ArrayList<String> files = new ArrayList<String>();
         f.mkdirs();
-        File[] files = f.listFiles();
-        if (files.length == 0)
-            return null;
-        else {
-            for (int i=0; i<files.length; i++) {
-                if (!files[i].isDirectory()) {
-                    Files.add(files[i].getName());
-                }
+
+        for (File file : f.listFiles()) {
+            if (!file.isDirectory()) {
+                files.add(file.getName());
             }
         }
-        Collections.sort(Files, String.CASE_INSENSITIVE_ORDER);
-        return  Files;
+        Collections.sort(files, String.CASE_INSENSITIVE_ORDER);
+        return  files;
     }
 
-    public ArrayList<String> loadFolders(String directory){
+    public static ArrayList<String> loadFolders(String directory){
+
         File f = new File(directory);
+        ArrayList<String> folders = new ArrayList<String>();
 
         f.mkdirs();
-        File[] files = f.listFiles();
-        if (files.length == 0)
-            return null;
-        else {
-            for (int i=0; i<files.length; i++) {
-                if (files[i].isDirectory()) {
-                   Folders.add(files[i].getName());
-                }
+        for (File file : f.listFiles()) {
+            if (file.isDirectory()) {
+                folders.add(file.getName());
             }
         }
-        return  Folders;
+        return  folders;
     }
 
-    public void InstallOverlays(Context context,ArrayList<String> paths) {
+    public static void InstallOverlays(Context context,ArrayList<String> paths) {
         if (paths != null) {
             // MOUNT /SYSTEM RW
             RootTools.remount("/system", "RW");
@@ -249,7 +244,7 @@ public class Commands {
     }
 
 
-    public void unzip(String zipFile, String location) throws IOException {
+    public static void unzip(String zipFile, String location) throws IOException {
 
         int size;
         byte[] buffer = new byte[1024];

@@ -2,7 +2,6 @@ package com.lovejoy777.rroandlayersmanager.fragments;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -37,7 +36,7 @@ import com.afollestad.materialcab.MaterialCab;
 import com.github.jorgecastilloprz.FABProgressCircle;
 import com.github.jorgecastilloprz.listeners.FABProgressListener;
 import com.lovejoy777.rroandlayersmanager.R;
-import com.lovejoy777.rroandlayersmanager.helper.AdvancedFile;
+import com.lovejoy777.rroandlayersmanager.helper.FileBean;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 
 import java.io.IOException;
@@ -50,7 +49,7 @@ import java.util.List;
  */
 public class InstallFragment extends Fragment implements FABProgressListener {
 
-    private ArrayList<AdvancedFile> Files = new ArrayList<>();
+    private ArrayList<FileBean> Files = new ArrayList<>();
     //private ArrayList<String> Files = new ArrayList<>();
     private ArrayList<String> Directories = new ArrayList<>();
     FloatingActionButton fab2;
@@ -107,7 +106,6 @@ public class InstallFragment extends Fragment implements FABProgressListener {
                 Directories.clear();
             }
             currentDir = "";
-            Commands command= new Commands();
             for (int i=1; i<Filedirectories.size();i++){
                 currentDir = currentDir+Filedirectories.get(i);
             }
@@ -117,18 +115,17 @@ public class InstallFragment extends Fragment implements FABProgressListener {
 
 
             try {
-                loadedFiles.addAll(command.loadFiles(currentDir));
+                loadedFiles.addAll(Commands.loadFiles(currentDir));
             } catch(NullPointerException e){
             }
 
 
 
-            for (String /*file*/ currentDir : loadedFiles) {
-                Files.add(new AdvancedFile(/*file*/currentDir));
+            for (String currentDir : loadedFiles) {
+                Files.add(new FileBean(currentDir));
 
             }
-            //Files = command.loadFiles(currentDir);
-            Directories = command.loadFolders(currentDir);
+            Directories = Commands.loadFolders(currentDir);
 
             if (Directories!=null){
                 Collections.sort(Directories, String.CASE_INSENSITIVE_ORDER);
@@ -243,14 +240,14 @@ public class InstallFragment extends Fragment implements FABProgressListener {
     //Adapter
     private class CardViewAdapter3 extends RecyclerView.Adapter<CardViewAdapter3.MyViewHolder>{
 
-        private ArrayList<AdvancedFile> themes;
+        private ArrayList<FileBean> themes;
         //private ArrayList<String> themes;
         private ArrayList<String> directories;
         private int rowLayout;
         private  int checkboxLayout;
         private Context mContext;
 
-        public CardViewAdapter3(ArrayList<AdvancedFile> themes,ArrayList<String> directories, int rowLayout, int checkboxLayout, Context context) {
+        public CardViewAdapter3(ArrayList<FileBean> themes,ArrayList<String> directories, int rowLayout, int checkboxLayout, Context context) {
             this.directories = directories;
             this.themes = themes;
             this.rowLayout = rowLayout;
@@ -298,7 +295,7 @@ public class InstallFragment extends Fragment implements FABProgressListener {
                     }
                 });
             } else{
-                final AdvancedFile theme2 = themes.get(i - directories.size());
+                final FileBean theme2 = themes.get(i - directories.size());
                 viewHolder.check.setText(theme2.getFullName());
                 viewHolder.check.setTag(i);
                 viewHolder.check.setId(i);
@@ -401,14 +398,13 @@ public class InstallFragment extends Fragment implements FABProgressListener {
         @Override
         protected Void doInBackground(Void... params) {
             ArrayList<String> paths = new ArrayList<String>();
-            Commands command = new Commands();
-            for (AdvancedFile file : Files) {
+            for (FileBean file : Files) {
                 if (file.isChecked()) {
                     paths.add(currentDir+"/"+file.getFullName());
                 }
             }
 
-            command.InstallOverlays(getActivity(), paths);
+            Commands.InstallOverlays(getActivity(), paths);
             return null;
         }
 
@@ -459,7 +455,7 @@ public class InstallFragment extends Fragment implements FABProgressListener {
 
     private void UncheckAll() {
 
-        for (AdvancedFile file : Files) {
+        for (FileBean file : Files) {
             file.setChecked(false);
         }
 

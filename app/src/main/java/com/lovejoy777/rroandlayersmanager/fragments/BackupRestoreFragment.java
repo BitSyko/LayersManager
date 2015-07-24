@@ -515,8 +515,7 @@ public class BackupRestoreFragment extends Fragment{
         protected Void doInBackground(String... params) {
 
             Files.clear();
-            Commands command= new Commands();
-            Files = command.loadFolders(Environment.getExternalStorageDirectory() + "/Overlays/Backup");
+            Files = Commands.loadFolders(Environment.getExternalStorageDirectory() + "/Overlays/Backup");
 
             return null;
 
