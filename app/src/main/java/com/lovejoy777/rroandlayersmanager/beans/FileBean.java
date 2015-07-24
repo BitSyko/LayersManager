@@ -1,4 +1,4 @@
-package com.lovejoy777.rroandlayersmanager.helper;
+package com.lovejoy777.rroandlayersmanager.beans;
 
 public class FileBean {
 

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.adapters.AboutAdapter;
 import com.lovejoy777.rroandlayersmanager.beans.DeveloperBean;
+import com.lovejoy777.rroandlayersmanager.beans.LicenceBean;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,9 +46,9 @@ public class AboutActivity extends AppCompatActivity {
         };
 
         DeveloperBean[] libraries = {
-                new DeveloperBean(getString(R.string.License1), getString(R.string.License1about), getDrawable(R.drawable.ic_drawer_about), getString(R.string.linkCommunity)),
-                new DeveloperBean(getString(R.string.License2), getString(R.string.License2about), getDrawable(R.drawable.ic_drawer_about), getString(R.string.linkCommunity)),
-                new DeveloperBean(getString(R.string.License3), getString(R.string.License3about), getDrawable(R.drawable.ic_drawer_about), getString(R.string.linkCommunity))
+                new LicenceBean(getString(R.string.License1), getString(R.string.License1about), getDrawable(R.drawable.ic_drawer_about), getString(R.string.License1github),getString(R.string.License1more)),
+                new LicenceBean(getString(R.string.License2), getString(R.string.License2about), getDrawable(R.drawable.ic_drawer_about), getString(R.string.License2github),getString(R.string.License2more)),
+                new LicenceBean(getString(R.string.License3), getString(R.string.License3about), getDrawable(R.drawable.ic_drawer_about), getString(R.string.License3github),getString(R.string.License3more))
         };
 
         //set Toolbar
@@ -95,69 +96,39 @@ public class AboutActivity extends AppCompatActivity {
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
                 if (groupPosition <= 1) {
-
                     String url = listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getWebpage();
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-                    return true;
                 } else if (groupPosition == 2) {
-
-                    showLicenceAlert(childPosition);
-
-                    return true;
+                    showLicenceAlert((LicenceBean) parent.getExpandableListAdapter().getChild(groupPosition, childPosition));
                 } else {
                     throw new IllegalArgumentException();
                 }
+
+                return true;
             }
         });
 
     }
 
 
-    private void showLicenceAlert(int position) {
+    private void showLicenceAlert(final LicenceBean licenceBean) {
 
-        String dialogText = "";
-        String dialogTitleText = "";
         LayoutInflater li = LayoutInflater.from(AboutActivity.this);
         View view3 = li.inflate(R.layout.dialog_license, null);
         final TextView tv_license = (TextView) view3.findViewById(R.id.tv_license);
         final AlertDialog.Builder dialog = new AlertDialog.Builder(AboutActivity.this);
         dialog.setView(view3);
-        switch (position) {
-            case 0:
-                dialogText = getResources().getString(R.string.License1more);
-                dialogTitleText = getResources().getString(R.string.License1);
-                dialog.setPositiveButton(R.string.VisitGithub, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.License1github)));
-                        startActivity(browserIntent);
-                    }
-                });
 
-                break;
-            case 1:
-                dialogText = getResources().getString(R.string.License2more);
-                dialogTitleText = getResources().getString(R.string.License2);
-                dialog.setPositiveButton(R.string.VisitGithub, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.License2github)));
-                        startActivity(browserIntent);
-                    }
-                });
-                break;
-            case 2:
-                dialogText = getResources().getString(R.string.License3more);
-                dialogTitleText = getResources().getString(R.string.License3);
-                dialog.setPositiveButton(R.string.VisitGithub, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.License3github)));
-                        startActivity(browserIntent);
-                    }
-                });
-                break;
+        dialog.setTitle(licenceBean.getTitle());
+        tv_license.setText(licenceBean.getLongDescription());
 
-        }
-        dialog.setTitle(dialogTitleText);
-        tv_license.setText(dialogText);
+        dialog.setPositiveButton(R.string.VisitGithub, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(licenceBean.getWebpage()));
+                startActivity(browserIntent);
+            }
+        });
+
         dialog.setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
             }
