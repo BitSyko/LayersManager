@@ -1,5 +1,6 @@
 package com.lovejoy777.rroandlayersmanager.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -33,21 +34,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.lovejoy777.rroandlayersmanager.OverlayDetailActivity;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.adapters.CardViewAdapter;
-import com.lovejoy777.rroandlayersmanager.helper.CardViewContent;
 import com.lovejoy777.rroandlayersmanager.helper.RecyclerItemClickListener;
+import com.lovejoy777.rroandlayersmanager.beans.CardBean;
+import com.lovejoy777.rroandlayersmanager.menu;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-import com.lovejoy777.rroandlayersmanager.menu;
 
 /**
  * Created by Niklas on 07.07.2015.
@@ -57,7 +54,7 @@ public class PluginFragment extends Fragment {
 
     private PackageBroadcastReceiver packageBroadcastReceiver;
     private IntentFilter packageFilter;
-    private ArrayList<HashMap<String,String>> services;
+    private ArrayList<HashMap<String, String>> services;
     private ArrayList<String> categories;
     private String[] packages = new String[100];
 
@@ -75,10 +72,10 @@ public class PluginFragment extends Fragment {
     private CoordinatorLayout cordLayout = null;
 
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        FragmentActivity faActivity  = (FragmentActivity)    super.getActivity();
-        cordLayout = (CoordinatorLayout)    inflater.inflate(R.layout.fragment_plugins, container, false);
+        FragmentActivity faActivity = (FragmentActivity) super.getActivity();
+        cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_plugins, container, false);
 
 
         LoadRecyclerViewFabToolbar();
@@ -90,10 +87,10 @@ public class PluginFragment extends Fragment {
         packageBroadcastReceiver = new PackageBroadcastReceiver();
         packageFilter = new IntentFilter();
         packageFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
-        packageFilter.addAction( Intent.ACTION_PACKAGE_REPLACED );
-        packageFilter.addAction( Intent.ACTION_PACKAGE_REMOVED );
-        packageFilter.addCategory( Intent.CATEGORY_DEFAULT );
-        packageFilter.addDataScheme( "package" );
+        packageFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
+        packageFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        packageFilter.addCategory(Intent.CATEGORY_DEFAULT);
+        packageFilter.addDataScheme("package");
 
         return cordLayout;
     }
@@ -114,7 +111,6 @@ public class PluginFragment extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerCardViewList.setLayoutManager(llm);
-
 
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
@@ -145,7 +141,8 @@ public class PluginFragment extends Fragment {
                 new fillPluginList().execute();
                 onItemsLoadComplete();
             }
-            void onItemsLoadComplete(){
+
+            void onItemsLoadComplete() {
                 ca.notifyDataSetChanged();
                 mSwipeRefresh.setRefreshing(false);
             }
@@ -160,7 +157,6 @@ public class PluginFragment extends Fragment {
     }
 
 
-
     ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
         @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -172,7 +168,7 @@ public class PluginFragment extends Fragment {
             //Remove swiped item from list and notify the RecyclerView
             //System.out.println(viewHolder.getAdapterPosition());
             String packageName = packages[viewHolder.getAdapterPosition()];
-            Uri packageURI = Uri.parse("package:"+packageName);
+            Uri packageURI = Uri.parse("package:" + packageName);
             Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, packageURI);
             startActivityForResult(uninstallIntent, 1);
 
@@ -180,78 +176,63 @@ public class PluginFragment extends Fragment {
     };
 
     //create List with all Plugins
-    private List createList(int size, String name[], String developer[], String packages[]) {
+    private List<CardBean> createList(int size, String name[], String developer[], String packages[]) {
 
-        List result = new ArrayList();
-        for (int i=1; i <= size; i++) {
-            CardViewContent ci = new CardViewContent();
-            ci.themeName = name[i-1];
-            ci.themeDeveloper = developer[i-1];
+        List<CardBean> result = new ArrayList<CardBean>();
+        for (int i = 0; i < size; i++) {
 
-            final String packName = packages[i-1];
+            final String packName = packages[i];
             String mDrawableName = "icon";
             PackageManager manager = getActivity().getPackageManager();
-            Resources mApk1Resources = null;
+            Resources mApk1Resources;
             try {
                 mApk1Resources = manager.getResourcesForApplication(packName);
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
+                continue;
             }
-            int mDrawableResID = 0;
-            if (mApk1Resources != null) {
-                mDrawableResID = mApk1Resources.getIdentifier(mDrawableName, "drawable", packName);
-            }
+
+            assert mApk1Resources != null;
+
+            int mDrawableResID = mApk1Resources.getIdentifier(mDrawableName, "drawable", packName);
+
             Drawable myDrawable = mApk1Resources.getDrawable(mDrawableResID);
 
-            ci.themeImage = myDrawable ;
-
-            result.add(ci);
+            result.add(new CardBean(name[i], developer[i], myDrawable));
         }
         return result;
     }
 
     //create list if no plugins are installed
-    private List createList2(int size, String[] message1, String[] message2) {
+    private List<CardBean> createList2() {
 
-        List result = new ArrayList();
-        Drawable Image[] = new Drawable[size];
-        Drawable myDrawable;
-        for (int i=1; i <= size; i++) {
-            CardViewContent ci = new CardViewContent();
-            ci.message1 = message1[i-1];
-            ci.message2 = message2[i-1];
-            Image[0] = getResources().getDrawable(R.drawable.ic_noplugin);
-            Image[1] = getResources().getDrawable(R.mipmap.ic_launcher);
-            Image[2] = getResources().getDrawable(R.drawable.playstore);
-            myDrawable = Image[i-1];
-            ci.themeImage = myDrawable ;
-            result.add(ci);
-        }
+        List<CardBean> result = new ArrayList<CardBean>();
+        result.add(new CardBean(getString(R.string.tooBad), getString(R.string.noPlugins), getResources().getDrawable(R.drawable.ic_noplugin)));
+        result.add(new CardBean(getString(R.string.Showcase), getString(R.string.ShowCaseMore), getResources().getDrawable(R.mipmap.ic_launcher)));
+        result.add(new CardBean(getString(R.string.PlayStore), getString(R.string.PlayStoreMore), getResources().getDrawable(R.drawable.playstore)));
         return result;
     }
 
 
     public void onStart() {
         super.onStart();
-               Log.d(LOG_TAG, "onStart");
-              getActivity().registerReceiver( packageBroadcastReceiver, packageFilter );
+        Log.d(LOG_TAG, "onStart");
+        getActivity().registerReceiver(packageBroadcastReceiver, packageFilter);
     }
 
 
     public void onStop() {
         super.onStop();
         Log.d(LOG_TAG, "onStop");
-        getActivity().unregisterReceiver( packageBroadcastReceiver );
+        getActivity().unregisterReceiver(packageBroadcastReceiver);
     }
 
     //open Plugin page after clicked on a cardview
-    protected void onListItemClick (int position) {
-        if (!TestBoolean){
+    protected void onListItemClick(int position) {
+        if (!TestBoolean) {
             String package2 = packages[position];
             String category = categories.get(position);
-            if( category.length() > 0 ) {
-
-
+            if (category.length() > 0) {
 
                 TransitionSet transitionSet = new TransitionSet();
                 transitionSet.addTransition(new ChangeImageTransform());
@@ -278,14 +259,14 @@ public class PluginFragment extends Fragment {
             }
             DrawerLayout mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-           //     ((menu) getActivity()).changeFragment2(category,package2);
+            //     ((menu) getActivity()).changeFragment2(category,package2);
 
-           // }
-        }
-        else{
-            if(position==2) {
+            // }
+        } else {
+            if (position == 2) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.PlaystoreSearch))));
-            } if(position==1){
+            }
+            if (position == 1) {
                 NotAvailableSnackbar();
             }
 
@@ -297,6 +278,7 @@ public class PluginFragment extends Fragment {
         private static final String LOG_TAG = "PackageBroadcastReceiver";
 
         //when a new Plugin is installed
+        @SuppressLint("LongLogTag")
         public void onReceive(Context context, Intent intent) {
             Log.d(LOG_TAG, "onReceive: " + intent);
             services.clear();
@@ -311,18 +293,16 @@ public class PluginFragment extends Fragment {
                 .show();
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // check if the request code is same as what is passed  here it is 2
-        if(requestCode==1)
-        {
+        if (requestCode == 1) {
             services.clear();
             new fillPluginList().execute();
         }
     }
 
-    private class fillPluginList extends AsyncTask<Void,Void,Void> {
+    private class fillPluginList extends AsyncTask<Void, Void, Void> {
 
         protected void onPreExecute() {
         }
@@ -330,21 +310,21 @@ public class PluginFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... params) {
 
-            services = new ArrayList<HashMap<String,String>>();
+            services = new ArrayList<HashMap<String, String>>();
             categories = new ArrayList<String>();
 
             PackageManager packageManager = getActivity().getPackageManager();
-            Intent baseIntent = new Intent( ACTION_PICK_PLUGIN );
+            Intent baseIntent = new Intent(ACTION_PICK_PLUGIN);
             baseIntent.setFlags(Intent.FLAG_DEBUG_LOG_RESOLUTION);
             ArrayList<ResolveInfo> list = (ArrayList<ResolveInfo>) packageManager.queryIntentServices(baseIntent,
-                    PackageManager.GET_RESOLVED_FILTER );
+                    PackageManager.GET_RESOLVED_FILTER);
 
             final String name[] = new String[list.size()];
             final String developer[] = new String[list.size()];
 
-            for( int i = 0 ; i < list.size() ; ++i ) {
+            for (int i = 0; i < list.size(); ++i) {
 
-                ResolveInfo info = list.get( i );
+                ResolveInfo info = list.get(i);
                 ServiceInfo sinfo = info.serviceInfo;
                 IntentFilter filter = info.filter;
                 Log.d(LOG_TAG, "fillPluginList: i: " + i + "; sinfo: " + sinfo + ";filter: " + filter);
@@ -362,32 +342,32 @@ public class PluginFragment extends Fragment {
                 name[i] = bundle.getString("Layers_Name");
                 developer[i] = bundle.getString("Layers_Developer");
 
-                if( sinfo != null ) {
-                    HashMap<String,String> item = new HashMap<String,String>();
-                    item.put( KEY_PKG, name[i] );
-                    item.put( KEY_SERVICENAME, developer[i] );
+                if (sinfo != null) {
+                    HashMap<String, String> item = new HashMap<String, String>();
+                    item.put(KEY_PKG, name[i]);
+                    item.put(KEY_SERVICENAME, developer[i]);
 
                     String firstCategory = null;
-                    if( filter != null ) {
+                    if (filter != null) {
                         StringBuilder actions = new StringBuilder();
-                        for( Iterator<String> actionIterator = filter.actionsIterator() ; actionIterator.hasNext() ; ) {
+                        for (Iterator<String> actionIterator = filter.actionsIterator(); actionIterator.hasNext(); ) {
                             String action = actionIterator.next();
-                            if( actions.length() > 0 )
-                                actions.append( "," );
-                            actions.append( action );
+                            if (actions.length() > 0)
+                                actions.append(",");
+                            actions.append(action);
                         }
                         StringBuilder categories = new StringBuilder();
-                        for( Iterator<String> categoryIterator = filter.categoriesIterator() ;
-                             categoryIterator.hasNext() ; ) {
+                        for (Iterator<String> categoryIterator = filter.categoriesIterator();
+                             categoryIterator.hasNext(); ) {
                             String category = categoryIterator.next();
-                            if( firstCategory == null )
+                            if (firstCategory == null)
                                 firstCategory = category;
-                            if( categories.length() > 0 )
-                                categories.append( "," );
-                            categories.append( category );
+                            if (categories.length() > 0)
+                                categories.append(",");
+                            categories.append(category);
                         }
                         try {
-                            packages[i] = getActivity().getPackageManager().getApplicationInfo(sinfo.packageName,0).packageName;
+                            packages[i] = getActivity().getPackageManager().getApplicationInfo(sinfo.packageName, 0).packageName;
                         } catch (PackageManager.NameNotFoundException e) {
                             e.printStackTrace();
                         }
@@ -395,30 +375,19 @@ public class PluginFragment extends Fragment {
                         item.put(KEY_ACTIONS, "<null>");
                         item.put(KEY_CATEGORIES, "<null>");
                     }
-                    if( firstCategory == null )
+                    if (firstCategory == null)
                         firstCategory = "";
-                    categories.add( firstCategory );
-                    services.add( item );
+                    categories.add(firstCategory);
+                    services.add(item);
                 }
             }
 
-            String Test1[] = new String[3];
-            String Test2[] = new String[3];
-
-            Test1[0] = getString(R.string.tooBad);
-            Test2[0] = getString(R.string.noPlugins);
-            Test1[1] = getString(R.string.Showcase);
-            Test2[1] = getString(R.string.ShowCaseMore);
-            Test1[2] = getString(R.string.PlayStore);
-            Test2[2] = getString(R.string.PlayStoreMore);
-
-            if (list.size()>0) {
+            if (list.size() > 0) {
                 ca = new CardViewAdapter(createList(list.size(), name, developer, packages));
-            }else {
-                ca = new CardViewAdapter(createList2(3, Test1, Test2));
+            } else {
+                ca = new CardViewAdapter(createList2());
                 TestBoolean = true;
             }
-
 
             return null;
 

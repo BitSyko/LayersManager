@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardCornerRadius="4dp"
     android:layout_marginTop="16dp"
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
@@ -34,7 +32,7 @@
             android:gravity="center_vertical"
             android:textSize="16sp"
             android:layout_alignTop="@+id/iv_themeImage"
-            android:layout_alignStart="@+id/txtSurname"
+            android:layout_toEndOf="@+id/iv_themeImage"
             android:layout_marginTop="12dp"
             android:textColor="@color/textColorPrimary" />
 
@@ -45,36 +43,12 @@
             android:text=""
             android:gravity="center_vertical"
             android:textSize="14sp"
-            android:layout_marginStart="5dp"
-            android:layout_toEndOf="@+id/iv_themeImage"
-            android:layout_alignBottom="@+id/iv_themeImage"
+            android:layout_below="@+id/txtName"
+            android:layout_alignStart="@+id/txtName"
             android:layout_marginBottom="12dp"
             android:textColor="@color/text_color_secondary" />
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView"
-            android:textColor="@color/textColorPrimary"
-            android:textSize="16sp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_alignTop="@+id/txtName"
-            android:layout_alignStart="@+id/txtName" />
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView2"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_alignStart="@+id/textView"
-            android:layout_alignTop="@+id/txtSurname"
-            android:layout_marginBottom="16dp"
-            android:textColor="@color/text_color_secondary" />
-
     </RelativeLayout>
-
 
 
 </android.support.v7.widget.CardView>
