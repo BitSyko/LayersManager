@@ -101,18 +101,28 @@
         android:layout_height="?actionBarSize" />
 
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <com.github.jorgecastilloprz.FABProgressCircle
+        android:id="@+id/fabProgressCircle"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_gravity="bottom|end"
-        android:scaleType="center"
-        android:src="@drawable/ic_drawer_delete"
-        android:layout_margin="16dp"
-        android:clickable="true"
-        android:id="@+id/fab6"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:tint="@color/white" />
+        android:elevation="@dimen/fab_elevation"
+        android:layout_margin="15dp"
+        app:arcColor="@color/primary"
+        app:reusable="true"
+        >
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_drawer_delete"
+            app:elevation="@dimen/fab_elevation"
+            android:clickable="true"
+            android:tint="@color/white"
+            />
+    </com.github.jorgecastilloprz.FABProgressCircle>
 
 
 

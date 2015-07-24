@@ -24,6 +24,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.afollestad.materialcab.MaterialCab;
+import com.github.jorgecastilloprz.FABProgressCircle;
+import com.github.jorgecastilloprz.listeners.FABProgressListener;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.helper.AdvancedFile;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
@@ -36,7 +38,7 @@ import java.util.ArrayList;
 /**
  * Created by lovejoy777 on 13/06/15.
  */
-public class UninstallFragment extends Fragment implements MaterialCab.Callback {
+public class UninstallFragment extends Fragment implements MaterialCab.Callback, FABProgressListener {
 
     private ArrayList<AdvancedFile> files = new ArrayList<>();
     FloatingActionButton fab2;
@@ -46,6 +48,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
     private MaterialCab mCab = null;
     private DrawerLayout mDrawerLayout;
     private CoordinatorLayout cordLayout = null;
+    private FABProgressCircle fabProgressCircle = null;
 
 
     @Override
@@ -55,6 +58,9 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
         cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_delete, container, false);
 
         setHasOptionsMenu(true);
+
+        fabProgressCircle = (FABProgressCircle) cordLayout.findViewById(R.id.fabProgressCircle);
+        fabProgressCircle.attachListener(this);
 
         loadToolbarRecylcerViewFab();
 
@@ -122,8 +128,9 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //System.out.println(InstallOverlayList);
-                fab2.hide();
+                fabProgressCircle.show();
+                fab2.setClickable(false);
+
                 new DeleteOverlays().execute();
             }
         });
@@ -215,12 +222,8 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
 
     //Delete Overlays
     private class DeleteOverlays extends AsyncTask<Void, Void, Void> {
-        ProgressDialog progressDelete;
 
         protected void onPreExecute() {
-
-            progressDelete = ProgressDialog.show(getActivity(), getString(R.string.UninstallOverlays),
-                    getString(R.string.uninstalling)+"...", true);
         }
 
         @Override
@@ -231,53 +234,57 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback 
                     RootCommands.DeleteFileRoot("system/vendor/overlay/" + file.getLocation());
                 }
             }
+            RootTools.remount("/system", "RO");
             return null;
 
         }
 
         protected void onPostExecute(Void result) {
-            progressDelete.dismiss();
-            RootTools.remount("/system", "RO");
-
-            CoordinatorLayout coordinatorLayoutView = (CoordinatorLayout) cordLayout.findViewById(R.id.main_content3);
-            Snackbar.make(coordinatorLayoutView, R.string.uninstalled, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.Reboot, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            AlertDialog.Builder progressDialogReboot = new AlertDialog.Builder(getActivity());
-                            progressDialogReboot.setTitle(R.string.Reboot);
-                            progressDialogReboot.setMessage(R.string.PreformReboot);
-                            progressDialogReboot.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                                //when Cancel Button is clicked
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                            progressDialogReboot.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                //when Cancel Button is clicked
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    try {
-                                        Process proc = Runtime.getRuntime()
-                                                .exec(new String[]{"su", "-c", "busybox killall system_server"});
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                    dialog.dismiss();
-                                }
-                            });
-                            progressDialogReboot.show();
-                        }
-                    })
-                    .show();
-
-            new LoadAndSet().execute();
-            mCab.finish();
-            ActivityCompat.invalidateOptionsMenu(getActivity());
-
+            fabProgressCircle.beginFinalAnimation();
         }
+    }
+
+    @Override
+    public void onFABProgressAnimationEnd() {
+        fab2.hide();
+        fab2.setClickable(true);
+        CoordinatorLayout coordinatorLayoutView = (CoordinatorLayout) cordLayout.findViewById(R.id.main_content3);
+        Snackbar.make(coordinatorLayoutView, R.string.uninstalled, Snackbar.LENGTH_LONG)
+                .setAction(R.string.Reboot, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        AlertDialog.Builder progressDialogReboot = new AlertDialog.Builder(getActivity());
+                        progressDialogReboot.setTitle(R.string.Reboot);
+                        progressDialogReboot.setMessage(R.string.PreformReboot);
+                        progressDialogReboot.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            //when Cancel Button is clicked
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        progressDialogReboot.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            //when Cancel Button is clicked
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    Process proc = Runtime.getRuntime()
+                                            .exec(new String[]{"su", "-c", "busybox killall system_server"});
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                dialog.dismiss();
+                            }
+                        });
+                        progressDialogReboot.show();
+                    }
+                })
+                .show();
+
+        new LoadAndSet().execute();
+        mCab.finish();
+        ActivityCompat.invalidateOptionsMenu(getActivity());
     }
 
 

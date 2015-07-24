@@ -32,9 +32,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialcab.MaterialCab;
+import com.github.jorgecastilloprz.FABProgressCircle;
+import com.github.jorgecastilloprz.listeners.FABProgressListener;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.helper.AdvancedFile;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
@@ -47,7 +48,7 @@ import java.util.List;
 /**
  * Created by lovejoy777 on 10/06/15.
  */
-public class InstallFragment extends Fragment {
+public class InstallFragment extends Fragment implements FABProgressListener {
 
     private ArrayList<AdvancedFile> Files = new ArrayList<>();
     //private ArrayList<String> Files = new ArrayList<>();
@@ -63,6 +64,7 @@ public class InstallFragment extends Fragment {
     String currentDir= null;
     String BaseDir=null;
     ArrayList<String> Filedirectories = new ArrayList<>();
+    private FABProgressCircle fabProgressCircle = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -74,6 +76,8 @@ public class InstallFragment extends Fragment {
         FragmentActivity faActivity  = (FragmentActivity)    super.getActivity();
         cordLayout = (CoordinatorLayout)    inflater.inflate(R.layout.fragment_install, container, false);
 
+        fabProgressCircle = (FABProgressCircle) cordLayout.findViewById(R.id.fabProgressCircle);
+        fabProgressCircle.attachListener(this);
 
         setHasOptionsMenu(true);
 
@@ -85,8 +89,9 @@ public class InstallFragment extends Fragment {
     }
 
 
+
+
     private class LoadAndSet extends AsyncTask<String,String,Void> {
-        ProgressDialog progressBackup;
 
         protected void onPreExecute() {
 
@@ -208,8 +213,7 @@ public class InstallFragment extends Fragment {
             Filedirectories.subList(Filedirectories.indexOf(clickedOn)+1, Filedirectories.size()).clear();
             //System.out.println(Filedirectories.indexOf(clickedOn));
             LinearLayout HscrollView = (LinearLayout) cordLayout.findViewById(R.id.horizontalScrollView2);
-
-new LoadAndSet().execute();
+            new LoadAndSet().execute();
         }
     };
 
@@ -230,15 +234,9 @@ new LoadAndSet().execute();
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<String> test = new ArrayList<String>();
-                for (AdvancedFile file : Files) {
-                    if (file.isChecked()) {
-                        test.add(file.getLocation());
-                    }
-                }
-                fab2.hide();
+                fabProgressCircle.show();
+                fab2.setClickable(false);
                 new InstallOverlays().execute();
-                System.out.println(test);
             }
         });
     }
@@ -398,12 +396,8 @@ new LoadAndSet().execute();
 
 
     private class InstallOverlays extends AsyncTask<Void,Void,Void> {
-        ProgressDialog progressDelete;
 
         protected void onPreExecute() {
-
-            progressDelete = ProgressDialog.show(getActivity(), getString(R.string.InstallOverlays),
-                    getString(R.string.installing)+"...", true);
         }
 
         @Override
@@ -421,44 +415,48 @@ new LoadAndSet().execute();
         }
 
         protected void onPostExecute(Void result) {
-
-            UncheckAll();
-            progressDelete.dismiss();
-            CoordinatorLayout coordinatorLayoutView = (CoordinatorLayout) cordLayout.findViewById(R.id.main_content3);
-            Snackbar.make(coordinatorLayoutView, R.string.installed, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.Reboot, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            AlertDialog.Builder progressDialogReboot = new AlertDialog.Builder(getActivity());
-                            progressDialogReboot.setTitle(R.string.Reboot);
-                            progressDialogReboot.setMessage(R.string.PreformReboot);
-                            progressDialogReboot.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                                //when Cancel Button is clicked
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                            progressDialogReboot.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                //when Cancel Button is clicked
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    try {
-                                        Process proc = Runtime.getRuntime()
-                                                .exec(new String[]{"su", "-c", "busybox killall system_server"});
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                    dialog.dismiss();
-                                }
-                            });
-                            progressDialogReboot.show();
-                        }
-                    })
-                    .show();
-
+            fabProgressCircle.beginFinalAnimation();
         }
+    }
+
+    @Override
+    public void onFABProgressAnimationEnd() {
+        fab2.hide();
+        fab2.setClickable(true);
+        UncheckAll();
+        CoordinatorLayout coordinatorLayoutView = (CoordinatorLayout) cordLayout.findViewById(R.id.main_content3);
+        Snackbar.make(fabProgressCircle, R.string.installed, Snackbar.LENGTH_LONG)
+                .setAction(R.string.Reboot, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        AlertDialog.Builder progressDialogReboot = new AlertDialog.Builder(getActivity());
+                        progressDialogReboot.setTitle(R.string.Reboot);
+                        progressDialogReboot.setMessage(R.string.PreformReboot);
+                        progressDialogReboot.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            //when Cancel Button is clicked
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        progressDialogReboot.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            //when Cancel Button is clicked
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                try {
+                                    Process proc = Runtime.getRuntime()
+                                            .exec(new String[]{"su", "-c", "busybox killall system_server"});
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                dialog.dismiss();
+                            }
+                        });
+                        progressDialogReboot.show();
+                    }
+                })
+                .show();
     }
 
     private void UncheckAll() {
