@@ -134,6 +134,11 @@ public class InstallFragment extends Fragment {
             LinearLayout HscrollView = (LinearLayout) cordLayout.findViewById(R.id.horizontalScrollView2);
             HscrollView.removeAllViews();
 
+            if (mAdapter.getItemCount() == 0) {
+                cordLayout.findViewById(R.id.noItems).setVisibility(View.VISIBLE);
+            } else {
+                cordLayout.findViewById(R.id.noItems).setVisibility(View.INVISIBLE);
+            }
 
             for (int i = 0; i < Filedirectories.size(); i++) {
 
