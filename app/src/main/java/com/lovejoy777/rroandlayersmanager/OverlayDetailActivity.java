@@ -197,15 +197,9 @@ public class OverlayDetailActivity extends Fragment {
                                 atleastOneIsClicked = atleastOneIsClicked - 1;
                             }
                             if (atleastOneIsClicked > 0) {
-                                fab2.setVisibility(View.VISIBLE);
-                                fab2.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
-
-
+                                fab2.show();
                             } else {
-
-                                fab2.animate().translationY(fab2.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
-                                //fab2.setVisibility(View.INVISIBLE);
-
+                                fab2.hide();
                             }
                         }
                     }
@@ -245,13 +239,9 @@ public class OverlayDetailActivity extends Fragment {
                                 InstallOverlayList.set(c, 0);
                             }
                             if (atleastOneIsClicked > 0) {
-
-                                fab2.setVisibility(View.VISIBLE);
-                                fab2.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+                                fab2.show();
                             } else {
-                                fab2.animate().translationY(fab2.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
-                                // fab2.setVisibility(View.INVISIBLE);
-
+                                fab2.hide();
                             }
                         }
                     }
@@ -399,8 +389,7 @@ public class OverlayDetailActivity extends Fragment {
 
         //Hide the FAB
         fab2 = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab2);
-        fab2.setVisibility(View.INVISIBLE);
-        fab2.animate().translationY(218).setInterpolator(new AccelerateInterpolator(2)).start();
+        fab2.hide();
 
         //Initialize Layout
         Toolbar toolbar = (Toolbar) cordLayout.findViewById(R.id.toolbar);
@@ -409,15 +398,7 @@ public class OverlayDetailActivity extends Fragment {
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        View mFab = cordLayout.findViewById(R.id.fab);
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                installTheme();
-            }
 
-
-        });
 
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -475,7 +456,6 @@ public class OverlayDetailActivity extends Fragment {
             public void onGenerated(Palette palette) {
                 Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
                 Palette.Swatch test = palette.getLightVibrantSwatch();
-                FloatingActionButton mFab = (FloatingActionButton) cordLayout.findViewById(R.id.fab);
                 if (vibrantSwatch != null) {
                     Collapsingtoolbar.setContentScrimColor(vibrantSwatch.getRgb());
                     float[] hsv = new float[3];
@@ -488,12 +468,6 @@ public class OverlayDetailActivity extends Fragment {
 
 
                 }
-                if (test!=null) {
-                    mFab.setBackgroundTintList(ColorStateList.valueOf(test.getRgb()));
-                }
-                //mFab.setVisibility(View.VISIBLE);
-                //Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fadein);
-                // mFab.startAnimation(fadeInAnimation);
             }
         });
         Animator reveal = ViewAnimationUtils.createCircularReveal(imageView,
@@ -752,9 +726,8 @@ public class OverlayDetailActivity extends Fragment {
     private void UncheckAllCheckBoxes(String Mode) {
 
         if (Mode.equals("Uncheck")) {
-            //fab2.animate().translationY(fab2.getHeight()+48).setInterpolator(new AccelerateInterpolator(2)).start();
 
-            fab2.setVisibility(View.INVISIBLE);
+            fab2.hide();
 
             for (int i = 0; i < NumberOfOverlays; i++) {
                 CheckBox checkBox = (CheckBox) cordLayout.findViewById(i);
@@ -785,8 +758,7 @@ public class OverlayDetailActivity extends Fragment {
 
     private void checkall() {
 
-        fab2.setVisibility(View.VISIBLE);
-        fab2.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+        fab2.show();
 
         for (int i = 0; i < NumberOfOverlays; i++) {
             CheckBox checkBox = (CheckBox) cordLayout.findViewById(i);
