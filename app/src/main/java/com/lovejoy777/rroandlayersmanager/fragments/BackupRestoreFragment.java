@@ -515,8 +515,7 @@ public class BackupRestoreFragment extends Fragment{
         protected Void doInBackground(String... params) {
 
             Files.clear();
-            Commands command= new Commands();
-            Files = command.loadFolders(Environment.getExternalStorageDirectory() + "/Overlays/Backup");
+            Files = Commands.loadFolders(Environment.getExternalStorageDirectory() + "/Overlays/Backup");
 
             return null;
 
@@ -526,7 +525,7 @@ public class BackupRestoreFragment extends Fragment{
 
             mAdapter = new CardViewAdapter3(Files, R.layout.adapter_tablerow, getActivity());
             mRecyclerView.setAdapter(mAdapter);
-            if (Files == null){
+            if (Files.isEmpty()){
                 ImageView noOverlays = (ImageView)cordLayout.findViewById(R.id.imageView);
                 TextView noOverlaysText = (TextView) cordLayout.findViewById(R.id.textView7);
                 noOverlays.setVisibility(View.VISIBLE);
