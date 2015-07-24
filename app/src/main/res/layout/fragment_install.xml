@@ -28,6 +28,16 @@
                 android:layout_height="match_parent"
                 android:gravity="center">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/emptydirectory"
+                    android:id="@+id/noItems"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:layout_marginTop="200dp"
+                    android:textSize="16sp"
+                    android:visibility="invisible" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/cardList"

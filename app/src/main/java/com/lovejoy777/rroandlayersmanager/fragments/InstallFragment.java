@@ -119,14 +119,6 @@ public class InstallFragment extends Fragment implements FABProgressListener {
             try {
                 loadedFiles.addAll(command.loadFiles(currentDir));
             } catch(NullPointerException e){
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Snackbar.make(getActivity().getWindow().getDecorView().findViewById(android.R.id.content), R.string.emptydirectory, Snackbar.LENGTH_SHORT)
-                                .show();
-                    }
-                });
-
             }
 
 
@@ -157,6 +149,12 @@ public class InstallFragment extends Fragment implements FABProgressListener {
 
             LinearLayout HscrollView = (LinearLayout) cordLayout.findViewById(R.id.horizontalScrollView2);
             HscrollView.removeAllViews();
+
+            if (mAdapter.getItemCount() == 0) {
+                cordLayout.findViewById(R.id.noItems).setVisibility(View.VISIBLE);
+            } else {
+                cordLayout.findViewById(R.id.noItems).setVisibility(View.INVISIBLE);
+            }
 
 
 

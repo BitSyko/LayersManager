@@ -169,7 +169,7 @@ Copyright (c) 2015 Aidan Michael Follestad\n\nPermission is hereby granted, free
         <!-- SnackBar texts -->
         <string name="selectOverlayFirst">Select Overlays first</string>
         <string name="OverlaysInstalled">Overlays installed!</string>
-    <string name="emptydirectory">This directory seems to be empty</string>
+    <string name="emptydirectory">This directory seems to be empty.</string>
 
 
 </resources>
