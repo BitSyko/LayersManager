@@ -2,9 +2,5 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="tool_bar_top_padding">0dp</dimen>
-    <dimen name="title_text_size">35sp</dimen>
-    <dimen name="setSubHead">40sp</dimen>
-    <dimen name="card_primary_text">20sp</dimen>
-
+    <dimen name="mcab_toolbar_elevation">0dp</dimen>
 </resources>

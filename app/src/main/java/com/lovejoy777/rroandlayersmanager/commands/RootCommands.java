@@ -21,7 +21,6 @@ package com.lovejoy777.rroandlayersmanager.commands;
 
 import android.util.Log;
 
-import com.lovejoy777.rroandlayersmanager.Settings;
 import com.stericson.RootTools.RootTools;
 
 import java.io.BufferedReader;
@@ -43,28 +42,6 @@ public class RootCommands {
         return input.replaceAll(UNIX_ESCAPE_EXPRESSION, "\\\\$1");
     }
 
-    public static ArrayList<String> listFiles(String path, boolean showhidden) {
-        ArrayList<String> mDirContent = new ArrayList<String>();
-        BufferedReader in;
-
-        try {
-            in = execute("ls -a " + getCommandLineString(path));
-
-            String line;
-            while ((line = in.readLine()) != null) {
-                if (!showhidden) {
-                    if (line.charAt(0) != '.')
-                        mDirContent.add(path + "/" + line);
-                } else {
-                    mDirContent.add(path + "/" + line);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return mDirContent;
-    }
 
     public static ArrayList<String> findFiles(String path, String query) {
         ArrayList<String> mDirContent = new ArrayList<String>();
@@ -115,26 +92,6 @@ public class RootCommands {
         }
     }
 
-    // path = currentDir
-    // oldName = currentDir + "/" + selected Item
-    // name = new name
-    public static void renameRootTarget(String path, String oldname, String name) {
-        File file = new File(path + "/" + oldname);
-        File newf = new File(path + "/" + name);
-
-        if (name.length() < 1)
-            return;
-
-        try {
-            if (!readReadWriteFile())
-                RootTools.remount(path, "rw");
-
-            execute("mv " + file.getAbsolutePath() + " "
-                    + newf.getAbsolutePath());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     // Delete file with root
     public static void DeleteFileRoot(String path) {
@@ -153,25 +110,6 @@ public class RootCommands {
         }
     }
 
-    // Create file with root
-    public static boolean createRootFile(String cdir, String name) {
-        File dir = new File(cdir + "/" + name);
-
-        if (dir.exists())
-            return false;
-
-        try {
-            if (!readReadWriteFile())
-                RootTools.remount(cdir, "rw");
-
-            execute("touch " + getCommandLineString(dir.getAbsolutePath()));
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
 
     // Check if system is mounted
     private static boolean readReadWriteFile() {
@@ -244,146 +182,9 @@ public class RootCommands {
                 return null;
             }
             return reader;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public static boolean changeGroupOwner(File file, String owner, String group) {
-        try {
-            if (!readReadWriteFile())
-                RootTools.remount(file.getAbsolutePath(), "rw");
-
-            execute("chown " + owner + "." + group + " "
-                    + getCommandLineString(file.getAbsolutePath()));
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    public static boolean applyPermissions(File file, Permissions permissions) {
-        try {
-            if (!readReadWriteFile())
-                RootTools.remount(file.getAbsolutePath(), "rw");
-
-            execute("chmod " + toOctalPermission(permissions) + " "
-                    + getCommandLineString(file.getAbsolutePath()));
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    public static String[] getFileProperties(File file) {
-        BufferedReader in;
-        String[] info = null;
-        String line;
-
-        if (!Settings.rootAccess())
-            return null;
-
-        try {
-            in = execute("ls -l "
-                    + getCommandLineString(file.getAbsolutePath()));
-
-            while ((line = in.readLine()) != null) {
-                info = getAttrs(line);
-            }
-            in.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return info;
-    }
-
-    private static String[] getAttrs(String string) {
-        if (string.length() < 44) {
-            throw new IllegalArgumentException("Bad ls -l output: " + string);
-        }
-        final char[] chars = string.toCharArray();
-
-        final String[] results = new String[11];
-        int ind = 0;
-        final StringBuilder current = new StringBuilder();
-
-        Loop:
-        for (int i = 0; i < chars.length; i++) {
-            switch (chars[i]) {
-                case ' ':
-                case '\t':
-                    if (current.length() != 0) {
-                        results[ind] = current.toString();
-                        ind++;
-                        current.setLength(0);
-                        if (ind == 10) {
-                            results[ind] = string.substring(i).trim();
-                            break Loop;
-                        }
-                    }
-                    break;
-
-                default:
-                    current.append(chars[i]);
-                    break;
-            }
-        }
-
-        return results;
-    }
-
-    /**
-     * Returns octal-formatted permission
-     *
-     * @param p Permissions to generate octal format for
-     * @return octal-formatted permission representation
-     */
-
-    private static String toOctalPermission(final Permissions p) {
-        byte user = 00;
-        byte group = 00;
-        byte other = 00;
-
-        if (p.ur) {
-            user += 04;
-        }
-        if (p.uw) {
-            user += 02;
-        }
-        if (p.ux) {
-            user += 01;
-        }
-
-        if (p.gr) {
-            group += 04;
-        }
-        if (p.gw) {
-            group += 02;
-        }
-        if (p.gx) {
-            group += 01;
-        }
-
-        if (p.or) {
-            other += 04;
-        }
-        if (p.ow) {
-            other += 02;
-        }
-        if (p.ox) {
-            other += 01;
-        }
-
-        return String.valueOf(user) + group + other;
     }
 }

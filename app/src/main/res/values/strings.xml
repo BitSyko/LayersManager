@@ -1,160 +1,173 @@
 <resources>
 
-    <!-- Main Layers Strings -->
-    <string name="app_name">rroandlayersmanager1</string>
-    <string name="slogan">\"Your Style Your Choice\"</string>
-    <string name="splashTitle">SPLASH</string>
-    <string name="action_all">All</string>
-    <string name="version">Version 3.8</string>
+    <!-- MAIN Fragment -->
     <string name="layersmanager">Layers Manager</string>
+    <string name="PlaystoreSearch"><![CDATA[https://play.google.com/store/search?q=Layers+Theme&c=apps&docType=1&sp=CAFiDgoMTGF5ZXJzIFRoZW1legIYAIoBAggB:S:ANO1ljK_ZAY]]></string>
+    <string name="tooBad">Too bad.</string>
+    <string name="noPlugins">You don\'t have installed any compatible plugins yet, Use the FAB button for none plugin type overlays.</string>
+    <string name="ShowCaseMore">Find some new beautiful overlays. Beta available now!</string>
+    <string name="PlayStoreMore">Have a look on the PlayStore.</string>
 
-
-
-    <!-- Menu CardView 1 Strings -->
-    <string name="card1text1">Install/Restore</string>
-    <string name="card1text2">• Install new Layers</string>
-    <string name="card1text3">• Restore existing backups</string>
-
-    <!-- Menu CardView 2 Strings -->
-    <string name="card2text1">Backup/Delete</string>
-    <string name="card2text2">• Backup Installed Layers</string>
-    <string name="card2text3">• Delete Installed Layers</string>
-
-    <!-- Menu CardView 3 Strings -->
-    <string name="card3text1">Reboot</string>
-    <string name="card3text2">• For changes to take effect</string>
-    <string name="card3text3"> </string>
-
-    <!-- FilePicker Strings -->
-    <string name="delete">OK</string>
-    <string name="backup">Cancel</string>
-    <string name="backup1">Backup</string>
-    <string name="back">Back</string>
-    <color name="action_select">#6d6d6d</color>
-    <string name="new_folder">New folder</string>
-    <string name="create_folder_error">Failed to create folder</string>
-    <string name="go_back">Go back</string>
-    <string name="select_something_first">Nothing Selected</string>
-
-    <!-- INSTRUCTIONS -->
-    <string name="instructionsTV1">Select what type of file you are installing from the Home screen.</string>
-    <string name="instructionsTV6">Layers Installer</string>
-    <string name="instructionsTV7">
-    <u><b>Installing Layers:</b></u>\n
-    • From the Install screen.\n
-    • Click on the \"File Chooser\" button.\n
-    • Select your Layers.zip that you pre-downloaded or individual .apk file that you want to install and click it.\n
-    • If the theme dev has provided previews for the theme a preview screen will pop-up otherwise it will just apply the chosen file.\n
-    • Click on any preview to see a zoomed in image (you can pinch zoom again in the fullscreen mode). If you like that particular apk hit back and then long-press on the preview to install that particular themed apk.\n
-    • If you want to install all themed apk\'s use the \"tick\" icon in the action bar. \"Reboot for Changes to Take Effect\" button for the layers to be installed.\n
-    (you can then check whats installed by clicking the \"Installed Layers\" Button).\n
-    \n
-    <u><b>Delete Multiple layers at a time:</b></u>\n
-    • From the nav drawer select Delete Layers\n
-    • Click the \"Delete File Chooser\" button.\n
-    • Select layer.apks you want to delete.\n
-    • Click the \"Delete Selected Layers\" button.\n
-    (you can then click the \"File Chooser\" button again to check it was deleted).\n
-    \n
-    <u><b>Deleting everything in the Overlays folder:</b></u>\n
-    • Click the \"Delete All Layers\" Button.\n
-    (you can then click the \"File Chooser\" button again to check they have all been deleted).\n
-    \n
-    <u><b>Backup / Restore:</b></u>\n
-    • From the nav drawer select Backup/restore.\n
-    \n
-    <u><b>Backup:</b></u>\n
-    • Click the \"Backup All Applied Layers\" button and enter a name for your backup.\n
-    \n
-    <u><b>Restore:</b></u>\n
-    • Click the \"File Chooser\" button and click your chosen saved folder then click the overlay.zip file.\n
-    (you can use this to check what saved layers you have).\n
-    • Check the file path is correct in the text view then click the \"Restore Selected Backup\" button then click the \"Reboot for Changes to Take Effect\" button for your backup to be restored.\n
-    \n
-    <u><b>SETTINGS:</b></u>\n
-    • You can customize the apps complete UI to match your Layers themes. \n
-    • After you make any changes restart the app for them to take effect. \n
-    \n
-    <u><b>TIPS:</b></u>\n
-    • You can package any number of layers.apk\'s into a folder of your choice then zip the whole folder and apply it in one go or just pick the .apk\'s 1x1.\n
-    • Use the \"Applied Layers\" button to check whats currently applied.\n
-    • You also need to reboot after installing, deleting or restoring for the changes to take effect.\n
-    • There\'s some useful links at the bottom of the nav drawer.\n
-    • Ask your theme dev for the Hex code for background color and input it in settings, code must start with #.\n
-
-
-    </string>
+    <!-- Plugin Detail -->
+    <string name="donotshowagain">Do not show again</string>
+    <string name="installeverything">Install everything</string>
+    <string name="selectalloverlays">Select all Overlays</string>
+    <string name="WhatsNew">WHATS NEW</string>
+    <string name="Category2Name">Style Specific Overlays</string>
+    <string name="Category1Name">General Overlays</string>
+    <string name="noRoot">No root access available</string>
+    <string name="rebootIn">Rebooting in 10 seconds</string>
+    <string name="RebootNow">Reboot now</string>
 
     <!-- About -->
-    <string name="aboutTV2">Developed by the BS™ Team </string>
-    <string name="aboutTV3">An easy way to manage your favourite layers. </string>
-    <string name="aboutTV4">Meet the Team. </string>
-    <string name="aboutTV5">Syko. </string>
-    <string name="aboutTV6">Lovejoy777. </string>
-    <string name="aboutTV7">Bgill55. </string>
+    <string name="niklasschnettler">Niklas Schnettler</string>
+    <string name="developedby">Layers developed by</string>
+    <string name="usefullinks">Useful links</string>
+    <string name="version">Version</string>
+    <string name="AditionalLayersDev">Additional Layers commits</string>
+    <string name="findOutWhatsNew">Find out whats new</string>
+    <string name="joinTheChat">Join the chat</string>
+    <string name="AppDeveloper">App Developer</string>
+    <string name="LayersDeveloper">Layers Developer</string>
+    <string name="LayersLeadDeveloper">Layers Lead Developer</string>
+    <string name="ShowcaseDeveloper">Showcase Developer</string>
 
-    <string name="bitsykotext">BS™</string>
+    <!-- Licenses -->
+    <string name="OpenSourceLicenses">Open Source Licenses:</string>
+    <string name="ApacheLicense" translatable="false">Apache License, Version 2.0</string>
+    <string name="MITLicense" translatable="false">MIT License</string>
+    <string name="License1">Root Tools</string>
+    <string name="License1about" translatable="false">Stephen Erickson, Chris Ravenscroft, Dominik Schuermann, Adam Shanks</string>
+    <string name="License1more" translatable="false">Copyright © 2012 Stephen Erickson, \nChris Ravenscroft, \nDominik Schuermann, \nAdam Shanks\n\nLicensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
+    <string name="License1github" translatable="false">https://github.com/Stericson/RootTools</string>
+    <string name="License2">App Intro</string>
+    <string name="License2about" translatable="false">Paolo Rotolo</string>
+    <string name="License2more">Copyright © 2015 Paolo Rotolo\n\nLicensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
+    <string name="License2github">https://github.com/PaoloRotolo/AppIntro</string>
+    <string name="License3">Material CAB</string>
+    <string name="License3about" translatable="false">Aidan Follestad</string>
+        <string name="License3more">The MIT License (MIT)
 
-    <!-- Changelog -->
-    <string name="changelogtitle">Changelog</string>
-    <string name="changelog">
-        • <u><b>3.8</b></u>\n
-     • Rewritten complete app.\n
-     • <u><b>3.7</b></u>\n
-     • Color Picker bug fix.\n
-     • <u><b>3.6</b></u>\n
-     • Added scroll view for multiselect delete paths.\n
-     • Removed unneeded items from navigation drawers.\n
-     • <u><b>3.5</b></u>\n
-     • Complete rewrite\n
-     • <u><b>3.4</b></u>\n
-     • bug fixes\n
-     • <u><b>3.3</b></u>\n
-     • Added Backup / Restore section.\n
-     • <u><b>3.2</b></u>\n
-     • New UI\n
+Copyright (c) 2015 Aidan Michael Follestad\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\n THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+</string>
+    <string name="License3github">https://github.com/afollestad/material-cab</string>
 
-     •
-    </string>
+    <!-- Links -->
+    <string name="linkXda">http://forum.xda-developers.com/android/apps-games/official-layers-bitsyko-apps-rro-t3012172</string>
+    <string name="linkCommunity">https://plus.google.com/u/0/communities/102261717366580091389</string>
+    <string name="linkNiklas">https://plus.google.com/u/0/+NiklasSchnettler/posts</string>
+    <string name="linkSteve">https://plus.google.com/u/0/+SteveLovejoy/posts</string>
+    <string name="linkAldrin">https://plus.google.com/u/0/+AldrinHolmes20/posts</string>
+    <string name="linkBrian">https://plus.google.com/u/0/+BrianGill55/posts</string>
+    <string name="linkReinhard">https://plus.google.com/101549242713977412381/posts</string>
+    <string name="linkSyko">https://plus.google.com/u/0/+SykoPompos/posts</string>
+    <string name="linkBranden">https://plus.google.com/u/0/101729058057775926785/posts</string>
+    <string name="linkDenis">https://plus.google.com/u/0/+DenisSuarez98/posts</string>
 
-    <!-- MAIN HEADER DRAWER -->
-    <string name="drawer_item_about">About</string>
-    <string name="drawer_item_changelog">Changelog</string>
-    <string name="drawer_item_instructions">Instructions</string>
-    <string name="drawer_item_settings">Settings</string>
 
-    <string name="drawer_item_links_header">Useful Links</string>
-    <string name="drawer_item_gplus">G +</string>
-    <string name="drawer_item_xda">Xda</string>
-    <string name="drawer_item_forum">Forum</string>
-    <string name="drawer_item_website">Website</string>
+    <!-- PRODUCT TOUR -->
+    <string name="Slide1_Heading">Layers Manager</string>
+    <string name="Slide1_Text">The central place to manage all your Overlays.</string>
+    <string name="Slide2_Heading">Plugin Overlays</string>
+    <string name="Slide2_Text">Compatible themes are directly integrated into the Layers Manager. Open them from the main page and directly install your favorite Overlays.</string>
+    <string name="Slide3_Heading">APK / ZIP Overlays</string>
+    <string name="Slide3_Text">Install themes available as apk´s or zip´s by clicking on the Floating Action Button.</string>
+    <string name="Slide4_Heading">Uninstall Overlays</string>
+    <string name="Slide4_Text">Uninstall the Overlays you do not want to use anymore.</string>
+    <string name="Slide5_Heading">Backup &amp; Restore</string>
+    <string name="Slide5_Text">Backup your favorite Overlays to restore them later.</string>
 
-    <string name="drawer_item_compact_header">CompactHeader Sample</string>
-    <string name="drawer_item_action_bar">ActionBar Sample</string>
-    <string name="drawer_item_multi_drawer">MultiDrawer Sample</string>
-    <string name="drawer_item_non_translucent_status_drawer">NonTranslucentStatusDrawer Sample</string>
-    <string name="title_activity_icon_main">IconMainActivity</string>
 
-    <plurals
-        name="select_dir">
-        <item quantity="one">Select directory</item>
-        <item quantity="other">Select directories</item>
-    </plurals>
+    <!-- INSTRUCTIONS/TUTORIAL -->
+    <string name="instructionstitle">Tutorial</string>
+    <string name="instructionscard1header">Install plugin overlays</string>
+    <string name="instructionscard1">Click one of the installed overlays\nChoose the apps you want to theme\nClick the FAB to install the overlays</string>
+    <string name="instructionscard2header">Install normal overlays</string>
+    <string name="instructionscard2">Click the FAB on the main screen\nChoose either a .zip or multiple .apk\'s\nClick the FAB to install the selected overlays</string>
+    <string name="instructionscard3header">Uninstall overlays</string>
+    <string name="instructionscard3">From the nav-drawer select "uninstall overlays"\nSelect multiple overlays\nClick the FAB to uninstall the selected overlays</string>
+    <string name="instructionscard4header">Backup overlays</string>
+    <string name="instructionscard4">From the nav-drawer select "Backup overlays"\nEnter a name and click "OK"</string>
+    <string name="instructionscard5header">Restore overlays</string>
+    <string name="instructionscard5">From the nav-drawer select "Restore overlays"\nClick the FAB to Restore the selected backup file</string>
+    <string name="instructionscard6header">Replay Introduction</string>
+    <string name="instructionscard6">Click to start tutorial from the beginning</string>
 
-    <plurals
-        name="select_file">
-        <item quantity="one">Select Layers</item>
-        <item quantity="other">Select files</item>
-    </plurals>
+    <!-- Fragments -->
 
-    <plurals
-        name="select_dir_or_file">
-        <item quantity="one">Select directory or file</item>
-        <item quantity="other">Select directories or files</item>
-    </plurals>
+    <!-- Install Fragment -->
+    <string name="InstallOverlays2">Install Overlays</string>
+    <string name="InstallOverlays">Install Overlays</string>
+    <string name="installing">Installing</string>
+    <string name="installed">Installed selected Overlays</string>
 
-    <!-- FilePicker dialog Strings -->
-    <string name="name">Name</string>
+    <!-- UnInstall Fragment -->
+    <string name="UninstallOverlays">Uninstall Overlays</string>
+    <string name="selectAll">Select all</string>
+    <string name="nothingApplied">No Overlays applied.\nInstall some on the main page.</string>
+    <string name="appliedOverlays">Applied Overlays:</string>
+    <string name="OverlaysSelected">Overlays selected</string>
+    <string name="uninstalling">Uninstalling</string>
+    <string name="PreformReboot">Perform a soft reboot?</string>
+    <string name="uninstalled">Uninstalled selected Overlays</string>
+
+    <!-- Backup Restore Fragment -->
+    <string name="noBackups">No Backups available.\nMake one by clicking the FAB.</string>
+    <string name="Backups">Backups:</string>
+    <string name="BackupRestore">Backup &amp; Restore</string>
+    <string name="backupInstalledOverlays">Backup installed Overlays</string>
+    <string name="enterBackupName">Enter a backup name</string>
+    <string name="noInputName">Please enter a name</string>
+    <string name="nothingToBackup">Nothing available to backup</string>
+    <string name="DoYouWantToRestore">Do you want to restore or delete the selected Backup?</string>
+    <string name="restore">Restore</string>
+    <string name="delete">Delete</string>
+    <string name="DeleteBackup">Deleting Backup</string>
+    <string name="deleting">Deleting</string>
+    <string name="BackupOverlays">Backup Overlays</string>
+    <string name="backingUp">Backing up</string>
+    <string name="backupComplete">Backup complete</string>
+    <string name="Restore">Restore Overlays</string>
+    <string name="restoring">Restoring</string>
+    <string name="deletedBackup">Deleted selected Backup</string>
+    <string name="restored">Restored selected Backup</string>
+
+    <!-- NavDrawer -->
+    <string name="More">More</string>
+    <string name="Tutorial">Tutorial</string>
+    <string name="About">About</string>
+    <string name="Showcase">Layers Showcase</string>
+    <string name="discover">Discover</string>
+    <string name="PlayStore">PlayStore</string>
+    <string name="Settings">Settings</string>
+
+    <!-- Settings -->
+    <string name="General">General</string>
+    <string name="SettingLauncherIconDetail">Remove Launcher Icon</string>
+    <string name="SettingLauncherIconWarning">Warning: you may not be able to launch this app unless your rom as it in the settings</string>
+    <string name="launcherIconRemoved">Launcher Icon removed</string>
+    <string name="romNeedsSupport">Your rom needs support for this function</string>
+    <string name="noBuildPropCommit">no build.prop commit</string>
+
+
+    <!-- Dialogs -->
+
+    <!-- Action texts -->
+    <string name="MoveOverlays">Install Overlays?</string>
+    <string name="VisitGithub">Github</string>
+    <string name="Reboot">REBOOT</string>
+    <string name="pick_color">Pick a Style</string>
+
+
+    <!-- description and headline texts -->
+    <string name="ApplyOverlays">Apply selected Overlays?</string>
+    <string name="rebooting">Rebooting</string>
+
+
+    <!-- SnackBar texts -->
+    <string name="selectOverlayFirst">Select Overlays first</string>
+    <string name="OverlaysInstalled">Overlays installed!</string>
+    <string name="emptydirectory">This directory seems to be empty.</string>
 
 
 </resources>

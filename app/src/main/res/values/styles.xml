@@ -6,32 +6,42 @@
 
 
     <style name="LayersTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/material_drawer_primary</item>
-        <item name="colorPrimaryDark">@color/material_drawer_primary_dark</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
 
     </style>
 
-    <style name="ToolbarTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:textColorPrimary">@color/abc_primary_text_material_dark</item>
-        <item name="actionMenuTextColor">@color/abc_primary_text_material_dark</item>
-        <item name="android:textColorSecondary">@color/abc_secondary_text_material_dark</item>
-    </style>
 
+    <!-- Toolbars -->
     <style name="Base.Theme.Test" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
         <item name="android:elevation">4dp</item>
         <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_menu</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_action_menu</item>
     </style>
 
+    <!-- Theme for menu Activity (transparent Statusbar)-->
+    <style name="Base.Theme.Toolbar.TransparentStatusBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/transparent</item>
+    </style>
+
+    <!-- Main theme -->
     <style name="Base.Theme.Toolbar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
-
+        <item name="mcab_contentinset_start">60dp</item>
     </style>
+
+
 
     <!-- Normal app Theme -->
     <style name="AppTheme" parent="android:Theme.Material.Light">
@@ -41,33 +51,12 @@
     </style>
 
 
-    <!-- Main Activity -->
-    <style name="AppTheme.Toolbar" parent="Theme.AppCompat.Light.NoActionBar">                        <!-- MaterialLight: Theme.AppCompat.Light.NoActionBar | MaterialDark: Theme.AppCompat.NoActionBar -->
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="android:actionOverflowButtonStyle">@style/menuOverflow</item>
-        <item name="android:navigationBarColor">@color/primary</item>
+    <style name="Toolbar_Popup" parent="Base.ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
-        <item name="android:textColorSecondary">@color/text_color_secondary</item>
-        <item name="android:windowBackground">@color/background</item>
     </style>
-
-
-
-
 
     <!-- Main Activity - Overflow Menu -->
     <style name="popupNew" parent="Theme.AppCompat.Light"/>                                      <!-- MaterialLight: Theme.AppCompat.Light | MaterialDark: Theme.AppCompat -->
-
-
-
-
-
-
-
-
-
 
     <!-- About -->
     <style name="Toolbar2" parent="Theme.AppCompat.Light.NoActionBar">                                  <!-- MaterialLight: Theme.Material.Light.DarkActionBar | MaterialDark: Theme.Material -->
@@ -84,30 +73,6 @@
         <item name="android:listDivider">@null</item>
 
     </style>
-
-
-    <!-- Tutorial -->
-    <style name="Tutorial" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="android:windowBackground">@color/background</item>
-        <item name="android:textColorPrimary">@color/textColorPrimary</item>
-        <item name="android:textColorSecondary">@color/text_color_secondary</item>
-        <item name="android:textColor">@color/textColorPrimary</item>
-        <item name="android:windowTranslucentStatus">true</item>
-    </style>
-
-
-
-
-
-
-    <style name="Widget.ActionBar" parent="@android:style/Widget.Material.Light.ActionBar">
-        <item name="android:background">@color/primary</item>
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
-
 
     <style name="menuOverflow" parent="Widget.AppCompat.Light.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_action_overflow</item>
@@ -149,6 +114,11 @@
     <style name="TextAppearance.AppCompat.Body1">
         <item name="android:textSize">@dimen/abc_text_size_body_1_material</item>
         <item name="android:textColor">#727272</item>
+    </style>
+
+    <!-- Navigation Drawer Text Sytle -->
+    <style name="NavigationViewTheme" parent="AppTheme">
+        <item name="textAppearanceListItem">@style/TextAppearance.AppCompat.Body2</item>
     </style>
 
 </resources>

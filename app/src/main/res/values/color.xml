@@ -1,81 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="yellow">#FFEB3B</color>
-    <color name="blue">#FF2196F3</color>
-    <color name="white">#ffffff</color>
-    <color name="black">#000000</color>
-    <color name="blueicon1">#727272</color>
-    <color name="blueicon2">#212121</color>
-    <color name="card_title">#212121</color>
-    <color name="card_description">#727272</color>
-    <color name="app_text_accent">#42000000</color>
-    <color name="app_text_secondary">#727272</color>
-    <color name="app_text_primary">#212121</color>
-
-    <color name="splashtext">#FF2196F3</color>
-    <color name="material_drawer_primary">#2196F3</color>
-    <color name="material_drawer_primary_dark">#1976D2</color>
-    <color name="material_drawer_primary_light">#BBDEFB</color>
-    <color name="material_drawer_accent">#2980b9</color>
-
-    <!-- MaterialDrawer DEFAULT colors -->
-    <color name="material_drawer_window_background">@color/background_material_light</color>
-    <color name="main_button_background">#503e3e3e</color>
-    <color name="material_drawer_selected_text">#2196F3</color>
-    <color name="material_drawer_header_selection_text">#2980B9</color>
-
-    <!-- Consistent colors for both light and dark themes -->
+    <!-- Primary & Accent colors -->
     <color name="primary">#ff3F51B5</color>
     <color name="primary_dark">#ff303F9F</color>
     <color name="accent">#ffFF5252</color>
-    <color name="ripple_light">#bbffffff</color>
-    <color name="menu_fab_color">#ffFF5252</color>
-    <color name="card_accent_text">#ffe94d4d</color>
-
-    <!-- Light Theme -->
-    <color name="app_background_color">#ffdbdbdb</color>
-    <color name="card_background_color">#fffafafa</color>
-    <color name="card_text_color">#df000000</color>
-    <color name="card_text_secondary_color">#ff4d4d4d</color>
-
-    <!-- Navigation Drawer Colors -->
-    <color name="material_drawer_background">#F9F9F9</color>
-    <color name="material_drawer_icons">#FFF</color>
-    <color name="material_drawer_primary_text">#DE000000</color>
-    <color name="material_drawer_primary_icon">#8A000000</color>
-    <color name="material_drawer_secondary_text">#8A000000</color>
-    <color name="material_drawer_hint_text">#42000000</color>
-    <color name="material_drawer_divider">#1F000000</color>
-    <color name="material_drawer_selected">#00E8E8E8</color>
 
 
-    <color name="ripplenormal">#fafafa</color>
-    <color name="Green">#50AF4C</color>
-    <color name="gray">#282828</color>
-    <color name="accentLight">#66bc69</color>
-    <color name="ripplewhite">#ffffff</color>
+    <!-- Text colors -->
     <color name="about_text">@color/textColorPrimary</color>
-    <color name="developer_name">@color/textColorPrimary</color>
-    <color name="transparent">#00000000</color>
-    <color name="tutorial_background">#272727</color>
-    <color name="tutorial_background_dark">#1c1c1c</color>
-    <color name="tutorial_page_indicator">@color/tutorial_radio</color>
-    <color name="tutorial_page_stroke">@color/tutorial_page_indicator</color>
-    <color name="tutorial_text">@color/text_color_secondary</color>
-    <color name="tutorial_text_secondary">@color/tutorial_text</color>
-    <color name="tutorial_radio">@color/tutorial_text</color>
-    <color name="button_background">@color/card_background</color>
-    <color name="floating_background">@color/card_background</color>
-
-
-
-    <!-- Material Light  -->
-    <color name="background">#ffffffff</color>
-    <color name="card_background">#fffafafa</color>
     <color name="textColorPrimary">#ff212121</color>
     <color name="text_color_inverse">#ffffffff</color>
     <color name="text_color_secondary">#ff727272</color>
     <color name="chooser_text_color">@color/textColorPrimary</color>
+    <color name="actionbar_text_color">#ffffffff</color>
+    <color name="actionbar_text_secondary_color">#ffffffff</color>
+    <color name="tutorial_text_primary_color">#ffffffff</color>
+    <color name="tutorial_text_secondary_color">#ffffffff</color>
 
+
+    <!-- Backgrounds -->
+    <color name="transparent">#00000000</color>
+    <color name="background">#ffffffff</color>
+    <color name="card_background">#fffafafa</color>
+    <color name="button_background">@color/card_background</color>
+    <color name="tutorial_background_1">#ff00BCD4</color>
+    <color name="tutorial_background_2">#ff4CAF50</color>
+    <color name="tutorial_background_3">#ff5C6BC0</color>
+    <color name="tutorial_background_4">#ffF44336</color>
+    <color name="tutorial_background_5">#ffFF9800</color>
+
+    <!-- other colors -->
+    <color name="white">#ffffff</color>
+    <color name="divider">#B6B6B6</color>
 </resources>

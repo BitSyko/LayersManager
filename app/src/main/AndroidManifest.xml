@@ -5,7 +5,7 @@ xmlns:tools="http://schemas.android.com/tools"
     android:sharedUserId="android.uid.Manager"
     android:process="com.android.Layers">
 
-<uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
+    <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -20,43 +20,40 @@ xmlns:tools="http://schemas.android.com/tools"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="Layers"
+        tools:replace="android:label"
         android:theme="@style/Base.Theme.Toolbar"
         >
 
-        <activity
-            android:name=".activities.MainActivity"
-            android:label="Install Overlays" >
-            <intent-filter android:label="Layers Manager">
-                <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".MainActivity"
+            android:label="Layers Manager"
+            android:theme="@style/Base.Theme.Toolbar.TransparentStatusBar"
+            android:noHistory="true">
 
-                <category android:name="android.intent.category.LAUNCHER" />
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.OverlayDetailActivity"
-            android:label="Operate"
-            android:theme="@style/Theme.Toolbar"
-            android:parentActivityName=".activities.MainActivity" />
 
         <activity
-            android:name="com.lovejoy777.rroandlayersmanager.Backup"
-            android:icon="@mipmap/ic_launcher"
-            android:label="Backup"
-            android:theme="@style/Base.Theme.Toolbar"
-            android:parentActivityName=".activities.MainActivity">
-            <intent-filter>
-                <action android:name="com.lovejoy777.rroandlayersmanager.BACKUP" />
+            android:name=".menu"
+            android:label="Layers Manager"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/Base.Theme.Toolbar.TransparentStatusBar">
+            <intent-filter android:label="Layers Manager">
+                <action android:name="android.intent.action.MAIN1" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
+
         <activity
-            android:name="com.lovejoy777.rroandlayersmanager.Install"
+            android:name=".fragments.InstallFragment"
             android:icon="@mipmap/ic_launcher"
             android:label="Install"
             android:theme="@style/Base.Theme.Toolbar"
-            android:parentActivityName=".activities.MainActivity">
+            android:parentActivityName=".menu">
             <intent-filter>
                 <action android:name="com.lovejoy777.rroandlayersmanager.INSTALL" />
 
@@ -65,49 +62,10 @@ xmlns:tools="http://schemas.android.com/tools"
         </activity>
 
         <activity
-            android:name="com.lovejoy777.rroandlayersmanager.Restore"
-            android:icon="@mipmap/ic_launcher"
-            android:label="Restore"
-            android:theme="@style/LayersTheme"
-            android:parentActivityName=".activities.MainActivity">
-            <intent-filter>
-                <action android:name="com.lovejoy777.rroandlayersmanager.RESTORE" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name="com.lovejoy777.rroandlayersmanager.Delete"
-            android:icon="@mipmap/ic_launcher"
-            android:label="Delete"
-            android:theme="@style/LayersTheme"
-            android:parentActivityName=".activities.MainActivity">
-            <intent-filter>
-                <action android:name="com.lovejoy777.rroandlayersmanager.DELETE" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-
-        <activity
-            android:name="com.lovejoy777.rroandlayersmanager.Settings"
-            android:icon="@mipmap/ic_launcher"
-            android:label="Settings"
-            android:theme="@style/LayersTheme"
-            android:parentActivityName=".activities.MainActivity">
-            <intent-filter>
-                <action android:name="com.lovejoy777.rroandlayersmanager.SETTINGS" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <activity
             android:name="com.lovejoy777.rroandlayersmanager.filepicker.FilePickerActivity"
             android:label="Layers"
-            android:theme="@style/Base.Theme.Toolbar">
+            android:theme="@style/Base.Theme.Toolbar"
+            android:parentActivityName=".menu">
             <intent-filter>
                 <action android:name="android.intent.action.GET_CONTENT" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -115,22 +73,9 @@ xmlns:tools="http://schemas.android.com/tools"
         </activity>
 
         <activity
-            android:name="com.lovejoy777.rroandlayersmanager.PlaystoreSuperUser"
-            android:icon="@mipmap/ic_launcher"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="com.lovejoy777.rroandlayersmanager.PLAYSU" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name="com.lovejoy777.rroandlayersmanager.Instructions"
-            android:icon="@mipmap/ic_launcher"
-            android:label="Instructions"
-            android:parentActivityName=".activities.MainActivity"
-            android:theme="@style/LayersTheme">
+            android:name=".activities.DetailedTutorialActivity"
+            android:label=""
+            android:parentActivityName=".menu">
             <intent-filter>
                 <action android:name="android.intent.action.INSTRUCTIONS" />
 
@@ -139,27 +84,25 @@ xmlns:tools="http://schemas.android.com/tools"
         </activity>
         <activity
             android:name=".activities.AboutActivity"
-            android:icon="@mipmap/ic_launcher"
             android:label=""
             android:theme="@style/Toolbar2"
-            android:parentActivityName=".activities.MainActivity">
+            android:parentActivityName=".menu">
             <intent-filter>
                 <action android:name="android.intent.action.ABOUT" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.lovejoy777.rroandlayersmanager.ChangeLog"
-            android:icon="@mipmap/ic_launcher"
-            android:label="ChangeLog"
-            android:parentActivityName=".activities.MainActivity"
-            android:theme="@style/LayersTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.CHANGELOG" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
+        <activity android:name=".activities.IntroActivity"
+            android:noHistory="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="Layers"
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".menu">
         </activity>
 
     </application>

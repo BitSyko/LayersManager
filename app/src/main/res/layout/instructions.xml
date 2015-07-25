@@ -1,34 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center">
 
-    <RelativeLayout
-        android:id="@+id/toolbar_container"
+    <android.support.v7.widget.Toolbar
+
+        android:id="@+id/toolbar5"
+        android:layout_height="56dp"
+        android:layout_width="match_parent"
+        android:minHeight="?android:attr/actionBarSize"
+        android:background="?android:attr/colorPrimary"
+        android:gravity="bottom"
+        tools:context="com.sh4dow.hex_layerstheme.activities.AboutActivity"
+        android:elevation="4dp"
+        android:theme="@style/Base.Theme.Test">
+
+    </android.support.v7.widget.Toolbar>
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:paddingTop="@dimen/tool_bar_top_padding">
+        android:text="@string/instructionstitle"
+        android:id="@+id/textView3"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="56dp"
+        android:textSize="18sp"
+        android:elevation="4dp"
+        android:textColor="#ffffff"
+        android:layout_below="@+id/toolbar5"
+        android:layout_alignParentEnd="false"
+        android:layout_marginTop="16dp"
+        android:textStyle="bold" />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:elevation="4dp"
-            android:transitionName="actionBar" />
-    </RelativeLayout>
-
-<ScrollView
+    <ScrollView
     android:id="@+id/layout1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/background_material_light"
-    android:layout_below="@+id/toolbar_container"
+    android:layout_below="@+id/toolbar5"
     android:fillViewport="true"
     android:scrollbarStyle="insideInset"
     android:scrollbars="vertical">
+
+
+
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -36,28 +54,321 @@
         android:background="@color/background_material_light"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+        <android.support.v7.widget.CardView
+            card_view:cardBackgroundColor="@color/card_background"
 
-            android:layout_marginTop="10dp"
-            android:text="@string/instructionsTV6"
-            android:textSize="@dimen/title_text_size"
-            android:textColor="@color/app_text_primary"
-            />
-
-        <TextView
-            android:id="@+id/textView7"
-            android:layout_width="fill_parent"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:padding="24dp"
-            android:text="@string/instructionsTV7"
-            android:textSize="15sp"
-            android:textColor="@color/app_text_secondary"
-            />
+            android:id="@+id/CardView_Instructions1"
+            android:elegantTextHeight="false"
+            android:elevation="5dp"
+            android:background="@color/card_background"
+            android:backgroundTint="@color/card_background"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp">
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="5.59"
+                >
+
+            <TextView
+                android:textColor="@color/textColorPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/instructionscard1header"
+                android:id="@+id/textView4"
+                android:layout_gravity="start|top"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:textStyle="bold"
+                android:elevation="5dp" />
+
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/instructionscard1"
+                android:id="@+id/textView5"
+                android:layout_gravity="start|top"
+                android:layout_marginStart="16dp"
+                android:textColor="@color/text_color_secondary"
+                android:elevation="5dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="16dp" />
+
+            </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            card_view:cardBackgroundColor="@color/card_background"
+
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:id="@+id/CardView_Instructions2"
+            android:elegantTextHeight="false"
+            android:elevation="5dp"
+            android:background="@color/card_background"
+            android:backgroundTint="@color/card_background"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="5.59"
+                >
+
+                <TextView
+                    android:textColor="@color/textColorPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instructionscard2header"
+                    android:id="@+id/textView6"
+                    android:layout_gravity="start|top"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:textStyle="bold"
+                    android:elevation="5dp" />
+
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instructionscard2"
+                    android:id="@+id/textview7"
+                    android:layout_gravity="start|top"
+                    android:layout_marginStart="16dp"
+                    android:textColor="@color/text_color_secondary"
+                    android:elevation="5dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginEnd="16dp" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            card_view:cardBackgroundColor="@color/card_background"
+
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:id="@+id/CardView_Instructions3"
+            android:elegantTextHeight="false"
+            android:elevation="5dp"
+            android:background="@color/card_background"
+            android:backgroundTint="@color/card_background"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="5.59"
+                >
+
+                <TextView
+                    android:textColor="@color/textColorPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instructionscard3header"
+                    android:id="@+id/textView8"
+                    android:layout_gravity="start|top"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:textStyle="bold"
+                    android:elevation="5dp" />
+
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instructionscard3"
+                    android:id="@+id/textview9"
+                    android:layout_gravity="start|top"
+                    android:layout_marginStart="16dp"
+                    android:textColor="@color/text_color_secondary"
+                    android:elevation="5dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginEnd="16dp" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            card_view:cardBackgroundColor="@color/card_background"
+
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:id="@+id/CardView_Instructions4"
+            android:elegantTextHeight="false"
+            android:elevation="5dp"
+            android:background="@color/card_background"
+            android:backgroundTint="@color/card_background"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp">
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="5.59"
+                >
+
+                <TextView
+                    android:textColor="@color/textColorPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instructionscard4header"
+                    android:id="@+id/textView10"
+                    android:layout_gravity="start|top"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:textStyle="bold"
+                    android:elevation="5dp" />
+
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instructionscard4"
+                    android:id="@+id/textview11"
+                    android:layout_gravity="start|top"
+                    android:layout_marginStart="16dp"
+                    android:textColor="@color/text_color_secondary"
+                    android:elevation="5dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginEnd="16dp" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            card_view:cardBackgroundColor="@color/card_background"
+
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:id="@+id/CardView_Instructions5"
+            android:elegantTextHeight="false"
+            android:elevation="5dp"
+            android:background="@color/card_background"
+            android:backgroundTint="@color/card_background"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="5.59"
+                >
+
+                <TextView
+                    android:textColor="@color/textColorPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instructionscard5header"
+                    android:id="@+id/textView12"
+                    android:layout_gravity="start|top"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:textStyle="bold"
+                    android:elevation="5dp" />
+
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instructionscard5"
+                    android:id="@+id/textview13"
+                    android:layout_gravity="start|top"
+                    android:layout_marginStart="16dp"
+                    android:textColor="@color/text_color_secondary"
+                    android:elevation="5dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="16dp" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            card_view:cardBackgroundColor="@color/card_background"
+
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:id="@+id/CardView_Instructions6"
+            android:elegantTextHeight="false"
+            android:elevation="5dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/card_background"
+            android:backgroundTint="@color/card_background"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="5.59"
+                >
+
+                <TextView
+                    android:textColor="@color/textColorPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instructionscard6header"
+                    android:id="@+id/textView14"
+                    android:layout_gravity="start|top"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:textStyle="bold"
+                    android:elevation="5dp" />
+
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instructionscard6"
+                    android:id="@+id/textview15"
+                    android:layout_gravity="start|top"
+                    android:layout_marginStart="16dp"
+                    android:textColor="@color/text_color_secondary"
+                    android:elevation="5dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="16dp" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
 
     </LinearLayout>
 

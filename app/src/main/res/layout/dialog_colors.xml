@@ -11,7 +11,9 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="8dp"></LinearLayout>
+        android:layout_height="8dp">
+
+    </LinearLayout>
     <RadioGroup
         android:id="@+id/radiogroup"
         android:layout_width="fill_parent"
@@ -20,8 +22,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="8dp"></LinearLayout>
+        android:layout_height="8dp">
 
-
+    </LinearLayout>
 
 </LinearLayout>
