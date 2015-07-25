@@ -98,6 +98,9 @@ xmlns:tools="http://schemas.android.com/tools"
             android:noHistory="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
+
+        <activity android:name=".activities.FullScreenActivity"/>
+
         <activity
             android:name=".activities.SettingsActivity"
             android:label="Layers"
