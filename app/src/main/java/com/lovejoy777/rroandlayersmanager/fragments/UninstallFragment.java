@@ -27,7 +27,7 @@ import com.afollestad.materialcab.MaterialCab;
 import com.github.jorgecastilloprz.FABProgressCircle;
 import com.github.jorgecastilloprz.listeners.FABProgressListener;
 import com.lovejoy777.rroandlayersmanager.R;
-import com.lovejoy777.rroandlayersmanager.helper.FileBean;
+import com.lovejoy777.rroandlayersmanager.beans.FileBean;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 import com.stericson.RootTools.RootTools;

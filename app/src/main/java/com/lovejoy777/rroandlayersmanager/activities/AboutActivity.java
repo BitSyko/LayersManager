@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.adapters.AboutAdapter;
 import com.lovejoy777.rroandlayersmanager.beans.DeveloperBean;
-import com.lovejoy777.rroandlayersmanager.beans.DeveloperFactory;
+import com.lovejoy777.rroandlayersmanager.beans.LicenceBean;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,28 +29,26 @@ public class AboutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
-        DeveloperFactory factory = new DeveloperFactory(this);
-
         DeveloperBean[] developers = {
-                factory.createDeveloper("Syko Pompos", getString(R.string.LayersLeadDeveloper), R.drawable.about_syko, R.string.linkSyko),
-                factory.createDeveloper("Reinhard Strauch", getString(R.string.LayersLeadDeveloper), R.drawable.about_reinhard, R.string.linkReinhard),
-                factory.createDeveloper("Brian Gill", getString(R.string.LayersDeveloper), R.drawable.about_brian, R.string.linkBrian),
-                factory.createDeveloper("Aldrin Holmes", getString(R.string.LayersDeveloper), R.drawable.about_aldrin, R.string.linkAldrin),
-                factory.createDeveloper("Steve Lovejoy", getString(R.string.AppDeveloper), R.drawable.about_steve, R.string.linkSteve),
-                factory.createDeveloper("Niklas Schnettler", getString(R.string.AppDeveloper), R.drawable.about_niklas, R.string.linkNiklas),
-                factory.createDeveloper("Branden Manibusan", getString(R.string.AditionalLayersDev), R.drawable.about_branden, R.string.linkBranden),
-                factory.createDeveloper("Denis Suarez", getString(R.string.ShowcaseDeveloper), R.drawable.about_denis, R.string.linkDenis),
+                new DeveloperBean("Syko Pompos", getString(R.string.LayersLeadDeveloper), getDrawable(R.drawable.about_syko), getString(R.string.linkSyko)),
+                new DeveloperBean("Reinhard Strauch", getString(R.string.LayersLeadDeveloper), getDrawable(R.drawable.about_reinhard), getString(R.string.linkReinhard)),
+                new DeveloperBean("Brian Gill", getString(R.string.LayersDeveloper), getDrawable(R.drawable.about_brian), getString(R.string.linkBrian)),
+                new DeveloperBean("Aldrin Holmes", getString(R.string.LayersDeveloper), getDrawable(R.drawable.about_aldrin), getString(R.string.linkAldrin)),
+                new DeveloperBean("Steve Lovejoy", getString(R.string.AppDeveloper), getDrawable(R.drawable.about_steve), getString(R.string.linkSteve)),
+                new DeveloperBean("Niklas Schnettler", getString(R.string.AppDeveloper), getDrawable(R.drawable.about_niklas), getString(R.string.linkNiklas)),
+                new DeveloperBean("Branden Manibusan", getString(R.string.AditionalLayersDev), getDrawable(R.drawable.about_branden), getString(R.string.linkBranden)),
+                new DeveloperBean("Denis Suarez", getString(R.string.ShowcaseDeveloper), getDrawable(R.drawable.about_denis), getString(R.string.linkDenis)),
         };
 
         DeveloperBean[] usefulLinks = {
-                factory.createDeveloper("Layers on Google Plus", getString(R.string.findOutWhatsNew), R.drawable.about_bitsyko, R.string.linkCommunity),
-                factory.createDeveloper("Layers on XDA", getString(R.string.joinTheChat), R.drawable.about_xda, R.string.linkXda)
+                new DeveloperBean("Layers on Google Plus", getString(R.string.findOutWhatsNew), getDrawable(R.drawable.about_bitsyko), getString(R.string.linkCommunity)),
+                new DeveloperBean("Layers on XDA", getString(R.string.joinTheChat), getDrawable(R.drawable.about_xda), getString(R.string.linkXda))
         };
 
         DeveloperBean[] libraries = {
-                factory.createDeveloper(getString(R.string.License1), getString(R.string.License1about), R.drawable.ic_drawer_about, R.string.linkCommunity),
-                factory.createDeveloper(getString(R.string.License2), getString(R.string.License2about), R.drawable.ic_drawer_about, R.string.linkCommunity),
-                factory.createDeveloper(getString(R.string.License3), getString(R.string.License3about), R.drawable.ic_drawer_about, R.string.linkCommunity)
+                new LicenceBean(getString(R.string.License1), getString(R.string.License1about), getDrawable(R.drawable.ic_drawer_about), getString(R.string.License1github),getString(R.string.License1more)),
+                new LicenceBean(getString(R.string.License2), getString(R.string.License2about), getDrawable(R.drawable.ic_drawer_about), getString(R.string.License2github),getString(R.string.License2more)),
+                new LicenceBean(getString(R.string.License3), getString(R.string.License3about), getDrawable(R.drawable.ic_drawer_about), getString(R.string.License3github),getString(R.string.License3more))
         };
 
         //set Toolbar
@@ -91,75 +89,46 @@ public class AboutActivity extends AppCompatActivity {
 
         devlist.setDividerHeight(26);
 
+
         devlist.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
-                if (groupPosition <=1) {
-
+                if (groupPosition <= 1) {
                     String url = listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition).getWebpage();
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-                    return true;
                 } else if (groupPosition == 2) {
-
-                    showLicenceAlert(childPosition);
-
-                    return true;
+                    showLicenceAlert((LicenceBean) parent.getExpandableListAdapter().getChild(groupPosition, childPosition));
                 } else {
                     throw new IllegalArgumentException();
                 }
+
+                return true;
             }
         });
 
     }
 
 
-    private void showLicenceAlert(int position) {
+    private void showLicenceAlert(final LicenceBean licenceBean) {
 
-        String dialogText = "";
-        String dialogTitleText = "";
         LayoutInflater li = LayoutInflater.from(AboutActivity.this);
         View view3 = li.inflate(R.layout.dialog_license, null);
         final TextView tv_license = (TextView) view3.findViewById(R.id.tv_license);
         final AlertDialog.Builder dialog = new AlertDialog.Builder(AboutActivity.this);
         dialog.setView(view3);
-        switch (position) {
-            case 0:
-                dialogText = getResources().getString(R.string.License1more);
-                dialogTitleText = getResources().getString(R.string.License1);
-                dialog.setPositiveButton(R.string.VisitGithub, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.License1github)));
-                        startActivity(browserIntent);
-                    }
-                });
 
-                break;
-            case 1:
-                dialogText = getResources().getString(R.string.License2more);
-                dialogTitleText = getResources().getString(R.string.License2);
-                dialog.setPositiveButton(R.string.VisitGithub, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.License2github)));
-                        startActivity(browserIntent);
-                    }
-                });
-                break;
-            case 2:
-                dialogText = getResources().getString(R.string.License3more);
-                dialogTitleText = getResources().getString(R.string.License3);
-                dialog.setPositiveButton(R.string.VisitGithub, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.License3github)));
-                        startActivity(browserIntent);
-                    }
-                });
-                break;
+        dialog.setTitle(licenceBean.getTitle());
+        tv_license.setText(licenceBean.getLongDescription());
 
-        }
-        dialog.setTitle(dialogTitleText);
-        tv_license.setText(dialogText);
+        dialog.setPositiveButton(R.string.VisitGithub, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(licenceBean.getWebpage()));
+                startActivity(browserIntent);
+            }
+        });
+
         dialog.setNegativeButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
             }
