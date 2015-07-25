@@ -1,20 +1,15 @@
 package com.lovejoy777.rroandlayersmanager;
 
 import android.animation.Animator;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.AssetManager;
-import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -35,41 +30,19 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.animation.AccelerateInterpolator;
+import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Switch;
-import android.widget.TableRow;
-import android.widget.TextView;
-
+import android.widget.*;
+import com.lovejoy777.rroandlayersmanager.activities.FullScreenActivity;
 import com.lovejoy777.rroandlayersmanager.helper.CopyUnzipHelper;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 
-/**
- * Created by Niklas on 02.06.2015.
- */
 public class OverlayDetailActivity extends Fragment {
 
     int NumberOfOverlays = 0;
@@ -79,9 +52,9 @@ public class OverlayDetailActivity extends Fragment {
 
     private final static int BUFFER_SIZE = 1024;
 
-    Bitmap bitmap[] = new Bitmap[NumberOfScreenshotsMain];
-
     public static final int NumberOfScreenshotsMain = 3;
+
+    public Bitmap bitmap[] = new Bitmap[NumberOfScreenshotsMain];
 
     private ArrayList<String> paths = new ArrayList<String>();
 
@@ -113,14 +86,20 @@ public class OverlayDetailActivity extends Fragment {
     private CoordinatorLayout cordLayout = null;
     private LoadDrawables imageLoader;
 
+    private Activity activity;
 
-    /** Called when the activity is first created. */
+
+    /**
+     * Called when the activity is first created.
+     */
     @Override
-    public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle
-            savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
         FragmentActivity faActivity = (FragmentActivity) super.getActivity();
         cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_plugindetail, container, false);
         setHasOptionsMenu(true);
+
+        activity = getActivity();
 
         getIntent();
 
@@ -132,13 +111,12 @@ public class OverlayDetailActivity extends Fragment {
     }
 
     @Override
-        public void onDestroy() {
-                if (imageLoader.getStatus() != AsyncTask.Status.FINISHED) {
-                        imageLoader.cancel(true);
-                    }
-                super.onDestroy();
-            }
-
+    public void onDestroy() {
+        if (imageLoader.getStatus() != AsyncTask.Status.FINISHED) {
+            imageLoader.cancel(true);
+        }
+        super.onDestroy();
+    }
 
 
     private void createThemeFolder() {
@@ -399,7 +377,6 @@ public class OverlayDetailActivity extends Fragment {
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -464,7 +441,6 @@ public class OverlayDetailActivity extends Fragment {
                     //int colorPrimaryDark = Color.HSVToColor(hsv);
                     Window window = getActivity().getWindow();
                     window.setStatusBarColor(Color.HSVToColor(hsv));
-
 
 
                 }
@@ -594,11 +570,6 @@ public class OverlayDetailActivity extends Fragment {
             }
         }
     }
-
-
-
-
-
 
 
     private void CopyFolderToSDCard() {
@@ -774,7 +745,6 @@ public class OverlayDetailActivity extends Fragment {
     }
 
 
-
     ///////////
     //Snackbars
     private void selectOverlaysFirstSnackbar() {
@@ -933,7 +903,7 @@ public class OverlayDetailActivity extends Fragment {
         protected void onPreExecute() {
 
             progress2 = ProgressDialog.show(getActivity(), getString(R.string.InstallOverlays),
-                    getString(R.string.installing)+"...", true);
+                    getString(R.string.installing) + "...", true);
         }
 
         @Override
@@ -957,7 +927,7 @@ public class OverlayDetailActivity extends Fragment {
             for (int i4 = NumberOfOverlays + 1; i4 < NumberOfOverlays + NumberOfColorOverlays + 1; i4++) {
                 if (InstallOverlayList.get(i4) == 1) {
                     InstallOverlayList.set(i4, 0);
-                    paths.add(ThemeFolder+whichColor+"/"+OverlayPathList.get(i4));
+                    paths.add(ThemeFolder + whichColor + "/" + OverlayPathList.get(i4));
                 }
             }
 
@@ -988,7 +958,7 @@ public class OverlayDetailActivity extends Fragment {
         protected void onPreExecute() {
             //progressDialog rebooting / 10 seconds
             progressDialogReboot.setTitle(R.string.rebooting);
-            progressDialogReboot.setMessage(getString(R.string.rebootIn)+"...");
+            progressDialogReboot.setMessage(getString(R.string.rebootIn) + "...");
             progressDialogReboot.setCanceledOnTouchOutside(false);
             progressDialogReboot.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
                 //when Cancel Button is clicked
@@ -1056,18 +1026,10 @@ public class OverlayDetailActivity extends Fragment {
 
     private class LoadDrawables extends AsyncTask<Void, Void, Void> {
 
-
-        protected void onPreExecute() {
-
-        }
-
-
         @Override
         protected Void doInBackground(Void... params) {
 
             for (int i = 0; i < NumberOfScreenshotsMain; i++) {
-
-
 
                 Drawable Screenshots[] = new Drawable[NumberOfScreenshotsMain];
                 int j = i + 1;
@@ -1106,15 +1068,24 @@ public class OverlayDetailActivity extends Fragment {
             if (isAdded()) {
                 for (int i = 0; i < NumberOfScreenshotsMain; i++) {
 
-                    if (bitmap[i].getHeight() > 1000){
+                    if (bitmap[i].getHeight() > 1000) {
                         ScreenshotimageView[i].setImageBitmap(Bitmap.createScaledBitmap(bitmap[i], (int) (bitmap[i].getWidth() * 0.4), (int) (bitmap[i].getHeight() * 0.4), true));
-                    }else{
+                    } else {
                         ScreenshotimageView[i].setImageBitmap(bitmap[i]);
                     }
 
-                    bitmap[i] = null;
                     Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fadein);
+
+                    ScreenshotimageView[i].setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            FullScreenActivity.launch(activity, (ImageView) view, "img");
+                        }
+                    });
+
                     ScreenshotimageView[i].startAnimation(fadeInAnimation);
+
+
                 }
             }
         }
