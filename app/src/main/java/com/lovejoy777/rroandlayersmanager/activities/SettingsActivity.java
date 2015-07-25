@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.lovejoy777.rroandlayersmanager.R;
@@ -128,6 +129,17 @@ public class SettingsActivity extends PreferenceActivity implements
 
     public static boolean rootAccess() {
         return mRootAccess && RootTools.isAccessGiven();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }
