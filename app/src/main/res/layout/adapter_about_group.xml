@@ -13,6 +13,7 @@
         android:id="@+id/header"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textColor="@color/accent"
-        />
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp" />
 
 </LinearLayout>
