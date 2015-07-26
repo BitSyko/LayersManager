@@ -74,7 +74,7 @@ public class AboutAdapter extends BaseExpandableListAdapter {
 
         if (rowView == null) {
             LayoutInflater inflater = context.getLayoutInflater();
-            rowView = inflater.inflate(R.layout.adapter_about_group, null);
+            rowView = inflater.inflate(R.layout.adapter_about_headings, null);
         }
 
         TextView lblListHeader = (TextView) rowView

@@ -14,8 +14,6 @@
   <string name="Category2Name">Stil spezifische Overlays</string>
   <string name="Category1Name">Allgemeine Overlays</string>
   <string name="noRoot">Kein Root Zugriff verfügbar</string>
-  <string name="rebootIn">Neustart in 10 Sekunden</string>
-  <string name="RebootNow">Neustart</string>
   <string name="niklasschnettler">Niklas Schnettler</string>
   <string name="developedby">Layers wurde entwickelt von</string>
   <string name="usefullinks">Nützliche Links</string>
@@ -72,15 +70,12 @@ Copyright (c) 2015 Aidan Michael Follestad\n\nPermission is hereby granted, free
   <string name="instructionscard6header">Zeige das Start Tutorial ein weiteres Mal an</string>
   <string name="instructionscard6">Klicke um das Tutorial vom Anfang noch einmal zu starten</string>
   <string name="InstallOverlays2">Installation</string>
-  <string name="InstallOverlays">Overlays installieren</string>
-  <string name="installing">Installiere</string>
   <string name="installed">Ausgewählte Overlays installiert</string>
   <string name="UninstallOverlays">Deinstallation</string>
   <string name="selectAll">Alles auswählen</string>
   <string name="nothingApplied">Keine Overlays angewendet.\nInstalliere welche von der Hauptseite aus.</string>
   <string name="appliedOverlays">Angewendete Overlays:</string>
   <string name="OverlaysSelected">Overlays ausgewählt</string>
-  <string name="uninstalling">Deinstalliere</string>
   <string name="PreformReboot">Führe einen Softreboot durch?</string>
   <string name="uninstalled">Ausgewählte Overlays deinstalliert</string>
   <string name="noBackups">Keine Sicherungen vorhanden.\nKlicke auf den FAB um eine zu erstellen.</string>
@@ -117,10 +112,9 @@ Copyright (c) 2015 Aidan Michael Follestad\n\nPermission is hereby granted, free
   <string name="noBuildPropCommit">Kein build.prop commit</string>
   <string name="MoveOverlays">Overlays installieren?</string>
   <string name="VisitGithub">Github</string>
-  <string name="Reboot">NEUSTARTEN</string>
+  <string name="Reboot">Neustarten</string>
   <string name="pick_color">Wähle einen Stil</string>
   <string name="ApplyOverlays">Ausgewählte Overlays anwenden?</string>
-  <string name="rebooting">Starte neu</string>
-  <string name="selectOverlayFirst">Wähle zuerst Overlays aus</string>
   <string name="OverlaysInstalled">Overlays wurden installiert!</string>
+  <string name="emptydirectory">Dieses Verzeichnis scheint leer zu sein.</string>
 </resources>

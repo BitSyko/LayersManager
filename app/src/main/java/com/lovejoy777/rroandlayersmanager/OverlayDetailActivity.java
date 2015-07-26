@@ -3,7 +3,6 @@ package com.lovejoy777.rroandlayersmanager;
 import android.animation.Animator;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,7 +13,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.AssetManager;
-import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -28,7 +26,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
@@ -41,10 +38,8 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -55,11 +50,13 @@ import android.widget.Switch;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.github.jorgecastilloprz.FABProgressCircle;
+import com.github.jorgecastilloprz.listeners.FABProgressListener;
+import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.helper.CopyUnzipHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -70,56 +67,49 @@ import java.util.List;
 /**
  * Created by Niklas on 02.06.2015.
  */
-public class OverlayDetailActivity extends Fragment {
-
-    int NumberOfOverlays = 0;
-
-    int NumberOfColorOverlays = 0;
-    private Drawable myDrawable = null;
-
-    private final static int BUFFER_SIZE = 1024;
-
-    Bitmap bitmap[] = new Bitmap[NumberOfScreenshotsMain];
-
-    public static final int NumberOfScreenshotsMain = 3;
-
-    private ArrayList<String> paths = new ArrayList<String>();
-
-    private String whichColor = null;
-
-    final ImageView ScreenshotimageView[] = new ImageView[NumberOfScreenshotsMain];
-
-    public CheckBox dontShowAgain;
-
-    int atleastOneIsClicked = 0;
+public class OverlayDetailActivity extends Fragment implements FABProgressListener {
 
     List<Integer> InstallOverlayList = new ArrayList<Integer>();
     List<String> OverlayPathList = new ArrayList<String>();
     List<String> OverlayColorListPublic = new ArrayList<String>();
+    List<String> OverlayNameList = null;
+    private ArrayList<String> paths = new ArrayList<String>();
 
     private String ThemeName;
-    private String ThemeFolder = null;
-    private String ThemeFolderGeneral = null;
-    private int NumberOfColors = 0;
-
-
+    private String ThemeFolder;
+    private String ThemeFolderGeneral;
     private String category;
     private String package2;
+    private String whichColor;
+    int atleastOneIsClicked;
+
+    private int NumberOfColors;
+    int NumberOfOverlays;
+    int NumberOfColorOverlays;
+    public static final int NumberOfScreenshotsMain = 3;
+    private final static int BUFFER_SIZE = 1024;
+
     private IOperation opService;
 
-    private Switch installEverything = null;
-    private FloatingActionButton fab2 = null;
-    private List<String> OverlayNameList = null;
-    private CoordinatorLayout cordLayout = null;
+    private Switch installEverything;
+    private FloatingActionButton fab2;
+    private CoordinatorLayout cordLayout;
     private LoadDrawables imageLoader;
+    private FABProgressCircle fabProgressCircle;
+    final ImageView ScreenshotimageView[] = new ImageView[NumberOfScreenshotsMain];
+    public CheckBox dontShowAgain;
+
+    private Drawable myDrawable;
+    Bitmap bitmap[] = new Bitmap[NumberOfScreenshotsMain];
 
 
     /** Called when the activity is first created. */
     @Override
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState){
-        FragmentActivity faActivity = (FragmentActivity) super.getActivity();
+
         cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_plugindetail, container, false);
+
         setHasOptionsMenu(true);
 
         getIntent();
@@ -193,7 +183,6 @@ public class OverlayDetailActivity extends Fragment {
                             } else {
 
                                 InstallOverlayList.set(c, 0);
-                                //InstallOverlay[c] = 0;
                                 atleastOneIsClicked = atleastOneIsClicked - 1;
                             }
                             if (atleastOneIsClicked > 0) {
@@ -398,11 +387,13 @@ public class OverlayDetailActivity extends Fragment {
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
+        fabProgressCircle = (FABProgressCircle) cordLayout.findViewById(R.id.fabProgressCircle);
+        fabProgressCircle.attachListener(this);
 
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                fab2.setClickable(false);
                 installTheme();
             }
         });
@@ -577,21 +568,13 @@ public class OverlayDetailActivity extends Fragment {
             NumberOfSelectedColorOverlays = NumberOfSelectedColorOverlays + InstallOverlayList.get(i);
         }
 
-        //No checkBox is checked
-        if (NumberOfSelectedNormalOverlays == 0 & NumberOfSelectedColorOverlays == 0) {
-
-            selectOverlaysFirstSnackbar();
-
-        } else {
-
-            //when a color checkbox is checked
-            if (NumberOfSelectedColorOverlays != 0) {
-                colorDialog();
-            }
-            //if only normal Overlays are selected
-            else {
-                installDialog();
-            }
+        //when a color checkbox is checked
+        if (NumberOfSelectedColorOverlays != 0) {
+            colorDialog();
+        }
+        //if only normal Overlays are selected
+        else {
+            installDialog();
         }
     }
 
@@ -623,8 +606,6 @@ public class OverlayDetailActivity extends Fragment {
             e.printStackTrace();
         }
 
-        String destinationGeneral = Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeNameNoSpace + "/General/";
-        String destinationColor = Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeNameNoSpace + "/";
         File ThemeDirectory = new File(Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeNameNoSpace + "/");
         ThemeDirectory.mkdirs();
         CopyFolderToSDCard(getActivity(), ThemeNameNoSpace, am);
@@ -633,12 +614,8 @@ public class OverlayDetailActivity extends Fragment {
 
     //copy files to sd card
     public void CopyFolderToSDCard(Context context, String ThemeNameNoSpace, AssetManager assetFiles) {
-        Context mContext;
-        //RootTools.deleteFileOrDirectory("/sdcard/Overlays/"+ThemeName, true);
-        mContext = context;
-        try {
 
-            //AssetManager assetFiles = mContext.getAssets();
+        try {
 
             String[] files = assetFiles.list("Files");
 
@@ -777,11 +754,6 @@ public class OverlayDetailActivity extends Fragment {
 
     ///////////
     //Snackbars
-    private void selectOverlaysFirstSnackbar() {
-
-        Snackbar.make(getActivity().getWindow().getDecorView().findViewById(android.R.id.content), R.string.selectOverlayFirst, Snackbar.LENGTH_SHORT)
-                .show();
-    }
 
     private void installationFinishedSnackBar() {
 
@@ -791,7 +763,7 @@ public class OverlayDetailActivity extends Fragment {
                 .setAction(R.string.Reboot, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        (new Reboot()).execute();
+                        Commands.reboot(getActivity());
                     }
                 })
                 .show();
@@ -805,7 +777,7 @@ public class OverlayDetailActivity extends Fragment {
         //if (showInstallationConfirmDialog()) {
         AlertDialog.Builder installdialog = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();
-        View dontShowAgainLayout = inflater.inflate(R.layout.dialog_installation, null);
+        View dontShowAgainLayout = inflater.inflate(R.layout.dialog_donotshowagain, null);
         dontShowAgain = (CheckBox) dontShowAgainLayout.findViewById(R.id.skip);
 
         installdialog.setView(dontShowAgainLayout);
@@ -821,6 +793,7 @@ public class OverlayDetailActivity extends Fragment {
                     editor.apply();
                 }
 
+                fabProgressCircle.show();
                 //start async task to install the Overlays
                 (new InstallOverlays()).execute();
             }
@@ -927,13 +900,8 @@ public class OverlayDetailActivity extends Fragment {
     /////////////
     //Async Tasks
     private class InstallOverlays extends AsyncTask<Void, Void, Void> {
-        ProgressDialog progress2;
-
 
         protected void onPreExecute() {
-
-            progress2 = ProgressDialog.show(getActivity(), getString(R.string.InstallOverlays),
-                    getString(R.string.installing)+"...", true);
         }
 
         @Override
@@ -970,88 +938,20 @@ public class OverlayDetailActivity extends Fragment {
 
         protected void onPostExecute(Void result) {
             if (isAdded()) {
-                UncheckAllCheckBoxes("Uncheck");
-                installEverything.setChecked(false);
-                //appendLog(OverlayNameList);
-
-                progress2.dismiss();
-                installationFinishedSnackBar(); //show snackbar with option to reboot
+                fabProgressCircle.beginFinalAnimation();
             }
         }
     }
 
-
-    //Async Task to reboot device///////////////////////////////////////////////////////////////////
-    private class Reboot extends AsyncTask<Void, Void, Void> {
-        final ProgressDialog progressDialogReboot = new ProgressDialog(getActivity());
-
-        protected void onPreExecute() {
-            //progressDialog rebooting / 10 seconds
-            progressDialogReboot.setTitle(R.string.rebooting);
-            progressDialogReboot.setMessage(getString(R.string.rebootIn)+"...");
-            progressDialogReboot.setCanceledOnTouchOutside(false);
-            progressDialogReboot.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-                //when Cancel Button is clicked
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Reboot.this.cancel(true);
-                    dialog.dismiss();
-                }
-            });
-
-            progressDialogReboot.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.RebootNow), new DialogInterface.OnClickListener() {
-                //when Cancel Button is clicked
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    try {
-                        Process proc = Runtime.getRuntime()
-                                .exec(new String[]{"su", "-c", "busybox killall system_server"});
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    dialog.dismiss();
-                }
-            });
-            progressDialogReboot.show();
-        }
-
-        //wait 10 seconds to reboot
-        @Override
-        protected Void doInBackground(Void... params) {
-            //wait 10 seconds
-            int i = 0;
-            while (i < 10) {
-                i++;
-                //cancel AsyncTask if Cancel Button is pressed
-                if (isCancelled()) {
-                    break;
-                }
-
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-            }
-            return null;
-        }
-
-        protected void onPostExecute(Void result) {
-            if (isAdded()) {
-                //close Dialog
-                progressDialogReboot.dismiss();
-
-                //softreboot phone
-                try {
-                    Process proc = Runtime.getRuntime()
-                            .exec(new String[]{"su", "-c", "busybox killall system_server"});
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+    @Override
+    public void onFABProgressAnimationEnd() {
+        fab2.setClickable(true);
+        installationFinishedSnackBar();
+        UncheckAllCheckBoxes("Uncheck");
+        installEverything.setChecked(false);
     }
+
+
 
 
     private class LoadDrawables extends AsyncTask<Void, Void, Void> {
@@ -1191,6 +1091,4 @@ public class OverlayDetailActivity extends Fragment {
         super.onDestroyView();
         releaseOpService();
     }
-
-
 }

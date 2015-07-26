@@ -473,30 +473,7 @@ public class BackupRestoreFragment extends Fragment{
                         @Override
                         public void onClick(View v) {
 
-                            AlertDialog.Builder progressDialogReboot = new AlertDialog.Builder(getActivity());
-                            progressDialogReboot.setTitle(R.string.Reboot);
-                            progressDialogReboot.setMessage(R.string.PreformReboot);
-                            progressDialogReboot.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                                //when Cancel Button is clicked
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                            progressDialogReboot.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                //when Cancel Button is clicked
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    try {
-                                        Process proc = Runtime.getRuntime()
-                                                .exec(new String[]{"su", "-c", "busybox killall system_server"});
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                    dialog.dismiss();
-                                }
-                            });
-                            progressDialogReboot.show();
+                            Commands.reboot(getActivity());
                         }
                     })
                     .show();
@@ -523,7 +500,7 @@ public class BackupRestoreFragment extends Fragment{
 
         protected void onPostExecute(Void result) {
 
-            mAdapter = new CardViewAdapter3(Files, R.layout.adapter_tablerow, getActivity());
+            mAdapter = new CardViewAdapter3(Files, R.layout.adapter_backups, getActivity());
             mRecyclerView.setAdapter(mAdapter);
             if (Files == null){
                 ImageView noOverlays = (ImageView)cordLayout.findViewById(R.id.imageView);

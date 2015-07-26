@@ -1,7 +1,9 @@
 package com.lovejoy777.rroandlayersmanager.commands;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -325,6 +327,33 @@ public class Commands {
         } catch (Exception e) {
             Log.e("TAG", "Unzip exception", e);
         }
+    }
+
+    public static void reboot(final Context context){
+        AlertDialog.Builder progressDialogReboot = new AlertDialog.Builder(context);
+        progressDialogReboot.setTitle(R.string.Reboot);
+        progressDialogReboot.setMessage(R.string.PreformReboot);
+        progressDialogReboot.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            //when Cancel Button is clicked
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        progressDialogReboot.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            //when Cancel Button is clicked
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    Process proc = Runtime.getRuntime()
+                            .exec(new String[]{"su", "-c", "busybox killall system_server"});
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                dialog.dismiss();
+            }
+        });
+        progressDialogReboot.show();
     }
 
 

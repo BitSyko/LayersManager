@@ -50,20 +50,21 @@ import java.util.List;
 public class InstallFragment extends Fragment implements FABProgressListener {
 
     private ArrayList<FileBean> Files = new ArrayList<>();
-    //private ArrayList<String> Files = new ArrayList<>();
     private ArrayList<String> Directories = new ArrayList<>();
+    ArrayList<String> Filedirectories = new ArrayList<>();
+
     FloatingActionButton fab2;
-    int atleastOneIsClicked = 0;
     private RecyclerView mRecyclerView;
     private CardViewAdapter3 mAdapter;
-    private MaterialCab mCab = null;
-    List<Integer> InstallOverlayList = new ArrayList<Integer>();
     private DrawerLayout mDrawerLayout;
     private CoordinatorLayout cordLayout = null;
+    private FABProgressCircle fabProgressCircle = null;
+
+    int atleastOneIsClicked = 0;
+
     String currentDir= null;
     String BaseDir=null;
-    ArrayList<String> Filedirectories = new ArrayList<>();
-    private FABProgressCircle fabProgressCircle = null;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -72,7 +73,7 @@ public class InstallFragment extends Fragment implements FABProgressListener {
         currentDir =null;
         Filedirectories.add("SD Card");
         Filedirectories.add("/Overlays");
-        FragmentActivity faActivity  = (FragmentActivity)    super.getActivity();
+
         cordLayout = (CoordinatorLayout)    inflater.inflate(R.layout.fragment_install, container, false);
 
         fabProgressCircle = (FABProgressCircle) cordLayout.findViewById(R.id.fabProgressCircle);
@@ -241,7 +242,6 @@ public class InstallFragment extends Fragment implements FABProgressListener {
     private class CardViewAdapter3 extends RecyclerView.Adapter<CardViewAdapter3.MyViewHolder>{
 
         private ArrayList<FileBean> themes;
-        //private ArrayList<String> themes;
         private ArrayList<String> directories;
         private int rowLayout;
         private  int checkboxLayout;
@@ -253,7 +253,6 @@ public class InstallFragment extends Fragment implements FABProgressListener {
             this.rowLayout = rowLayout;
             this.mContext = context;
             this.checkboxLayout = checkboxLayout;
-            //themes.addAll(directories);
         }
 
         @Override
@@ -274,13 +273,8 @@ public class InstallFragment extends Fragment implements FABProgressListener {
         }
 
 
-       // private UninstallFile theme2 = null;
         @Override
         public void onBindViewHolder(MyViewHolder viewHolder, final int i) {
-
-
-
-
 
             if (isFolder(i)) {
                 viewHolder.image.setImageResource(R.drawable.ic_folder);
@@ -333,7 +327,7 @@ public class InstallFragment extends Fragment implements FABProgressListener {
             if (directories != null){
                 Size = Size + directories.size();
             }
-                return Size;
+            return Size;
         }
 
         public boolean isFolder(int i){
@@ -345,8 +339,6 @@ public class InstallFragment extends Fragment implements FABProgressListener {
             public RelativeLayout rel;
             public CheckBox check;
 
-
-
             public MyViewHolder(View itemView, int type) {
                 super(itemView);
 
@@ -357,23 +349,16 @@ public class InstallFragment extends Fragment implements FABProgressListener {
                 } else if (type == 0) {
                     check = (CheckBox)itemView.findViewById(R.id.deletecheckbox);
                 }
-
-
             }
-
-
         }
 
         @Override
         public int getItemViewType(int position) {
-            System.out.println(isFolder(position));
             if (isFolder(position)){
                 return 1;
             } else{
                 return 0;
             }
-
-
         }
     }
     
@@ -403,7 +388,6 @@ public class InstallFragment extends Fragment implements FABProgressListener {
                     paths.add(currentDir+"/"+file.getFullName());
                 }
             }
-
             Commands.InstallOverlays(getActivity(), paths);
             return null;
         }
@@ -418,36 +402,12 @@ public class InstallFragment extends Fragment implements FABProgressListener {
         fab2.hide();
         fab2.setClickable(true);
         UncheckAll();
-        CoordinatorLayout coordinatorLayoutView = (CoordinatorLayout) cordLayout.findViewById(R.id.main_content3);
         Snackbar.make(fabProgressCircle, R.string.installed, Snackbar.LENGTH_LONG)
                 .setAction(R.string.Reboot, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        AlertDialog.Builder progressDialogReboot = new AlertDialog.Builder(getActivity());
-                        progressDialogReboot.setTitle(R.string.Reboot);
-                        progressDialogReboot.setMessage(R.string.PreformReboot);
-                        progressDialogReboot.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                            //when Cancel Button is clicked
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        progressDialogReboot.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            //when Cancel Button is clicked
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    Process proc = Runtime.getRuntime()
-                                            .exec(new String[]{"su", "-c", "busybox killall system_server"});
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                dialog.dismiss();
-                            }
-                        });
-                        progressDialogReboot.show();
+                        Commands.reboot(getActivity());
                     }
                 })
                 .show();

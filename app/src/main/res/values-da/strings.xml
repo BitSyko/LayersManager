@@ -14,8 +14,6 @@
   <string name="Category2Name">Stil specifikke overlays</string>
   <string name="Category1Name">Generelle overlays</string>
   <string name="noRoot">Ingen root-adgang til rådighed</string>
-  <string name="rebootIn">Genstarter om 10 sekunder</string>
-  <string name="RebootNow">Genstart nu</string>
   <string name="niklasschnettler">Niklas Schnettler</string>
   <string name="developedby">Layers udviklet af</string>
   <string name="usefullinks">Nyttige links</string>
@@ -72,15 +70,12 @@ Copyright (c) 2015 Aidan Michael Follestad\n\nPermission is hereby granted, free
   <string name="instructionscard6header">Afspil introduktionen igen</string>
   <string name="instructionscard6">Klik for at starte guiden fra begyndelsen</string>
   <string name="InstallOverlays2">Installer overlays</string>
-  <string name="InstallOverlays">Installer overlays</string>
-  <string name="installing">Installerer</string>
   <string name="installed">Installed selected Overlays</string>
   <string name="UninstallOverlays">Afinstaller overlays</string>
   <string name="selectAll">Vælg alt</string>
   <string name="nothingApplied">Ingen overlays tilføjet\nInstaller dem på hovedsiden.</string>
   <string name="appliedOverlays">Anvendte overlays:</string>
   <string name="OverlaysSelected">Valgte overlays</string>
-  <string name="uninstalling">Afinstallerer</string>
   <string name="PreformReboot">Vil du udføre en soft reboot?</string>
   <string name="uninstalled">De valgte overlays er afinstalleret</string>
   <string name="noBackups">Ingen tilgængelige sikkerhedskopier. \nLav en ved at klikke på FAB knappen.</string>
@@ -117,10 +112,9 @@ Copyright (c) 2015 Aidan Michael Follestad\n\nPermission is hereby granted, free
   <string name="noBuildPropCommit">ingen build.prop commit</string>
   <string name="MoveOverlays">Installer overlays?</string>
   <string name="VisitGithub">Github</string>
-  <string name="Reboot">GENSTART</string>
+  <string name="Reboot">Reboot</string>
   <string name="pick_color">Vælg en stil</string>
   <string name="ApplyOverlays">Anvend markerede Overlays?</string>
-  <string name="rebooting">Genstarter</string>
-  <string name="selectOverlayFirst">Vælg først overlays</string>
   <string name="OverlaysInstalled">Overlays installeret!</string>
+  <string name="emptydirectory">This directory seems to be empty.</string>
 </resources>
