@@ -253,30 +253,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
                     @Override
                     public void onClick(View v) {
 
-                        AlertDialog.Builder progressDialogReboot = new AlertDialog.Builder(getActivity());
-                        progressDialogReboot.setTitle(R.string.Reboot);
-                        progressDialogReboot.setMessage(R.string.PreformReboot);
-                        progressDialogReboot.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                            //when Cancel Button is clicked
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        progressDialogReboot.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            //when Cancel Button is clicked
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                try {
-                                    Process proc = Runtime.getRuntime()
-                                            .exec(new String[]{"su", "-c", "busybox killall system_server"});
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                dialog.dismiss();
-                            }
-                        });
-                        progressDialogReboot.show();
+                        Commands.reboot(getActivity());
                     }
                 })
                 .show();

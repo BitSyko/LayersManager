@@ -119,7 +119,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:scaleType="center"
-        android:src="@drawable/ic_action_plus"
+        android:src="@drawable/ic_action_add"
         android:layout_margin="16dp"
         android:clickable="true"
         android:id="@+id/fab6"

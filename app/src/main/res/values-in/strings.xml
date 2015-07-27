@@ -14,8 +14,6 @@
   <string name="Category2Name">Spesifik Overlays</string>
   <string name="Category1Name">Overlays umum</string>
   <string name="noRoot">Akses root tidak tersedia</string>
-  <string name="rebootIn">Reboot dalam 10 detik</string>
-  <string name="RebootNow">Reboot sekarang</string>
   <string name="niklasschnettler">Niklas Schnettler</string>
   <string name="developedby">Layers dibuat oleh</string>
   <string name="usefullinks">Link yang berguna</string>
@@ -72,15 +70,12 @@ Copyright (c) 2015 Aidan Michael Follestad\n\nPermission is hereby granted, free
   <string name="instructionscard6header">Mulai ulang pengenalan</string>
   <string name="instructionscard6">Klik untuk memulai tutorial dari awal</string>
   <string name="InstallOverlays2">Pasang Overlays</string>
-  <string name="InstallOverlays">Pasang Overlays</string>
-  <string name="installing">Sedang memasang</string>
   <string name="installed">Installed selected Overlays</string>
   <string name="UninstallOverlays">Hapus Overlays</string>
   <string name="selectAll">Pilih semua</string>
   <string name="nothingApplied">Tidak ada Overlays terpasang.\nPasang beberapa dari halaman awal.</string>
   <string name="appliedOverlays">Overlays yang terpasang:</string>
   <string name="OverlaysSelected">Overlays terpilih</string>
-  <string name="uninstalling">Menghapus</string>
   <string name="PreformReboot">Lakukan soft reboot?</string>
   <string name="uninstalled">Overlays terpilih telah dihapus</string>
   <string name="noBackups">Tidak ada Cadangan tersedia.\nBuat dengan mengklik FAB.</string>
@@ -117,10 +112,9 @@ Copyright (c) 2015 Aidan Michael Follestad\n\nPermission is hereby granted, free
   <string name="noBuildPropCommit">tidak ada komit build.prop</string>
   <string name="MoveOverlays">Pasang Overlays?</string>
   <string name="VisitGithub">Github</string>
-  <string name="Reboot">REBOOT</string>
+  <string name="Reboot">Reboot</string>
   <string name="pick_color">Pilih Gaya</string>
   <string name="ApplyOverlays">Terapkan Overlays terpilih?</string>
-  <string name="rebooting">Rebooting</string>
-  <string name="selectOverlayFirst">Pilih Overlays dahulu</string>
   <string name="OverlaysInstalled">Overlays terpasang!</string>
+  <string name="emptydirectory">This directory seems to be empty.</string>
 </resources>

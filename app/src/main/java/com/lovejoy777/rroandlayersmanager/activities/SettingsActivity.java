@@ -59,7 +59,7 @@ public class SettingsActivity extends PreferenceActivity implements
                 } else{
 
                     Toast.makeText(SettingsActivity.this, getResources().getString(R.string.romNeedsSupport), Toast.LENGTH_LONG).show();
-                    SharedPreferences myPrefs = this.getSharedPreferences("myPrefs", MODE_WORLD_READABLE);
+                    SharedPreferences myPrefs = this.getSharedPreferences("myPrefs", MODE_PRIVATE);
                     SharedPreferences.Editor editor = myPrefs.edit();
                     editor.putBoolean("switch1", false);
                     editor.apply();
@@ -69,7 +69,7 @@ public class SettingsActivity extends PreferenceActivity implements
             } else {
 
                 Toast.makeText(SettingsActivity.this, getResources().getString(R.string.noBuildPropCommit), Toast.LENGTH_LONG).show();
-                SharedPreferences myPrefs = this.getSharedPreferences("myPrefs", MODE_WORLD_READABLE);
+                SharedPreferences myPrefs = this.getSharedPreferences("myPrefs", MODE_PRIVATE);
                 SharedPreferences.Editor editor = myPrefs.edit();
                 editor.putBoolean("switch1", false);
                 editor.apply();
@@ -116,8 +116,7 @@ public class SettingsActivity extends PreferenceActivity implements
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,String key)
     {
-        SharedPreferences myPrefs = this.getSharedPreferences("myPrefs", MODE_WORLD_READABLE);
-        SharedPreferences.Editor editor = myPrefs.edit();
+        SharedPreferences myPrefs = this.getSharedPreferences("myPrefs", MODE_PRIVATE);
         Boolean HideLauncherIcon = myPrefs.getBoolean("switch1",false);
 
         if(HideLauncherIcon){

@@ -14,8 +14,6 @@
   <string name="Category2Name">Overlay specifici per i vari stili</string>
   <string name="Category1Name">Overlay generali</string>
   <string name="noRoot">Accesso Root non disponibile</string>
-  <string name="rebootIn">Riavvio tra 10 secondi</string>
-  <string name="RebootNow">Riavvia ora</string>
   <string name="niklasschnettler">Niklas Schnettler</string>
   <string name="developedby">Layers sviluppati da</string>
   <string name="usefullinks">Link utili</string>
@@ -72,15 +70,12 @@ Copyright (c) 2015 Aidan Michael Follestad\n\nPermission is hereby granted, free
   <string name="instructionscard6header">Ripeti introduzione</string>
   <string name="instructionscard6">Clicca per ripetere il tutorial</string>
   <string name="InstallOverlays2">Installa Overlay</string>
-  <string name="InstallOverlays">Installa Overlay</string>
-  <string name="installing">Installando</string>
   <string name="installed">Installed selected Overlays</string>
   <string name="UninstallOverlays">Rimuovi Overlay</string>
   <string name="selectAll">Seleziona tutto</string>
   <string name="nothingApplied">Nessun Overlay applicato. \nInstallane alcuni dal menu principale.</string>
   <string name="appliedOverlays">Overlay applicati:</string>
   <string name="OverlaysSelected">Overlay selezionati</string>
-  <string name="uninstalling">Rimozione</string>
   <string name="PreformReboot">Vuoi fare un riavvio veloce?</string>
   <string name="uninstalled">Overlay selezionati rimossi</string>
   <string name="noBackups">Non sono presenti backup.\nCreane uno cliccando sul FAB.</string>
@@ -117,10 +112,9 @@ Copyright (c) 2015 Aidan Michael Follestad\n\nPermission is hereby granted, free
   <string name="noBuildPropCommit">no build.prop commit</string>
   <string name="MoveOverlays">Installare Overlay?</string>
   <string name="VisitGithub">Github</string>
-  <string name="Reboot">RIAVVIA</string>
+  <string name="Reboot">Reboot</string>
   <string name="pick_color">Scegli uno stile</string>
   <string name="ApplyOverlays">Applicare gli Overlay selezionati?</string>
-  <string name="rebooting">Riavviando</string>
-  <string name="selectOverlayFirst">Seleziona prima gli Overlay</string>
   <string name="OverlaysInstalled">Overlay installati!</string>
+  <string name="emptydirectory">This directory seems to be empty.</string>
 </resources>

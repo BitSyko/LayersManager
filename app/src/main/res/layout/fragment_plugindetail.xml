@@ -3,10 +3,11 @@
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/main_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:fitsSystemWindows="true"
-    android:background="@color/background">
+        android:background="@color/background"
+        android:clipChildren="false">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
@@ -320,15 +321,23 @@
 
 
 
-
+    <com.github.jorgecastilloprz.FABProgressCircle
+        android:id="@+id/fabProgressCircle"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        app:arcColor="@color/primary"
+        app:reusable="true"
+        >
         <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
             android:scaleType="center"
             android:src="@drawable/ic_drawer_install"
-            android:layout_margin="16dp"
             android:clickable="true"
             android:id="@+id/fab2" />
+    </com.github.jorgecastilloprz.FABProgressCircle>
 
     </android.support.design.widget.CoordinatorLayout>
