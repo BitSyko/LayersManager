@@ -1,10 +1,7 @@
 package com.lovejoy777.rroandlayersmanager.fragments;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -18,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -32,7 +28,6 @@ import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 import com.stericson.RootTools.RootTools;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -54,7 +49,6 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        FragmentActivity faActivity = (FragmentActivity) super.getActivity();
         cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_delete, container, false);
 
         setHasOptionsMenu(true);
@@ -71,7 +65,6 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
 
     private class LoadAndSet extends AsyncTask<String, String, Void> {
-        ProgressDialog progressBackup;
 
         protected void onPreExecute() {
             files.clear();
@@ -94,8 +87,6 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
         protected void onPostExecute(Void result) {
 
-
-
             atleastOneIsClicked = 0;
             mAdapter = new CardViewAdapter3(files, R.layout.adapter_listlayout, getActivity());
             mRecyclerView.setAdapter(mAdapter);
@@ -111,12 +102,6 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
     }
 
     private void loadToolbarRecylcerViewFab() {
-        // Handle Toolbar
-        //Toolbar toolbar = (Toolbar) cordLayout.findViewById(R.id.toolbar);
-        //toolbar.setNavigationIcon(R.drawable.ic_action_menu);
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        //activity.setSupportActionBar(toolbar);
-        //activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mRecyclerView = (RecyclerView) cordLayout.findViewById(R.id.cardList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

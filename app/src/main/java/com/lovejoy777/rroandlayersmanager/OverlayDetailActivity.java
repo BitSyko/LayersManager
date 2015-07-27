@@ -385,7 +385,7 @@ public class OverlayDetailActivity extends Fragment implements FABProgressListen
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_back);
 
         fabProgressCircle = (FABProgressCircle) cordLayout.findViewById(R.id.fabProgressCircle);
         fabProgressCircle.attachListener(this);

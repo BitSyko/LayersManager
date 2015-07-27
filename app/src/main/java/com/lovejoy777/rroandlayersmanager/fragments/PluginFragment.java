@@ -126,7 +126,7 @@ public class PluginFragment extends Fragment {
                 //Bundle bndlanimation =
                 //        ActivityOptions.makeCustomAnimation(getActivity().getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
                 //startActivity(Installactivity, bndlanimation);
-                ((menu) getActivity()).changeFragment(4);
+                ((menu) getActivity()).changeFragment(4,0);
             }
 
 
@@ -234,34 +234,10 @@ public class PluginFragment extends Fragment {
             String category = categories.get(position);
             if (category.length() > 0) {
 
-                TransitionSet transitionSet = new TransitionSet();
-                transitionSet.addTransition(new ChangeImageTransform());
-                transitionSet.addTransition(new ChangeBounds());
-                transitionSet.addTransition(new ChangeTransform());
-                transitionSet.setDuration(300);
 
-                Fragment fragment2 = new OverlayDetailActivity();
-                fragment2.setSharedElementEnterTransition(transitionSet);
-                fragment2.setSharedElementReturnTransition(transitionSet);
+                 ((menu) getActivity()).changeFragment2(category,package2);
 
-
-                Bundle args = new Bundle();
-                args.putString(BUNDLE_EXTRAS_CATEGORY, category);
-                args.putString(BUNDLE_EXTRAS_PACKAGENAME, package2);
-                //fragment = new OverlayDetailActivity();
-                FloatingActionButton fab = (FloatingActionButton) cordLayout.findViewById(R.id.fab3);
-                fragment2.setArguments(args);
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, fragment2)
-                        .addSharedElement(fab, "fab")
-                        .addToBackStack("test")
-                        .commit();
-            }
-            DrawerLayout mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            //     ((menu) getActivity()).changeFragment2(category,package2);
-
-            // }
+             }
         } else {
             if (position == 2) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.PlaystoreSearch))));
