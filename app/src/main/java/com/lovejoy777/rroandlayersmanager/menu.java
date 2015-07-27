@@ -276,6 +276,7 @@ public class menu extends AppCompatActivity
 
     public void changeFragment2(String category, String package2){
         final android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+        TextView title2 = (TextView) findViewById(R.id.title2);
         int elevation;
 
 
@@ -289,6 +290,7 @@ public class menu extends AppCompatActivity
         fragment.setArguments(args);
 
         elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
+        title2.setText("");
         toolbar.setElevation(elevation);
 
 
