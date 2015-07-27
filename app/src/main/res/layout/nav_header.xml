@@ -17,30 +17,20 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="192dp"
+    android:layout_height="166dp"
     android:id="@+id/layout11"
     android:background="@color/primary"
-    android:padding="16dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:orientation="vertical"
     android:gravity="bottom">
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:id="@+id/imVie_AppLogo"
-        android:src="@drawable/layersmanager"
-        android:layout_marginBottom="12dp"
+        android:src="@drawable/bitsyko"
+
         android:layout_gravity="center_horizontal" />
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/layersmanager"
-        android:layout_gravity="center_horizontal"
-        style="@style/TextAppearance.AppCompat.Subhead" />
-
 
 
 </LinearLayout>

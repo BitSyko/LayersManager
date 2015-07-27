@@ -16,22 +16,15 @@
         android:orientation="vertical"
         android:id="@+id/relative">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:minHeight="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            android:theme="@style/Base.Theme.Test"
-            android:elevation="4dp" />
+
 
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar">
+            android:layout_marginTop="56dp"
+            >
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/cardList"

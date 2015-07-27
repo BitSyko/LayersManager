@@ -149,11 +149,11 @@ public class PluginFragment extends Fragment {
         });
 
 
-        Toolbar toolbar = (Toolbar) cordLayout.findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_action_menu);
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.setSupportActionBar(toolbar);
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //Toolbar toolbar = (Toolbar) cordLayout.findViewById(R.id.toolbar);
+        //toolbar.setNavigationIcon(R.drawable.ic_action_menu);
+        //AppCompatActivity activity = (AppCompatActivity) getActivity();
+        //activity.setSupportActionBar(toolbar);
+        //activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 

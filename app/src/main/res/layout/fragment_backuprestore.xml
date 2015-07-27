@@ -21,8 +21,8 @@
     <android.support.v7.widget.CardView
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="72dp"
         android:background="@color/white">
@@ -73,44 +73,6 @@
         </android.support.v7.widget.RecyclerView>
         </RelativeLayout>
     </android.support.v7.widget.CardView>
-
-
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_height="156dp"
-        android:layout_width="match_parent"
-        android:minHeight="?android:attr/actionBarSize"
-        android:background="?android:attr/colorPrimary"
-        tools:context="com.lovejoy777.showcase.Screen1Free"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        android:layout_alignParentTop="false"
-        android:layout_alignParentStart="true">
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/BackupRestore"
-            android:id="@+id/textView9"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textAlignment="center"
-            android:paddingBottom="100dp"
-            />
-    </android.support.v7.widget.Toolbar>
-
-
-
-    <ViewStub
-        android:id="@+id/cab_stub"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize" />
-
-
-
-
-
 
 
 </RelativeLayout>

@@ -19,10 +19,22 @@
         android:layout_height="56dp"
         android:minHeight="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        android:theme="@style/Base.Theme.Test"
-        android:visibility="invisible"
-        />
+        app:theme="@style/Toolbar.AppCompat.Responsive"
+        app:popupTheme="@style/Toolbar.Popup.AppCompat">
+
+
+        </android.support.v7.widget.Toolbar>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your Text"
+            android:id="@+id/title2"
+            android:layout_marginTop="14dp"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:elevation="4dp"
+            android:layout_marginStart="@dimen/second_keyline"
+            android:textColor="@color/white"/>
     <!-- Will contain the fragment -->
     <FrameLayout
         android:id="@+id/fragment_container"

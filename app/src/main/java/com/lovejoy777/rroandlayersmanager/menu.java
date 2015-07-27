@@ -22,10 +22,17 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 
 import com.lovejoy777.rroandlayersmanager.fragments.InstallFragment;
@@ -81,7 +88,7 @@ public class menu extends AppCompatActivity
         createImportantDirectories();
 
         changeFragment(1);
-        getSupportActionBar().setElevation(0);
+
 
         LoadTutorial();
     }
@@ -159,7 +166,6 @@ public class menu extends AppCompatActivity
                         switch (id){
                             case R.id.nav_home:
                                 changeFragment(1);
-                                getSupportActionBar().setElevation(0);
                                 break;
                             case R.id.nav_about:
                                 Intent about = new Intent(menu.this, AboutActivity.class);
@@ -167,9 +173,6 @@ public class menu extends AppCompatActivity
                                 break;
                             case R.id.nav_delete:
                                 changeFragment(2);
-                                getSupportActionBar().setElevation(0);
-                                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_menu);
-                                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                                 break;
                             case R.id.nav_tutorial:
                                 Intent tutorial = new Intent(menu.this, DetailedTutorialActivity.class);
@@ -209,17 +212,54 @@ public class menu extends AppCompatActivity
     }
 
     public void changeFragment(int position) {
+        final android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+        TextView title2 = (TextView) findViewById(R.id.title2);
+        RelativeLayout.LayoutParams layoutParams = null;
+        int height = 0;
+        int elevation = 0;
         Fragment fragment = null;
         Bundle args = new Bundle();
         FragmentManager fragmentManager = getFragmentManager();
         switch (position){
             case 1:
+                System.out.println("HERE");
+                elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
+                height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, getResources().getDisplayMetrics());
+                layoutParams = new RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,height
+                );
+                getSupportActionBar().setTitle("");
+                toolbar.setLayoutParams(layoutParams);
+                toolbar.setElevation(elevation);
+                title2.setText(getString(R.string.InstallOverlays2));
+                title2.setElevation(elevation);
                 fragment = new PluginFragment();
                 break;
             case 2:
+                elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
+                height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 156, getResources().getDisplayMetrics());
+                layoutParams = new RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,height
+                );
+                toolbar.setTitle("");
+                toolbar.setElevation(elevation);
+                toolbar.setLayoutParams(layoutParams);
+                title2.setText(getString(R.string.UninstallOverlays));
+                title2.setElevation(elevation);
                 fragment = new UninstallFragment();
                 break;
             case 3:
+                elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
+                height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 156, getResources().getDisplayMetrics());
+                layoutParams = new RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,height
+                );
+                toolbar.setTitle("");
+                toolbar.setElevation(elevation);
+                toolbar.setLayoutParams(layoutParams);
+                title2.setText(getString(R.string.BackupRestore));
+                title2.setElevation(elevation);
+                fragment = new UninstallFragment();
                 fragment = new BackupRestoreFragment();
                 break;
             case 4: fragment = new InstallFragment();

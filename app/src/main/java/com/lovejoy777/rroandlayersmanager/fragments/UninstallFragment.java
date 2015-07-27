@@ -112,11 +112,11 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
     private void loadToolbarRecylcerViewFab() {
         // Handle Toolbar
-        Toolbar toolbar = (Toolbar) cordLayout.findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_action_menu);
+        //Toolbar toolbar = (Toolbar) cordLayout.findViewById(R.id.toolbar);
+        //toolbar.setNavigationIcon(R.drawable.ic_action_menu);
         AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.setSupportActionBar(toolbar);
-        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //activity.setSupportActionBar(toolbar);
+        //activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mRecyclerView = (RecyclerView) cordLayout.findViewById(R.id.cardList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
