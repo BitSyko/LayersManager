@@ -810,6 +810,7 @@ public class OverlayDetailActivity extends Fragment implements FABProgressListen
         if (!skipMessage.equals("checked")) {
             installdialog.show();
         } else {
+            fabProgressCircle.show();
             (new InstallOverlays()).execute();
         }
     }

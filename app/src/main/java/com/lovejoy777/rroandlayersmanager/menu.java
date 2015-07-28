@@ -93,13 +93,22 @@ public class menu extends AppCompatActivity
         if (counter < 1){
 
             Intent intent = new Intent(this,IntroActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, 1);
 
         }
         // Increment the counter
         SharedPreferences.Editor editor = app_preferences.edit();
         editor.putInt("counter", ++counter);
         editor.apply();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK){
+            changeFragment(1,0);
+            this.finish();
+        }
     }
 
     private void loadToolbarNavDrawer() {
