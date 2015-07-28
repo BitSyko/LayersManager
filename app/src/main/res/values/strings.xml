@@ -4,15 +4,15 @@
     <string name="layersmanager">Layers Manager</string>
     <string name="PlaystoreSearch"><![CDATA[https://play.google.com/store/search?q=Layers+Theme&c=apps&docType=1&sp=CAFiDgoMTGF5ZXJzIFRoZW1legIYAIoBAggB:S:ANO1ljK_ZAY]]></string>
     <string name="tooBad">Too bad.</string>
-    <string name="noPlugins">You don\'t have installed any compatible plugins yet, Use the FAB button for none plugin type overlays.</string>
+    <string name="noPlugins">You don\'t have any compatible plugins(layers) installed yet, Use the FAB button to install non plugin overlays.</string>
     <string name="ShowCaseMore">Find some new beautiful overlays. Beta available now!</string>
     <string name="PlayStoreMore">Have a look on the PlayStore.</string>
 
     <!-- Plugin Detail -->
     <string name="donotshowagain">Do not show again</string>
-    <string name="installeverything">Install everything</string>
-    <string name="selectalloverlays">Select all Overlays</string>
-    <string name="WhatsNew">WHATS NEW</string>
+    <string name="installeverything">Install Everything</string>
+    <string name="selectalloverlays">Select all overlays</string>
+    <string name="WhatsNew">WHAT\'S NEW</string>
     <string name="Category2Name">Style Specific Overlays</string>
     <string name="Category1Name">General Overlays</string>
     <string name="noRoot">No root access available</string>
@@ -76,15 +76,15 @@ Copyright (c) 2015 Aidan Michael Follestad\n\nPermission is hereby granted, free
 
     <!-- INSTRUCTIONS/TUTORIAL -->
     <string name="instructionstitle">Tutorial</string>
-    <string name="instructionscard1header">Install plugin overlays</string>
+    <string name="instructionscard1header">Install Plugin Overlays</string>
     <string name="instructionscard1">Click one of the installed overlays\nChoose the apps you want to theme\nClick the FAB to install the overlays</string>
-    <string name="instructionscard2header">Install normal overlays</string>
+    <string name="instructionscard2header">Install Normal Overlays</string>
     <string name="instructionscard2">Click the FAB on the main screen\nChoose either a .zip or multiple .apk\'s\nClick the FAB to install the selected overlays</string>
-    <string name="instructionscard3header">Uninstall overlays</string>
+    <string name="instructionscard3header">Uninstall Overlays</string>
     <string name="instructionscard3">From the nav-drawer select "uninstall overlays"\nSelect multiple overlays\nClick the FAB to uninstall the selected overlays</string>
-    <string name="instructionscard4header">Backup overlays</string>
+    <string name="instructionscard4header">Backup Overlays</string>
     <string name="instructionscard4">From the nav-drawer select "Backup overlays"\nEnter a name and click "OK"</string>
-    <string name="instructionscard5header">Restore overlays</string>
+    <string name="instructionscard5header">Restore Overlays</string>
     <string name="instructionscard5">From the nav-drawer select "Restore overlays"\nClick the FAB to Restore the selected backup file</string>
     <string name="instructionscard6header">Replay Introduction</string>
     <string name="instructionscard6">Click to start tutorial from the beginning</string>
@@ -93,7 +93,7 @@ Copyright (c) 2015 Aidan Michael Follestad\n\nPermission is hereby granted, free
 
     <!-- Install Fragment -->
     <string name="InstallOverlays2">Install Overlays</string>
-    <string name="installed">Installed selected Overlays</string>
+    <string name="installed">Installed selected overlays</string>
 
     <!-- UnInstall Fragment -->
     <string name="UninstallOverlays">Uninstall Overlays</string>
@@ -102,13 +102,13 @@ Copyright (c) 2015 Aidan Michael Follestad\n\nPermission is hereby granted, free
     <string name="appliedOverlays">Applied Overlays:</string>
     <string name="OverlaysSelected">Overlays selected</string>
     <string name="PreformReboot">Perform a soft reboot?</string>
-    <string name="uninstalled">Uninstalled selected Overlays</string>
+    <string name="uninstalled">Uninstalled selected overlays</string>
 
     <!-- Backup Restore Fragment -->
     <string name="noBackups">No Backups available.\nMake one by clicking the FAB.</string>
     <string name="Backups">Backups:</string>
     <string name="BackupRestore">Backup &amp; Restore</string>
-    <string name="backupInstalledOverlays">Backup installed Overlays</string>
+    <string name="backupInstalledOverlays">Backup installed overlays</string>
     <string name="enterBackupName">Enter a backup name</string>
     <string name="noInputName">Please enter a name</string>
     <string name="nothingToBackup">Nothing available to backup</string>
@@ -118,12 +118,12 @@ Copyright (c) 2015 Aidan Michael Follestad\n\nPermission is hereby granted, free
     <string name="DeleteBackup">Deleting Backup</string>
     <string name="deleting">Deleting</string>
     <string name="BackupOverlays">Backup Overlays</string>
-    <string name="backingUp">Backing up</string>
-    <string name="backupComplete">Backup complete</string>
+    <string name="backingUp">Backing Up</string>
+    <string name="backupComplete">Backup Complete</string>
     <string name="Restore">Restore Overlays</string>
     <string name="restoring">Restoring</string>
-    <string name="deletedBackup">Deleted selected Backup</string>
-    <string name="restored">Restored selected Backup</string>
+    <string name="deletedBackup">Deleted selected backup</string>
+    <string name="restored">Restored selected backup</string>
 
     <!-- NavDrawer -->
     <string name="More">More</string>
@@ -137,10 +137,10 @@ Copyright (c) 2015 Aidan Michael Follestad\n\nPermission is hereby granted, free
     <!-- Settings -->
     <string name="General">General</string>
     <string name="SettingLauncherIconDetail">Remove Launcher Icon</string>
-    <string name="SettingLauncherIconWarning">Warning: you may not be able to launch this app unless your rom as it in the settings</string>
+    <string name="SettingLauncherIconWarning">Warning: You may not be able to launch this app unless your rom as it in the settings</string>
     <string name="launcherIconRemoved">Launcher Icon removed</string>
     <string name="romNeedsSupport">Your rom needs support for this function</string>
-    <string name="noBuildPropCommit">no build.prop commit</string>
+    <string name="noBuildPropCommit">No build.prop commit</string>
 
 
     <!-- Dialogs -->
@@ -153,7 +153,7 @@ Copyright (c) 2015 Aidan Michael Follestad\n\nPermission is hereby granted, free
 
 
     <!-- description and headline texts -->
-    <string name="ApplyOverlays">Apply selected Overlays?</string>
+    <string name="ApplyOverlays">Apply selected overlays?</string>
 
 
     <!-- SnackBar texts -->
