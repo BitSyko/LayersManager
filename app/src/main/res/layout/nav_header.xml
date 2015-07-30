@@ -28,8 +28,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/imVie_AppLogo"
-        android:src="@drawable/bitsyko"
-
+        android:src="@drawable/about_bitsyko"
         android:layout_gravity="center_horizontal" />
 
 
