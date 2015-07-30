@@ -46,9 +46,9 @@ public class AboutActivity extends AppCompatActivity {
         };
 
         DeveloperBean[] libraries = {
-                new LicenceBean(getString(R.string.License1), getString(R.string.License1about), getDrawable(R.drawable.ic_opensource), getString(R.string.License1github),getString(R.string.License1more)),
-                new LicenceBean(getString(R.string.License2), getString(R.string.License2about), getDrawable(R.drawable.ic_opensource), getString(R.string.License2github),getString(R.string.License2more)),
-                new LicenceBean(getString(R.string.License3), getString(R.string.License3about), getDrawable(R.drawable.ic_opensource), getString(R.string.License3github),getString(R.string.License3more))
+                new LicenceBean(getString(R.string.License1), getString(R.string.License1about), getDrawable(R.drawable.ic_opensource), getString(R.string.License1github),generateLicense(getString(R.string.License1about), "Apache", "2012")),
+                new LicenceBean(getString(R.string.License2), getString(R.string.License2about), getDrawable(R.drawable.ic_opensource), getString(R.string.License2github),generateLicense(getString(R.string.License2about), "Apache", "2015")),
+                new LicenceBean(getString(R.string.License3), getString(R.string.License3about), getDrawable(R.drawable.ic_opensource), getString(R.string.License3github),generateLicense(getString(R.string.License3about), "MIT", "2015"))
         };
 
         //set Toolbar
@@ -152,4 +152,18 @@ public class AboutActivity extends AppCompatActivity {
         super.onBackPressed();
         overridePendingTransition(R.anim.back2, R.anim.back1);
     }
+
+    private String generateLicense(String developer, String License, String year){
+        String LicenseText = " ";
+        if (License.equals("Apache")){
+            LicenseText = getString(R.string.Apache1)+" "+year+" "+developer+getString(R.string.Apache2);
+        }else{
+            if (License.equals("MIT")){
+                LicenseText = getString(R.string.MIT1)+" "+year+" "+developer+getString(R.string.MIT2);
+            }
+        }
+        return LicenseText;
+
+    }
+
 }
