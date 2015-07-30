@@ -17,7 +17,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="166dp"
+    android:layout_height="167dp"
     android:id="@+id/layout11"
     android:background="@color/primary"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
