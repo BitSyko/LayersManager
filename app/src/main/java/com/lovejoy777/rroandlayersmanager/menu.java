@@ -391,8 +391,4 @@ public class menu extends AppCompatActivity
         }
 
     }
-
-    public void InstallOverlays(Context context,ArrayList<String> paths2) {
-        Commands.InstallOverlays(menu.this, paths2);
-    }
 }

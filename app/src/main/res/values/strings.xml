@@ -163,6 +163,7 @@
     <!-- SnackBar texts -->
     <string name="OverlaysInstalled">Overlays installed!</string>
     <string name="emptydirectory">This directory seems to be empty.</string>
+    <string name="installingOverlays">Installing Overlays</string>
 
 
 </resources>

@@ -12,7 +12,6 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -50,15 +49,9 @@ import android.widget.Switch;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.github.jorgecastilloprz.FABProgressCircle;
-import com.github.jorgecastilloprz.listeners.FABProgressListener;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
-import com.lovejoy777.rroandlayersmanager.helper.CopyUnzipHelper;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -67,7 +60,7 @@ import java.util.List;
 /**
  * Created by Niklas on 02.06.2015.
  */
-public class OverlayDetailActivity extends Fragment implements FABProgressListener {
+public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
     List<Integer> InstallOverlayList = new ArrayList<Integer>();
     List<String> OverlayPathList = new ArrayList<String>();
@@ -87,7 +80,7 @@ public class OverlayDetailActivity extends Fragment implements FABProgressListen
     int NumberOfOverlays;
     int NumberOfColorOverlays;
     public static final int NumberOfScreenshotsMain = 3;
-    private final static int BUFFER_SIZE = 1024;
+
 
     private IOperation opService;
 
@@ -95,7 +88,6 @@ public class OverlayDetailActivity extends Fragment implements FABProgressListen
     private FloatingActionButton fab2;
     private CoordinatorLayout cordLayout;
     private LoadDrawables imageLoader;
-    private FABProgressCircle fabProgressCircle;
     final ImageView ScreenshotimageView[] = new ImageView[NumberOfScreenshotsMain];
     public CheckBox dontShowAgain;
 
@@ -387,8 +379,6 @@ public class OverlayDetailActivity extends Fragment implements FABProgressListen
         activity.setSupportActionBar(toolbar);
         activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_back);
 
-        fabProgressCircle = (FABProgressCircle) cordLayout.findViewById(R.id.fabProgressCircle);
-        fabProgressCircle.attachListener(this);
 
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -578,87 +568,6 @@ public class OverlayDetailActivity extends Fragment implements FABProgressListen
         }
     }
 
-
-
-
-
-
-
-    private void CopyFolderToSDCard() {
-        Context otherContext = null;
-        final String packName = package2;
-        try {
-            otherContext = getActivity().createPackageContext(packName, 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        AssetManager am = null;
-        if (otherContext != null) {
-            am = otherContext.getAssets();
-        }
-
-        String ThemeNameNoSpace = ThemeName.replaceAll(" ", "");
-        ApplicationInfo ai = null;
-        try {
-            ai = getActivity().getPackageManager().getApplicationInfo(packName, PackageManager.GET_META_DATA);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        File ThemeDirectory = new File(Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeNameNoSpace + "/");
-        ThemeDirectory.mkdirs();
-        CopyFolderToSDCard(getActivity(), ThemeNameNoSpace, am);
-    }
-
-
-    //copy files to sd card
-    public void CopyFolderToSDCard(Context context, String ThemeNameNoSpace, AssetManager assetFiles) {
-
-        try {
-
-            String[] files = assetFiles.list("Files");
-
-            //initialize streams
-            InputStream in;
-            OutputStream out;
-
-            for (String file : files) {
-
-                if (file.toString().equalsIgnoreCase("images")
-                        || file.toString().equalsIgnoreCase("js")) {
-                    //nothing
-                } else {
-                    in = assetFiles.open("Files/" + file);
-                    out = new FileOutputStream(Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeNameNoSpace + "/" + file);
-                    copyAssetFiles(in, out);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private void copyAssetFiles(InputStream in, OutputStream out) {
-
-        try {
-            byte[] buffer = new byte[BUFFER_SIZE];
-            int read;
-            while ((read = in.read(buffer)) != -1) {
-                out.write(buffer, 0, read);
-            }
-
-            in.close();
-            out.flush();
-            out.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -669,36 +578,6 @@ public class OverlayDetailActivity extends Fragment implements FABProgressListen
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-    //unzip ..... the zip files :DD
-    public void unzip() {
-
-        int NumberOfSelectedNormalOverlays = 0;
-        for (int i = 0; i < NumberOfOverlays; i++) {
-            NumberOfSelectedNormalOverlays = NumberOfSelectedNormalOverlays + InstallOverlayList.get(i);
-        }
-
-
-        int NumberOfSelectedColorOverlays = 0;
-        for (int i = NumberOfOverlays + 1; i < NumberOfColorOverlays + NumberOfOverlays + 1; i++) {
-            NumberOfSelectedColorOverlays = NumberOfSelectedColorOverlays + InstallOverlayList.get(i);
-        }
-
-
-        ApplicationInfo ai = null;
-        try {
-            ai = getActivity().getPackageManager().getApplicationInfo(package2, PackageManager.GET_META_DATA);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
-
-        CopyUnzipHelper cls2 = new CopyUnzipHelper();
-        cls2.unzip(ThemeName.replaceAll(" ", ""), NumberOfSelectedNormalOverlays, NumberOfSelectedColorOverlays, whichColor);
-
-    }
-
 
     private void UncheckAllCheckBoxes(String Mode) {
 
@@ -793,9 +672,9 @@ public class OverlayDetailActivity extends Fragment implements FABProgressListen
                     editor.apply();
                 }
 
-                fabProgressCircle.show();
                 //start async task to install the Overlays
-                (new InstallOverlays()).execute();
+                //(new InstallOverlays()).execute();
+                InstallAsyncOverlays();
             }
         });
         installdialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -810,11 +689,42 @@ public class OverlayDetailActivity extends Fragment implements FABProgressListen
         if (!skipMessage.equals("checked")) {
             installdialog.show();
         } else {
-            fabProgressCircle.show();
-            (new InstallOverlays()).execute();
+            InstallAsyncOverlays();
+            //(new InstallOverlays()).execute();
         }
     }
 
+    private void InstallAsyncOverlays() {
+
+        ArrayList<Integer> OldInstallOverlay = new ArrayList<>(InstallOverlayList);
+
+            //install Normal Overlays
+            for (int i = 0; i < NumberOfOverlays; i++) {
+                if (InstallOverlayList.get(i) == 1) {
+                    InstallOverlayList.set(i, 0);
+                    paths.add(ThemeFolderGeneral + OverlayPathList.get(i));
+                }
+            }
+
+            //install Color Specific Overlays
+            for (int i4 = NumberOfOverlays + 1; i4 < NumberOfOverlays + NumberOfColorOverlays + 1; i4++) {
+                if (InstallOverlayList.get(i4) == 1) {
+                    InstallOverlayList.set(i4, 0);
+                    paths.add(ThemeFolder+whichColor+"/"+OverlayPathList.get(i4));
+                }
+            }
+        Commands.InstallOverlays asyncTask =new Commands.InstallOverlays("Plugin",getActivity(),ThemeName.replace(" ",""),paths,package2,NumberOfOverlays,NumberOfColorOverlays, OldInstallOverlay,whichColor);
+        asyncTask.execute();
+        asyncTask.delegate = this;
+    }
+
+    public void processFinish(){
+        fab2.setClickable(true);
+        installationFinishedSnackBar();
+        UncheckAllCheckBoxes("Uncheck");
+        paths.clear();
+        installEverything.setChecked(false);
+    }
 
     //Dialog to choose color
     public void colorDialog() {
@@ -896,63 +806,6 @@ public class OverlayDetailActivity extends Fragment implements FABProgressListen
         colorDialog.create();
         colorDialog.show();
     }
-
-
-    /////////////
-    //Async Tasks
-    private class InstallOverlays extends AsyncTask<Void, Void, Void> {
-
-        protected void onPreExecute() {
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            CopyFolderToSDCard();  //copy Overlay Files to SD Card
-
-            unzip();  //unzip Overlay ZIP´s
-
-            System.out.println("UNZIPPED");
-
-            //install Normal Overlays
-            for (int i = 0; i < NumberOfOverlays; i++) {
-                if (InstallOverlayList.get(i) == 1) {
-                    InstallOverlayList.set(i, 0);
-                    paths.add(ThemeFolderGeneral + OverlayPathList.get(i));
-                }
-            }
-
-            //install Color Specific Overlays
-            for (int i4 = NumberOfOverlays + 1; i4 < NumberOfOverlays + NumberOfColorOverlays + 1; i4++) {
-                if (InstallOverlayList.get(i4) == 1) {
-                    InstallOverlayList.set(i4, 0);
-                    paths.add(ThemeFolder+whichColor+"/"+OverlayPathList.get(i4));
-                }
-            }
-
-            System.out.println("STARTED MOVING");
-            ((menu) getActivity()).InstallOverlays(getActivity(), paths);
-
-            return null;
-
-        }
-
-        protected void onPostExecute(Void result) {
-            if (isAdded()) {
-                fabProgressCircle.beginFinalAnimation();
-            }
-        }
-    }
-
-    @Override
-    public void onFABProgressAnimationEnd() {
-        fab2.setClickable(true);
-        installationFinishedSnackBar();
-        UncheckAllCheckBoxes("Uncheck");
-        installEverything.setChecked(false);
-    }
-
-
 
 
     private class LoadDrawables extends AsyncTask<Void, Void, Void> {
@@ -1091,5 +944,14 @@ public class OverlayDetailActivity extends Fragment implements FABProgressListen
     public void onDestroyView() {
         super.onDestroyView();
         releaseOpService();
+    }
+
+    public void onInstallationFinished(){
+        //cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_plugindetail, container, false);
+        //fab2 = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab2);
+        fab2.setClickable(true);
+        installationFinishedSnackBar();
+         UncheckAllCheckBoxes("Uncheck");
+        installEverything.setChecked(false);
     }
 }

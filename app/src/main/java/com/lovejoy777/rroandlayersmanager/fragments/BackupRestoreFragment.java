@@ -538,7 +538,7 @@ public class BackupRestoreFragment extends Fragment{
                                 parentDir.mkdirs();
                             }
                         }
-                        // unzip the file
+                        // unzipNormalOverlays the file
                         FileOutputStream out = new FileOutputStream(unzipFile, false);
                         BufferedOutputStream fout = new BufferedOutputStream(out, 1024);
                         try {

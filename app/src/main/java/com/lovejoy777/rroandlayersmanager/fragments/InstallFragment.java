@@ -1,9 +1,7 @@
 package com.lovejoy777.rroandlayersmanager.fragments;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -11,14 +9,11 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -32,22 +27,18 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.afollestad.materialcab.MaterialCab;
-import com.github.jorgecastilloprz.FABProgressCircle;
-import com.github.jorgecastilloprz.listeners.FABProgressListener;
+import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.beans.FileBean;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by lovejoy777 on 10/06/15.
  */
-public class InstallFragment extends Fragment implements FABProgressListener {
+public class InstallFragment extends Fragment implements AsyncResponse  {
 
     private ArrayList<FileBean> Files = new ArrayList<>();
     private ArrayList<String> Directories = new ArrayList<>();
@@ -58,7 +49,6 @@ public class InstallFragment extends Fragment implements FABProgressListener {
     private CardViewAdapter3 mAdapter;
     private DrawerLayout mDrawerLayout;
     private CoordinatorLayout cordLayout = null;
-    private FABProgressCircle fabProgressCircle = null;
 
     int atleastOneIsClicked = 0;
 
@@ -76,8 +66,6 @@ public class InstallFragment extends Fragment implements FABProgressListener {
 
         cordLayout = (CoordinatorLayout)    inflater.inflate(R.layout.fragment_install, container, false);
 
-        fabProgressCircle = (FABProgressCircle) cordLayout.findViewById(R.id.fabProgressCircle);
-        fabProgressCircle.attachListener(this);
 
         setHasOptionsMenu(true);
 
@@ -225,9 +213,9 @@ public class InstallFragment extends Fragment implements FABProgressListener {
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fabProgressCircle.show();
                 fab2.setClickable(false);
-                new InstallOverlays().execute();
+                InstallAsyncOverlays();
+                //new InstallOverlays().execute();
             }
         });
     }
@@ -368,33 +356,51 @@ public class InstallFragment extends Fragment implements FABProgressListener {
         }
     }
 
+    private void InstallAsyncOverlays() {
+
+        ArrayList<String> paths = new ArrayList<String>();
+        for (FileBean file : Files) {
+            if (file.isChecked()) {
+                paths.add(currentDir+"/"+file.getFullName());
+            }
+        }
+
+        Commands.InstallOverlays asyncTask =new Commands.InstallOverlays("Normal",getActivity(),"0",paths,null,0,0, null,null);
+        asyncTask.execute();
+        asyncTask.delegate = this;
+    }
+
+    public void processFinish(){
+        fab2.hide();
+        fab2.setClickable(true);
+        UncheckAll();
+        Snackbar.make(cordLayout, R.string.installed, Snackbar.LENGTH_LONG)
+                .setAction(R.string.Reboot, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Commands.reboot(getActivity());
+                    }
+                })
+                .show();
+    }
 
 
-    private class InstallOverlays extends AsyncTask<Void,Void,Void> {
+    /*private class InstallOverlays extends AsyncTask<Void,Void,Void> {
 
         protected void onPreExecute() {
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            ArrayList<String> paths = new ArrayList<String>();
-            for (FileBean file : Files) {
-                if (file.isChecked()) {
-                    paths.add(currentDir+"/"+file.getFullName());
-                }
-            }
+
             Commands.InstallOverlays(getActivity(), paths);
             return null;
         }
 
         protected void onPostExecute(Void result) {
             fabProgressCircle.beginFinalAnimation();
-        }
-    }
-
-    @Override
-    public void onFABProgressAnimationEnd() {
-        fab2.hide();
+            fab2.hide();
         fab2.setClickable(true);
         UncheckAll();
         Snackbar.make(fabProgressCircle, R.string.installed, Snackbar.LENGTH_LONG)
@@ -406,7 +412,9 @@ public class InstallFragment extends Fragment implements FABProgressListener {
                     }
                 })
                 .show();
-    }
+        }
+    } */
+
 
     private void UncheckAll() {
 

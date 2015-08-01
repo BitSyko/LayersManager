@@ -319,25 +319,14 @@
 
         </android.support.v4.widget.NestedScrollView>
 
-
-
-    <com.github.jorgecastilloprz.FABProgressCircle
-        android:id="@+id/fabProgressCircle"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="bottom|end"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        app:arcColor="@color/primary"
-        app:reusable="true"
-        >
         <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="center"
             android:src="@drawable/ic_drawer_install"
             android:clickable="true"
-            android:id="@+id/fab2" />
-    </com.github.jorgecastilloprz.FABProgressCircle>
-
+            android:id="@+id/fab2"
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"/>
     </android.support.design.widget.CoordinatorLayout>
