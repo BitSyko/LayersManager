@@ -11,28 +11,14 @@ import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.Toast;
-
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,87 +27,61 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 
-
-/**
- * Created by Niklas on 29.06.2015.
- */
 public class Commands {
     private final static int BUFFER_SIZE = 1024;
+
     //No instances
     private Commands() {
-
-    }
-
-    //https://stackoverflow.com/questions/17693578/android-how-to-display-2-listviews-in-one-activity-one-after-the-other
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            // pre-condition
-            return;
-        }
-
-        int totalHeight = 0;
-        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-        listView.requestLayout();
     }
 
 
-   public static ArrayList<String> RootloadFiles(final Context context, final Activity act, String directory){
-       ArrayList<String> files = new ArrayList<String>();
-       if (RootTools.isAccessGiven()) {
-       try {
-            String line;
-            Process process = Runtime.getRuntime().exec("su");
-            OutputStream stdin = process.getOutputStream();
-            InputStream stderr = process.getErrorStream();
-            InputStream stdout = process.getInputStream();
+    public static ArrayList<String> RootloadFiles(final Context context, final Activity act, String directory) {
+        ArrayList<String> files = new ArrayList<String>();
+        if (RootTools.isAccessGiven()) {
+            try {
+                String line;
+                Process process = Runtime.getRuntime().exec("su");
+                OutputStream stdin = process.getOutputStream();
+                InputStream stderr = process.getErrorStream();
+                InputStream stdout = process.getInputStream();
 
-            stdin.write(("ls -a "+directory+"\n").getBytes());
+                stdin.write(("ls -a " + directory + "\n").getBytes());
 
-            stdin.write("exit\n".getBytes());
-            stdin.flush();   //flush stream
-            stdin.close(); //close stream
+                stdin.write("exit\n".getBytes());
+                stdin.flush();   //flush stream
+                stdin.close(); //close stream
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(stdout));
+                BufferedReader br = new BufferedReader(new InputStreamReader(stdout));
 
-            while ((line = br.readLine()) != null) {
+                while ((line = br.readLine()) != null) {
 
-                files.add(line);
+                    files.add(line);
+                }
+                br.close();
+                br = new BufferedReader(new InputStreamReader(stderr));
+                while ((line = br.readLine()) != null) {
+                    Log.e("[Error]", line);
+                }
+                process.waitFor();//wait for process to finish
+                process.destroy();
+
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
             }
-            br.close();
-            br = new BufferedReader(new InputStreamReader(stderr));
-            while ((line = br.readLine()) != null) {
-                Log.e("[Error]", line);
-            }
-            process.waitFor();//wait for process to finish
-            process.destroy();
+        } else {
+            act.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast toast = Toast.makeText(context, R.string.noRoot, Toast.LENGTH_LONG);
+                    toast.show();
+                }
+            });
 
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
         }
-       } else{
-           act.runOnUiThread(new Runnable() {
-               @Override
-               public void run() {
-                   Toast toast = Toast.makeText(context, R.string.noRoot, Toast.LENGTH_LONG);
-                   toast.show();
-               }
-           });
+        return files;
+    }
 
-       }
-       return files;
-   }
-
-    public static ArrayList<String> loadFiles(String directory){
+    public static ArrayList<String> loadFiles(String directory) {
 
         File f = new File(directory);
         ArrayList<String> files = new ArrayList<String>();
@@ -133,10 +93,10 @@ public class Commands {
             }
         }
         Collections.sort(files, String.CASE_INSENSITIVE_ORDER);
-        return  files;
+        return files;
     }
 
-    public static ArrayList<String> loadFolders(String directory){
+    public static ArrayList<String> loadFolders(String directory) {
 
         File f = new File(directory);
         ArrayList<String> folders = new ArrayList<String>();
@@ -147,7 +107,7 @@ public class Commands {
                 folders.add(file.getName());
             }
         }
-        return  folders;
+        return folders;
     }
 
     public static void unzipPluginOverlays(int NumberOfOverlays, int NumberOfColorOverlays, List<Integer> InstallOverlayList, String package2, String ThemeName, Context context, String whichColor) {
@@ -163,16 +123,16 @@ public class Commands {
             NumberOfSelectedColorOverlays = NumberOfSelectedColorOverlays + InstallOverlayList.get(i);
         }
 
-        System.out.println("NumberSelected "+NumberOfSelectedNormalOverlays);
+        System.out.println("NumberSelected " + NumberOfSelectedNormalOverlays);
         String filePath;
         String destinationGeneral = Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeName + "/General/";
         String destinationColor = Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeName + "/";
 
         if (NumberOfSelectedNormalOverlays > 0 /*|| NumberOfSelectedAdditionalOverlays > 0*/) {
 
-            File GeneralDirectory = new File(Environment.getExternalStorageDirectory() +"/Overlays/"+ThemeName+"/General");
+            File GeneralDirectory = new File(Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeName + "/General");
             GeneralDirectory.mkdirs();
-            filePath = Environment.getExternalStorageDirectory() + "/Overlays/"+ThemeName+"/"+ThemeName+"_General.zip";
+            filePath = Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeName + "/" + ThemeName + "_General.zip";
 
             try {
                 FileInputStream inputStream = new FileInputStream(filePath);
@@ -203,12 +163,12 @@ public class Commands {
 
         if (NumberOfSelectedColorOverlays > 0 /*|| NumberOfSelectedAdditionalOverlays > 0*/) {
 
-            File ColorDirectory = new File(Environment.getExternalStorageDirectory() +"/Overlays/"+ThemeName+"/" + whichColor);
+            File ColorDirectory = new File(Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeName + "/" + whichColor);
             ColorDirectory.mkdirs();
 
             destinationColor = destinationColor + whichColor;
 
-            filePath = Environment.getExternalStorageDirectory() + "/Overlays/"+ThemeName+"/"+ThemeName+"_" +whichColor + ".zip";
+            filePath = Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeName + "/" + ThemeName + "_" + whichColor + ".zip";
             try {
                 FileInputStream inputStream = new FileInputStream(filePath);
                 ZipInputStream zipStream = new ZipInputStream(inputStream);
@@ -296,7 +256,7 @@ public class Commands {
         }
     }
 
-    public static void reboot(final Context context){
+    public static void reboot(final Context context) {
         AlertDialog.Builder progressDialogReboot = new AlertDialog.Builder(context);
         progressDialogReboot.setTitle(R.string.Reboot);
         progressDialogReboot.setMessage(R.string.PreformReboot);
@@ -364,8 +324,8 @@ public class Commands {
 
             for (String file : files) {
 
-                if (file.toString().equalsIgnoreCase("images")
-                        || file.toString().equalsIgnoreCase("js")) {
+                if (file.equalsIgnoreCase("images")
+                        || file.equalsIgnoreCase("js")) {
                     //nothing
                 } else {
                     in = assetFiles.open("Files/" + file);
@@ -399,20 +359,19 @@ public class Commands {
 
 
     public static class InstallOverlays extends AsyncTask<Integer, Integer, Integer> {
-        public AsyncResponse delegate=null;
+        public AsyncResponse delegate = null;
         ProgressDialog progress;
         String Mode;
         Context Context;
         String ThemeName;
-        AssetManager AssetFiles;
         ArrayList<String> Paths;
         String Package2;
         int NumberOfOverlays;
         int NumberOfColorOverlays;
-        List<Integer>InstallOverlayList;
+        List<Integer> InstallOverlayList;
         String whichcolor;
 
-        public InstallOverlays(String mode, Context context,String themeName,ArrayList<String> paths,String package2, int NumberOfOverlays,int NumberOfColorOverlays, List<Integer> InstallOverlayList,String whichColor){
+        public InstallOverlays(String mode, Context context, String themeName, ArrayList<String> paths, String package2, int NumberOfOverlays, int NumberOfColorOverlays, List<Integer> InstallOverlayList, String whichColor) {
             this.Mode = mode;
             this.Context = context;
             this.ThemeName = themeName;
@@ -425,7 +384,7 @@ public class Commands {
         }
 
         protected void onPreExecute() {
-            progress= new ProgressDialog(Context);
+            progress = new ProgressDialog(Context);
             progress.setTitle(R.string.installingOverlays);
             progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             progress.setProgress(0);
@@ -433,7 +392,7 @@ public class Commands {
             progress.setCancelable(false);
             if (Mode.equals("Plugin")) {
                 progress.setMax(Paths.size() + 1);
-            }else{
+            } else {
                 progress.setMax(Paths.size());
             }
 
@@ -446,9 +405,9 @@ public class Commands {
             if (Mode.equals("Plugin")) {
                 CopyFolderToSDCard(Package2, Context, ThemeName);  //copy Overlay Files to SD Card
                 unzipPluginOverlays(NumberOfOverlays, NumberOfColorOverlays, InstallOverlayList, Package2, ThemeName, Context, whichcolor);  //unzipNormalOverlays Overlay ZIP´s
-                publishProgress(Integer.valueOf(1));
+                publishProgress(1);
             }
-                moveOverlays(Paths,Mode);
+            moveOverlays(Paths, Mode);
             return null;
         }
 
@@ -457,8 +416,8 @@ public class Commands {
         }
 
         protected void onPostExecute(Integer result) {
-                progress.dismiss();
-                delegate.processFinish();
+            progress.dismiss();
+            delegate.processFinish();
         }
 
         private void moveOverlays(ArrayList<String> paths, String Mode) {
@@ -485,9 +444,9 @@ public class Commands {
                 } catch (IOException | RootDeniedException | TimeoutException | InterruptedException e) {
                     e.printStackTrace();
                 }
-                int i =1;
+                int i = 1;
                 for (String path : paths) {
-                    i= i+1;
+                    i = i + 1;
 
                     String layersdata = Context.getApplicationInfo().dataDir + "/overlay";
                     String overlaypath = "/vendor";
@@ -559,21 +518,21 @@ public class Commands {
 
                             // COPY NEW FILES TO /VENDOR/OVERLAY FOLDER
                             System.out.println(path);
-                            RootCommands.moveCopyRoot(path, overlaypath+"/overlay");
+                            RootCommands.moveCopyRoot(path, overlaypath + "/overlay");
 
                         }
                     }
-                    if (Mode.equals("Plugin")){
-                        publishProgress(Integer.valueOf(i));
-                    } else{
-                        publishProgress(Integer.valueOf(i-1));
+                    if (Mode.equals("Plugin")) {
+                        publishProgress(i);
+                    } else {
+                        publishProgress(i - 1);
                     }
 
 
                 }
 
 
-                try{
+                try {
                     // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 666 RECURING
                     CommandCapture command9 = new CommandCapture(0, "chmod -R 644 /vendor/overlay");
                     RootTools.getShell(true).add(command9);
@@ -602,18 +561,23 @@ public class Commands {
     }
 
     public static class UnInstallOverlays extends AsyncTask<Integer, Integer, Integer> {
-        public AsyncResponse delegate=null;
+        private AsyncResponse delegate;
         ProgressDialog progress;
         ArrayList<String> Paths;
         Context Context;
 
-        public UnInstallOverlays(ArrayList<String> paths, Context context){
+        public UnInstallOverlays(ArrayList<String> paths, Context context, AsyncResponse response) {
             this.Paths = paths;
             this.Context = context;
+            this.delegate = response;
+        }
+
+        public UnInstallOverlays(ArrayList<String> paths, Context context) {
+            this(paths, context, null);
         }
 
         protected void onPreExecute() {
-            progress= new ProgressDialog(Context);
+            progress = new ProgressDialog(Context);
             progress.setTitle(R.string.uninstallingOverlays);
             progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             progress.setProgress(0);
@@ -628,7 +592,7 @@ public class Commands {
             int i = 0;
             RootTools.remount("/system", "RW");
             for (String path : Paths) {
-                i = i+1;
+                i = i + 1;
                 if (!RootCommands.readReadWriteFile())
                     RootTools.remount(path, "rw");
                 try {
@@ -641,7 +605,7 @@ public class Commands {
             RootTools.remount("/system", "RO");
             return null;
         }
-            final
+
         private static String getCommandLineString(String input) {
             String UNIX_ESCAPE_EXPRESSION = "(\\(|\\)|\\[|\\]|\\s|\'|\"|`|\\{|\\}|&|\\\\|\\?)";
             return input.replaceAll(UNIX_ESCAPE_EXPRESSION, "\\\\$1");
@@ -652,9 +616,10 @@ public class Commands {
         }
 
         protected void onPostExecute(Integer result) {
-
             progress.dismiss();
-            delegate.processFinish();
+            if (delegate != null) {
+                delegate.processFinish();
+            }
         }
 
     }

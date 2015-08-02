@@ -14,16 +14,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.afollestad.materialcab.MaterialCab;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
@@ -191,7 +185,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
                                 .setMenu(R.menu.overflow);
                     }
 
-                    mCab.setTitle(atleastOneIsClicked + " "+getResources().getString(R.string.OverlaysSelected));
+                    mCab.setTitle(atleastOneIsClicked + " " + getResources().getString(R.string.OverlaysSelected));
                     if (atleastOneIsClicked > 0) {
                         fab2.show();
                     } else {
@@ -229,9 +223,8 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
             }
         }
 
-        Commands.UnInstallOverlays asyncTask =new Commands.UnInstallOverlays(paths, getActivity());
+        Commands.UnInstallOverlays asyncTask = new Commands.UnInstallOverlays(paths, getActivity(), this);
         asyncTask.execute();
-        asyncTask.delegate = this;
     }
 
 
@@ -257,7 +250,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
                     .setCloseDrawableRes(R.drawable.ic_action_check)
                     .setMenu(R.menu.overflow);
 
-        mCab.setTitle(atleastOneIsClicked + " "+getResources().getString(R.string.OverlaysSelected));
+        mCab.setTitle(atleastOneIsClicked + " " + getResources().getString(R.string.OverlaysSelected));
     }
 
     private void UncheckAll() {
@@ -317,9 +310,9 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
-                    case R.id.menu_reboot:
-                        Commands.reboot(getActivity());
-                        return true;
+            case R.id.menu_reboot:
+                Commands.reboot(getActivity());
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
