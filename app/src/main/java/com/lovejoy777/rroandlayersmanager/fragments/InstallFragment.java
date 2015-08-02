@@ -17,6 +17,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +74,8 @@ public class InstallFragment extends Fragment implements AsyncResponse  {
         loadToolbarRecylcerViewFab();
 
         new LoadAndSet().execute();
+
+        setHasOptionsMenu(true);
 
         return cordLayout;
     }
@@ -385,37 +389,6 @@ public class InstallFragment extends Fragment implements AsyncResponse  {
                 .show();
     }
 
-
-    /*private class InstallOverlays extends AsyncTask<Void,Void,Void> {
-
-        protected void onPreExecute() {
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            Commands.InstallOverlays(getActivity(), paths);
-            return null;
-        }
-
-        protected void onPostExecute(Void result) {
-            fabProgressCircle.beginFinalAnimation();
-            fab2.hide();
-        fab2.setClickable(true);
-        UncheckAll();
-        Snackbar.make(fabProgressCircle, R.string.installed, Snackbar.LENGTH_LONG)
-                .setAction(R.string.Reboot, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Commands.reboot(getActivity());
-                    }
-                })
-                .show();
-        }
-    } */
-
-
     private void UncheckAll() {
 
         for (FileBean file : Files) {
@@ -425,5 +398,10 @@ public class InstallFragment extends Fragment implements AsyncResponse  {
         atleastOneIsClicked = 0;
         mAdapter.notifyDataSetChanged();
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.menu_main, menu);
     }
 }

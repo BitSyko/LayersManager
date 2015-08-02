@@ -332,6 +332,9 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
+                    case R.id.menu_reboot:
+                        Commands.reboot(getActivity());
+                        return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

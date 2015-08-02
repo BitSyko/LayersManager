@@ -19,6 +19,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -32,11 +33,15 @@ import android.transition.ChangeTransform;
 import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import com.lovejoy777.rroandlayersmanager.OverlayDetailActivity;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.adapters.CardViewAdapter;
+import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.helper.RecyclerItemClickListener;
 import com.lovejoy777.rroandlayersmanager.beans.CardBean;
 import com.lovejoy777.rroandlayersmanager.menu;
@@ -91,6 +96,8 @@ public class PluginFragment extends Fragment {
         packageFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
         packageFilter.addCategory(Intent.CATEGORY_DEFAULT);
         packageFilter.addDataScheme("package");
+
+        setHasOptionsMenu(true);
 
         return cordLayout;
     }
@@ -375,5 +382,19 @@ public class PluginFragment extends Fragment {
             recList.setHasFixedSize(true);
             recList.setAdapter(ca);
         }
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.menu_main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_reboot:
+                Commands.reboot(getActivity());
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

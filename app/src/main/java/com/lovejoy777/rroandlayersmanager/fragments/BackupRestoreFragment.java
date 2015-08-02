@@ -4,8 +4,11 @@ package com.lovejoy777.rroandlayersmanager.fragments;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,6 +26,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,6 +76,8 @@ public class BackupRestoreFragment extends Fragment{
         loadToolbarRecyclerViewFab();
 
         new LoadAndSet().execute();
+
+        setHasOptionsMenu(true);
 
     return cordLayout;
     }
@@ -161,6 +168,9 @@ public class BackupRestoreFragment extends Fragment{
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+            case R.id.menu_reboot:
+                Commands.reboot(getActivity());
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -560,4 +570,11 @@ public class BackupRestoreFragment extends Fragment{
             Log.e(TAG, "Unzip exception", e);
         }
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.menu_main, menu);
+    }
+
+
 }
