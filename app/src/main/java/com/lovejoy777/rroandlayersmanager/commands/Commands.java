@@ -600,4 +600,62 @@ public class Commands {
             }
         }
     }
+
+    public static class UnInstallOverlays extends AsyncTask<Integer, Integer, Integer> {
+        public AsyncResponse delegate=null;
+        ProgressDialog progress;
+        ArrayList<String> Paths;
+        Context Context;
+
+        public UnInstallOverlays(ArrayList<String> paths, Context context){
+            this.Paths = paths;
+            this.Context = context;
+        }
+
+        protected void onPreExecute() {
+            progress= new ProgressDialog(Context);
+            progress.setTitle(R.string.uninstallingOverlays);
+            progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progress.setProgress(0);
+            progress.show();
+            progress.setCancelable(false);
+            progress.setMax(Paths.size());
+        }
+
+
+        @Override
+        protected Integer doInBackground(Integer... params) {
+            int i = 0;
+            RootTools.remount("/system", "RW");
+            for (String path : Paths) {
+                i = i+1;
+                if (!RootCommands.readReadWriteFile())
+                    RootTools.remount(path, "rw");
+                try {
+                    RootCommands.execute("rm -r " + getCommandLineString(path));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                publishProgress(i);
+            }
+            RootTools.remount("/system", "RO");
+            return null;
+        }
+            final
+        private static String getCommandLineString(String input) {
+            String UNIX_ESCAPE_EXPRESSION = "(\\(|\\)|\\[|\\]|\\s|\'|\"|`|\\{|\\}|&|\\\\|\\?)";
+            return input.replaceAll(UNIX_ESCAPE_EXPRESSION, "\\\\$1");
+        }
+
+        protected void onProgressUpdate(Integer... progress2) {
+            progress.setProgress(progress2[0]);
+        }
+
+        protected void onPostExecute(Integer result) {
+
+            progress.dismiss();
+            delegate.processFinish();
+        }
+
+    }
 }

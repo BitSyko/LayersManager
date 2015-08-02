@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.afollestad.materialcab.MaterialCab;
 import com.github.jorgecastilloprz.FABProgressCircle;
 import com.github.jorgecastilloprz.listeners.FABProgressListener;
+import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.beans.FileBean;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
@@ -33,7 +34,7 @@ import java.util.ArrayList;
 /**
  * Created by lovejoy777 on 13/06/15.
  */
-public class UninstallFragment extends Fragment implements MaterialCab.Callback, FABProgressListener {
+public class UninstallFragment extends Fragment implements MaterialCab.Callback, AsyncResponse {
 
     private ArrayList<FileBean> files = new ArrayList<>();
     FloatingActionButton fab2;
@@ -43,7 +44,6 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
     private MaterialCab mCab = null;
     private DrawerLayout mDrawerLayout;
     private CoordinatorLayout cordLayout = null;
-    private FABProgressCircle fabProgressCircle = null;
 
 
     @Override
@@ -53,14 +53,31 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
         setHasOptionsMenu(true);
 
-        fabProgressCircle = (FABProgressCircle) cordLayout.findViewById(R.id.fabProgressCircle);
-        fabProgressCircle.attachListener(this);
-
         loadToolbarRecylcerViewFab();
 
         new LoadAndSet().execute();
 
         return cordLayout;
+    }
+
+    @Override
+    public void processFinish() {
+        fab2.hide();
+        fab2.setClickable(true);
+        CoordinatorLayout coordinatorLayoutView = (CoordinatorLayout) cordLayout.findViewById(R.id.main_content3);
+        Snackbar.make(coordinatorLayoutView, R.string.uninstalled, Snackbar.LENGTH_LONG)
+                .setAction(R.string.Reboot, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Commands.reboot(getActivity());
+                    }
+                })
+                .show();
+
+        new LoadAndSet().execute();
+        mCab.finish();
+        ActivityCompat.invalidateOptionsMenu(getActivity());
     }
 
 
@@ -112,10 +129,8 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fabProgressCircle.show();
                 fab2.setClickable(false);
-
-                new DeleteOverlays().execute();
+                AsyncUninstallOverlays();
             }
         });
     }
@@ -203,49 +218,19 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
         }
     }
 
+    private void AsyncUninstallOverlays() {
 
-    //Delete Overlays
-    private class DeleteOverlays extends AsyncTask<Void, Void, Void> {
 
-        protected void onPreExecute() {
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            RootTools.remount("/system", "RW");
-            for (FileBean file : files) {
-                if (file.isChecked()) {
-                    RootCommands.DeleteFileRoot("system/vendor/overlay/" + file.getLocation());
-                }
+        ArrayList<String> paths = new ArrayList<String>();
+        for (FileBean file : files) {
+            if (file.isChecked()) {
+                paths.add("system/vendor/overlay/"+file.getLocation());
             }
-            RootTools.remount("/system", "RO");
-            return null;
-
         }
 
-        protected void onPostExecute(Void result) {
-            fabProgressCircle.beginFinalAnimation();
-        }
-    }
-
-    @Override
-    public void onFABProgressAnimationEnd() {
-        fab2.hide();
-        fab2.setClickable(true);
-        CoordinatorLayout coordinatorLayoutView = (CoordinatorLayout) cordLayout.findViewById(R.id.main_content3);
-        Snackbar.make(coordinatorLayoutView, R.string.uninstalled, Snackbar.LENGTH_LONG)
-                .setAction(R.string.Reboot, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Commands.reboot(getActivity());
-                    }
-                })
-                .show();
-
-        new LoadAndSet().execute();
-        mCab.finish();
-        ActivityCompat.invalidateOptionsMenu(getActivity());
+        Commands.UnInstallOverlays asyncTask =new Commands.UnInstallOverlays(paths, getActivity());
+        asyncTask.execute();
+        asyncTask.delegate = this;
     }
 
 
@@ -257,7 +242,6 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
         }
 
         atleastOneIsClicked = files.size();
-        // System.out.println(atleastOneIsClicked);
         mAdapter.notifyDataSetChanged();
         fab2.show();
         if (mCab == null)

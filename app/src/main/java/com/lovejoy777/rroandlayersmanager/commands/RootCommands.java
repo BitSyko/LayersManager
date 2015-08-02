@@ -112,7 +112,7 @@ public class RootCommands {
 
 
     // Check if system is mounted
-    private static boolean readReadWriteFile() {
+    public static boolean readReadWriteFile() {
         File mountFile = new File("/proc/mounts");
         StringBuilder procData = new StringBuilder();
         if (mountFile.exists()) {

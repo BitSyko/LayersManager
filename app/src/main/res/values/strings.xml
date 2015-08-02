@@ -166,6 +166,7 @@
     <string name="installingOverlays">Installing Overlays</string>
     <string name="linkAndrzej"><![CDATA[https://plus.google.com/117376207394302665227/posts?utm_source=chrome_ntp_icon&utm_medium=chrome_app&utm_campaign=chrome]]></string>
     <string name="LeadAppDeveloper">Lead App Developer</string>
+    <string name="uninstallingOverlays">Uninstalling Overlays</string>
 
 
 </resources>
