@@ -1,32 +1,21 @@
 package com.lovejoy777.rroandlayersmanager;
 
-import android.animation.Animator;
 import android.app.ActivityOptions;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -34,24 +23,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-
-import com.lovejoy777.rroandlayersmanager.fragments.InstallFragment;
-import com.lovejoy777.rroandlayersmanager.activities.IntroActivity;
-import com.lovejoy777.rroandlayersmanager.fragments.UninstallFragment;
-import com.lovejoy777.rroandlayersmanager.fragments.BackupRestoreFragment;
 import com.lovejoy777.rroandlayersmanager.activities.AboutActivity;
 import com.lovejoy777.rroandlayersmanager.activities.DetailedTutorialActivity;
-import com.lovejoy777.rroandlayersmanager.fragments.PluginFragment;
+import com.lovejoy777.rroandlayersmanager.activities.IntroActivity;
 import com.lovejoy777.rroandlayersmanager.activities.SettingsActivity;
-import com.lovejoy777.rroandlayersmanager.commands.Commands;
+import com.lovejoy777.rroandlayersmanager.fragments.BackupRestoreFragment;
+import com.lovejoy777.rroandlayersmanager.fragments.InstallFragment;
+import com.lovejoy777.rroandlayersmanager.fragments.PluginFragment;
+import com.lovejoy777.rroandlayersmanager.fragments.UninstallFragment;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 
 public class menu extends AppCompatActivity
@@ -79,7 +64,7 @@ public class menu extends AppCompatActivity
 
         createImportantDirectories();
 
-        changeFragment(1,0);
+        changeFragment(1, 0);
 
         LoadTutorial();
 

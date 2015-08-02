@@ -4,11 +4,8 @@ package com.lovejoy777.rroandlayersmanager.fragments;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,11 +15,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,12 +56,37 @@ import java.util.zip.ZipOutputStream;
 public class BackupRestoreFragment extends Fragment{
 
     private static final String TAG = null ;
-    private ArrayList<String> Files = new ArrayList<String>();
     FloatingActionButton fab2;
+    private ArrayList<String> Files = new ArrayList<String>();
     private RecyclerView mRecyclerView;
     private CardViewAdapter3 mAdapter;
     private DrawerLayout mDrawerLayout;
     private CoordinatorLayout cordLayout = null;
+
+    private static void zipFolder(String inputFolderPath, String outZipPath) {
+        try {
+            FileOutputStream fos = new FileOutputStream(outZipPath);
+            ZipOutputStream zos = new ZipOutputStream(fos);
+            File srcFile = new File(inputFolderPath);
+            File[] files = srcFile.listFiles();
+            Log.d("", "Zip directory: " + srcFile.getName());
+            for (File file : files) {
+                Log.d("", "Adding file: " + file.getName());
+                byte[] buffer = new byte[1024];
+                FileInputStream fis = new FileInputStream(file);
+                zos.putNextEntry(new ZipEntry(file.getName()));
+                int length;
+                while ((length = fis.read(buffer)) > 0) {
+                    zos.write(buffer, 0, length);
+                }
+                zos.closeEntry();
+                fis.close();
+            }
+            zos.close();
+        } catch (IOException ioe) {
+            Log.e("", ioe.getMessage());
+        }
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 
@@ -81,9 +101,6 @@ public class BackupRestoreFragment extends Fragment{
 
     return cordLayout;
     }
-
-
-
 
     private void loadToolbarRecyclerViewFab() {
 
@@ -176,6 +193,67 @@ public class BackupRestoreFragment extends Fragment{
         return super.onOptionsItemSelected(item);
     }
 
+    public void unzip(String zipFile, String location) throws IOException {
+
+        int size;
+        byte[] buffer = new byte[1024];
+
+        try {
+
+            if (!location.endsWith("/")) {
+                location += "/";
+            }
+            File f = new File(location);
+            if (!f.isDirectory()) {
+                f.mkdirs();
+            }
+            ZipInputStream zin = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile), 1024));
+            try {
+                ZipEntry ze;
+                while ((ze = zin.getNextEntry()) != null) {
+                    String path = location + ze.getName();
+                    File unzipFile = new File(path);
+
+                    if (ze.isDirectory()) {
+                        if (!unzipFile.isDirectory()) {
+                            unzipFile.mkdirs();
+                        }
+                    } else {
+
+                        // check for and create parent directories if they don't exist
+                        File parentDir = unzipFile.getParentFile();
+                        if (null != parentDir) {
+                            if (!parentDir.isDirectory()) {
+                                parentDir.mkdirs();
+                            }
+                        }
+                        // unzipNormalOverlays the file
+                        FileOutputStream out = new FileOutputStream(unzipFile, false);
+                        BufferedOutputStream fout = new BufferedOutputStream(out, 1024);
+                        try {
+                            while ((size = zin.read(buffer, 0, 1024)) != -1) {
+                                fout.write(buffer, 0, size);
+                            }
+                            zin.closeEntry();
+                        } finally {
+                            fout.flush();
+                            fout.close();
+                            out.close();
+                        }
+                    }
+                }
+            } finally {
+                zin.close();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Unzip exception", e);
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.menu_main, menu);
+    }
 
     //Adapter
     private class CardViewAdapter3 extends RecyclerView.Adapter<CardViewAdapter3.ViewHolder>{
@@ -237,9 +315,6 @@ public class BackupRestoreFragment extends Fragment{
         }
     }
 
-
-
-
     //Delete Overlays
     private class DeleteBackup extends AsyncTask<String,String,Void> {
         ProgressDialog progressBackup;
@@ -279,8 +354,6 @@ public class BackupRestoreFragment extends Fragment{
             new LoadAndSet().execute();
         }
     }
-
-
 
     private class BackupOverlays extends AsyncTask<String,String,Void> {
         ProgressDialog progressBackup;
@@ -360,32 +433,6 @@ public class BackupRestoreFragment extends Fragment{
             Snackbar.make(coordinatorLayoutView, R.string.backupComplete, Snackbar.LENGTH_LONG)
                     .show();
             new LoadAndSet().execute();
-        }
-    }
-
-
-    private static void zipFolder(String inputFolderPath, String outZipPath) {
-        try {
-            FileOutputStream fos = new FileOutputStream(outZipPath);
-            ZipOutputStream zos = new ZipOutputStream(fos);
-            File srcFile = new File(inputFolderPath);
-            File[] files = srcFile.listFiles();
-            Log.d("", "Zip directory: " + srcFile.getName());
-            for (File file : files) {
-                Log.d("", "Adding file: " + file.getName());
-                byte[] buffer = new byte[1024];
-                FileInputStream fis = new FileInputStream(file);
-                zos.putNextEntry(new ZipEntry(file.getName()));
-                int length;
-                while ((length = fis.read(buffer)) > 0) {
-                    zos.write(buffer, 0, length);
-                }
-                zos.closeEntry();
-                fis.close();
-            }
-            zos.close();
-        } catch (IOException ioe) {
-            Log.e("", ioe.getMessage());
         }
     }
 
@@ -484,7 +531,6 @@ public class BackupRestoreFragment extends Fragment{
         }
     }
 
-
     private class LoadAndSet extends AsyncTask<String,String,Void> {
 
 
@@ -512,68 +558,6 @@ public class BackupRestoreFragment extends Fragment{
                 noOverlaysText.setVisibility(View.VISIBLE);
             }
         }
-    }
-
-    public void unzip(String zipFile, String location) throws IOException {
-
-        int size;
-        byte[] buffer = new byte[1024];
-
-        try {
-
-            if (!location.endsWith("/")) {
-                location += "/";
-            }
-            File f = new File(location);
-            if (!f.isDirectory()) {
-                f.mkdirs();
-            }
-            ZipInputStream zin = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile), 1024));
-            try {
-                ZipEntry ze;
-                while ((ze = zin.getNextEntry()) != null) {
-                    String path = location + ze.getName();
-                    File unzipFile = new File(path);
-
-                    if (ze.isDirectory()) {
-                        if (!unzipFile.isDirectory()) {
-                            unzipFile.mkdirs();
-                        }
-                    } else {
-
-                        // check for and create parent directories if they don't exist
-                        File parentDir = unzipFile.getParentFile();
-                        if (null != parentDir) {
-                            if (!parentDir.isDirectory()) {
-                                parentDir.mkdirs();
-                            }
-                        }
-                        // unzipNormalOverlays the file
-                        FileOutputStream out = new FileOutputStream(unzipFile, false);
-                        BufferedOutputStream fout = new BufferedOutputStream(out, 1024);
-                        try {
-                            while ((size = zin.read(buffer, 0, 1024)) != -1) {
-                                fout.write(buffer, 0, size);
-                            }
-                            zin.closeEntry();
-                        } finally {
-                            fout.flush();
-                            fout.close();
-                            out.close();
-                        }
-                    }
-                }
-            } finally {
-                zin.close();
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Unzip exception", e);
-        }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        menuInflater.inflate(R.menu.menu_main, menu);
     }
 
 

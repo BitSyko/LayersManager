@@ -8,26 +8,27 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.afollestad.materialcab.MaterialCab;
-import com.github.jorgecastilloprz.FABProgressCircle;
-import com.github.jorgecastilloprz.listeners.FABProgressListener;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.beans.FileBean;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
-import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
-import com.stericson.RootTools.RootTools;
 
 import java.util.ArrayList;
 
@@ -92,7 +93,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
             ArrayList<String> loadedFiles = new ArrayList<String>();
 
-            loadedFiles.addAll(Commands.RootloadFiles(getActivity(),getActivity(),"/system/vendor/overlay"));
+            loadedFiles.addAll(Commands.RootloadFiles(getActivity(), getActivity(), "/system/vendor/overlay"));
 
             for (String file : loadedFiles) {
                 files.add(new FileBean(file));
@@ -224,7 +225,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
         ArrayList<String> paths = new ArrayList<String>();
         for (FileBean file : files) {
             if (file.isChecked()) {
-                paths.add("system/vendor/overlay/"+file.getLocation());
+                paths.add("system/vendor/overlay/" + file.getLocation());
             }
         }
 

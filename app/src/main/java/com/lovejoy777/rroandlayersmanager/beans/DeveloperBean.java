@@ -1,6 +1,5 @@
 package com.lovejoy777.rroandlayersmanager.beans;
 
-import android.app.Activity;
 import android.graphics.drawable.Drawable;
 
 
