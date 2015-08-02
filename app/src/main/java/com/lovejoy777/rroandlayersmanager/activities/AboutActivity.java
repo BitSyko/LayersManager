@@ -34,10 +34,12 @@ public class AboutActivity extends AppCompatActivity {
                 new DeveloperBean("Reinhard Strauch", getString(R.string.LayersLeadDeveloper), getDrawable(R.drawable.about_reinhard), getString(R.string.linkReinhard)),
                 new DeveloperBean("Brian Gill", getString(R.string.LayersDeveloper), getDrawable(R.drawable.about_brian), getString(R.string.linkBrian)),
                 new DeveloperBean("Aldrin Holmes", getString(R.string.LayersDeveloper), getDrawable(R.drawable.about_aldrin), getString(R.string.linkAldrin)),
+                new DeveloperBean("Branden Manibusan", getString(R.string.LayersDeveloper), getDrawable(R.drawable.about_branden), getString(R.string.linkBranden)),
                 new DeveloperBean("Steve Lovejoy", getString(R.string.AppDeveloper), getDrawable(R.drawable.about_steve), getString(R.string.linkSteve)),
                 new DeveloperBean("Niklas Schnettler", getString(R.string.AppDeveloper), getDrawable(R.drawable.about_niklas), getString(R.string.linkNiklas)),
-                new DeveloperBean("Branden Manibusan", getString(R.string.AditionalLayersDev), getDrawable(R.drawable.about_branden), getString(R.string.linkBranden)),
+                new DeveloperBean("Andrzej Ressel", getString(R.string.AppDeveloper), getDrawable(R.drawable.about_andrzej), getString(R.string.linkAndrzej)),
                 new DeveloperBean("Denis Suarez", getString(R.string.ShowcaseDeveloper), getDrawable(R.drawable.about_denis), getString(R.string.linkDenis)),
+
         };
 
         DeveloperBean[] usefulLinks = {
