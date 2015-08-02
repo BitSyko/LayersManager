@@ -371,7 +371,9 @@ public class Commands {
         List<Integer> InstallOverlayList;
         String whichcolor;
 
-        public InstallOverlays(String mode, Context context, String themeName, ArrayList<String> paths, String package2, int NumberOfOverlays, int NumberOfColorOverlays, List<Integer> InstallOverlayList, String whichColor) {
+        public InstallOverlays(String mode, Context context, String themeName, ArrayList<String> paths, String package2,
+                               int NumberOfOverlays, int NumberOfColorOverlays, List<Integer> InstallOverlayList,
+                               String whichColor, AsyncResponse delegate) {
             this.Mode = mode;
             this.Context = context;
             this.ThemeName = themeName;
@@ -381,6 +383,7 @@ public class Commands {
             this.NumberOfOverlays = NumberOfOverlays;
             this.InstallOverlayList = InstallOverlayList;
             this.whichcolor = whichColor;
+            this.delegate = delegate;
         }
 
         protected void onPreExecute() {
