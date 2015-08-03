@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -30,6 +29,7 @@ import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
+import com.bitsyko.liblayers.Callback;
 import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 
@@ -742,58 +742,62 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     }
 
 
-    private class LoadDrawables extends AsyncTask<Void, Void, List<Drawable>> {
+    private class LoadDrawables extends AsyncTask<Void, Drawable, Void> {
 
-
-        protected void onPreExecute() {
-
-        }
-
+        LinearLayout screenshotLayout;
+        LinearLayout.LayoutParams params;
 
         @Override
-        protected List<Drawable> doInBackground(Void... params) {
-            return layer.getScreenShots();
+        protected void onPreExecute() {
+            screenshotLayout = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutScreenshots);
+
+            int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
+
+            params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            params.rightMargin = margin;
+
+
         }
 
+        @Override
+        protected void onProgressUpdate(Drawable... values) {
 
-        //TODO: Screenshots are visible all at once
-        protected void onPostExecute(List<Drawable> result) {
-            if (isAdded()) {
+            for (Drawable screenshot : values) {
 
-                LinearLayout screenshotLayout = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutScreenshots);
+                ImageView screenshotImageView = new ImageView(getActivity());
+                screenshotImageView.setBackgroundColor(getResources().getColor(R.color.accent));
 
-                for (Drawable screenshot : result) {
-                    LinearLayout linear = new LinearLayout(getActivity());
+                Bitmap bitmap = ((BitmapDrawable) screenshot).getBitmap();
 
-                    int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
-
-                    LinearLayout.LayoutParams params
-                            = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-                    params.rightMargin = margin;
-
-                    ImageView screenshotImageView = new ImageView(getActivity());
-                    screenshotImageView.setBackgroundColor(getResources().getColor(R.color.accent));
-
-                    Bitmap bitmap = ((BitmapDrawable) screenshot).getBitmap();
-
-                    //TODO: Rewrite
-                    if (bitmap.getHeight() > 1000) {
-                        screenshotImageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * 0.4), (int) (bitmap.getHeight() * 0.4), true));
-                    } else {
-                        screenshotImageView.setImageBitmap(bitmap);
-                    }
-
-
-                    linear.setLayoutParams(params);
-
-                    linear.addView(screenshotImageView);
-                    screenshotLayout.addView(linear);
+                //TODO: Rewrite
+                if (bitmap.getHeight() > 1000) {
+                    screenshotImageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * 0.4), (int) (bitmap.getHeight() * 0.4), true));
+                } else {
+                    screenshotImageView.setImageBitmap(bitmap);
                 }
 
-
+                LinearLayout linear = new LinearLayout(getActivity());
+                linear.setLayoutParams(params);
+                
+                linear.addView(screenshotImageView);
+                screenshotLayout.addView(linear);
             }
+
+
         }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            layer.getScreenShots(new Callback<Drawable>() {
+                @Override
+                public void callback(Drawable object) {
+                    publishProgress(object);
+                }
+            });
+            return null;
+        }
+
     }
 
 

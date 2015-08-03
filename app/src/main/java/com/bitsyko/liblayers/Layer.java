@@ -109,8 +109,11 @@ public class Layer implements Serializable, Closeable {
         return packageName;
     }
 
-
     public List<Drawable> getScreenShots() {
+        return getScreenShots(null);
+    }
+
+    public List<Drawable> getScreenShots(Callback<Drawable> callback) {
 
         if (screenShots == null) {
 
@@ -128,9 +131,16 @@ public class Layer implements Serializable, Closeable {
                     break;
                 }
 
+                Drawable drawable = resources.getDrawable(mDrawableResID, null);
+
                 screenShots.add(resources.getDrawable(mDrawableResID, null));
 
                 i++;
+
+                if (callback != null) {
+                    callback.callback(drawable);
+                }
+
 
             }
 
