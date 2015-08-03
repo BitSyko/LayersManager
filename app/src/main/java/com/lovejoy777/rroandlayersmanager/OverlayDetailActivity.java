@@ -21,7 +21,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
@@ -31,9 +30,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.*;
 import com.bitsyko.liblayers.Callback;
 import com.bitsyko.liblayers.Layer;
+import com.bitsyko.liblayers.LayerFile;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,7 +47,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     List<String> OverlayNameList = null;
     private ArrayList<String> paths = new ArrayList<>();
 
-    private String ThemeName;
+    private String themeName;
     private String ThemeFolder;
     private String ThemeFolderGeneral;
     private String package2;
@@ -107,7 +108,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
     private void createThemeFolder() {
         //create the Theme folder
-        File ThemeDirectory = new File(Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeName.replaceAll(" ", "") + "/");
+        File ThemeDirectory = new File(Environment.getExternalStorageDirectory() + "/Overlays/" + themeName.replaceAll(" ", "") + "/");
         ThemeDirectory.mkdirs();
     }
 
@@ -131,6 +132,38 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
             Category2Name.setText(getResources().getString(R.string.Category2Name));
         }
 
+
+        List<LayerFile> layerFiles = layer.getLayersInPackage();
+
+
+        for (LayerFile layerFile : layerFiles) {
+
+            TableRow row = new TableRow(getActivity());
+            row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+
+            CheckBox check = new CheckBox(getActivity());
+
+            check.setText(layerFile.getName());
+            check.setTag(layerFile);
+
+            row.addView(check);
+
+            if (layerFile.isColor()) {
+                CardViewCategory2.addView(row);
+            } else {
+                CardViewCategory1.addView(row);
+            }
+
+
+
+
+
+
+        }
+
+
+
+        /*
         //Cardview with normal Overlays
         for (int i = 0; i < NumberOfOverlays; i++) {
             TableRow row = new TableRow(getActivity());
@@ -220,6 +253,8 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
             CardView CardViewCategory = (CardView) cordLayout.findViewById(R.id.CardViewCategory2);
             CardViewCategory.setVisibility(View.GONE);
         }
+
+        */
     }
 
     private void loadScreenshotCardview() {
@@ -231,12 +266,12 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         if (NumberOfOverlays == 0) {
             for (int i = 1; i < NumberOfOverlays + NumberOfColorOverlays + 1; i++) {
                 String CurrentOverlyName = OverlayNameList.get(i).replaceAll(" ", "");
-                OverlayPathList.add(i, ThemeName.replaceAll(" ", "") + "_" + CurrentOverlyName + ".apk");
+                OverlayPathList.add(i, themeName.replaceAll(" ", "") + "_" + CurrentOverlyName + ".apk");
             }
         } else {
             for (int i = 0; i < NumberOfOverlays + NumberOfColorOverlays + 1; i++) {
                 String CurrentOverlyName = OverlayNameList.get(i).replaceAll(" ", "");
-                OverlayPathList.add(i, ThemeName.replaceAll(" ", "") + "_" + CurrentOverlyName + ".apk");
+                OverlayPathList.add(i, themeName.replaceAll(" ", "") + "_" + CurrentOverlyName + ".apk");
             }
         }
 
@@ -245,12 +280,12 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
     private void receiveAndUseData() {
         //get important data from Plugin´s Manifest
-        String Description;
-        String OverlayNameString;
-        String NormalOverlayNameString;
-        String StyleSpecificOverlayString;
-        String WhatsNew;
-        String OverlayColorString;
+        String description;
+        String overlayNameString;
+        String normalOverlayNameString;
+        String styleSpecificOverlayString;
+        String whatsNew;
+        String overlayColorString;
         ApplicationInfo ai = null;
         try {
             ai = getActivity().getPackageManager().getApplicationInfo(package2, PackageManager.GET_META_DATA);
@@ -261,41 +296,42 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         if (ai != null) {
             bundle = ai.metaData;
         }
-        ThemeName = bundle.getString("Layers_Name");
-        Description = bundle.getString("Layers_Description");
-        OverlayNameString = bundle.getString("Layers_OverlayNames");
-        OverlayColorString = bundle.getString("Layers_Colors");
-        WhatsNew = bundle.getString("Layers_WhatsNew");
-        NormalOverlayNameString = bundle.getString("Layers_NormalOverlays");
-        StyleSpecificOverlayString = bundle.getString("Layers_StyleSpecificOverlays");
+
+        themeName = bundle.getString("Layers_Name");
+        description = bundle.getString("Layers_Description");
+        overlayNameString = bundle.getString("Layers_OverlayNames");
+        overlayColorString = bundle.getString("Layers_Colors");
+        whatsNew = bundle.getString("Layers_WhatsNew");
+        normalOverlayNameString = bundle.getString("Layers_NormalOverlays");
+        styleSpecificOverlayString = bundle.getString("Layers_StyleSpecificOverlays");
 
 
         //Use the received data
-        ThemeFolder = Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeName.replaceAll(" ", "") + "/";
+        ThemeFolder = Environment.getExternalStorageDirectory() + "/Overlays/" + themeName.replaceAll(" ", "") + "/";
         ThemeFolderGeneral = ThemeFolder + "General/";
 
 
-        if (OverlayNameString != null) {
-            OverlayNameList = new ArrayList<>(Arrays.asList(OverlayNameString.split(",")));
+        if (overlayNameString != null) {
+            OverlayNameList = new ArrayList<>(Arrays.asList(overlayNameString.split(",")));
         } else {
-            if (!NormalOverlayNameString.isEmpty()) {
-                OverlayNameList = new ArrayList<>(Arrays.asList(NormalOverlayNameString.split(",")));
+            if (!normalOverlayNameString.isEmpty()) {
+                OverlayNameList = new ArrayList<>(Arrays.asList(normalOverlayNameString.split(",")));
                 OverlayNameList.add(" ");
-                if (!StyleSpecificOverlayString.isEmpty()) {
-                    OverlayNameList.addAll(Arrays.asList(StyleSpecificOverlayString.split(",")));
+                if (!styleSpecificOverlayString.isEmpty()) {
+                    OverlayNameList.addAll(Arrays.asList(styleSpecificOverlayString.split(",")));
                 }
             } else {
-                if (StyleSpecificOverlayString != null) {
+                if (styleSpecificOverlayString != null) {
                     OverlayNameList = new ArrayList<>();
                     OverlayNameList.add(" ");
-                    OverlayNameList.addAll(Arrays.asList(StyleSpecificOverlayString.split(",")));
+                    OverlayNameList.addAll(Arrays.asList(styleSpecificOverlayString.split(",")));
                 }
             }
         }
 
         List<String> OverlayColorList = null;
-        if (OverlayColorString != null) {
-            OverlayColorList = new ArrayList<>(Arrays.asList(OverlayColorString.split(",")));
+        if (overlayColorString != null) {
+            OverlayColorList = new ArrayList<>(Arrays.asList(overlayColorString.split(",")));
         }
 
         if (OverlayNameList != null) {
@@ -307,14 +343,14 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         NumberOfColors = OverlayColorList.size();
 
         TextView tv_description = (TextView) cordLayout.findViewById(R.id.HeX1);
-        tv_description.setText(Description);
+        tv_description.setText(description);
 
         TextView tv_whatsNew = (TextView) cordLayout.findViewById(R.id.tv_whatsNew);
-        tv_whatsNew.setText(WhatsNew);
+        tv_whatsNew.setText(whatsNew);
 
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) cordLayout.findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle(ThemeName);
+        collapsingToolbar.setTitle(themeName);
 
         for (int i = 0; i < OverlayColorList.size(); i++) {
             OverlayColorListPublic.add(OverlayColorList.get(i));
@@ -364,9 +400,10 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         Bundle bundle2 = this.getArguments();
         package2 = bundle2.getString("PackageName");
         try {
-            layer = Layer.layerFromPackageName(package2, getActivity());
+            layer = Layer.layerFromPackageName(package2, getActivity().getApplicationContext());
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+            throw new RuntimeException();
         }
         Log.d("PackageName: ", package2);
     }
@@ -384,7 +421,6 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         Palette.from(((BitmapDrawable) promo).getBitmap()).generate(new Palette.PaletteAsyncListener() {
             public void onGenerated(Palette palette) {
                 Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
-                Palette.Swatch test = palette.getLightVibrantSwatch();
                 if (vibrantSwatch != null) {
                     Collapsingtoolbar.setContentScrimColor(vibrantSwatch.getRgb());
                     float[] hsv = new float[3];
@@ -393,8 +429,6 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
                     //int colorPrimaryDark = Color.HSVToColor(hsv);
                     Window window = getActivity().getWindow();
                     window.setStatusBarColor(Color.HSVToColor(hsv));
-
-
                 }
             }
         });
@@ -442,17 +476,12 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     private void loadBackdrop2() {
         final ImageView imageView = (ImageView) cordLayout.findViewById(R.id.backdrop);
         imageView.setBackgroundResource(R.drawable.no_heroimage);
-
     }
 
     private void loadScreenshots() {
-
         imageLoader = new LoadDrawables();
         imageLoader.execute();
-
     }
-
-    private static final String LOG_TAG = "InvokeOp";
 
     //If FAB is clicked
     public void installTheme() {
@@ -622,7 +651,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
                 paths.add(ThemeFolder + whichColor + "/" + OverlayPathList.get(i4));
             }
         }
-        Commands.InstallOverlays asyncTask = new Commands.InstallOverlays("Plugin", getActivity(), ThemeName.replace(" ", ""), paths, package2, NumberOfOverlays, NumberOfColorOverlays, OldInstallOverlay, whichColor, this);
+        Commands.InstallOverlays asyncTask = new Commands.InstallOverlays("Plugin", getActivity(), themeName.replace(" ", ""), paths, package2, NumberOfOverlays, NumberOfColorOverlays, OldInstallOverlay, whichColor, this);
         asyncTask.execute();
     }
 
@@ -719,7 +748,6 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     private class LoadDrawables extends AsyncTask<Void, Drawable, Void> {
 
         LinearLayout screenshotLayout;
-        LinearLayout.LayoutParams params;
 
         @Override
         protected void onPreExecute() {
@@ -743,7 +771,6 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
                 }
 
                 LinearLayout linear = new LinearLayout(getActivity());
-                //linear.setLayoutParams(params);
 
                 linear.addView(screenshotImageView);
                 screenshotLayout.addView(linear);
@@ -765,75 +792,14 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
     }
 
-
-    /*public void appendLog(List<String> text)
-    {
-        String filename = "OverlayLog";
-        File logFile = new File(OverlayDetailActivity.this.getFilesDir(), filename);
-        if (!logFile.exists())
-        {
-            try
-            {
-                logFile.createNewFile();
-            }
-            catch (IOException e)
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        try
-        {
-            //BufferedWriter for performance, true to set append to file flag
-            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
-            buf.append(" // "+ThemeName + " ,"+text.toString()+" // "/*.replace(ThemeName+"_","").replace(" ", ""));
-            //buf.newLine();
-            buf.close();
-        }
-        catch (IOException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        readLog();
-    }
-    public  void readLog() {
-        String filename = "OverlayLog";
-        //Get the text file
-        File logFile = new File(OverlayDetailActivity.this.getFilesDir(), filename);
-        //Read text from file
-        StringBuilder text = new StringBuilder();
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(logFile));
-            String line;
-            while ((line = br.readLine()) != null) {
-                text.append(line);
-                text.append('\n');
-            }
-            br.close();
-        } catch (IOException e) {
-            //You'll need to add proper error handling here
-        }
-        String test = text.toString().replaceAll("\\[","").replaceAll("\\]","").replaceAll(" , ","");
-        System.out.println("Test "+test);
-        InstalledOverlays = new ArrayList<>(Arrays.asList(test.split("//")));
-        System.out.println(InstalledOverlays.get(0));
-        //String Splitted = InstalledOverlays.toString();
-        //int position = -1;
-        for (int i = 0; i < InstalledOverlays.size()-2; i++){
-            String Splitted = InstalledOverlays.get(i+1).toString();
-            List<String> SplitedList = new ArrayList<>(Arrays.asList(Splitted.replaceAll(" ","").split(",")));
-            if (SplitedList.get(0).contains(ThemeName.replaceAll(" ",""))){
-                i = InstalledOverlays.size()-2;
-                SplitedList.remove(0);
-                System.out.println("YEAHHH"+SplitedList);
-            }
-        }
-    }*/
-
     @Override
     public void onDestroyView() {
         loadBackdrop2();
+        try {
+            layer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         super.onDestroyView();
     }
 

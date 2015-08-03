@@ -1,6 +1,7 @@
 package com.bitsyko.liblayers;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -9,11 +10,11 @@ import android.content.pm.ServiceInfo;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Layer implements Closeable {
     private static final String ACTION_PICK_PLUGIN = "com.layers.plugins.PICK_OVERLAYS";
@@ -24,44 +25,48 @@ public class Layer implements Closeable {
     private List<Drawable> screenShots;
     private Drawable promo;
     private PackageManager packageManager;
+    private ApplicationInfo applicationInfo;
     private Resources resources;
+
+    private Map<String, String> additionalData;
 
     private Drawable icon;
 
     public Layer(String name, String developer, Drawable icon) {
-        this(name, developer, icon, null, null, null);
+        this(name, developer, icon, null, null, null, null);
     }
 
     public Layer(String name, String developer, Drawable icon, String packageName,
-                 PackageManager packageManager, Resources resources) {
+                 PackageManager packageManager, Resources resources, ApplicationInfo applicationInfo) {
         this.name = name;
         this.developer = developer;
         this.icon = icon;
         this.packageName = packageName;
         this.packageManager = packageManager;
         this.resources = resources;
+        this.applicationInfo = applicationInfo;
     }
 
-    public static Layer layerFromPackageName(String packageName, Activity activity)
+    public static Layer layerFromPackageName(String packageName, Context context)
             throws PackageManager.NameNotFoundException {
 
-        ApplicationInfo ai = activity.getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA);
+        ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA);
 
-        Bundle bundle = ai.metaData;
+        Bundle bundle = applicationInfo.metaData;
 
         String name = bundle.getString("Layers_Name");
         String developer = bundle.getString("Layers_Developer");
 
         String mDrawableName = "icon";
-        PackageManager manager = activity.getPackageManager();
+        PackageManager manager = context.getPackageManager();
 
-        Resources mApk1Resources = manager.getResourcesForApplication(packageName);
+        Resources resources = manager.getResourcesForApplication(packageName);
 
-        int mDrawableResID = mApk1Resources.getIdentifier(mDrawableName, "drawable", packageName);
+        int iconID = resources.getIdentifier(mDrawableName, "drawable", packageName);
 
-        Drawable myDrawable = mApk1Resources.getDrawable(mDrawableResID, null);
+        Drawable icon = resources.getDrawable(iconID, null);
 
-        return new Layer(name, developer, myDrawable, packageName, manager, mApk1Resources);
+        return new Layer(name, developer, icon, packageName, manager, resources, applicationInfo);
     }
 
     public static List<Layer> getLayersInSystem(Activity activity) {
@@ -89,7 +94,6 @@ public class Layer implements Closeable {
         return layerList;
     }
 
-
     public String getName() {
         return name;
     }
@@ -107,7 +111,11 @@ public class Layer implements Closeable {
     }
 
     public List<Drawable> getScreenShots() {
-        return getScreenShots(null);
+        return getScreenShots(new Callback<Drawable>() {
+            @Override
+            public void callback(Drawable object) {
+            }
+        });
     }
 
     public List<Drawable> getScreenShots(Callback<Drawable> callback) {
@@ -134,10 +142,7 @@ public class Layer implements Closeable {
 
                 i++;
 
-                if (callback != null) {
-                    callback.callback(drawable);
-                }
-
+                callback.callback(drawable);
 
             }
 
@@ -158,6 +163,82 @@ public class Layer implements Closeable {
 
 
         return promo;
+    }
+
+    public List<LayerFile> getLayersInPackage() {
+
+        Bundle bundle = applicationInfo.metaData;
+
+        List<LayerFile> files = new ArrayList<>();
+
+        if (bundle.containsKey("Layers_NormalOverlays")) {
+            //v1.1
+
+            Log.d("Normal overlays: ", bundle.getString("Layers_NormalOverlays"));
+
+            String[] normalOverlayNames = bundle.getString("Layers_NormalOverlays").split(",");
+
+            for (String layer : normalOverlayNames) {
+                files.add(new LayerFile(this, layer, false));
+            }
+
+            String[] styleSpecificOverlayNames = bundle.getString("Layers_StyleSpecificOverlays", "").split(",");
+
+            for (String layer : styleSpecificOverlayNames) {
+                files.add(new LayerFile(this, layer, true));
+            }
+
+
+
+        } else {
+            //v1.0
+
+            Log.d("Overlays", bundle.getString("Layers_OverlayNames"));
+
+            //Overlays
+            String[] overlays = bundle.getString("Layers_OverlayNames").split(",");
+
+            boolean normalOverlay = true;
+
+
+            for (String overlay: overlays) {
+
+                if (overlay.equals(" ") || overlay.equals("")) {
+                    normalOverlay = false;
+                    continue;
+                }
+
+                files.add(new LayerFile(this, overlay, !normalOverlay));
+
+            }
+
+            /*
+            for (String layer : normalOverlays) {
+                files.add(new LayerFile(this, layer, false));
+            }
+*/
+
+
+
+        }
+
+
+        return files;
+
+    }
+
+    public List<String> getColors() {
+
+        Bundle bundle = applicationInfo.metaData;
+
+        ArrayList<String> list = new ArrayList<>();
+
+        list.addAll(Arrays.asList(bundle.getString("Layers_Colors", "").split(",")));
+        list.addAll(Arrays.asList(bundle.getString("Styles", "").split(",")));
+
+        list.remove("");
+
+        return list;
     }
 
     @Override
