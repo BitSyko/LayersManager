@@ -3,15 +3,11 @@ package com.lovejoy777.rroandlayersmanager;
 import android.animation.Animator;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -20,7 +16,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.IBinder;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -31,24 +26,11 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.ViewGroup;
-import android.view.Window;
+import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Switch;
-import android.widget.TableRow;
-import android.widget.TextView;
-
+import android.widget.*;
+import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 
 import java.io.File;
@@ -56,33 +38,27 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
-/**
- * Created by Niklas on 02.06.2015.
- */
 public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
-    List<Integer> InstallOverlayList = new ArrayList<Integer>();
-    List<String> OverlayPathList = new ArrayList<String>();
-    List<String> OverlayColorListPublic = new ArrayList<String>();
+    List<Integer> InstallOverlayList = new ArrayList<>();
+    List<String> OverlayPathList = new ArrayList<>();
+    List<String> OverlayColorListPublic = new ArrayList<>();
     List<String> OverlayNameList = null;
-    private ArrayList<String> paths = new ArrayList<String>();
+    private ArrayList<String> paths = new ArrayList<>();
 
     private String ThemeName;
     private String ThemeFolder;
     private String ThemeFolderGeneral;
-    private String category;
     private String package2;
     private String whichColor;
     int atleastOneIsClicked;
+
+    private Layer layer;
 
     private int NumberOfColors;
     int NumberOfOverlays;
     int NumberOfColorOverlays;
     public static final int NumberOfScreenshotsMain = 3;
-
-
-    private IOperation opService;
 
     private Switch installEverything;
     private FloatingActionButton fab2;
@@ -91,14 +67,15 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     final ImageView ScreenshotimageView[] = new ImageView[NumberOfScreenshotsMain];
     public CheckBox dontShowAgain;
 
-    private Drawable myDrawable;
     Bitmap bitmap[] = new Bitmap[NumberOfScreenshotsMain];
 
 
-    /** Called when the activity is first created. */
+    /**
+     * Called when the activity is first created.
+     */
     @Override
-    public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle
-            savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
 
         cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_plugindetail, container, false);
 
@@ -106,7 +83,16 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
         getIntent();
 
-        bindOpService();
+        //loadBackdrop();
+
+        cordLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                v.removeOnLayoutChangeListener(this);
+                loadBackdrop();
+            }
+        });
+
 
         createLayouts();
 
@@ -114,13 +100,12 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     }
 
     @Override
-        public void onDestroy() {
-                if (imageLoader.getStatus() != AsyncTask.Status.FINISHED) {
-                        imageLoader.cancel(true);
-                    }
-                super.onDestroy();
-            }
-
+    public void onDestroy() {
+        if (imageLoader.getStatus() != AsyncTask.Status.FINISHED) {
+            imageLoader.cancel(true);
+        }
+        super.onDestroy();
+    }
 
 
     private void createThemeFolder() {
@@ -241,27 +226,6 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     }
 
     private void loadScreenshotCardview() {
-        //Scroll view with screenshots
-        LinearLayout screenshotLayout = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutScreenshots);
-
-        for (int i = 0; i < NumberOfScreenshotsMain; i++) {
-            LinearLayout linear = new LinearLayout(getActivity());
-
-            int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
-
-            LinearLayout.LayoutParams params
-                    = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-            params.rightMargin = margin;
-
-            ScreenshotimageView[i] = new ImageView(getActivity());
-            ScreenshotimageView[i].setBackgroundColor(getResources().getColor(R.color.accent));
-
-            linear.setLayoutParams(params);
-
-            linear.addView(ScreenshotimageView[i]);
-            screenshotLayout.addView(linear);
-        }
         loadScreenshots();
     }
 
@@ -402,16 +366,19 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
     private void getIntent() {
         Bundle bundle2 = this.getArguments();
-        if (bundle2 != null) {
-            category = bundle2.getString(com.lovejoy777.rroandlayersmanager.menu.BUNDLE_EXTRAS_CATEGORY);
-            package2 = bundle2.getString(menu.BUNDLE_EXTRAS_PACKAGENAME);
+        package2 = bundle2.getString("PackageName");
+        try {
+            layer = Layer.layerFromPackageName(package2, getActivity());
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
+        Log.d("PackageName: ", package2);
     }
 
     private void loadBackdrop() {
+
         ImageView imageView = (ImageView) cordLayout.findViewById(R.id.backdrop);
-
-
+/*
         final String packName = package2;
         String mDrawableName = "heroimage";
         PackageManager manager = getActivity().getPackageManager();
@@ -430,10 +397,17 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         if (myDrawable != null) {
             imageView.setImageDrawable(myDrawable);
         }
+        */
+
+        Drawable promo = layer.getPromo();
+
+        imageView.setImageDrawable(promo);
+
+
         final CollapsingToolbarLayout Collapsingtoolbar = (CollapsingToolbarLayout) cordLayout.findViewById(R.id.collapsing_toolbar);
 
 
-        Palette.from(((BitmapDrawable) myDrawable).getBitmap()).generate(new Palette.PaletteAsyncListener() {
+        Palette.from(((BitmapDrawable) promo).getBitmap()).generate(new Palette.PaletteAsyncListener() {
             public void onGenerated(Palette palette) {
                 Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
                 Palette.Swatch test = palette.getLightVibrantSwatch();
@@ -445,7 +419,6 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
                     //int colorPrimaryDark = Color.HSVToColor(hsv);
                     Window window = getActivity().getWindow();
                     window.setStatusBarColor(Color.HSVToColor(hsv));
-
 
 
                 }
@@ -505,44 +478,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
     }
 
-
-    private void bindOpService() {
-        if (category != null) {
-            opServiceConnection = new OpServiceConnection();
-            Intent i = new Intent(menu.ACTION_PICK_PLUGIN);
-            ResolveInfo info = getActivity().getPackageManager().resolveService(i, Context.BIND_AUTO_CREATE);
-            i.setComponent(new ComponentName(package2, package2 + "." + category));
-            i.addCategory(category);
-            getActivity().bindService(i, opServiceConnection, Context.BIND_AUTO_CREATE);
-        }
-    }
-
-    private void releaseOpService() {
-        getActivity().unbindService(opServiceConnection);
-        opServiceConnection = null;
-    }
-
-    private OpServiceConnection opServiceConnection;
-
     private static final String LOG_TAG = "InvokeOp";
-
-    class OpServiceConnection implements ServiceConnection {
-        public void onServiceConnected(ComponentName className,
-                                       IBinder boundService) {
-            opService = IOperation.Stub.asInterface(boundService);
-            Log.d(LOG_TAG, "onServiceConnected");
-            loadBackdrop();
-
-
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            opService = null;
-            Log.d(LOG_TAG, "onServiceDisconnected");
-            //onBackPressed();
-            loadBackdrop2();
-        }
-    }
 
     //If FAB is clicked
     public void installTheme() {
@@ -630,7 +566,6 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     }
 
 
-
     ///////////
     //Snackbars
 
@@ -698,26 +633,26 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
         ArrayList<Integer> OldInstallOverlay = new ArrayList<>(InstallOverlayList);
 
-            //install Normal Overlays
-            for (int i = 0; i < NumberOfOverlays; i++) {
-                if (InstallOverlayList.get(i) == 1) {
-                    InstallOverlayList.set(i, 0);
-                    paths.add(ThemeFolderGeneral + OverlayPathList.get(i));
-                }
+        //install Normal Overlays
+        for (int i = 0; i < NumberOfOverlays; i++) {
+            if (InstallOverlayList.get(i) == 1) {
+                InstallOverlayList.set(i, 0);
+                paths.add(ThemeFolderGeneral + OverlayPathList.get(i));
             }
+        }
 
-            //install Color Specific Overlays
-            for (int i4 = NumberOfOverlays + 1; i4 < NumberOfOverlays + NumberOfColorOverlays + 1; i4++) {
-                if (InstallOverlayList.get(i4) == 1) {
-                    InstallOverlayList.set(i4, 0);
-                    paths.add(ThemeFolder+whichColor+"/"+OverlayPathList.get(i4));
-                }
+        //install Color Specific Overlays
+        for (int i4 = NumberOfOverlays + 1; i4 < NumberOfOverlays + NumberOfColorOverlays + 1; i4++) {
+            if (InstallOverlayList.get(i4) == 1) {
+                InstallOverlayList.set(i4, 0);
+                paths.add(ThemeFolder + whichColor + "/" + OverlayPathList.get(i4));
             }
-        Commands.InstallOverlays asyncTask = new Commands.InstallOverlays("Plugin",getActivity(),ThemeName.replace(" ",""),paths,package2,NumberOfOverlays,NumberOfColorOverlays, OldInstallOverlay,whichColor, this);
+        }
+        Commands.InstallOverlays asyncTask = new Commands.InstallOverlays("Plugin", getActivity(), ThemeName.replace(" ", ""), paths, package2, NumberOfOverlays, NumberOfColorOverlays, OldInstallOverlay, whichColor, this);
         asyncTask.execute();
     }
 
-    public void processFinish(){
+    public void processFinish() {
         fab2.setClickable(true);
         installationFinishedSnackBar();
         UncheckAllCheckBoxes("Uncheck");
@@ -807,7 +742,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     }
 
 
-    private class LoadDrawables extends AsyncTask<Void, Void, Void> {
+    private class LoadDrawables extends AsyncTask<Void, Void, List<Drawable>> {
 
 
         protected void onPreExecute() {
@@ -816,59 +751,47 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
 
         @Override
-        protected Void doInBackground(Void... params) {
-
-            for (int i = 0; i < NumberOfScreenshotsMain; i++) {
-
-
-
-                Drawable Screenshots[] = new Drawable[NumberOfScreenshotsMain];
-                int j = i + 1;
-                final String packName = package2;
-                String mDrawableName = "screenshot" + j;
-                PackageManager manager = getActivity().getPackageManager();
-                Resources mApk1Resources = null;
-                try {
-                    mApk1Resources = manager.getResourcesForApplication(packName);
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
-
-                int mDrawableResID = 0;
-                if (mApk1Resources != null) {
-                    mDrawableResID = mApk1Resources.getIdentifier(mDrawableName, "drawable", packName);
-                }
-
-                if (mApk1Resources != null) {
-                    //InputStream is = getResources().openRawResource(mApk1Resources.getDrawable(mDrawableResID));
-                    myDrawable = mApk1Resources.getDrawable(mDrawableResID);
-                    //Bitmap b1 = BitmapFactory.decodeResource(mApk1Resources.getDrawable(mDrawableResID));
-                }
-                //Screenshots[i] = myDrawable;
-                //myDrawable = null;
-                bitmap[i] = ((BitmapDrawable) myDrawable).getBitmap();
-                myDrawable = null;
-                //Screenshots[i] = null;
-
-            }
-            return null;
-
+        protected List<Drawable> doInBackground(Void... params) {
+            return layer.getScreenShots();
         }
 
-        protected void onPostExecute(Void result) {
-            if (isAdded()) {
-                for (int i = 0; i < NumberOfScreenshotsMain; i++) {
 
-                    if (bitmap[i].getHeight() > 1000){
-                        ScreenshotimageView[i].setImageBitmap(Bitmap.createScaledBitmap(bitmap[i], (int) (bitmap[i].getWidth() * 0.4), (int) (bitmap[i].getHeight() * 0.4), true));
-                    }else{
-                        ScreenshotimageView[i].setImageBitmap(bitmap[i]);
+        //TODO: Screenshots are visible all at once
+        protected void onPostExecute(List<Drawable> result) {
+            if (isAdded()) {
+
+                LinearLayout screenshotLayout = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutScreenshots);
+
+                for (Drawable screenshot : result) {
+                    LinearLayout linear = new LinearLayout(getActivity());
+
+                    int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
+
+                    LinearLayout.LayoutParams params
+                            = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                    params.rightMargin = margin;
+
+                    ImageView screenshotImageView = new ImageView(getActivity());
+                    screenshotImageView.setBackgroundColor(getResources().getColor(R.color.accent));
+
+                    Bitmap bitmap = ((BitmapDrawable) screenshot).getBitmap();
+
+                    //TODO: Rewrite
+                    if (bitmap.getHeight() > 1000) {
+                        screenshotImageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * 0.4), (int) (bitmap.getHeight() * 0.4), true));
+                    } else {
+                        screenshotImageView.setImageBitmap(bitmap);
                     }
 
-                    bitmap[i] = null;
-                    Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fadein);
-                    ScreenshotimageView[i].startAnimation(fadeInAnimation);
+
+                    linear.setLayoutParams(params);
+
+                    linear.addView(screenshotImageView);
+                    screenshotLayout.addView(linear);
                 }
+
+
             }
         }
     }
@@ -941,16 +864,16 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
     @Override
     public void onDestroyView() {
+        loadBackdrop2();
         super.onDestroyView();
-        releaseOpService();
     }
 
-    public void onInstallationFinished(){
+    public void onInstallationFinished() {
         //cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_plugindetail, container, false);
         //fab2 = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab2);
         fab2.setClickable(true);
         installationFinishedSnackBar();
-         UncheckAllCheckBoxes("Uncheck");
+        UncheckAllCheckBoxes("Uncheck");
         installEverything.setChecked(false);
     }
 }

@@ -1,9 +1,6 @@
 package com.lovejoy777.rroandlayersmanager.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.Fragment;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
@@ -17,7 +14,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.*;
 import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.R;
@@ -99,7 +95,7 @@ public class PluginFragment extends Fragment {
                 //Bundle bndlanimation =
                 //        ActivityOptions.makeCustomAnimation(getActivity().getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
                 //startActivity(Installactivity, bndlanimation);
-                ((menu) getActivity()).changeFragment(4,0);
+                ((menu) getActivity()).changeFragment(4, 0);
             }
 
 
@@ -145,9 +141,9 @@ public class PluginFragment extends Fragment {
     private List<Layer> createList2() {
 
         List<Layer> result = new ArrayList<>();
-        result.add(new Layer(getString(R.string.tooBad), getString(R.string.noPlugins), getResources().getDrawable(R.drawable.ic_noplugin, null), null));
-        result.add(new Layer(getString(R.string.Showcase), getString(R.string.ShowCaseMore), getResources().getDrawable(R.mipmap.ic_launcher, null), null));
-        result.add(new Layer(getString(R.string.PlayStore), getString(R.string.PlayStoreMore), getResources().getDrawable(R.drawable.playstore, null), null));
+        result.add(new Layer(getString(R.string.tooBad), getString(R.string.noPlugins), getResources().getDrawable(R.drawable.ic_noplugin, null)));
+        result.add(new Layer(getString(R.string.Showcase), getString(R.string.ShowCaseMore), getResources().getDrawable(R.mipmap.ic_launcher, null)));
+        result.add(new Layer(getString(R.string.PlayStore), getString(R.string.PlayStoreMore), getResources().getDrawable(R.drawable.playstore, null)));
         return result;
     }
 
@@ -155,11 +151,11 @@ public class PluginFragment extends Fragment {
     //open Plugin page after clicked on a cardview
     protected void onListItemClick(int position) {
         if (!TestBoolean) {
-            String package2 = packages[position];
-            String category = categories.get(position);
-            if (category.length() > 0) {
-                 ((menu) getActivity()).changeFragment2(category,package2);
-             }
+            //  String package2 = packages[position];
+            //   String category = categories.get(position);
+            //  if (category.length() > 0) {
+            ((menu) getActivity()).changeFragment2(ca.getLayerFromPosition(position));
+            //   }
         } else {
             if (position == 2) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.PlaystoreSearch))));
@@ -215,6 +211,7 @@ public class PluginFragment extends Fragment {
             mSwipeRefresh.setRefreshing(false);
         }
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         menuInflater.inflate(R.menu.menu_main, menu);

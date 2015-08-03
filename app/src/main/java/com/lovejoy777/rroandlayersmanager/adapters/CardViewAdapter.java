@@ -20,6 +20,9 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Contac
         this.layersList = layersList;
     }
 
+    public Layer getLayerFromPosition(int position) {
+        return layersList.get(position);
+    }
 
     @Override
     public int getItemCount() {

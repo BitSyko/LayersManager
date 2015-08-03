@@ -22,6 +22,7 @@ import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.activities.AboutActivity;
 import com.lovejoy777.rroandlayersmanager.activities.DetailedTutorialActivity;
 import com.lovejoy777.rroandlayersmanager.activities.IntroActivity;
@@ -266,18 +267,18 @@ public class menu extends AppCompatActivity {
 
     }
 
-    public void changeFragment2(String category, String package2) {
+    public void changeFragment2(Layer layer) {
         final android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         TextView title2 = (TextView) findViewById(R.id.title2);
         int elevation;
 
-
-        Fragment fragment = null;
         Bundle args = new Bundle();
-        args.putString(BUNDLE_EXTRAS_CATEGORY, category);
-        args.putString(BUNDLE_EXTRAS_PACKAGENAME, package2);
+       // args.putString(BUNDLE_EXTRAS_CATEGORY, category);
+       // args.putString(BUNDLE_EXTRAS_PACKAGENAME, package2);
 
-        fragment = new OverlayDetailActivity();
+        args.putString("PackageName", layer.getPackageName());
+
+        Fragment fragment = new OverlayDetailActivity();
 
         fragment.setArguments(args);
 
