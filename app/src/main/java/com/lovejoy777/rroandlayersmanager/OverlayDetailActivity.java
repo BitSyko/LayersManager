@@ -344,7 +344,6 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fab2.setClickable(false);
                 installTheme();
             }
         });
