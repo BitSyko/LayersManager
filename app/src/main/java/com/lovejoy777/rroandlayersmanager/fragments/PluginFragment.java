@@ -32,7 +32,6 @@ import java.util.List;
 
 public class PluginFragment extends Fragment {
 
-    private PackageBroadcastReceiver packageBroadcastReceiver;
     private IntentFilter packageFilter;
     private ArrayList<HashMap<String, String>> services;
     private ArrayList<String> categories;
@@ -63,14 +62,6 @@ public class PluginFragment extends Fragment {
         //createImportantDirectories();
 
         new fillPluginList().execute();
-
-        packageBroadcastReceiver = new PackageBroadcastReceiver();
-        packageFilter = new IntentFilter();
-        packageFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
-        packageFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
-        packageFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
-        packageFilter.addCategory(Intent.CATEGORY_DEFAULT);
-        packageFilter.addDataScheme("package");
 
         setHasOptionsMenu(true);
 
@@ -161,19 +152,6 @@ public class PluginFragment extends Fragment {
     }
 
 
-    public void onStart() {
-        super.onStart();
-        Log.d(LOG_TAG, "onStart");
-        getActivity().registerReceiver(packageBroadcastReceiver, packageFilter);
-    }
-
-
-    public void onStop() {
-        super.onStop();
-        Log.d(LOG_TAG, "onStop");
-        getActivity().unregisterReceiver(packageBroadcastReceiver);
-    }
-
     //open Plugin page after clicked on a cardview
     protected void onListItemClick(int position) {
         if (!TestBoolean) {
@@ -192,21 +170,6 @@ public class PluginFragment extends Fragment {
 
         }
     }
-
-
-    class PackageBroadcastReceiver extends BroadcastReceiver {
-        private static final String LOG_TAG = "PackageBroadcastReceiver";
-
-        //when a new Plugin is installed
-        @SuppressLint("LongLogTag")
-        public void onReceive(Context context, Intent intent) {
-            Log.d(LOG_TAG, "onReceive: " + intent);
-            services.clear();
-            new fillPluginList().execute();
-            ca.notifyDataSetChanged();
-        }
-    }
-
 
     private void NotAvailableSnackbar() {
         final View coordinatorLayoutView = cordLayout.findViewById(R.id.main_content2);
@@ -266,4 +229,13 @@ public class PluginFragment extends Fragment {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        new fillPluginList().execute();
+    }
+
+
 }
