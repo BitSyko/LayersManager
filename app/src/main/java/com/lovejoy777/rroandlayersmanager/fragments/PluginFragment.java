@@ -6,12 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.content.pm.ServiceInfo;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,25 +18,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-
+import android.view.*;
 import com.bitsyko.liblayers.Layer;
-
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.adapters.CardViewAdapter;
-import com.lovejoy777.rroandlayersmanager.beans.CardBean;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.helper.RecyclerItemClickListener;
 import com.lovejoy777.rroandlayersmanager.menu;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 public class PluginFragment extends Fragment {
@@ -65,7 +50,7 @@ public class PluginFragment extends Fragment {
     static final String BUNDLE_EXTRAS_CATEGORY = "category";
     static final String BUNDLE_EXTRAS_PACKAGENAME = "packageName";
     private CoordinatorLayout cordLayout = null;
-
+    private SwipeRefreshLayout mSwipeRefresh;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -129,19 +114,12 @@ public class PluginFragment extends Fragment {
 
         });
 
-        final SwipeRefreshLayout mSwipeRefresh = (SwipeRefreshLayout) cordLayout.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefresh = (SwipeRefreshLayout) cordLayout.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefresh.setColorSchemeResources(R.color.accent);
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                services.clear();
                 new fillPluginList().execute();
-                onItemsLoadComplete();
-            }
-
-            void onItemsLoadComplete() {
-                ca.notifyDataSetChanged();
-                mSwipeRefresh.setRefreshing(false);
             }
         });
 
@@ -176,9 +154,9 @@ public class PluginFragment extends Fragment {
     private List<Layer> createList2() {
 
         List<Layer> result = new ArrayList<>();
-        result.add(new Layer(getString(R.string.tooBad), getString(R.string.noPlugins), getResources().getDrawable(R.drawable.ic_noplugin), null));
-        result.add(new Layer(getString(R.string.Showcase), getString(R.string.ShowCaseMore), getResources().getDrawable(R.mipmap.ic_launcher), null));
-        result.add(new Layer(getString(R.string.PlayStore), getString(R.string.PlayStoreMore), getResources().getDrawable(R.drawable.playstore), null));
+        result.add(new Layer(getString(R.string.tooBad), getString(R.string.noPlugins), getResources().getDrawable(R.drawable.ic_noplugin, null), null));
+        result.add(new Layer(getString(R.string.Showcase), getString(R.string.ShowCaseMore), getResources().getDrawable(R.mipmap.ic_launcher, null), null));
+        result.add(new Layer(getString(R.string.PlayStore), getString(R.string.PlayStoreMore), getResources().getDrawable(R.drawable.playstore, null), null));
         return result;
     }
 
@@ -202,10 +180,7 @@ public class PluginFragment extends Fragment {
             String package2 = packages[position];
             String category = categories.get(position);
             if (category.length() > 0) {
-
-
                  ((menu) getActivity()).changeFragment2(category,package2);
-
              }
         } else {
             if (position == 2) {
@@ -232,6 +207,7 @@ public class PluginFragment extends Fragment {
         }
     }
 
+
     private void NotAvailableSnackbar() {
         final View coordinatorLayoutView = cordLayout.findViewById(R.id.main_content2);
         Snackbar.make(coordinatorLayoutView, "Sorry, not available yet.", Snackbar.LENGTH_SHORT)
@@ -250,6 +226,7 @@ public class PluginFragment extends Fragment {
     private class fillPluginList extends AsyncTask<Void, Void, Void> {
 
         protected void onPreExecute() {
+            mSwipeRefresh.setRefreshing(true);
         }
 
         @Override
@@ -269,10 +246,10 @@ public class PluginFragment extends Fragment {
         }
 
         protected void onPostExecute(Void result) {
-
             recList = (RecyclerView) cordLayout.findViewById(R.id.cardList);
             recList.setHasFixedSize(true);
             recList.setAdapter(ca);
+            mSwipeRefresh.setRefreshing(false);
         }
     }
     @Override
