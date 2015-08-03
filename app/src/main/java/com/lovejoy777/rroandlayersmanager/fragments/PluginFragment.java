@@ -31,6 +31,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bitsyko.liblayers.Layer;
+
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.adapters.CardViewAdapter;
 import com.lovejoy777.rroandlayersmanager.beans.CardBean;
@@ -42,10 +44,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-/**
- * Created by Niklas on 07.07.2015.
- */
 
 public class PluginFragment extends Fragment {
 
@@ -174,41 +172,13 @@ public class PluginFragment extends Fragment {
         }
     };
 
-    //create List with all Plugins
-    private List<CardBean> createList(int size, String name[], String developer[], String packages[]) {
-
-        List<CardBean> result = new ArrayList<CardBean>();
-        for (int i = 0; i < size; i++) {
-
-            final String packName = packages[i];
-            String mDrawableName = "icon";
-            PackageManager manager = getActivity().getPackageManager();
-            Resources mApk1Resources;
-            try {
-                mApk1Resources = manager.getResourcesForApplication(packName);
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-                continue;
-            }
-
-            assert mApk1Resources != null;
-
-            int mDrawableResID = mApk1Resources.getIdentifier(mDrawableName, "drawable", packName);
-
-            Drawable myDrawable = mApk1Resources.getDrawable(mDrawableResID);
-
-            result.add(new CardBean(name[i], developer[i], myDrawable));
-        }
-        return result;
-    }
-
     //create list if no plugins are installed
-    private List<CardBean> createList2() {
+    private List<Layer> createList2() {
 
-        List<CardBean> result = new ArrayList<CardBean>();
-        result.add(new CardBean(getString(R.string.tooBad), getString(R.string.noPlugins), getResources().getDrawable(R.drawable.ic_noplugin)));
-        result.add(new CardBean(getString(R.string.Showcase), getString(R.string.ShowCaseMore), getResources().getDrawable(R.mipmap.ic_launcher)));
-        result.add(new CardBean(getString(R.string.PlayStore), getString(R.string.PlayStoreMore), getResources().getDrawable(R.drawable.playstore)));
+        List<Layer> result = new ArrayList<>();
+        result.add(new Layer(getString(R.string.tooBad), getString(R.string.noPlugins), getResources().getDrawable(R.drawable.ic_noplugin), null));
+        result.add(new Layer(getString(R.string.Showcase), getString(R.string.ShowCaseMore), getResources().getDrawable(R.mipmap.ic_launcher), null));
+        result.add(new Layer(getString(R.string.PlayStore), getString(R.string.PlayStoreMore), getResources().getDrawable(R.drawable.playstore), null));
         return result;
     }
 
@@ -285,80 +255,10 @@ public class PluginFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... params) {
 
-            services = new ArrayList<HashMap<String, String>>();
-            categories = new ArrayList<String>();
+            List<Layer> layerList = Layer.getLayersInSystem(PluginFragment.this.getActivity());
 
-            PackageManager packageManager = getActivity().getPackageManager();
-            Intent baseIntent = new Intent(ACTION_PICK_PLUGIN);
-            baseIntent.setFlags(Intent.FLAG_DEBUG_LOG_RESOLUTION);
-            ArrayList<ResolveInfo> list = (ArrayList<ResolveInfo>) packageManager.queryIntentServices(baseIntent,
-                    PackageManager.GET_RESOLVED_FILTER);
-
-            final String name[] = new String[list.size()];
-            final String developer[] = new String[list.size()];
-
-            for (int i = 0; i < list.size(); ++i) {
-
-                ResolveInfo info = list.get(i);
-                ServiceInfo sinfo = info.serviceInfo;
-                IntentFilter filter = info.filter;
-                Log.d(LOG_TAG, "fillPluginList: i: " + i + "; sinfo: " + sinfo + ";filter: " + filter);
-
-                ApplicationInfo ai = null;
-                try {
-                    ai = getActivity().getPackageManager().getApplicationInfo(sinfo.packageName, PackageManager.GET_META_DATA);
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
-                Bundle bundle = null;
-                if (ai != null) {
-                    bundle = ai.metaData;
-                }
-                name[i] = bundle.getString("Layers_Name");
-                developer[i] = bundle.getString("Layers_Developer");
-
-                if (sinfo != null) {
-                    HashMap<String, String> item = new HashMap<String, String>();
-                    item.put(KEY_PKG, name[i]);
-                    item.put(KEY_SERVICENAME, developer[i]);
-
-                    String firstCategory = null;
-                    if (filter != null) {
-                        StringBuilder actions = new StringBuilder();
-                        for (Iterator<String> actionIterator = filter.actionsIterator(); actionIterator.hasNext(); ) {
-                            String action = actionIterator.next();
-                            if (actions.length() > 0)
-                                actions.append(",");
-                            actions.append(action);
-                        }
-                        StringBuilder categories = new StringBuilder();
-                        for (Iterator<String> categoryIterator = filter.categoriesIterator();
-                             categoryIterator.hasNext(); ) {
-                            String category = categoryIterator.next();
-                            if (firstCategory == null)
-                                firstCategory = category;
-                            if (categories.length() > 0)
-                                categories.append(",");
-                            categories.append(category);
-                        }
-                        try {
-                            packages[i] = getActivity().getPackageManager().getApplicationInfo(sinfo.packageName, 0).packageName;
-                        } catch (PackageManager.NameNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        item.put(KEY_ACTIONS, "<null>");
-                        item.put(KEY_CATEGORIES, "<null>");
-                    }
-                    if (firstCategory == null)
-                        firstCategory = "";
-                    categories.add(firstCategory);
-                    services.add(item);
-                }
-            }
-
-            if (list.size() > 0) {
-                ca = new CardViewAdapter(createList(list.size(), name, developer, packages));
+            if (layerList.size() > 0) {
+                ca = new CardViewAdapter(layerList);
             } else {
                 ca = new CardViewAdapter(createList2());
                 TestBoolean = true;

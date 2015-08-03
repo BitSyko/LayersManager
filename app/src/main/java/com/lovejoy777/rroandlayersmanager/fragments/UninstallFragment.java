@@ -199,7 +199,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
         @Override
         public int getItemCount() {
-            return themes == null ? 0 : themes.size();
+            return themes.size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {

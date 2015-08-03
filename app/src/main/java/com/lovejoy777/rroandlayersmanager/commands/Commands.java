@@ -139,7 +139,6 @@ public class Commands {
                 ZipInputStream zipStream = new ZipInputStream(inputStream);
                 ZipEntry zEntry;
                 while ((zEntry = zipStream.getNextEntry()) != null) {
-
                     FileOutputStream fout = new FileOutputStream(
                             destinationGeneral + "/" + zEntry.getName());
                     BufferedOutputStream bufout = new BufferedOutputStream(fout);
@@ -542,7 +541,7 @@ public class Commands {
                     while (!command9.isFinished()) {
                         Thread.sleep(1);
                     }
-
+                    
 
                     // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER BACK TO 777
                     CommandCapture command10 = new CommandCapture(0, "chmod 755 /vendor/overlay");
@@ -595,12 +594,14 @@ public class Commands {
             int i = 0;
             RootTools.remount("/system", "RW");
             for (String path : Paths) {
+                Log.d("Removing: ", path);
                 i = i + 1;
                 if (!RootCommands.readReadWriteFile())
                     RootTools.remount(path, "rw");
                 try {
                     RootCommands.execute("rm -r " + getCommandLineString(path));
                 } catch (Exception e) {
+                    Log.w("Cannot remove: ", path);
                     e.printStackTrace();
                 }
                 publishProgress(i);

@@ -7,31 +7,31 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.R;
-import com.lovejoy777.rroandlayersmanager.beans.CardBean;
 
 import java.util.List;
 
 public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ContactViewHolder> {
 
-    private List<CardBean> contactList;
+    private List<Layer> layersList;
 
-    public CardViewAdapter(List<CardBean> contactList) {
-        this.contactList = contactList;
+    public CardViewAdapter(List<Layer> layersList) {
+        this.layersList = layersList;
     }
 
 
     @Override
     public int getItemCount() {
-        return contactList.size();
+        return layersList.size();
     }
 
     @Override
     public void onBindViewHolder(ContactViewHolder contactViewHolder, int i) {
-        CardBean ci = contactList.get(i);
-        contactViewHolder.name.setText(ci.getTitle());
-        contactViewHolder.developer.setText(ci.getDescription());
-        contactViewHolder.image.setImageDrawable(ci.getImage());
+        Layer layer = layersList.get(i);
+        contactViewHolder.name.setText(layer.getName());
+        contactViewHolder.developer.setText(layer.getDeveloper());
+        contactViewHolder.image.setImageDrawable(layer.getIcon());
     }
 
     @Override
