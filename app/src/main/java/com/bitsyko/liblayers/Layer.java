@@ -12,13 +12,11 @@ import android.os.Bundle;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Layer implements Serializable, Closeable {
+public class Layer implements Closeable {
     private static final String ACTION_PICK_PLUGIN = "com.layers.plugins.PICK_OVERLAYS";
-
 
     private String name;
     private String packageName;
@@ -44,7 +42,8 @@ public class Layer implements Serializable, Closeable {
         this.resources = resources;
     }
 
-    public static Layer layerFromPackageName(String packageName, Activity activity) throws PackageManager.NameNotFoundException {
+    public static Layer layerFromPackageName(String packageName, Activity activity)
+            throws PackageManager.NameNotFoundException {
 
         ApplicationInfo ai = activity.getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA);
 
@@ -78,7 +77,6 @@ public class Layer implements Serializable, Closeable {
         for (ResolveInfo info : list) {
             ServiceInfo sinfo = info.serviceInfo;
 
-
             try {
                 layerList.add(layerFromPackageName(sinfo.packageName, activity));
             } catch (PackageManager.NameNotFoundException e) {
@@ -89,7 +87,6 @@ public class Layer implements Serializable, Closeable {
         }
 
         return layerList;
-
     }
 
 

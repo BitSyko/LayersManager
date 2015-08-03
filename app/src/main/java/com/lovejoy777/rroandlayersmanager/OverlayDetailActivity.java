@@ -64,10 +64,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     private FloatingActionButton fab2;
     private CoordinatorLayout cordLayout;
     private LoadDrawables imageLoader;
-    final ImageView ScreenshotimageView[] = new ImageView[NumberOfScreenshotsMain];
     public CheckBox dontShowAgain;
-
-    Bitmap bitmap[] = new Bitmap[NumberOfScreenshotsMain];
 
 
     /**
@@ -378,34 +375,12 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     private void loadBackdrop() {
 
         ImageView imageView = (ImageView) cordLayout.findViewById(R.id.backdrop);
-/*
-        final String packName = package2;
-        String mDrawableName = "heroimage";
-        PackageManager manager = getActivity().getPackageManager();
-        Resources mApk1Resources = null;
-        try {
-            mApk1Resources = manager.getResourcesForApplication(packName);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        int mDrawableResID = 0;
-        if (mApk1Resources != null) {
-            mDrawableResID = mApk1Resources.getIdentifier(mDrawableName, "drawable", packName);
-        }
-        Drawable myDrawable = mApk1Resources.getDrawable(mDrawableResID);
-        //ImageView imageView = (ImageView) cordLayout.findViewById(R.id.backdrop);
-        if (myDrawable != null) {
-            imageView.setImageDrawable(myDrawable);
-        }
-        */
 
         Drawable promo = layer.getPromo();
 
         imageView.setImageDrawable(promo);
 
-
         final CollapsingToolbarLayout Collapsingtoolbar = (CollapsingToolbarLayout) cordLayout.findViewById(R.id.collapsing_toolbar);
-
 
         Palette.from(((BitmapDrawable) promo).getBitmap()).generate(new Palette.PaletteAsyncListener() {
             public void onGenerated(Palette palette) {
@@ -750,14 +725,6 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         @Override
         protected void onPreExecute() {
             screenshotLayout = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutScreenshots);
-
-            int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
-
-            params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-            params.rightMargin = margin;
-
-
         }
 
         @Override
@@ -766,7 +733,6 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
             for (Drawable screenshot : values) {
 
                 ImageView screenshotImageView = new ImageView(getActivity());
-                screenshotImageView.setBackgroundColor(getResources().getColor(R.color.accent));
 
                 Bitmap bitmap = ((BitmapDrawable) screenshot).getBitmap();
 
@@ -778,8 +744,8 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
                 }
 
                 LinearLayout linear = new LinearLayout(getActivity());
-                linear.setLayoutParams(params);
-                
+                //linear.setLayoutParams(params);
+
                 linear.addView(screenshotImageView);
                 screenshotLayout.addView(linear);
             }
