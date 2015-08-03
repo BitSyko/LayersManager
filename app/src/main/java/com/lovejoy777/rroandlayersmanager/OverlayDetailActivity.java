@@ -713,9 +713,8 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
                     paths.add(ThemeFolder+whichColor+"/"+OverlayPathList.get(i4));
                 }
             }
-        Commands.InstallOverlays asyncTask =new Commands.InstallOverlays("Plugin",getActivity(),ThemeName.replace(" ",""),paths,package2,NumberOfOverlays,NumberOfColorOverlays, OldInstallOverlay,whichColor);
+        Commands.InstallOverlays asyncTask = new Commands.InstallOverlays("Plugin",getActivity(),ThemeName.replace(" ",""),paths,package2,NumberOfOverlays,NumberOfColorOverlays, OldInstallOverlay,whichColor, this);
         asyncTask.execute();
-        asyncTask.delegate = this;
     }
 
     public void processFinish(){
