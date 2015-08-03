@@ -263,7 +263,7 @@ public class OverlayDetailActivity extends Fragment implements FABProgressListen
             params.rightMargin = margin;
 
             ScreenshotimageView[i] = new ImageView(getActivity());
-            ScreenshotimageView[i].setBackgroundColor(getResources().getColor(R.color.accent));
+            ScreenshotimageView[i].setBackgroundColor(getResources().getColor(R.color.screenshot_background));
 
             linear.setLayoutParams(params);
 
