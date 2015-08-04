@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Path;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -42,11 +43,20 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -60,7 +70,6 @@ public class BackupRestoreFragment extends Fragment {
     private ArrayList<String> Files = new ArrayList<String>();
     private RecyclerView mRecyclerView;
     private CardViewAdapter3 mAdapter;
-    private DrawerLayout mDrawerLayout;
     private CoordinatorLayout cordLayout = null;
 
     private static void zipFolder(String inputFolderPath, String outZipPath) {
@@ -90,7 +99,6 @@ public class BackupRestoreFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        FragmentActivity faActivity = (FragmentActivity) super.getActivity();
         cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_backuprestore, container, false);
 
         loadToolbarRecyclerViewFab();
@@ -183,71 +191,11 @@ public class BackupRestoreFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
             case R.id.menu_reboot:
                 Commands.reboot(getActivity());
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void unzip(String zipFile, String location) throws IOException {
-
-        int size;
-        byte[] buffer = new byte[1024];
-
-        try {
-
-            if (!location.endsWith("/")) {
-                location += "/";
-            }
-            File f = new File(location);
-            if (!f.isDirectory()) {
-                f.mkdirs();
-            }
-            ZipInputStream zin = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile), 1024));
-            try {
-                ZipEntry ze;
-                while ((ze = zin.getNextEntry()) != null) {
-                    String path = location + ze.getName();
-                    File unzipFile = new File(path);
-
-                    if (ze.isDirectory()) {
-                        if (!unzipFile.isDirectory()) {
-                            unzipFile.mkdirs();
-                        }
-                    } else {
-
-                        // check for and create parent directories if they don't exist
-                        File parentDir = unzipFile.getParentFile();
-                        if (null != parentDir) {
-                            if (!parentDir.isDirectory()) {
-                                parentDir.mkdirs();
-                            }
-                        }
-                        // unzipNormalOverlays the file
-                        FileOutputStream out = new FileOutputStream(unzipFile, false);
-                        BufferedOutputStream fout = new BufferedOutputStream(out, 1024);
-                        try {
-                            while ((size = zin.read(buffer, 0, 1024)) != -1) {
-                                fout.write(buffer, 0, size);
-                            }
-                            zin.closeEntry();
-                        } finally {
-                            fout.flush();
-                            fout.close();
-                            out.close();
-                        }
-                    }
-                }
-            } finally {
-                zin.close();
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Unzip exception", e);
-        }
     }
 
     @Override
@@ -275,14 +223,13 @@ public class BackupRestoreFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder viewHolder, final int i) {
+        public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
 
             viewHolder.themeName.setText(themes.get(i).replace(".apk", "").replace("_", " "));
             viewHolder.themeName.setTag(themes.get(i));
             viewHolder.themeName.setId(i);
             viewHolder.themeName.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    System.out.println(i);
                     AlertDialog.Builder installdialog = new AlertDialog.Builder(getActivity());
                     installdialog.setTitle(themes.get(i));
                     installdialog.setMessage(Html.fromHtml(getResources().getString(R.string.DoYouWantToRestore)));
@@ -294,6 +241,45 @@ public class BackupRestoreFragment extends Fragment {
                     installdialog.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             new DeleteBackup().execute(Files.get(i));
+                        }
+                    });
+                    installdialog.setNeutralButton(R.string.show, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            AlertDialog.Builder contentDialog = new AlertDialog.Builder(getActivity());
+                            contentDialog.setTitle(themes.get(i) +" "+ getString(R.string.contains));
+                            FileInputStream fis;
+                            try {
+                                fis = new FileInputStream(Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + themes.get(i) + "/content.txt");
+                                ObjectInputStream ois = new ObjectInputStream(fis);
+                                List<String> content = (List<String>) ois.readObject();
+                                ois.close();
+                                String overlays = "";
+                                for (int i = 0; i < content.size(); i++) {
+                                    if (i == 0) {
+                                        overlays = content.get(i);
+                                    } else {
+                                        overlays = overlays + "\n" + content.get(i);
+                                    }
+                                }
+                                contentDialog.setMessage(overlays.replace(".apk", "").replaceAll("_", " "));
+                            } catch (FileNotFoundException e) {
+                                contentDialog.setMessage("This feature is currently only available for Backups made with Layers Manager 4.3 or later...");
+                                e.printStackTrace();
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            } catch (OptionalDataException e) {
+                                e.printStackTrace();
+                            } catch (StreamCorruptedException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            contentDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                        }
+                                    });
+                            contentDialog.show();
                         }
                     });
                     installdialog.show();
@@ -329,13 +315,12 @@ public class BackupRestoreFragment extends Fragment {
 
         @Override
         protected Void doInBackground(String... params) {
-            String SZP = params[0];
-            SZP = Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + SZP;
-            System.out.println(SZP);
+            String backupName = params[0];
+            backupName = Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + backupName;
             try {
 
                 // DELETE /VENDOR/OVERLAY
-                RootCommands.DeleteFileRoot(SZP);
+                RootCommands.DeleteFileRoot(backupName);
 
                 // CLOSE ALL SHELLS
                 RootTools.closeAllShells();
@@ -374,6 +359,8 @@ public class BackupRestoreFragment extends Fragment {
 
                 String sdOverlays = Environment.getExternalStorageDirectory() + "/Overlays";
 
+                ArrayList<String> backedupOverlays = Commands.loadFiles("/system/vendor/overlay");
+
                 // CREATES /SDCARD/OVERLAYS/BACKUP/TEMP
                 File dir1 = new File(sdOverlays + "/Backup/temp");
                 if (!dir1.exists() && !dir1.isDirectory()) {
@@ -387,6 +374,8 @@ public class BackupRestoreFragment extends Fragment {
                         e.printStackTrace();
                     }
                 }
+
+
 
                 RootTools.remount("/system", "RW");
 
@@ -402,6 +391,11 @@ public class BackupRestoreFragment extends Fragment {
 
                 // ZIP OVERLAY FOLDER
                 zipFolder(Environment.getExternalStorageDirectory() + "/Overlays/Backup/temp/overlay", Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + backupname + "/overlay.zip");
+
+                FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + backupname+"/content.txt");
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(backedupOverlays);
+                oos.close();
 
                 // CHANGE PERMISSIONS OF /VENDOR/OVERLAY/ 666  && /VENDOR/OVERLAY 777 && /SDCARD/OVERLAYS/BACKUP/ 666
                 CommandCapture command18 = new CommandCapture(0, "chmod 777 " + Environment.getExternalStorageDirectory() + "/Overlays/Backup/temp");
@@ -491,7 +485,7 @@ public class BackupRestoreFragment extends Fragment {
                 }
 
                 // UNZIP SZP TO /SDCARD/OVERLAYS/BACKUP/TEMP/OVERLAY FOLDER
-                unzip(SZP, Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp/overlay");
+                Commands.unzipNormalOverlays(SZP, Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp/overlay");
 
                 // MOVE /SDCARD/OVERLAYS/BACKUP/TEMP/OVERLAY TO /VENDOR/
                 RootCommands.moveCopyRoot(Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp/overlay", "/vendor/");
@@ -561,6 +555,4 @@ public class BackupRestoreFragment extends Fragment {
             }
         }
     }
-
-
 }
