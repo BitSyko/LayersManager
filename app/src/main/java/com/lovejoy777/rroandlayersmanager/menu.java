@@ -66,22 +66,13 @@ public class menu extends AppCompatActivity {
 
     private void LoadTutorial() {
 
-        // Get the app's shared preferences
-        SharedPreferences app_preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Boolean tutorialShown = PreferenceManager.getDefaultSharedPreferences(menu.this).getBoolean("tutorialShown", false);
 
-        // Get the value for the run counter
-        int counter = app_preferences.getInt("counter", 0);
-
-        if (counter < 1) {
-
+        if (!tutorialShown) {
             Intent intent = new Intent(this, IntroActivity.class);
             startActivityForResult(intent, 1);
-
+            PreferenceManager.getDefaultSharedPreferences(menu.this).edit().putBoolean("tutorialShown", true).commit();
         }
-        // Increment the counter
-        SharedPreferences.Editor editor = app_preferences.edit();
-        editor.putInt("counter", ++counter);
-        editor.apply();
     }
 
     @Override
