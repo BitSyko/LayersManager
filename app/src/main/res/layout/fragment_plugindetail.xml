@@ -259,7 +259,8 @@
                             android:textStyle="bold"
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="16dp"
-                            android:textSize="16sp"/>
+                            android:textSize="16sp"
+                            android:text="@string/Category1Name"/>
 
                         <LinearLayout
                             android:orientation="vertical"
@@ -298,7 +299,8 @@
                             android:textStyle="bold"
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="16dp"
-                            android:textSize="16sp" />
+                            android:textSize="16sp"
+                            android:text="@string/Category2Name"/>
 
                         <LinearLayout
                             android:orientation="vertical"

@@ -19,6 +19,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
@@ -37,27 +38,18 @@ import java.util.List;
 
 public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
-    List<Integer> InstallOverlayList = new ArrayList<>();
-    List<String> OverlayPathList = new ArrayList<>();
-    List<String> OverlayColorListPublic = new ArrayList<>();
-    private ArrayList<String> paths = new ArrayList<>();
     private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
 
-    private String themeName;
-    private String ThemeFolder;
-    private String ThemeFolderGeneral;
-    private String package2;
-    private String whichColor = "";
-    int atleastOneIsClicked;
+    private String layerPackageName;
+    private String choosedStyle = "";
 
     private Layer layer;
 
-    private int NumberOfColors;
     int NumberOfOverlays;
     int NumberOfColorOverlays;
 
     private Switch installEverything;
-    private FloatingActionButton fab2;
+    private FloatingActionButton installationFAB;
     private CoordinatorLayout cordLayout;
     private LoadDrawables imageLoader;
     public CheckBox dontShowAgain;
@@ -111,32 +103,20 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     private void refreshFab() {
 
         if (isAnyCheckboxEnabled()) {
-            fab2.show();
+            installationFAB.show();
         } else {
-            fab2.hide();
+            installationFAB.hide();
         }
 
     }
 
     private void loadOverlayCardviews() {
         //sort cardviews by number of Overlays
-        LinearLayout CardViewCategory1, CardViewCategory2;
-        TextView Category1Name, Category2Name;
-        if (NumberOfOverlays >= NumberOfColorOverlays) {
-            CardViewCategory1 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory1);
-            CardViewCategory2 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory2);
-            Category1Name = (TextView) cordLayout.findViewById(R.id.Tv_Category1Name);
-            Category1Name.setText(getResources().getString(R.string.Category1Name));
-            Category2Name = (TextView) cordLayout.findViewById(R.id.Tv_Category2Name);
-            Category2Name.setText(getResources().getString(R.string.Category2Name));
-        } else {
-            CardViewCategory1 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory2);
-            CardViewCategory2 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory1);
-            Category1Name = (TextView) cordLayout.findViewById(R.id.Tv_Category2Name);
-            Category1Name.setText(getResources().getString(R.string.Category1Name));
-            Category2Name = (TextView) cordLayout.findViewById(R.id.Tv_Category1Name);
-            Category2Name.setText(getResources().getString(R.string.Category2Name));
-        }
+        LinearLayout linearLayoutCategory1, linearLayoutCategory2;
+        linearLayoutCategory1 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory1);
+        linearLayoutCategory2 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory2);
+        CardView cardViewCategory1 = (CardView) cordLayout.findViewById(R.id.CardViewCategory1);
+        CardView cardViewCategory2 = (CardView) cordLayout.findViewById(R.id.CardViewCategory2);
 
 
         List<LayerFile> layerFiles = layer.getLayersInPackage();
@@ -155,9 +135,9 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
             row.addView(check);
 
             if (layerFile.isColor()) {
-                CardViewCategory2.addView(row);
+                linearLayoutCategory2.addView(row);
             } else {
-                CardViewCategory1.addView(row);
+                linearLayoutCategory1.addView(row);
             }
 
             check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -171,15 +151,17 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
         }
 
-        /*
 
-        //If there arent any color specific Overlays, hide the cardview
-        if (NumberOfColorOverlays == 0 || NumberOfOverlays == 0) {
-            CardView CardViewCategory = (CardView) cordLayout.findViewById(R.id.CardViewCategory2);
-            CardViewCategory.setVisibility(View.GONE);
+        //No styleSpecific Overlays
+        if (linearLayoutCategory2.getChildCount()==0){
+            cardViewCategory2.setVisibility(View.GONE);
+        }
+        //No normal Overlays
+        if (linearLayoutCategory1.getChildCount()==0){
+            cardViewCategory1.setVisibility(View.GONE);
         }
 
-        */
+
     }
 
     private void loadScreenshotCardview() {
@@ -201,12 +183,12 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     }
 
     private void createLayouts() {
-        //switch
+        //switch to select all Checkboxes
         installEverything = (Switch) cordLayout.findViewById(R.id.allswitch);
 
         //Hide the FAB
-        fab2 = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab2);
-        fab2.hide();
+        installationFAB = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab2);
+        installationFAB.hide();
 
         //Initialize Layout
         Toolbar toolbar = (Toolbar) cordLayout.findViewById(R.id.toolbar);
@@ -216,7 +198,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_back);
 
 
-        fab2.setOnClickListener(new View.OnClickListener() {
+        installationFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 installTheme();
@@ -237,14 +219,14 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
     private void getIntent() {
         Bundle bundle2 = this.getArguments();
-        package2 = bundle2.getString("PackageName");
+        layerPackageName = bundle2.getString("PackageName");
         try {
-            layer = Layer.layerFromPackageName(package2, getActivity().getApplicationContext());
+            layer = Layer.layerFromPackageName(layerPackageName, getActivity().getApplicationContext());
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
             throw new RuntimeException();
         }
-        Log.d("PackageName: ", package2);
+        Log.d("PackageName: ", layerPackageName);
     }
 
     private void loadBackdrop() {
@@ -365,7 +347,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
     private void checkall() {
 
-        fab2.show();
+        installationFAB.show();
 
         for (CheckBox checkBox : checkBoxes) {
             if (!checkBox.isChecked()) {
@@ -445,18 +427,16 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
         }
 
-        Log.d("Choosed color", whichColor);
+        Log.d("Choosed color", choosedStyle);
 
-        new Commands.InstallOverlaysBetterWay(layersToInstall, whichColor, getActivity(), this).execute();
+        new Commands.InstallOverlaysBetterWay(layersToInstall, choosedStyle, getActivity(), this).execute();
 
 
     }
 
     public void processFinish() {
-        fab2.setClickable(true);
         installationFinishedSnackBar();
         uncheckAllCheckBoxes();
-        paths.clear();
         installEverything.setChecked(false);
     }
 
@@ -499,7 +479,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
             radioButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    whichColor = (String) v.getTag();
+                    choosedStyle = (String) v.getTag();
                 }
             });
 
@@ -582,14 +562,5 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
             e.printStackTrace();
         }
         super.onDestroyView();
-    }
-
-    public void onInstallationFinished() {
-        //cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_plugindetail, container, false);
-        //fab2 = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab2);
-        fab2.setClickable(true);
-        installationFinishedSnackBar();
-        uncheckAllCheckBoxes();
-        installEverything.setChecked(false);
     }
 }
