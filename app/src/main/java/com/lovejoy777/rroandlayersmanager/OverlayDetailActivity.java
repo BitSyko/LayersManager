@@ -88,14 +88,6 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         return cordLayout;
     }
 
-    @Override
-    public void onDestroy() {
-        if (imageLoader.getStatus() != AsyncTask.Status.FINISHED) {
-            imageLoader.cancel(true);
-        }
-        super.onDestroy();
-    }
-
     private boolean isAnyCheckboxEnabled() {
 
         for (CheckBox checkBox : checkBoxes) {
@@ -515,11 +507,15 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     @Override
     public void onDestroyView() {
         loadBackdrop2();
+        if (imageLoader.getStatus() != AsyncTask.Status.FINISHED) {
+            imageLoader.cancel(true);
+        }
         try {
             layer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         super.onDestroyView();
     }
 
@@ -537,7 +533,13 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
             for (Drawable screenshot : values) {
 
-                ImageView screenshotImageView = new ImageView(getActivity());
+                ImageView screenshotImageView;
+
+                try {
+                    screenshotImageView = new ImageView(getActivity());
+                } catch (NullPointerException e) {
+                    return;
+                }
 
                 Bitmap bitmap = ((BitmapDrawable) screenshot).getBitmap();
 
@@ -554,11 +556,11 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
                 screenshotLayout.addView(linear);
             }
 
-
         }
 
         @Override
         protected Void doInBackground(Void... params) {
+
             layer.getScreenShots(new Callback<Drawable>() {
                 @Override
                 public void callback(Drawable object) {

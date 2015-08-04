@@ -59,7 +59,7 @@ public class Layer implements Closeable {
     public static Layer layerFromPackageName(String packageName, Context context)
             throws PackageManager.NameNotFoundException {
 
-        ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA);
+        ApplicationInfo applicationInfo = context.getApplicationContext().getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA);
 
         Bundle bundle = applicationInfo.metaData;
 
@@ -67,7 +67,7 @@ public class Layer implements Closeable {
         String developer = bundle.getString("Layers_Developer");
 
         String mDrawableName = "icon";
-        PackageManager manager = context.getPackageManager();
+        PackageManager manager = context.getApplicationContext().getPackageManager();
 
         Resources resources = manager.getResourcesForApplication(packageName);
 
