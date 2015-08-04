@@ -28,34 +28,21 @@ import java.util.List;
 
 public class PluginFragment extends Fragment {
 
-    private IntentFilter packageFilter;
+
     private ArrayList<HashMap<String, String>> services;
-    private ArrayList<String> categories;
     private String[] packages = new String[100];
 
-    public static final String ACTION_PICK_PLUGIN = "com.layers.plugins.PICK_OVERLAYS";
-    static final String KEY_PKG = "pkg";
-    static final String KEY_SERVICENAME = "servicename";
-    static final String KEY_ACTIONS = "actions";
-    static final String KEY_CATEGORIES = "categories";
     private Boolean TestBoolean = false;
-    static final String LOG_TAG = "PluginApp";
     RecyclerView recList = null;
     CardViewAdapter ca = null;
-    static final String BUNDLE_EXTRAS_CATEGORY = "category";
-    static final String BUNDLE_EXTRAS_PACKAGENAME = "packageName";
     private CoordinatorLayout cordLayout = null;
     private SwipeRefreshLayout mSwipeRefresh;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        FragmentActivity faActivity = (FragmentActivity) super.getActivity();
         cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_plugins, container, false);
 
-
         LoadRecyclerViewFabToolbar();
-
-        //createImportantDirectories();
 
         new fillPluginList().execute();
 
@@ -90,11 +77,6 @@ public class PluginFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent Installactivity = new Intent(getActivity(), Install.class);
-
-                //Bundle bndlanimation =
-                //        ActivityOptions.makeCustomAnimation(getActivity().getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
-                //startActivity(Installactivity, bndlanimation);
                 ((menu) getActivity()).changeFragment(4, 0);
             }
 
@@ -109,13 +91,6 @@ public class PluginFragment extends Fragment {
                 new fillPluginList().execute();
             }
         });
-
-
-        //Toolbar toolbar = (Toolbar) cordLayout.findViewById(R.id.toolbar);
-        //toolbar.setNavigationIcon(R.drawable.ic_action_menu);
-        //AppCompatActivity activity = (AppCompatActivity) getActivity();
-        //activity.setSupportActionBar(toolbar);
-        //activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 
@@ -128,7 +103,6 @@ public class PluginFragment extends Fragment {
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
             //Remove swiped item from list and notify the RecyclerView
-            //System.out.println(viewHolder.getAdapterPosition());
             String packageName = packages[viewHolder.getAdapterPosition()];
             Uri packageURI = Uri.parse("package:" + packageName);
             Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, packageURI);
@@ -151,11 +125,7 @@ public class PluginFragment extends Fragment {
     //open Plugin page after clicked on a cardview
     protected void onListItemClick(int position) {
         if (!TestBoolean) {
-            //  String package2 = packages[position];
-            //   String category = categories.get(position);
-            //  if (category.length() > 0) {
             ((menu) getActivity()).changeFragment2(ca.getLayerFromPosition(position));
-            //   }
         } else {
             if (position == 2) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.PlaystoreSearch))));

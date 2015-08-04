@@ -41,9 +41,6 @@ import java.util.concurrent.TimeoutException;
 
 public class menu extends AppCompatActivity {
 
-    public static final String ACTION_PICK_PLUGIN = "com.layers.plugins.PICK_OVERLAYS";
-    static final String BUNDLE_EXTRAS_CATEGORY = "category";
-    static final String BUNDLE_EXTRAS_PACKAGENAME = "packageName";
     private DrawerLayout mDrawerLayout;
 
 
@@ -99,7 +96,6 @@ public class menu extends AppCompatActivity {
         //set Toolbar
         final android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_menu);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -173,7 +169,7 @@ public class menu extends AppCompatActivity {
                                     break;
                                 } else {
                                     Toast.makeText(menu.this, "Please install the layers showcase plugin", Toast.LENGTH_LONG).show();
-                                    System.out.println("App is not currently installed on your phone");
+                                    System.out.println("App is currently not installed on your phone");
                                     break;
                                 }
                             case R.id.nav_settings:
@@ -251,7 +247,6 @@ public class menu extends AppCompatActivity {
             if (position == 4) {
 
                 fragmentManager.beginTransaction()
-                        //.setCustomAnimations(R.anim.enter_right,0,0,R.anim.exit_right)
                         .addToBackStack("test")
                         .replace(R.id.fragment_container, fragment)
                         .commit();
@@ -273,13 +268,9 @@ public class menu extends AppCompatActivity {
         int elevation;
 
         Bundle args = new Bundle();
-       // args.putString(BUNDLE_EXTRAS_CATEGORY, category);
-       // args.putString(BUNDLE_EXTRAS_PACKAGENAME, package2);
-
         args.putString("PackageName", layer.getPackageName());
 
         Fragment fragment = new OverlayDetailActivity();
-
         fragment.setArguments(args);
 
         elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
