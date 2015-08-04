@@ -24,25 +24,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.ViewGroup;
-import android.view.Window;
+import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Switch;
-import android.widget.TableRow;
-import android.widget.TextView;
-
-import com.bitsyko.liblayers.Callback;
+import android.widget.*;
 import com.bitsyko.liblayers.Layer;
 import com.bitsyko.liblayers.LayerFile;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
@@ -53,7 +38,7 @@ import java.util.List;
 
 public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
-    public CheckBox dontShowAgain;
+    private CheckBox dontShowAgain;
     private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
     private String layerPackageName;
     private String choosedStyle = "";
@@ -483,6 +468,10 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
                 }
             });
 
+            if (colors.indexOf(color) == 0) {
+                radioButton.performClick();
+            }
+
         }
 
         colorDialog.setCancelable(false);
@@ -564,7 +553,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
             Pair<Integer, Drawable> pair;
 
-            while((pair = layer.getNextScreenshot()).first != 0) {
+            while ((pair = layer.getNextScreenshot()).first != 0) {
 
                 if (isCancelled()) {
                     break;
@@ -573,7 +562,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
                 publishProgress(pair.second);
 
             }
-            
+
             return null;
         }
 
