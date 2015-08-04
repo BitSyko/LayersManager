@@ -3,6 +3,7 @@ package com.lovejoy777.rroandlayersmanager.adapters;
 /**
  * Created by Niklas on 16.07.2015.
  */
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,10 @@ import android.view.ViewGroup;
 public class SlideAdapter extends Fragment {
 
     private static final String ARG_LAYOUT_RES_ID = "layoutResId";
+    private int layoutResId;
+
+    public SlideAdapter() {
+    }
 
     public static SlideAdapter newInstance(int layoutResId) {
         SlideAdapter sampleSlideAdapter = new SlideAdapter();
@@ -24,15 +29,11 @@ public class SlideAdapter extends Fragment {
         return sampleSlideAdapter;
     }
 
-    private int layoutResId;
-
-    public SlideAdapter() {}
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(getArguments() != null && getArguments().containsKey(ARG_LAYOUT_RES_ID))
+        if (getArguments() != null && getArguments().containsKey(ARG_LAYOUT_RES_ID))
             layoutResId = getArguments().getInt(ARG_LAYOUT_RES_ID);
     }
 

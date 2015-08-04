@@ -15,8 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class MainActivity extends Activity
-{
+public class MainActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,18 +24,7 @@ public class MainActivity extends Activity
         if (!RootTools.isAccessGiven()) {
 
             Toast.makeText(MainActivity.this, R.string.noRoot, Toast.LENGTH_LONG).show();
-           /* final View coordinatorLayoutView = findViewById(R.id.main_content2);
-            Snackbar.make(coordinatorLayoutView, "No root access available", Snackbar.LENGTH_LONG)
-                    .setAction("Get Root", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=eu.chainfire.supersu")));
-                        }
-                    })
-                    .show(); */
         }
-
 
 
         // switch and build.prop call for no launcher Icon.
@@ -72,9 +60,9 @@ public class MainActivity extends Activity
             e.printStackTrace();
         }
 
-        Intent intent = new Intent(MainActivity.this,menu.class);
+        Intent intent = new Intent(MainActivity.this, menu.class);
         startActivity(intent);
-        overridePendingTransition(0,0);
+        overridePendingTransition(0, 0);
         finish();
 
     }

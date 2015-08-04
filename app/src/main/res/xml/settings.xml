@@ -2,21 +2,15 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
-        android:title="@string/General"
-        android:key="first_category">
-
+        android:key="first_category"
+        android:title="@string/General">
 
         <SwitchPreference
-            android:key="switch1"
-            android:title="@string/SettingLauncherIconDetail"
             android:defaultValue="false"
+            android:key="switch1"
             android:summary="@string/SettingLauncherIconWarning"
-        />
-
-
+            android:title="@string/SettingLauncherIconDetail" />
 
     </PreferenceCategory>
-
-
 
 </PreferenceScreen>

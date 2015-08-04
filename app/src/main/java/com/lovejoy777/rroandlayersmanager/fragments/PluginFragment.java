@@ -2,19 +2,23 @@ package com.lovejoy777.rroandlayersmanager.fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.adapters.CardViewAdapter;
@@ -23,14 +27,28 @@ import com.lovejoy777.rroandlayersmanager.helper.RecyclerItemClickListener;
 import com.lovejoy777.rroandlayersmanager.menu;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class PluginFragment extends Fragment {
 
-    private Boolean TestBoolean = false;
     RecyclerView recList = null;
     CardViewAdapter ca = null;
+    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+            //Remove swiped item from list and notify the RecyclerView
+            String packageName = ca.getLayerFromPosition(viewHolder.getAdapterPosition()).getPackageName();
+            Uri packageURI = Uri.parse("package:" + packageName);
+            Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, packageURI);
+            startActivityForResult(uninstallIntent, 1);
+        }
+    };
+    private Boolean TestBoolean = false;
     private CoordinatorLayout cordLayout = null;
     private SwipeRefreshLayout mSwipeRefresh;
 
@@ -89,23 +107,6 @@ public class PluginFragment extends Fragment {
         });
     }
 
-
-    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-        @Override
-        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-            return false;
-        }
-
-        @Override
-        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-            //Remove swiped item from list and notify the RecyclerView
-            String packageName = ca.getLayerFromPosition(viewHolder.getAdapterPosition()).getPackageName();
-            Uri packageURI = Uri.parse("package:" + packageName);
-            Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, packageURI);
-            startActivityForResult(uninstallIntent, 1);
-        }
-    };
-
     //create list if no plugins are installed
     private List<Layer> createList2() {
 
@@ -145,6 +146,27 @@ public class PluginFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.menu_main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_reboot:
+                Commands.reboot(getActivity());
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        new fillPluginList().execute();
+    }
+
     private class fillPluginList extends AsyncTask<Void, Void, Void> {
 
         protected void onPreExecute() {
@@ -173,28 +195,6 @@ public class PluginFragment extends Fragment {
             recList.setAdapter(ca);
             mSwipeRefresh.setRefreshing(false);
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        menuInflater.inflate(R.menu.menu_main, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_reboot:
-                Commands.reboot(getActivity());
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        new fillPluginList().execute();
     }
 
 

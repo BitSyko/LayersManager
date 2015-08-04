@@ -22,6 +22,7 @@ import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.activities.AboutActivity;
 import com.lovejoy777.rroandlayersmanager.activities.DetailedTutorialActivity;

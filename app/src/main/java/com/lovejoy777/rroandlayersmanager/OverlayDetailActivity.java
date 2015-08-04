@@ -23,10 +23,24 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.*;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Switch;
+import android.widget.TableRow;
+import android.widget.TextView;
+
 import com.bitsyko.liblayers.Callback;
 import com.bitsyko.liblayers.Layer;
 import com.bitsyko.liblayers.LayerFile;
@@ -38,22 +52,15 @@ import java.util.List;
 
 public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
+    public CheckBox dontShowAgain;
     private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
-
     private String layerPackageName;
     private String choosedStyle = "";
-
     private Layer layer;
-
-    int NumberOfOverlays;
-    int NumberOfColorOverlays;
-
     private Switch installEverything;
     private FloatingActionButton installationFAB;
     private CoordinatorLayout cordLayout;
     private LoadDrawables imageLoader;
-    public CheckBox dontShowAgain;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
@@ -153,11 +160,11 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
 
         //No styleSpecific Overlays
-        if (linearLayoutCategory2.getChildCount()==0){
+        if (linearLayoutCategory2.getChildCount() == 0) {
             cardViewCategory2.setVisibility(View.GONE);
         }
         //No normal Overlays
-        if (linearLayoutCategory1.getChildCount()==0){
+        if (linearLayoutCategory1.getChildCount() == 0) {
             cardViewCategory1.setVisibility(View.GONE);
         }
 
@@ -505,6 +512,16 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         colorDialog.show();
     }
 
+    @Override
+    public void onDestroyView() {
+        loadBackdrop2();
+        try {
+            layer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        super.onDestroyView();
+    }
 
     private class LoadDrawables extends AsyncTask<Void, Drawable, Void> {
 
@@ -551,16 +568,5 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
             return null;
         }
 
-    }
-
-    @Override
-    public void onDestroyView() {
-        loadBackdrop2();
-        try {
-            layer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        super.onDestroyView();
     }
 }

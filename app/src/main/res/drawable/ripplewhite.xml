@@ -2,6 +2,7 @@
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     android:color="@color/ripple_material_light"> <!-- rippleprimarys color -->
 
-    <item android:drawable="@color/card_background"/> <!-- normal color -->
+    <item android:drawable="@color/card_background" />
+    <!-- normal color -->
 
 </ripple>

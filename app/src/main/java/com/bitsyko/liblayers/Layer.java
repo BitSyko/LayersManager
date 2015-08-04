@@ -11,14 +11,16 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import com.lovejoy777.rroandlayersmanager.commands.Commands;
+
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
-import com.stericson.RootTools.RootTools;
 
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class Layer implements Closeable {
     private static final String ACTION_PICK_PLUGIN = "com.layers.plugins.PICK_OVERLAYS";
@@ -192,7 +194,6 @@ public class Layer implements Closeable {
             }
 
 
-
         } else {
             //v1.0
 
@@ -204,7 +205,7 @@ public class Layer implements Closeable {
             boolean normalOverlay = true;
 
 
-            for (String overlay: overlays) {
+            for (String overlay : overlays) {
 
                 if (overlay.equals(" ") || overlay.equals("")) {
                     normalOverlay = false;
@@ -241,7 +242,7 @@ public class Layer implements Closeable {
     }
 
     public String getWhatsNew() {
-       return applicationInfo.metaData.getString("Layers_WhatsNew");
+        return applicationInfo.metaData.getString("Layers_WhatsNew");
     }
 
     public String getDescription() {

@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.bitsyko.liblayers.LayerFile;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
@@ -19,7 +20,16 @@ import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -358,6 +368,22 @@ public class Commands {
         }
     }
 
+    public static InputStream fileFromZip(File zip, String file) throws IOException {
+
+
+        ZipFile zipFile = new ZipFile(zip);
+        ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zip)));
+        ZipEntry ze;
+
+        while ((ze = zis.getNextEntry()) != null) {
+            if (ze.getName().equalsIgnoreCase(file.replaceAll(" ", ""))) {
+                return zipFile.getInputStream(ze);
+            }
+        }
+
+
+        throw new RuntimeException("No " + file + " in " + zip.getAbsolutePath());
+    }
 
     public static class InstallOverlays extends AsyncTask<Integer, Integer, Integer> {
         public AsyncResponse delegate = null;
@@ -565,10 +591,10 @@ public class Commands {
     }
 
     public static class UnInstallOverlays extends AsyncTask<Integer, Integer, Integer> {
-        private AsyncResponse delegate;
         ProgressDialog progress;
         ArrayList<String> Paths;
         Context Context;
+        private AsyncResponse delegate;
 
         public UnInstallOverlays(ArrayList<String> paths, Context context, AsyncResponse response) {
             this.Paths = paths;
@@ -580,6 +606,11 @@ public class Commands {
             this(paths, context, null);
         }
 
+        private static String getCommandLineString(String input) {
+            String UNIX_ESCAPE_EXPRESSION = "(\\(|\\)|\\[|\\]|\\s|\'|\"|`|\\{|\\}|&|\\\\|\\?)";
+            return input.replaceAll(UNIX_ESCAPE_EXPRESSION, "\\\\$1");
+        }
+
         protected void onPreExecute() {
             progress = new ProgressDialog(Context);
             progress.setTitle(R.string.uninstallingOverlays);
@@ -589,7 +620,6 @@ public class Commands {
             progress.setCancelable(false);
             progress.setMax(Paths.size());
         }
-
 
         @Override
         protected Integer doInBackground(Integer... params) {
@@ -612,11 +642,6 @@ public class Commands {
             return null;
         }
 
-        private static String getCommandLineString(String input) {
-            String UNIX_ESCAPE_EXPRESSION = "(\\(|\\)|\\[|\\]|\\s|\'|\"|`|\\{|\\}|&|\\\\|\\?)";
-            return input.replaceAll(UNIX_ESCAPE_EXPRESSION, "\\\\$1");
-        }
-
         protected void onProgressUpdate(Integer... progress2) {
             progress.setProgress(progress2[0]);
         }
@@ -630,30 +655,13 @@ public class Commands {
 
     }
 
-    public static InputStream fileFromZip(File zip, String file) throws IOException {
-
-
-        ZipFile zipFile = new ZipFile(zip);
-        ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zip)));
-        ZipEntry ze;
-
-        while ((ze = zis.getNextEntry()) != null) {
-            if (ze.getName().equalsIgnoreCase(file.replaceAll(" ", ""))) {
-                return zipFile.getInputStream(ze);
-            }
-        }
-
-
-        throw new RuntimeException("No " + file + " in " + zip.getAbsolutePath());
-    }
-
     public static class InstallOverlaysBetterWay extends AsyncTask<Void, Void, Void> {
 
+        ProgressDialog progress;
         private AsyncResponse delegate;
         private List<LayerFile> layersToInstall;
         private Context context;
         private String color;
-        ProgressDialog progress;
         private int i = 0;
 
         public InstallOverlaysBetterWay(List<LayerFile> layersToInstall, String color, Context context, AsyncResponse delegate) {

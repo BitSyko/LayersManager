@@ -21,9 +21,13 @@ import java.io.InputStreamReader;
  */
 public class SettingsActivity extends PreferenceActivity implements
 
-       SharedPreferences.OnSharedPreferenceChangeListener {
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static boolean mRootAccess;
+
+    public static boolean rootAccess() {
+        return mRootAccess && RootTools.isAccessGiven();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,9 +38,7 @@ public class SettingsActivity extends PreferenceActivity implements
         addPreferencesFromResource(R.xml.settings);
 
 
-
     }
-
 
     private void killLauncherIcon() {
 
@@ -46,17 +48,17 @@ public class SettingsActivity extends PreferenceActivity implements
             p1 = new ProcessBuilder("/system/bin/getprop", "ro.layers.noIcon").redirectErrorStream(true).start();
             BufferedReader br = new BufferedReader(new InputStreamReader(p1.getInputStream()));
             String line = "";
-            if ((line=br.readLine()) != null){
+            if ((line = br.readLine()) != null) {
                 noIcon = line;
 
                 if (noIcon.length() >= 3) {
 
                     PackageManager p = getPackageManager();
                     ComponentName componentName = new ComponentName(this, com.lovejoy777.rroandlayersmanager.MainActivity.class); // activity which is first time open in manifiest file which is declare as <category android:name="android.intent.category.LAUNCHER" />
-                    p.setComponentEnabledSetting(componentName,PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                    p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
                     Toast.makeText(SettingsActivity.this, getResources().getString(R.string.launcherIconRemoved), Toast.LENGTH_SHORT).show();
 
-                } else{
+                } else {
 
                     Toast.makeText(SettingsActivity.this, getResources().getString(R.string.romNeedsSupport), Toast.LENGTH_LONG).show();
                     SharedPreferences myPrefs = this.getSharedPreferences("myPrefs", MODE_PRIVATE);
@@ -96,8 +98,6 @@ public class SettingsActivity extends PreferenceActivity implements
         overridePendingTransition(R.anim.back2, R.anim.back1);
     }
 
-
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -114,20 +114,15 @@ public class SettingsActivity extends PreferenceActivity implements
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,String key)
-    {
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         SharedPreferences myPrefs = this.getSharedPreferences("myPrefs", MODE_PRIVATE);
-        Boolean HideLauncherIcon = myPrefs.getBoolean("switch1",false);
+        Boolean HideLauncherIcon = myPrefs.getBoolean("switch1", false);
 
-        if(HideLauncherIcon){
+        if (HideLauncherIcon) {
             killLauncherIcon();
-        } else{
+        } else {
             ReviveLauncherIcon();
         }
-    }
-
-    public static boolean rootAccess() {
-        return mRootAccess && RootTools.isAccessGiven();
     }
 
     @Override

@@ -53,9 +53,9 @@ import java.util.zip.ZipOutputStream;
 /**
  * Created by Niklas Schnettler on 04/07/15.
  */
-public class BackupRestoreFragment extends Fragment{
+public class BackupRestoreFragment extends Fragment {
 
-    private static final String TAG = null ;
+    private static final String TAG = null;
     FloatingActionButton fab2;
     private ArrayList<String> Files = new ArrayList<String>();
     private RecyclerView mRecyclerView;
@@ -88,10 +88,10 @@ public class BackupRestoreFragment extends Fragment{
         }
     }
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        FragmentActivity    faActivity  = (FragmentActivity)    super.getActivity();
-           cordLayout = (CoordinatorLayout)    inflater.inflate(R.layout.fragment_backuprestore, container, false);
+        FragmentActivity faActivity = (FragmentActivity) super.getActivity();
+        cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_backuprestore, container, false);
 
         loadToolbarRecyclerViewFab();
 
@@ -99,7 +99,7 @@ public class BackupRestoreFragment extends Fragment{
 
         setHasOptionsMenu(true);
 
-    return cordLayout;
+        return cordLayout;
     }
 
     private void loadToolbarRecyclerViewFab() {
@@ -125,7 +125,7 @@ public class BackupRestoreFragment extends Fragment{
                             public void onClick(DialogInterface dialog, int whichButton) {
 
                                 // get editText String
-                                String backupname = input.getText().toString().replace(" ","");
+                                String backupname = input.getText().toString().replace(" ", "");
 
                                 if (backupname.length() <= 1) {
 
@@ -256,7 +256,7 @@ public class BackupRestoreFragment extends Fragment{
     }
 
     //Adapter
-    private class CardViewAdapter3 extends RecyclerView.Adapter<CardViewAdapter3.ViewHolder>{
+    private class CardViewAdapter3 extends RecyclerView.Adapter<CardViewAdapter3.ViewHolder> {
 
         private ArrayList<String> themes;
         private int rowLayout;
@@ -277,7 +277,7 @@ public class BackupRestoreFragment extends Fragment{
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, final int i) {
 
-            viewHolder.themeName.setText(themes.get(i).replace(".apk","").replace("_"," "));
+            viewHolder.themeName.setText(themes.get(i).replace(".apk", "").replace("_", " "));
             viewHolder.themeName.setTag(themes.get(i));
             viewHolder.themeName.setId(i);
             viewHolder.themeName.setOnClickListener(new View.OnClickListener() {
@@ -297,14 +297,16 @@ public class BackupRestoreFragment extends Fragment{
                         }
                     });
                     installdialog.show();
-            }});
+                }
+            });
         }
 
         @Override
         public int getItemCount() {
             return themes == null ? 0 : themes.size();
         }
-        public  class ViewHolder extends RecyclerView.ViewHolder {
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
             public TextView themeName;
 
 
@@ -316,19 +318,19 @@ public class BackupRestoreFragment extends Fragment{
     }
 
     //Delete Overlays
-    private class DeleteBackup extends AsyncTask<String,String,Void> {
+    private class DeleteBackup extends AsyncTask<String, String, Void> {
         ProgressDialog progressBackup;
 
         protected void onPreExecute() {
 
             progressBackup = ProgressDialog.show(getActivity(), getString(R.string.DeleteBackup),
-                    getString(R.string.deleting)+"...", true);
+                    getString(R.string.deleting) + "...", true);
         }
 
         @Override
         protected Void doInBackground(String... params) {
             String SZP = params[0];
-            SZP =  Environment.getExternalStorageDirectory()+"/Overlays/Backup/"+SZP;
+            SZP = Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + SZP;
             System.out.println(SZP);
             try {
 
@@ -355,13 +357,13 @@ public class BackupRestoreFragment extends Fragment{
         }
     }
 
-    private class BackupOverlays extends AsyncTask<String,String,Void> {
+    private class BackupOverlays extends AsyncTask<String, String, Void> {
         ProgressDialog progressBackup;
 
         protected void onPreExecute() {
 
             progressBackup = ProgressDialog.show(getActivity(), getString(R.string.BackupOverlays),
-                    getString(R.string.backingUp)+"...", true);
+                    getString(R.string.backingUp) + "...", true);
         }
 
         @Override
@@ -436,19 +438,19 @@ public class BackupRestoreFragment extends Fragment{
         }
     }
 
-    private class RestoreOverlays extends AsyncTask<String,String,Void> {
+    private class RestoreOverlays extends AsyncTask<String, String, Void> {
         ProgressDialog progressBackup;
 
         protected void onPreExecute() {
 
             progressBackup = ProgressDialog.show(getActivity(), getString(R.string.Restore),
-                    getString(R.string.restoring)+"...", true);
+                    getString(R.string.restoring) + "...", true);
         }
 
         @Override
         protected Void doInBackground(String... params) {
             String SZP = params[0];
-            SZP =  Environment.getExternalStorageDirectory()+"/Overlays/Backup/"+SZP+"/overlay.zip";
+            SZP = Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + SZP + "/overlay.zip";
             System.out.println(SZP);
             try {
 
@@ -531,7 +533,7 @@ public class BackupRestoreFragment extends Fragment{
         }
     }
 
-    private class LoadAndSet extends AsyncTask<String,String,Void> {
+    private class LoadAndSet extends AsyncTask<String, String, Void> {
 
 
         protected void onPreExecute() {
@@ -551,8 +553,8 @@ public class BackupRestoreFragment extends Fragment{
 
             mAdapter = new CardViewAdapter3(Files, R.layout.adapter_backups, getActivity());
             mRecyclerView.setAdapter(mAdapter);
-            if (Files == null){
-                ImageView noOverlays = (ImageView)cordLayout.findViewById(R.id.imageView);
+            if (Files == null) {
+                ImageView noOverlays = (ImageView) cordLayout.findViewById(R.id.imageView);
                 TextView noOverlaysText = (TextView) cordLayout.findViewById(R.id.textView7);
                 noOverlays.setVisibility(View.VISIBLE);
                 noOverlaysText.setVisibility(View.VISIBLE);

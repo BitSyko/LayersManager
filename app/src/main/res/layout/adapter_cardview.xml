@@ -3,9 +3,9 @@
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="16dp"
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
+    android:layout_marginTop="16dp"
     android:clickable="true">
 
     <RelativeLayout
@@ -13,39 +13,39 @@
         android:layout_height="match_parent">
 
         <ImageView
+            android:id="@+id/iv_themeImage"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:id="@+id/iv_themeImage"
             android:layout_centerVertical="true"
-            android:src="@mipmap/ic_launcher"
-            android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginStart="8dp" />
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@mipmap/ic_launcher" />
 
         <TextView
             android:id="@+id/txtName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:gravity="center_vertical"
-            android:textSize="16sp"
             android:layout_alignTop="@+id/iv_themeImage"
-            android:layout_toEndOf="@+id/iv_themeImage"
             android:layout_marginTop="12dp"
-            android:textColor="@color/textColorPrimary" />
+            android:layout_toEndOf="@+id/iv_themeImage"
+            android:gravity="center_vertical"
+            android:text=""
+            android:textColor="@color/textColorPrimary"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/txtSurname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:gravity="center_vertical"
-            android:textSize="14sp"
-            android:layout_below="@+id/txtName"
             android:layout_alignStart="@+id/txtName"
+            android:layout_below="@+id/txtName"
             android:layout_marginBottom="12dp"
-            android:textColor="@color/text_color_secondary" />
+            android:gravity="center_vertical"
+            android:text=""
+            android:textColor="@color/text_color_secondary"
+            android:textSize="14sp" />
 
     </RelativeLayout>
 

@@ -1,7 +1,9 @@
 package com.bitsyko.liblayers;
 
 import android.content.res.AssetManager;
+
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
+
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
