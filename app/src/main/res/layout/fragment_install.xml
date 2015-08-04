@@ -83,7 +83,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                android:src="@drawable/ic_drawer_showcase"
+                android:src="@drawable/ic_drawer_install"
                 android:tint="@color/white"
                 app:elevation="@dimen/fab_elevation" />
         </com.github.jorgecastilloprz.FABProgressCircle>
