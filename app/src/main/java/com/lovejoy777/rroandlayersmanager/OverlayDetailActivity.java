@@ -291,7 +291,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         boolean isThereColorOverlay = false;
 
         for (CheckBox checkBox : checkBoxes) {
-            if (((LayerFile) checkBox.getTag()).isColor()) {
+            if (checkBox.isChecked() && ((LayerFile) checkBox.getTag()).isColor()) {
                 isThereColorOverlay = true;
                 break;
             }
