@@ -30,8 +30,6 @@ import com.bitsyko.liblayers.Callback;
 import com.bitsyko.liblayers.Layer;
 import com.bitsyko.liblayers.LayerFile;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
-import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
-import com.stericson.RootTools.RootTools;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,7 +47,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     private String ThemeFolder;
     private String ThemeFolderGeneral;
     private String package2;
-    private String whichColor;
+    private String whichColor = "";
     int atleastOneIsClicked;
 
     private Layer layer;
@@ -323,10 +321,10 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     //If FAB is clicked
     public void installTheme() {
 
-       boolean isThereColorOverlay = false;
+        boolean isThereColorOverlay = false;
 
         for (CheckBox checkBox : checkBoxes) {
-            if (((LayerFile)checkBox.getTag()).isColor()) {
+            if (((LayerFile) checkBox.getTag()).isColor()) {
                 isThereColorOverlay = true;
                 break;
             }
@@ -447,7 +445,9 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
         }
 
-        new Commands.InstallOverlaysBetterWay(layersToInstall, whichColor, getActivity()).execute();
+        Log.d("Choosed color", whichColor);
+
+        new Commands.InstallOverlaysBetterWay(layersToInstall, whichColor, getActivity(), this).execute();
 
 
     }
@@ -469,53 +469,46 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         View colordialogView = inflater.inflate(R.layout.dialog_colors, null);
         colorDialog.setView(colordialogView);
 
-        for (String color : layer.getColors()) {
+        final RadioGroup radioGroup = (RadioGroup) colordialogView.findViewById(R.id.radiogroup);
 
-            RadioGroup my_layout = (RadioGroup) colordialogView.findViewById(R.id.radiogroup);
+        RadioGroup.LayoutParams params
+                = new RadioGroup.LayoutParams(getActivity(), null);
 
-            RadioGroup.LayoutParams params
-                    = new RadioGroup.LayoutParams(getActivity(), null);
+        params.leftMargin = 66;
+        params.topMargin = 2;
+        params.bottomMargin = 2;
+        params.width = RadioGroup.LayoutParams.MATCH_PARENT;
 
-            params.leftMargin = 66;
-            params.topMargin = 2;
-            params.bottomMargin = 2;
-            params.width = RadioGroup.LayoutParams.MATCH_PARENT;
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 44, getResources().getDisplayMetrics());
+        params.height = height;
 
-            int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 44, getResources().getDisplayMetrics());
-            params.height = height;
 
+        final List<String> colors = layer.getColors();
+
+        for (final String color : colors) {
 
             final RadioButton radioButton = new RadioButton(getActivity());
 
             radioButton.setText(color);
             radioButton.setLayoutParams(params);
             radioButton.setTextSize(18);
+            radioButton.setTag(color);
 
-            my_layout.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            radioGroup.addView(radioButton);
+
+            radioButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    whichColor = (String) radioButton.getText();
+                public void onClick(View v) {
+                    whichColor = (String) v.getTag();
                 }
             });
 
-            my_layout.addView(radioButton);
         }
 
         colorDialog.setCancelable(false);
         colorDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                int whichRadioButton = 0;
-                SharedPreferences myPrefs = getActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-                for (int e = 0; e < NumberOfColors; e++) {
-                    if (whichColor.equals(OverlayColorListPublic.get(e))) {
-                        whichRadioButton = e;
-
-                    }
-                }
-                SharedPreferences.Editor editor = myPrefs.edit();
-                editor.putInt("ColorDialogRadioButton", whichRadioButton);
-                editor.apply();
                 installDialog();
             }
         });

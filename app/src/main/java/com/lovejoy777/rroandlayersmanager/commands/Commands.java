@@ -537,7 +537,7 @@ public class Commands {
 
 
                 try {
-                    // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 666 RECURING
+                    // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 644 RECURING
                     CommandCapture command9 = new CommandCapture(0, "chmod -R 644 /vendor/overlay");
                     RootTools.getShell(true).add(command9);
                     while (!command9.isFinished()) {
@@ -545,14 +545,14 @@ public class Commands {
                     }
 
 
-                    // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER BACK TO 777
+                    // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER BACK TO 755
                     CommandCapture command10 = new CommandCapture(0, "chmod 755 /vendor/overlay");
                     RootTools.getShell(true).add(command10);
                     while (!command10.isFinished()) {
                         Thread.sleep(1);
-                        RootTools.remount("/system", "RO");
                     }
 
+                    RootTools.remount("/system", "RO");
 
                     // CLOSE ALL SHELLS
                     RootTools.closeAllShells();
@@ -649,16 +649,18 @@ public class Commands {
 
     public static class InstallOverlaysBetterWay extends AsyncTask<Void, Void, Void> {
 
+        private AsyncResponse delegate;
         private List<LayerFile> layersToInstall;
         private Context context;
         private String color;
         ProgressDialog progress;
         private int i = 0;
 
-        public InstallOverlaysBetterWay(List<LayerFile> layersToInstall, String color, Context context) {
+        public InstallOverlaysBetterWay(List<LayerFile> layersToInstall, String color, Context context, AsyncResponse delegate) {
             this.layersToInstall = layersToInstall;
             this.context = context;
             this.color = color;
+            this.delegate = delegate;
         }
 
         @Override
@@ -676,6 +678,28 @@ public class Commands {
         @Override
         protected Void doInBackground(Void... params) {
 
+            // MOUNT /SYSTEM RW
+            RootTools.remount("/system", "RW");
+
+            try {
+                // Create vendor Overlay Folder
+                CommandCapture command7 = new CommandCapture(0, "mkdir /vendor/overlay");
+                RootTools.getShell(true).add(command7);
+                while (!command7.isFinished()) {
+                    Thread.sleep(1);
+                }
+
+                // CHANGE PERMISSIONS TO 777
+                CommandCapture command8 = new CommandCapture(0, "chmod -R 777 /vendor/overlay");
+                RootTools.getShell(true).add(command8);
+                while (!command8.isFinished()) {
+                    Thread.sleep(1);
+                }
+            } catch (IOException | RootDeniedException | TimeoutException | InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
             for (LayerFile layerFile : layersToInstall) {
                 try {
                     if (layerFile.isColor()) {
@@ -690,8 +714,34 @@ public class Commands {
                 publishProgress();
             }
 
-            return null;
 
+            try {
+                // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 644 RECURING
+                CommandCapture command9 = new CommandCapture(0, "chmod -R 644 /vendor/overlay");
+                RootTools.getShell(true).add(command9);
+                while (!command9.isFinished()) {
+                    Thread.sleep(1);
+                }
+
+
+                // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER BACK TO 755
+                CommandCapture command10 = new CommandCapture(0, "chmod 755 /vendor/overlay");
+                RootTools.getShell(true).add(command10);
+                while (!command10.isFinished()) {
+                    Thread.sleep(1);
+                }
+
+                RootTools.remount("/system", "RO");
+
+                // CLOSE ALL SHELLS
+                RootTools.closeAllShells();
+
+            } catch (IOException | RootDeniedException | TimeoutException | InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+            return null;
         }
 
         @Override
@@ -702,6 +752,9 @@ public class Commands {
         @Override
         protected void onPostExecute(Void aVoid) {
             progress.dismiss();
+            if (delegate != null) {
+                delegate.processFinish();
+            }
         }
     }
 }
