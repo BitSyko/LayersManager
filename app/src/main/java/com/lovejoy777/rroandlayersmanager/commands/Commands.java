@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
+import com.bitsyko.liblayers.ErrorThatShouldNeverHappen;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.stericson.RootTools.RootTools;
@@ -24,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 
@@ -541,7 +543,7 @@ public class Commands {
                     while (!command9.isFinished()) {
                         Thread.sleep(1);
                     }
-                    
+
 
                     // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER BACK TO 777
                     CommandCapture command10 = new CommandCapture(0, "chmod 755 /vendor/overlay");
@@ -627,4 +629,32 @@ public class Commands {
         }
 
     }
+
+    public static InputStream fileFromZip(File zip, String file) {
+
+        try {
+
+            ZipFile zipFile = new ZipFile(zip);
+
+            ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zip)));
+
+            ZipEntry ze;
+
+            while ((ze = zis.getNextEntry()) != null) {
+
+                if (ze.getName().equalsIgnoreCase(file)) {
+                    return zipFile.getInputStream(ze);
+                }
+
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        throw new RuntimeException("No given file in zip");
+
+    }
+
 }

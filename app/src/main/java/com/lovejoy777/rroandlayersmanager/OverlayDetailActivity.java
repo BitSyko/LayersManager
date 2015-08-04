@@ -6,7 +6,6 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -14,7 +13,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -32,11 +30,11 @@ import com.bitsyko.liblayers.Callback;
 import com.bitsyko.liblayers.Layer;
 import com.bitsyko.liblayers.LayerFile;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
+import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
+import com.stericson.RootTools.RootTools;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class OverlayDetailActivity extends Fragment implements AsyncResponse {
@@ -44,8 +42,8 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     List<Integer> InstallOverlayList = new ArrayList<>();
     List<String> OverlayPathList = new ArrayList<>();
     List<String> OverlayColorListPublic = new ArrayList<>();
-    List<String> OverlayNameList = null;
     private ArrayList<String> paths = new ArrayList<>();
+    private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
 
     private String themeName;
     private String ThemeFolder;
@@ -59,7 +57,6 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     private int NumberOfColors;
     int NumberOfOverlays;
     int NumberOfColorOverlays;
-    public static final int NumberOfScreenshotsMain = 3;
 
     private Switch installEverything;
     private FloatingActionButton fab2;
@@ -68,9 +65,6 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     public CheckBox dontShowAgain;
 
 
-    /**
-     * Called when the activity is first created.
-     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
@@ -80,8 +74,6 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         setHasOptionsMenu(true);
 
         getIntent();
-
-        //loadBackdrop();
 
         cordLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
@@ -94,6 +86,8 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
         createLayouts();
 
+        Log.d("Colors", String.valueOf(layer.getColors()));
+
         return cordLayout;
     }
 
@@ -105,11 +99,25 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         super.onDestroy();
     }
 
+    private boolean isAnyCheckboxEnabled() {
 
-    private void createThemeFolder() {
-        //create the Theme folder
-        File ThemeDirectory = new File(Environment.getExternalStorageDirectory() + "/Overlays/" + themeName.replaceAll(" ", "") + "/");
-        ThemeDirectory.mkdirs();
+        for (CheckBox checkBox : checkBoxes) {
+            if (checkBox.isChecked()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    private void refreshFab() {
+
+        if (isAnyCheckboxEnabled()) {
+            fab2.show();
+        } else {
+            fab2.hide();
+        }
+
     }
 
     private void loadOverlayCardviews() {
@@ -154,99 +162,18 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
                 CardViewCategory1.addView(row);
             }
 
+            check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    refreshFab();
+                }
+            });
 
-
-
-
+            checkBoxes.add(check);
 
         }
-
-
 
         /*
-        //Cardview with normal Overlays
-        for (int i = 0; i < NumberOfOverlays; i++) {
-            TableRow row = new TableRow(getActivity());
-            row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-
-            final CheckBox[] check = new CheckBox[NumberOfOverlays];
-            check[i] = new CheckBox(getActivity());
-            check[i].setText(OverlayNameList.get(i));
-            check[i].setTag(i);
-            check[i].setId(i);
-            check[i].setTextColor(getResources().getColor(R.color.chooser_text_color));
-            check[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                //check if checkbox is clicked
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                    for (int c = 0; c < NumberOfOverlays; c++) {
-                        if (buttonView.getTag().equals(c)) {
-                            if (buttonView.isChecked()) {
-                                InstallOverlayList.set(c, 1);
-
-                                atleastOneIsClicked = atleastOneIsClicked + 1;
-
-                            } else {
-
-                                InstallOverlayList.set(c, 0);
-                                atleastOneIsClicked = atleastOneIsClicked - 1;
-                            }
-                            if (atleastOneIsClicked > 0) {
-                                fab2.show();
-                            } else {
-                                fab2.hide();
-                            }
-                        }
-                    }
-                }
-            });
-            row.addView(check[i]);
-            CardViewCategory1.addView(row);
-        }
-
-        //CardView with color specific Overlays
-        for (int i = NumberOfOverlays + 1; i < NumberOfColorOverlays + NumberOfOverlays + 1; i++) {
-            TableRow row = new TableRow(getActivity());
-
-            row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-            final CheckBox[] check = new CheckBox[NumberOfColorOverlays + NumberOfOverlays + 1];
-            check[i] = new CheckBox(getActivity());
-            check[i].setText(OverlayNameList.get(i));
-            check[i].setTag(i);
-            check[i].setId(i);
-            check[i].setTextColor(getResources().getColor(R.color.chooser_text_color));
-            check[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                    for (int c = NumberOfOverlays + 1; c < NumberOfColorOverlays + NumberOfOverlays + 1; c++) {
-
-                        if (buttonView.getTag().equals(c)) {
-
-                            if (buttonView.isChecked()) {
-                                InstallOverlayList.set(c, 1);
-
-                                atleastOneIsClicked = atleastOneIsClicked + 1;
-
-                            } else {
-                                atleastOneIsClicked = atleastOneIsClicked - 1;
-                                InstallOverlayList.set(c, 0);
-                            }
-                            if (atleastOneIsClicked > 0) {
-                                fab2.show();
-                            } else {
-                                fab2.hide();
-                            }
-                        }
-                    }
-                }
-            });
-            row.addView(check[i]);
-            CardViewCategory2.addView(row);
-        }
-
 
         //If there arent any color specific Overlays, hide the cardview
         if (NumberOfColorOverlays == 0 || NumberOfOverlays == 0) {
@@ -261,104 +188,18 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         loadScreenshots();
     }
 
-    private void generateFilepaths() {
-        //Generate filepaths of normal Overlays
-        if (NumberOfOverlays == 0) {
-            for (int i = 1; i < NumberOfOverlays + NumberOfColorOverlays + 1; i++) {
-                String CurrentOverlyName = OverlayNameList.get(i).replaceAll(" ", "");
-                OverlayPathList.add(i, themeName.replaceAll(" ", "") + "_" + CurrentOverlyName + ".apk");
-            }
-        } else {
-            for (int i = 0; i < NumberOfOverlays + NumberOfColorOverlays + 1; i++) {
-                String CurrentOverlyName = OverlayNameList.get(i).replaceAll(" ", "");
-                OverlayPathList.add(i, themeName.replaceAll(" ", "") + "_" + CurrentOverlyName + ".apk");
-            }
-        }
-
-    }
-
-
     private void receiveAndUseData() {
-        //get important data from Plugin´s Manifest
-        String description;
-        String overlayNameString;
-        String normalOverlayNameString;
-        String styleSpecificOverlayString;
-        String whatsNew;
-        String overlayColorString;
-        ApplicationInfo ai = null;
-        try {
-            ai = getActivity().getPackageManager().getApplicationInfo(package2, PackageManager.GET_META_DATA);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        Bundle bundle = null;
-        if (ai != null) {
-            bundle = ai.metaData;
-        }
-
-        themeName = bundle.getString("Layers_Name");
-        description = bundle.getString("Layers_Description");
-        overlayNameString = bundle.getString("Layers_OverlayNames");
-        overlayColorString = bundle.getString("Layers_Colors");
-        whatsNew = bundle.getString("Layers_WhatsNew");
-        normalOverlayNameString = bundle.getString("Layers_NormalOverlays");
-        styleSpecificOverlayString = bundle.getString("Layers_StyleSpecificOverlays");
-
-
-        //Use the received data
-        ThemeFolder = Environment.getExternalStorageDirectory() + "/Overlays/" + themeName.replaceAll(" ", "") + "/";
-        ThemeFolderGeneral = ThemeFolder + "General/";
-
-
-        if (overlayNameString != null) {
-            OverlayNameList = new ArrayList<>(Arrays.asList(overlayNameString.split(",")));
-        } else {
-            if (!normalOverlayNameString.isEmpty()) {
-                OverlayNameList = new ArrayList<>(Arrays.asList(normalOverlayNameString.split(",")));
-                OverlayNameList.add(" ");
-                if (!styleSpecificOverlayString.isEmpty()) {
-                    OverlayNameList.addAll(Arrays.asList(styleSpecificOverlayString.split(",")));
-                }
-            } else {
-                if (styleSpecificOverlayString != null) {
-                    OverlayNameList = new ArrayList<>();
-                    OverlayNameList.add(" ");
-                    OverlayNameList.addAll(Arrays.asList(styleSpecificOverlayString.split(",")));
-                }
-            }
-        }
-
-        List<String> OverlayColorList = null;
-        if (overlayColorString != null) {
-            OverlayColorList = new ArrayList<>(Arrays.asList(overlayColorString.split(",")));
-        }
-
-        if (OverlayNameList != null) {
-            NumberOfOverlays = OverlayNameList.indexOf(" ");
-            NumberOfColorOverlays = OverlayNameList.size() - OverlayNameList.indexOf(" ") - 1;
-        }
-
-
-        NumberOfColors = OverlayColorList.size();
 
         TextView tv_description = (TextView) cordLayout.findViewById(R.id.HeX1);
-        tv_description.setText(description);
+        tv_description.setText(layer.getDescription());
 
         TextView tv_whatsNew = (TextView) cordLayout.findViewById(R.id.tv_whatsNew);
-        tv_whatsNew.setText(whatsNew);
+        tv_whatsNew.setText(layer.getWhatsNew());
 
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) cordLayout.findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle(themeName);
+        collapsingToolbar.setTitle(layer.getName());
 
-        for (int i = 0; i < OverlayColorList.size(); i++) {
-            OverlayColorListPublic.add(OverlayColorList.get(i));
-        }
-        for (int i = 0; i < NumberOfColorOverlays + NumberOfOverlays + 1; i++) {
-            //OverlayPathList.add(null);
-            InstallOverlayList.add(0);
-        }
     }
 
     private void createLayouts() {
@@ -389,7 +230,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
                 if (isChecked) {
                     checkall();
                 } else {
-                    UncheckAllCheckBoxes("Uncheck");
+                    uncheckAllCheckBoxes();
                 }
             }
         });
@@ -453,11 +294,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
             public void onAnimationEnd(Animator animation) {
                 if (isAdded()) {
                     loadOverlayCardviews();
-                    createThemeFolder();
-                    generateFilepaths();
                 }
-
-
             }
 
             @Override
@@ -518,54 +355,28 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         return super.onOptionsItemSelected(item);
     }
 
-    private void UncheckAllCheckBoxes(String Mode) {
+    private void uncheckAllCheckBoxes() {
 
-        if (Mode.equals("Uncheck")) {
+        for (CheckBox checkBox : checkBoxes) {
 
-            fab2.hide();
-
-            for (int i = 0; i < NumberOfOverlays; i++) {
-                CheckBox checkBox = (CheckBox) cordLayout.findViewById(i);
-                checkBox.setChecked(false);
-                InstallOverlayList.set(i, 0);
+            if (checkBox.isChecked()) {
+                checkBox.performClick();
             }
 
-            for (int i = NumberOfOverlays + 1; i < NumberOfColorOverlays + NumberOfOverlays + 1; i++) {
-                CheckBox checkBox = (CheckBox) cordLayout.findViewById(i);
-                checkBox.setChecked(false);
-                InstallOverlayList.set(i, 0);
-            }
         }
 
-        if (Mode.equals("Disable")) {
-            //disable all Checkboxes
-            for (int i = 0; i < NumberOfOverlays; i++) {
-                CheckBox checkBox = (CheckBox) cordLayout.findViewById(i);
-                checkBox.setEnabled(false);
-            }
-
-            for (int i = NumberOfOverlays + 1; i < NumberOfColorOverlays + NumberOfOverlays + 1; i++) {
-                CheckBox checkBox = (CheckBox) cordLayout.findViewById(i);
-                checkBox.setEnabled(false);
-            }
-        }
     }
 
     private void checkall() {
 
         fab2.show();
 
-        for (int i = 0; i < NumberOfOverlays; i++) {
-            CheckBox checkBox = (CheckBox) cordLayout.findViewById(i);
-            checkBox.setChecked(true);
-            InstallOverlayList.set(i, 1);
+        for (CheckBox checkBox : checkBoxes) {
+            if (!checkBox.isChecked()) {
+                checkBox.performClick();
+            }
         }
 
-        for (int i = NumberOfOverlays + 1; i < NumberOfColorOverlays + NumberOfOverlays + 1; i++) {
-            CheckBox checkBox = (CheckBox) cordLayout.findViewById(i);
-            checkBox.setChecked(true);
-            InstallOverlayList.set(i, 1);
-        }
     }
 
 
@@ -615,12 +426,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
                 InstallAsyncOverlays();
             }
         });
-        installdialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                UncheckAllCheckBoxes("Uncheck");
-                installEverything.setChecked(false);
-            }
-        });
+        installdialog.setNegativeButton(android.R.string.cancel, null);
 
         SharedPreferences myprefs = getActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
         String skipMessage = myprefs.getString("ConfirmInstallationDialog", "unchecked");
@@ -634,6 +440,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
     private void InstallAsyncOverlays() {
 
+        /*
         ArrayList<Integer> OldInstallOverlay = new ArrayList<>(InstallOverlayList);
 
         //install Normal Overlays
@@ -653,19 +460,30 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         }
         Commands.InstallOverlays asyncTask = new Commands.InstallOverlays("Plugin", getActivity(), themeName.replace(" ", ""), paths, package2, NumberOfOverlays, NumberOfColorOverlays, OldInstallOverlay, whichColor, this);
         asyncTask.execute();
+
+    */
+
+        for (CheckBox checkBox : checkBoxes) {
+
+            if (checkBox.isChecked()) {
+                LayerFile layerFile = (LayerFile) checkBox.getTag();
+                RootCommands.moveCopyRoot(layerFile.getFile().getAbsolutePath(), "/system/vendor/overlay/");
+            }
+
+        }
+
     }
 
     public void processFinish() {
         fab2.setClickable(true);
         installationFinishedSnackBar();
-        UncheckAllCheckBoxes("Uncheck");
+        uncheckAllCheckBoxes();
         paths.clear();
         installEverything.setChecked(false);
     }
 
     //Dialog to choose color
     public void colorDialog() {
-
 
         final AlertDialog.Builder colorDialog = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -733,8 +551,6 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                UncheckAllCheckBoxes("Uncheck");
-                installEverything.setChecked(false);
                 dialog.dismiss();
             }
 
@@ -808,7 +624,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         //fab2 = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab2);
         fab2.setClickable(true);
         installationFinishedSnackBar();
-        UncheckAllCheckBoxes("Uncheck");
+        uncheckAllCheckBoxes();
         installEverything.setChecked(false);
     }
 }

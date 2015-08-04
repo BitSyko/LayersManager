@@ -11,8 +11,12 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import com.lovejoy777.rroandlayersmanager.commands.Commands;
+import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
+import com.stericson.RootTools.RootTools;
 
 import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -27,17 +31,19 @@ public class Layer implements Closeable {
     private PackageManager packageManager;
     private ApplicationInfo applicationInfo;
     private Resources resources;
+    private Context context;
 
     private Map<String, String> additionalData;
 
     private Drawable icon;
 
     public Layer(String name, String developer, Drawable icon) {
-        this(name, developer, icon, null, null, null, null);
+        this(name, developer, icon, null, null, null, null, null);
     }
 
     public Layer(String name, String developer, Drawable icon, String packageName,
-                 PackageManager packageManager, Resources resources, ApplicationInfo applicationInfo) {
+                 PackageManager packageManager, Resources resources, ApplicationInfo applicationInfo,
+                 Context context) {
         this.name = name;
         this.developer = developer;
         this.icon = icon;
@@ -45,6 +51,7 @@ public class Layer implements Closeable {
         this.packageManager = packageManager;
         this.resources = resources;
         this.applicationInfo = applicationInfo;
+        this.context = context;
     }
 
     public static Layer layerFromPackageName(String packageName, Context context)
@@ -66,7 +73,7 @@ public class Layer implements Closeable {
 
         Drawable icon = resources.getDrawable(iconID, null);
 
-        return new Layer(name, developer, icon, packageName, manager, resources, applicationInfo);
+        return new Layer(name, developer, icon, packageName, manager, resources, applicationInfo, context);
     }
 
     public static List<Layer> getLayersInSystem(Activity activity) {
@@ -137,13 +144,9 @@ public class Layer implements Closeable {
                 }
 
                 Drawable drawable = resources.getDrawable(mDrawableResID, null);
-
                 screenShots.add(resources.getDrawable(mDrawableResID, null));
-
                 i++;
-
                 callback.callback(drawable);
-
             }
 
         }
@@ -212,14 +215,6 @@ public class Layer implements Closeable {
 
             }
 
-            /*
-            for (String layer : normalOverlays) {
-                files.add(new LayerFile(this, layer, false));
-            }
-*/
-
-
-
         }
 
 
@@ -241,8 +236,25 @@ public class Layer implements Closeable {
         return list;
     }
 
+    public Resources getResources() {
+        return resources;
+    }
+
+    public String getWhatsNew() {
+       return applicationInfo.metaData.getString("Layers_WhatsNew");
+    }
+
+    public String getDescription() {
+        return applicationInfo.metaData.getString("Layers_Description");
+    }
+
+    public String getCacheDir() {
+        return context.getCacheDir().getAbsolutePath();
+    }
+
+
     @Override
     public void close() throws IOException {
-
+        RootCommands.DeleteFileRoot(getCacheDir() + File.separator + getName());
     }
 }
