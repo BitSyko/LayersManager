@@ -28,10 +28,6 @@ import java.util.List;
 
 public class PluginFragment extends Fragment {
 
-
-    private ArrayList<HashMap<String, String>> services;
-    private String[] packages = new String[100];
-
     private Boolean TestBoolean = false;
     RecyclerView recList = null;
     CardViewAdapter ca = null;
@@ -103,11 +99,10 @@ public class PluginFragment extends Fragment {
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
             //Remove swiped item from list and notify the RecyclerView
-            String packageName = packages[viewHolder.getAdapterPosition()];
+            String packageName = ca.getLayerFromPosition(viewHolder.getAdapterPosition()).getPackageName();
             Uri packageURI = Uri.parse("package:" + packageName);
             Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, packageURI);
             startActivityForResult(uninstallIntent, 1);
-
         }
     };
 
@@ -145,9 +140,7 @@ public class PluginFragment extends Fragment {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // check if the request code is same as what is passed  here it is 2
         if (requestCode == 1) {
-            services.clear();
             new fillPluginList().execute();
         }
     }
