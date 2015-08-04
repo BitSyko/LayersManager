@@ -168,8 +168,10 @@
     <string name="OverlaysInstalled">Overlays installed!</string>
     <string name="emptydirectory">This directory seems to be empty.</string>
     <string name="installingOverlays">Installing Overlays</string>
-
-
+    <string name="Sort">Sort by</string>
+    <string name="sort_name">Name</string>
+    <string name="sort_developer">Developer</string>
+    <string name="sort_random">Random</string>
 
 
 </resources>

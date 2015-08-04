@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -27,12 +28,16 @@ import com.lovejoy777.rroandlayersmanager.helper.RecyclerItemClickListener;
 import com.lovejoy777.rroandlayersmanager.menu;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 public class PluginFragment extends Fragment {
 
     RecyclerView recList = null;
     CardViewAdapter ca = null;
+    public int sortMode;
     ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
         @Override
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -57,6 +62,8 @@ public class PluginFragment extends Fragment {
         cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_plugins, container, false);
 
         LoadRecyclerViewFabToolbar();
+
+        sortMode = Commands.getSortMode(getActivity());
 
         new fillPluginList().execute();
 
@@ -148,7 +155,17 @@ public class PluginFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        menuInflater.inflate(R.menu.menu_main, menu);
+        menuInflater.inflate(R.menu.menu_pluginlist, menu);
+        switch (sortMode) {
+            default:
+                menu.findItem(R.id.menu_sortName).setChecked(true);
+                break;
+            case 2:
+                menu.findItem(R.id.menu_sortDeveloper).setChecked(true);
+                break;
+            case 3:
+                menu.findItem(R.id.menu_sortRandom).setChecked(true);
+        }
     }
 
     @Override
@@ -156,7 +173,22 @@ public class PluginFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.menu_reboot:
                 Commands.reboot(getActivity());
-                return true;
+                break;
+            case R.id.menu_sortName:
+                item.setChecked(true);
+                Commands.setSortMode(getActivity(),1);
+                new fillPluginList().execute();
+                break;
+            case R.id.menu_sortDeveloper:
+                item.setChecked(true);
+                Commands.setSortMode(getActivity(), 2);
+                new fillPluginList().execute();
+                break;
+            case R.id.menu_sortRandom:
+                item.setChecked(true);
+                Commands.setSortMode(getActivity(), 3);
+                new fillPluginList().execute();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -177,6 +209,32 @@ public class PluginFragment extends Fragment {
         protected Void doInBackground(Void... params) {
 
             List<Layer> layerList = Layer.getLayersInSystem(PluginFragment.this.getActivity());
+
+            sortMode = Commands.getSortMode(getActivity());
+            if (sortMode == 1 || sortMode == 0) {
+                //Alphabetically NAME
+                Collections.sort(layerList, new Comparator<Layer>() {
+                    public int compare(Layer layer1, Layer layer2) {
+                        return layer1.getName().compareToIgnoreCase(layer2.getName());
+                    }
+                });
+            }
+            if (sortMode ==2){
+                //Alphabetically DEVELOPER
+                Collections.sort(layerList, new Comparator<Layer>() {
+                    public int compare(Layer layer1, Layer layer2) {
+                        return layer1.getDeveloper().compareToIgnoreCase(layer2.getDeveloper());
+                    }
+                });
+            }
+            if (sortMode ==3){
+                //RANDOM
+                long seed = System.nanoTime();
+                Collections.shuffle(layerList, new Random(seed));
+                Collections.shuffle(layerList, new Random(seed));
+
+            }
+
 
             if (layerList.size() > 0) {
                 ca = new CardViewAdapter(layerList);

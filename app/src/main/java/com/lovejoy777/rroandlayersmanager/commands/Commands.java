@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -384,6 +385,9 @@ public class Commands {
 
         throw new RuntimeException("No " + file + " in " + zip.getAbsolutePath());
     }
+
+
+
 
     public static class InstallOverlays extends AsyncTask<Integer, Integer, Integer> {
         public AsyncResponse delegate = null;
@@ -764,5 +768,13 @@ public class Commands {
                 delegate.processFinish();
             }
         }
+
+    }
+    public static int getSortMode(Activity context){
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt("sortMode", 0);
+    }
+
+    public static void setSortMode(Activity context, int mode){
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("sortMode", mode).commit();
     }
 }
