@@ -34,6 +34,7 @@ public class Layer implements Closeable {
     private ApplicationInfo applicationInfo;
     private Resources resources;
     private Context context;
+   private  List<LayerFile> files;
 
     private Map<String, String> additionalData;
 
@@ -174,7 +175,7 @@ public class Layer implements Closeable {
 
         Bundle bundle = applicationInfo.metaData;
 
-        List<LayerFile> files = new ArrayList<>();
+        files = new ArrayList<>();
 
         if (bundle.containsKey("Layers_NormalOverlays")) {
             //v1.1
@@ -256,6 +257,8 @@ public class Layer implements Closeable {
 
     @Override
     public void close() throws IOException {
-        RootCommands.DeleteFileRoot(getCacheDir() + File.separator + getName());
+        if (new File(getCacheDir() + File.separator + getName()).exists()) {
+            RootCommands.DeleteFileRoot(getCacheDir() + File.separator + getName());
+        }
     }
 }
