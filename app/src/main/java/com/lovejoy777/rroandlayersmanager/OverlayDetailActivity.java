@@ -440,37 +440,19 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
     private void InstallAsyncOverlays() {
 
-        /*
-        ArrayList<Integer> OldInstallOverlay = new ArrayList<>(InstallOverlayList);
-
-        //install Normal Overlays
-        for (int i = 0; i < NumberOfOverlays; i++) {
-            if (InstallOverlayList.get(i) == 1) {
-                InstallOverlayList.set(i, 0);
-                paths.add(ThemeFolderGeneral + OverlayPathList.get(i));
-            }
-        }
-
-        //install Color Specific Overlays
-        for (int i4 = NumberOfOverlays + 1; i4 < NumberOfOverlays + NumberOfColorOverlays + 1; i4++) {
-            if (InstallOverlayList.get(i4) == 1) {
-                InstallOverlayList.set(i4, 0);
-                paths.add(ThemeFolder + whichColor + "/" + OverlayPathList.get(i4));
-            }
-        }
-        Commands.InstallOverlays asyncTask = new Commands.InstallOverlays("Plugin", getActivity(), themeName.replace(" ", ""), paths, package2, NumberOfOverlays, NumberOfColorOverlays, OldInstallOverlay, whichColor, this);
-        asyncTask.execute();
-
-    */
+        List<LayerFile> layersToInstall = new ArrayList<>();
 
         for (CheckBox checkBox : checkBoxes) {
 
             if (checkBox.isChecked()) {
                 LayerFile layerFile = (LayerFile) checkBox.getTag();
-                RootCommands.moveCopyRoot(layerFile.getFile().getAbsolutePath(), "/system/vendor/overlay/");
+                layersToInstall.add(layerFile);
             }
 
         }
+
+        new Commands.InstallOverlaysBetterWay(layersToInstall, getActivity()).execute();
+
 
     }
 

@@ -21,7 +21,7 @@ public class LayerFile {
         this.color = color;
     }
 
-    public File getFile(String color) {
+    public File getFile(String color) throws IOException {
 
         String fileName = name.replaceAll(" ", "");
 
@@ -41,14 +41,10 @@ public class LayerFile {
         if (!zipFile.exists()) {
             AssetManager assetManager = layer.getResources().getAssets();
 
-            try {
-                InputStream in = assetManager.open("Files" + File.separator + layer.getName() + "_" + color + ".zip");
-                FileUtils.copyInputStreamToFile(in, zipFile);
-                in.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new ErrorThatShouldNeverHappen();
-            }
+            InputStream in = assetManager.open(("Files" + File.separator + layer.getName() + "_" + color + ".zip").replaceAll(" ", ""));
+            FileUtils.copyInputStreamToFile(in, zipFile);
+            in.close();
+
         }
 
 
@@ -66,23 +62,15 @@ public class LayerFile {
 
 
         if (!destFile.exists()) {
-
-            try {
-                FileUtils.copyInputStreamToFile(Commands.fileFromZip(zipFile, layer.getName() + "_" + fileName + ".apk"), destFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new ErrorThatShouldNeverHappen();
-            }
-
+            FileUtils.copyInputStreamToFile(Commands.fileFromZip(zipFile, layer.getName() + "_" + fileName + ".apk"), destFile);
         }
-
 
 
         return destFile;
 
     }
 
-    public File getFile() {
+    public File getFile() throws IOException {
         return getFile("General");
     }
 

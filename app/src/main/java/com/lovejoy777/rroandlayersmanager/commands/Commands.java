@@ -12,7 +12,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
-import com.bitsyko.liblayers.ErrorThatShouldNeverHappen;
+import com.bitsyko.liblayers.LayerFile;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.stericson.RootTools.RootTools;
@@ -630,31 +630,71 @@ public class Commands {
 
     }
 
-    public static InputStream fileFromZip(File zip, String file) {
+    public static InputStream fileFromZip(File zip, String file) throws IOException {
 
-        try {
 
-            ZipFile zipFile = new ZipFile(zip);
+        ZipFile zipFile = new ZipFile(zip);
+        ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zip)));
+        ZipEntry ze;
 
-            ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zip)));
-
-            ZipEntry ze;
-
-            while ((ze = zis.getNextEntry()) != null) {
-
-                if (ze.getName().equalsIgnoreCase(file)) {
-                    return zipFile.getInputStream(ze);
-                }
-
+        while ((ze = zis.getNextEntry()) != null) {
+            if (ze.getName().equalsIgnoreCase(file.replaceAll(" ", ""))) {
+                return zipFile.getInputStream(ze);
             }
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
-        throw new RuntimeException("No given file in zip");
 
+        throw new RuntimeException("No " + file + " in " + zip.getAbsolutePath());
     }
 
+    public static class InstallOverlaysBetterWay extends AsyncTask<Void, Void, Void> {
+
+        private List<LayerFile> layersToInstall;
+        private Context context;
+        ProgressDialog progress;
+        private int i = 0;
+
+        public InstallOverlaysBetterWay(List<LayerFile> layersToInstall, Context context) {
+            this.layersToInstall = layersToInstall;
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progress = new ProgressDialog(context);
+            progress.setTitle(R.string.installingOverlays);
+            progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progress.setProgress(i);
+            progress.show();
+            progress.setCancelable(false);
+            progress.setMax(layersToInstall.size());
+        }
+
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            for (LayerFile layerFile : layersToInstall) {
+                try {
+                    RootCommands.moveCopyRoot(layerFile.getFile().getAbsolutePath(), "/system/vendor/overlay/");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                publishProgress();
+            }
+
+            return null;
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            progress.setProgress(++i);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            progress.dismiss();
+        }
+    }
 }
