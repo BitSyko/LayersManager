@@ -651,12 +651,14 @@ public class Commands {
 
         private List<LayerFile> layersToInstall;
         private Context context;
+        private String color;
         ProgressDialog progress;
         private int i = 0;
 
-        public InstallOverlaysBetterWay(List<LayerFile> layersToInstall, Context context) {
+        public InstallOverlaysBetterWay(List<LayerFile> layersToInstall, String color, Context context) {
             this.layersToInstall = layersToInstall;
             this.context = context;
+            this.color = color;
         }
 
         @Override
@@ -676,7 +678,12 @@ public class Commands {
 
             for (LayerFile layerFile : layersToInstall) {
                 try {
-                    RootCommands.moveCopyRoot(layerFile.getFile().getAbsolutePath(), "/system/vendor/overlay/");
+                    if (layerFile.isColor()) {
+                        RootCommands.moveCopyRoot(layerFile.getFile(color).getAbsolutePath(), "/system/vendor/overlay/");
+                    } else {
+                        RootCommands.moveCopyRoot(layerFile.getFile().getAbsolutePath(), "/system/vendor/overlay/");
+                    }
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

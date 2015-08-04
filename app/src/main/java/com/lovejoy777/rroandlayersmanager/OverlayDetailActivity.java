@@ -323,19 +323,17 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     //If FAB is clicked
     public void installTheme() {
 
-        int NumberOfSelectedNormalOverlays = 0;
-        for (int i = 0; i < NumberOfOverlays; i++) {
-            NumberOfSelectedNormalOverlays = NumberOfSelectedNormalOverlays + InstallOverlayList.get(i);
-        }
+       boolean isThereColorOverlay = false;
 
-        int NumberOfSelectedColorOverlays = 0;
-
-        for (int i = NumberOfOverlays + 1; i < NumberOfOverlays + NumberOfColorOverlays + 1; i++) {
-            NumberOfSelectedColorOverlays = NumberOfSelectedColorOverlays + InstallOverlayList.get(i);
+        for (CheckBox checkBox : checkBoxes) {
+            if (((LayerFile)checkBox.getTag()).isColor()) {
+                isThereColorOverlay = true;
+                break;
+            }
         }
 
         //when a color checkbox is checked
-        if (NumberOfSelectedColorOverlays != 0) {
+        if (isThereColorOverlay) {
             colorDialog();
         }
         //if only normal Overlays are selected
@@ -422,7 +420,6 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
                 }
 
                 //start async task to install the Overlays
-                //(new InstallOverlays()).execute();
                 InstallAsyncOverlays();
             }
         });
@@ -434,7 +431,6 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
             installdialog.show();
         } else {
             InstallAsyncOverlays();
-            //(new InstallOverlays()).execute();
         }
     }
 
@@ -451,7 +447,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
         }
 
-        new Commands.InstallOverlaysBetterWay(layersToInstall, getActivity()).execute();
+        new Commands.InstallOverlaysBetterWay(layersToInstall, whichColor, getActivity()).execute();
 
 
     }
@@ -473,7 +469,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         View colordialogView = inflater.inflate(R.layout.dialog_colors, null);
         colorDialog.setView(colordialogView);
 
-        for (int i = 0; i < NumberOfColors; i++) {
+        for (String color : layer.getColors()) {
 
             RadioGroup my_layout = (RadioGroup) colordialogView.findViewById(R.id.radiogroup);
 
@@ -489,25 +485,19 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
             params.height = height;
 
 
-            RadioButton radioButton = new RadioButton(getActivity());
+            final RadioButton radioButton = new RadioButton(getActivity());
 
-            radioButton.setText(OverlayColorListPublic.get(i));
-            radioButton.setId(i);
-            radioButton.setTag("r" + i);
+            radioButton.setText(color);
             radioButton.setLayoutParams(params);
             radioButton.setTextSize(18);
 
             my_layout.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-                    whichColor = OverlayColorListPublic.get(checkedId);
+                    whichColor = (String) radioButton.getText();
                 }
             });
 
-            if (i == 0) {
-                radioButton.setChecked(true);
-            }
             my_layout.addView(radioButton);
         }
 
