@@ -22,6 +22,7 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Pair;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -538,7 +539,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
                 try {
                     screenshotImageView = new ImageView(getActivity());
                 } catch (NullPointerException e) {
-                    return;
+                    continue;
                 }
 
                 Bitmap bitmap = ((BitmapDrawable) screenshot).getBitmap();
@@ -561,12 +562,18 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         @Override
         protected Void doInBackground(Void... params) {
 
-            layer.getScreenShots(new Callback<Drawable>() {
-                @Override
-                public void callback(Drawable object) {
-                    publishProgress(object);
+            Pair<Integer, Drawable> pair;
+
+            while((pair = layer.getNextScreenshot()).first != 0) {
+
+                if (isCancelled()) {
+                    break;
                 }
-            });
+
+                publishProgress(pair.second);
+
+            }
+            
             return null;
         }
 

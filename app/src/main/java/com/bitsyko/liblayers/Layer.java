@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 
+import android.util.Pair;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 
 import java.io.Closeable;
@@ -127,6 +128,26 @@ public class Layer implements Closeable {
             }
         });
     }
+
+    int screenShotId = 1;
+
+    public Pair<Integer, Drawable> getNextScreenshot() {
+
+        String drawableName = "screenshot" + screenShotId;
+
+        int mDrawableResID = resources.getIdentifier(drawableName, "drawable", packageName);
+
+        if (mDrawableResID == 0) {
+            return new Pair<>(0, null);
+        }
+
+        Drawable drawable = resources.getDrawable(mDrawableResID, null);
+
+        screenShotId++;
+
+        return new Pair<>(screenShotId-1, drawable);
+    }
+
 
     public List<Drawable> getScreenShots(Callback<Drawable> callback) {
 
