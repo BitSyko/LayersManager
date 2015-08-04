@@ -10,20 +10,33 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.bitsyko.liblayers.LayerFile;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 
@@ -139,7 +152,6 @@ public class Commands {
                 ZipInputStream zipStream = new ZipInputStream(inputStream);
                 ZipEntry zEntry;
                 while ((zEntry = zipStream.getNextEntry()) != null) {
-
                     FileOutputStream fout = new FileOutputStream(
                             destinationGeneral + "/" + zEntry.getName());
                     BufferedOutputStream bufout = new BufferedOutputStream(fout);
@@ -357,6 +369,25 @@ public class Commands {
         }
     }
 
+    public static InputStream fileFromZip(File zip, String file) throws IOException {
+
+
+        ZipFile zipFile = new ZipFile(zip);
+        ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zip)));
+        ZipEntry ze;
+
+        while ((ze = zis.getNextEntry()) != null) {
+            if (ze.getName().equalsIgnoreCase(file.replaceAll(" ", ""))) {
+                return zipFile.getInputStream(ze);
+            }
+        }
+
+
+        throw new RuntimeException("No " + file + " in " + zip.getAbsolutePath());
+    }
+
+
+
 
     public static class InstallOverlays extends AsyncTask<Integer, Integer, Integer> {
         public AsyncResponse delegate = null;
@@ -536,7 +567,7 @@ public class Commands {
 
 
                 try {
-                    // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 666 RECURING
+                    // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 644 RECURING
                     CommandCapture command9 = new CommandCapture(0, "chmod -R 644 /vendor/overlay");
                     RootTools.getShell(true).add(command9);
                     while (!command9.isFinished()) {
@@ -544,14 +575,14 @@ public class Commands {
                     }
 
 
-                    // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER BACK TO 777
+                    // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER BACK TO 755
                     CommandCapture command10 = new CommandCapture(0, "chmod 755 /vendor/overlay");
                     RootTools.getShell(true).add(command10);
                     while (!command10.isFinished()) {
                         Thread.sleep(1);
-                        RootTools.remount("/system", "RO");
                     }
 
+                    RootTools.remount("/system", "RO");
 
                     // CLOSE ALL SHELLS
                     RootTools.closeAllShells();
@@ -564,10 +595,10 @@ public class Commands {
     }
 
     public static class UnInstallOverlays extends AsyncTask<Integer, Integer, Integer> {
-        private AsyncResponse delegate;
         ProgressDialog progress;
         ArrayList<String> Paths;
         Context Context;
+        private AsyncResponse delegate;
 
         public UnInstallOverlays(ArrayList<String> paths, Context context, AsyncResponse response) {
             this.Paths = paths;
@@ -577,6 +608,11 @@ public class Commands {
 
         public UnInstallOverlays(ArrayList<String> paths, Context context) {
             this(paths, context, null);
+        }
+
+        private static String getCommandLineString(String input) {
+            String UNIX_ESCAPE_EXPRESSION = "(\\(|\\)|\\[|\\]|\\s|\'|\"|`|\\{|\\}|&|\\\\|\\?)";
+            return input.replaceAll(UNIX_ESCAPE_EXPRESSION, "\\\\$1");
         }
 
         protected void onPreExecute() {
@@ -589,29 +625,25 @@ public class Commands {
             progress.setMax(Paths.size());
         }
 
-
         @Override
         protected Integer doInBackground(Integer... params) {
             int i = 0;
             RootTools.remount("/system", "RW");
             for (String path : Paths) {
+                Log.d("Removing: ", path);
                 i = i + 1;
                 if (!RootCommands.readReadWriteFile())
                     RootTools.remount(path, "rw");
                 try {
                     RootCommands.execute("rm -r " + getCommandLineString(path));
                 } catch (Exception e) {
+                    Log.w("Cannot remove: ", path);
                     e.printStackTrace();
                 }
                 publishProgress(i);
             }
             RootTools.remount("/system", "RO");
             return null;
-        }
-
-        private static String getCommandLineString(String input) {
-            String UNIX_ESCAPE_EXPRESSION = "(\\(|\\)|\\[|\\]|\\s|\'|\"|`|\\{|\\}|&|\\\\|\\?)";
-            return input.replaceAll(UNIX_ESCAPE_EXPRESSION, "\\\\$1");
         }
 
         protected void onProgressUpdate(Integer... progress2) {
@@ -625,5 +657,123 @@ public class Commands {
             }
         }
 
+    }
+
+    public static class InstallOverlaysBetterWay extends AsyncTask<Void, Void, Void> {
+
+        ProgressDialog progress;
+        private AsyncResponse delegate;
+        private List<LayerFile> layersToInstall;
+        private Context context;
+        private String color;
+        private int i = 0;
+
+        public InstallOverlaysBetterWay(List<LayerFile> layersToInstall, String color, Context context, AsyncResponse delegate) {
+            this.layersToInstall = layersToInstall;
+            this.context = context;
+            this.color = color;
+            this.delegate = delegate;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progress = new ProgressDialog(context);
+            progress.setTitle(R.string.installingOverlays);
+            progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progress.setProgress(i);
+            progress.show();
+            progress.setCancelable(false);
+            progress.setMax(layersToInstall.size());
+        }
+
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            // MOUNT /SYSTEM RW
+            RootTools.remount("/system", "RW");
+
+            try {
+                // Create vendor Overlay Folder
+                CommandCapture command7 = new CommandCapture(0, "mkdir /vendor/overlay");
+                RootTools.getShell(true).add(command7);
+                while (!command7.isFinished()) {
+                    Thread.sleep(1);
+                }
+
+                // CHANGE PERMISSIONS TO 777
+                CommandCapture command8 = new CommandCapture(0, "chmod -R 777 /vendor/overlay");
+                RootTools.getShell(true).add(command8);
+                while (!command8.isFinished()) {
+                    Thread.sleep(1);
+                }
+            } catch (IOException | RootDeniedException | TimeoutException | InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+            for (LayerFile layerFile : layersToInstall) {
+                try {
+                    if (layerFile.isColor()) {
+                        RootCommands.moveCopyRoot(layerFile.getFile(color).getAbsolutePath(), "/system/vendor/overlay/");
+                    } else {
+                        RootCommands.moveCopyRoot(layerFile.getFile().getAbsolutePath(), "/system/vendor/overlay/");
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                publishProgress();
+            }
+
+
+            try {
+                // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 644 RECURING
+                CommandCapture command9 = new CommandCapture(0, "chmod -R 644 /vendor/overlay");
+                RootTools.getShell(true).add(command9);
+                while (!command9.isFinished()) {
+                    Thread.sleep(1);
+                }
+
+
+                // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER BACK TO 755
+                CommandCapture command10 = new CommandCapture(0, "chmod 755 /vendor/overlay");
+                RootTools.getShell(true).add(command10);
+                while (!command10.isFinished()) {
+                    Thread.sleep(1);
+                }
+
+                RootTools.remount("/system", "RO");
+
+                // CLOSE ALL SHELLS
+                RootTools.closeAllShells();
+
+            } catch (IOException | RootDeniedException | TimeoutException | InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            progress.setProgress(++i);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            progress.dismiss();
+            if (delegate != null) {
+                delegate.processFinish();
+            }
+        }
+
+    }
+    public static int getSortMode(Activity context){
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt("sortMode", 0);
+    }
+
+    public static void setSortMode(Activity context, int mode){
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("sortMode", mode).commit();
     }
 }

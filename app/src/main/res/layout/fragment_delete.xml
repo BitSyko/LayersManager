@@ -6,105 +6,99 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center">
-
-    <android.support.v7.widget.CardView
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="72dp">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:id="@+id/imageView"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_uninstall"
-            android:tint="#727272"
-            android:layout_gravity="center_horizontal"
-            android:visibility="invisible" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/nothingApplied"
-                android:id="@+id/textView7"
-                android:layout_below="@+id/imageView"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="200dp"
-                android:textSize="16sp"
-                android:visibility="invisible"
-                android:gravity="center" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/appliedOverlays"
-                android:id="@+id/textView8"
-
-                android:layout_marginTop="16dp"
-                android:layout_marginStart="16dp"
-                android:textColor="@color/accent"
-                android:textStyle="bold"
-                android:paddingBottom="8dp"
-                android:gravity="center"/>
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/cardList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textView8"
-                >
-        </android.support.v7.widget.RecyclerView>
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
-
-
-
-
-
-
-
-    <ViewStub
-        android:id="@+id/cab_stub"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize" />
+        android:layout_height="match_parent"
+        android:gravity="center">
 
-
-    <com.github.jorgecastilloprz.FABProgressCircle
-        android:id="@+id/fabProgressCircle"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="bottom|end"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:elevation="@dimen/fab_elevation"
-        android:layout_margin="15dp"
-        app:arcColor="@color/primary"
-        app:reusable="true"
-        >
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab6"
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.CardView
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_drawer_delete"
-            app:elevation="@dimen/fab_elevation"
-            android:clickable="true"
-            android:tint="@color/white"
-            />
-    </com.github.jorgecastilloprz.FABProgressCircle>
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="72dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_uninstall"
+                    android:tint="#727272"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imageView"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="200dp"
+                    android:gravity="center"
+                    android:text="@string/nothingApplied"
+                    android:textSize="16sp"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
+                    android:paddingBottom="8dp"
+                    android:text="@string/appliedOverlays"
+                    android:textColor="@color/accent"
+                    android:textStyle="bold" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/cardList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView8"></android.support.v7.widget.RecyclerView>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
 
 
+        <ViewStub
+            android:id="@+id/cab_stub"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize" />
 
 
-</RelativeLayout>
+        <com.github.jorgecastilloprz.FABProgressCircle
+            android:id="@+id/fabProgressCircle"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="15dp"
+            android:elevation="@dimen/fab_elevation"
+            app:arcColor="@color/primary"
+            app:reusable="true">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:src="@drawable/ic_drawer_delete"
+                android:tint="@color/white"
+                app:elevation="@dimen/fab_elevation" />
+        </com.github.jorgecastilloprz.FABProgressCircle>
 
 
+    </RelativeLayout>
 
-    </android.support.design.widget.CoordinatorLayout>
+
+</android.support.design.widget.CoordinatorLayout>

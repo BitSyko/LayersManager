@@ -4,54 +4,56 @@
     android:id="@+id/main_content3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:layout_marginTop="56dp"
 
-    android:layout_marginTop="56dp">
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        >
+        android:gravity="center">
+
         <HorizontalScrollView
+            android:id="@+id/horizontalScrollView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:scrollbars="none"
-            android:id="@+id/horizontalScrollView3"
             android:layout_marginStart="32dp"
-            android:elevation="5dp">
+            android:elevation="5dp"
+            android:scrollbars="none">
 
             <LinearLayout
+                android:id="@+id/horizontalScrollView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/horizontalScrollView2"
-                android:orientation="horizontal"
-                android:elevation="4dp"/>
+                android:elevation="4dp"
+                android:orientation="horizontal" />
 
         </HorizontalScrollView>
+
         <android.support.v7.widget.CardView
-            android:layout_height="wrap_content"
+            android:id="@+id/view"
             android:layout_width="fill_parent"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_height="wrap_content"
             android:layout_below="@id/horizontalScrollView3"
-            android:id="@+id/view">
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center">
 
                 <TextView
+                    android:id="@+id/noItems"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/emptydirectory"
-                    android:id="@+id/noItems"
                     android:layout_centerHorizontal="true"
-                    android:gravity="center"
                     android:layout_marginTop="200dp"
+                    android:gravity="center"
+                    android:text="@string/emptydirectory"
                     android:textSize="16sp"
                     android:visibility="invisible" />
 
@@ -59,40 +61,35 @@
                     android:id="@+id/cardList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/textView8"
-                    >
-                </android.support.v7.widget.RecyclerView>
+                    android:layout_below="@+id/textView8"></android.support.v7.widget.RecyclerView>
             </RelativeLayout>
         </android.support.v7.widget.CardView>
-
 
 
         <com.github.jorgecastilloprz.FABProgressCircle
             android:id="@+id/fabProgressCircle"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_gravity="bottom|end"
-            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:elevation="@dimen/fab_elevation"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="bottom|end"
             android:layout_margin="15dp"
+            android:elevation="@dimen/fab_elevation"
             app:arcColor="@color/primary"
-            app:reusable="true"
-            >
+            app:reusable="true">
+
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fab6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_drawer_showcase"
-                app:elevation="@dimen/fab_elevation"
                 android:clickable="true"
+                android:src="@drawable/ic_drawer_install"
                 android:tint="@color/white"
-                />
+                app:elevation="@dimen/fab_elevation" />
         </com.github.jorgecastilloprz.FABProgressCircle>
 
 
     </RelativeLayout>
-
 
 
 </android.support.design.widget.CoordinatorLayout>

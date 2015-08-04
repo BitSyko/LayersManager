@@ -1,23 +1,14 @@
 package com.lovejoy777.rroandlayersmanager.helper;
 
-/**
- * Created by Niklas on 06.06.2015.
- */
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-
 public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
-    private OnItemClickListener mListener;
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-    }
-
     GestureDetector mGestureDetector;
+    private OnItemClickListener mListener;
 
     public RecyclerItemClickListener(Context context, OnItemClickListener listener) {
         mListener = listener;
@@ -46,6 +37,10 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
     @Override
     public void onRequestDisallowInterceptTouchEvent(boolean b) {
 
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
     }
 
     //@Override

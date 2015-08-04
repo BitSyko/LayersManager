@@ -15,8 +15,20 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
-import android.view.*;
-import android.widget.*;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.beans.FileBean;
@@ -30,21 +42,26 @@ import java.util.Collections;
  */
 public class InstallFragment extends Fragment implements AsyncResponse {
 
+    ArrayList<String> Filedirectories = new ArrayList<>();
+    FloatingActionButton fab2;
+    int atleastOneIsClicked = 0;
+    String currentDir = null;
+    String BaseDir = null;
     private ArrayList<FileBean> Files = new ArrayList<>();
     private ArrayList<String> Directories = new ArrayList<>();
-    ArrayList<String> Filedirectories = new ArrayList<>();
-
-    FloatingActionButton fab2;
     private RecyclerView mRecyclerView;
     private CardViewAdapter3 mAdapter;
     private DrawerLayout mDrawerLayout;
     private CoordinatorLayout cordLayout = null;
-
-    int atleastOneIsClicked = 0;
-
-    String currentDir = null;
-    String BaseDir = null;
-
+    View.OnClickListener onclicklistener = new View.OnClickListener() {
+        public void onClick(View v) {
+            Object clickedOn = v.getTag()/*.toString()*/;
+            Filedirectories.subList(Filedirectories.indexOf(clickedOn) + 1, Filedirectories.size()).clear();
+            //System.out.println(Filedirectories.indexOf(clickedOn));
+            LinearLayout HscrollView = (LinearLayout) cordLayout.findViewById(R.id.horizontalScrollView2);
+            new LoadAndSet().execute();
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,6 +85,79 @@ public class InstallFragment extends Fragment implements AsyncResponse {
         return cordLayout;
     }
 
+    private void loadToolbarRecylcerViewFab() {
+
+
+        mRecyclerView = (RecyclerView) cordLayout.findViewById(R.id.cardList);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        fab2 = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab6);
+        fab2.hide();
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fab2.setClickable(false);
+                InstallAsyncOverlays();
+                //new InstallOverlays().execute();
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void InstallAsyncOverlays() {
+
+        ArrayList<String> paths = new ArrayList<String>();
+        for (FileBean file : Files) {
+            if (file.isChecked()) {
+                paths.add(currentDir + "/" + file.getFullName());
+            }
+        }
+
+        Commands.InstallOverlays asyncTask = new Commands.InstallOverlays("Normal", getActivity(), "0", paths, null, 0, 0, null, null, this);
+        asyncTask.execute();
+    }
+
+    public void processFinish() {
+        fab2.hide();
+        fab2.setClickable(true);
+        UncheckAll();
+        Snackbar.make(cordLayout, R.string.installed, Snackbar.LENGTH_LONG)
+                .setAction(R.string.Reboot, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Commands.reboot(getActivity());
+                    }
+                })
+                .show();
+    }
+
+    private void UncheckAll() {
+
+        for (FileBean file : Files) {
+            file.setChecked(false);
+        }
+
+        atleastOneIsClicked = 0;
+        mAdapter.notifyDataSetChanged();
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.menu_main, menu);
+    }
 
     private class LoadAndSet extends AsyncTask<String, String, Void> {
 
@@ -179,36 +269,6 @@ public class InstallFragment extends Fragment implements AsyncResponse {
         }
     }
 
-    View.OnClickListener onclicklistener = new View.OnClickListener() {
-        public void onClick(View v) {
-            Object clickedOn = v.getTag()/*.toString()*/;
-            Filedirectories.subList(Filedirectories.indexOf(clickedOn) + 1, Filedirectories.size()).clear();
-            //System.out.println(Filedirectories.indexOf(clickedOn));
-            LinearLayout HscrollView = (LinearLayout) cordLayout.findViewById(R.id.horizontalScrollView2);
-            new LoadAndSet().execute();
-        }
-    };
-
-    private void loadToolbarRecylcerViewFab() {
-
-
-        mRecyclerView = (RecyclerView) cordLayout.findViewById(R.id.cardList);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        fab2 = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab6);
-        fab2.hide();
-        fab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fab2.setClickable(false);
-                InstallAsyncOverlays();
-                //new InstallOverlays().execute();
-            }
-        });
-    }
-
-
     //Adapter
     private class CardViewAdapter3 extends RecyclerView.Adapter<CardViewAdapter3.MyViewHolder> {
 
@@ -305,6 +365,15 @@ public class InstallFragment extends Fragment implements AsyncResponse {
             return i < directories.size();
         }
 
+        @Override
+        public int getItemViewType(int position) {
+            if (isFolder(position)) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+
         public class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView themeName;
             public ImageView image;
@@ -323,69 +392,5 @@ public class InstallFragment extends Fragment implements AsyncResponse {
                 }
             }
         }
-
-        @Override
-        public int getItemViewType(int position) {
-            if (isFolder(position)) {
-                return 1;
-            } else {
-                return 0;
-            }
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void InstallAsyncOverlays() {
-
-        ArrayList<String> paths = new ArrayList<String>();
-        for (FileBean file : Files) {
-            if (file.isChecked()) {
-                paths.add(currentDir + "/" + file.getFullName());
-            }
-        }
-
-        Commands.InstallOverlays asyncTask = new Commands.InstallOverlays("Normal", getActivity(), "0", paths, null, 0, 0, null, null, this);
-        asyncTask.execute();
-    }
-
-    public void processFinish() {
-        fab2.hide();
-        fab2.setClickable(true);
-        UncheckAll();
-        Snackbar.make(cordLayout, R.string.installed, Snackbar.LENGTH_LONG)
-                .setAction(R.string.Reboot, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Commands.reboot(getActivity());
-                    }
-                })
-                .show();
-    }
-
-    private void UncheckAll() {
-
-        for (FileBean file : Files) {
-            file.setChecked(false);
-        }
-
-        atleastOneIsClicked = 0;
-        mAdapter.notifyDataSetChanged();
-
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        menuInflater.inflate(R.menu.menu_main, menu);
     }
 }

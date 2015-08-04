@@ -20,9 +20,9 @@ public class DetailedTutorialActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-         // ENDS SWVALUE ELSE
+        // ENDS SWVALUE ELSE
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.instructions);
+        setContentView(R.layout.activity_instructions);
 
         // Handle Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar5);

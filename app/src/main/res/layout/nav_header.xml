@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2015 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,20 +15,20 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout11"
     android:layout_width="match_parent"
     android:layout_height="166.5dp"
-    android:id="@+id/layout11"
     android:background="@color/primary"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    android:gravity="bottom"
     android:orientation="vertical"
-    android:gravity="bottom">
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
+        android:id="@+id/imVie_AppLogo"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/imVie_AppLogo"
-        android:src="@drawable/bitsyko"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/bitsyko" />
 
 
 </LinearLayout>

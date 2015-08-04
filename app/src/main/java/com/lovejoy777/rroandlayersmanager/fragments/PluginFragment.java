@@ -1,29 +1,17 @@
 package com.lovejoy777.rroandlayersmanager.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.Fragment;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.content.pm.ServiceInfo;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,63 +19,52 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.adapters.CardViewAdapter;
-import com.lovejoy777.rroandlayersmanager.beans.CardBean;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.helper.RecyclerItemClickListener;
 import com.lovejoy777.rroandlayersmanager.menu;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-
-/**
- * Created by Niklas on 07.07.2015.
- */
+import java.util.Random;
 
 public class PluginFragment extends Fragment {
 
-    private PackageBroadcastReceiver packageBroadcastReceiver;
-    private IntentFilter packageFilter;
-    private ArrayList<HashMap<String, String>> services;
-    private ArrayList<String> categories;
-    private String[] packages = new String[100];
-
-    public static final String ACTION_PICK_PLUGIN = "com.layers.plugins.PICK_OVERLAYS";
-    static final String KEY_PKG = "pkg";
-    static final String KEY_SERVICENAME = "servicename";
-    static final String KEY_ACTIONS = "actions";
-    static final String KEY_CATEGORIES = "categories";
-    private Boolean TestBoolean = false;
-    static final String LOG_TAG = "PluginApp";
     RecyclerView recList = null;
     CardViewAdapter ca = null;
-    static final String BUNDLE_EXTRAS_CATEGORY = "category";
-    static final String BUNDLE_EXTRAS_PACKAGENAME = "packageName";
-    private CoordinatorLayout cordLayout = null;
+    public int sortMode;
+    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
 
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+            //Remove swiped item from list and notify the RecyclerView
+            String packageName = ca.getLayerFromPosition(viewHolder.getAdapterPosition()).getPackageName();
+            Uri packageURI = Uri.parse("package:" + packageName);
+            Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, packageURI);
+            startActivityForResult(uninstallIntent, 1);
+        }
+    };
+    private Boolean TestBoolean = false;
+    private CoordinatorLayout cordLayout = null;
+    private SwipeRefreshLayout mSwipeRefresh;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        FragmentActivity faActivity = (FragmentActivity) super.getActivity();
         cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_plugins, container, false);
-
 
         LoadRecyclerViewFabToolbar();
 
-        //createImportantDirectories();
+        sortMode = Commands.getSortMode(getActivity());
 
         new fillPluginList().execute();
-
-        packageBroadcastReceiver = new PackageBroadcastReceiver();
-        packageFilter = new IntentFilter();
-        packageFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
-        packageFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
-        packageFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
-        packageFilter.addCategory(Intent.CATEGORY_DEFAULT);
-        packageFilter.addDataScheme("package");
 
         setHasOptionsMenu(true);
 
@@ -120,123 +97,37 @@ public class PluginFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent Installactivity = new Intent(getActivity(), Install.class);
-
-                //Bundle bndlanimation =
-                //        ActivityOptions.makeCustomAnimation(getActivity().getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
-                //startActivity(Installactivity, bndlanimation);
-                ((menu) getActivity()).changeFragment(4,0);
+                ((menu) getActivity()).changeFragment(4, 0);
             }
 
 
         });
 
-        final SwipeRefreshLayout mSwipeRefresh = (SwipeRefreshLayout) cordLayout.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefresh = (SwipeRefreshLayout) cordLayout.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefresh.setColorSchemeResources(R.color.accent);
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                services.clear();
                 new fillPluginList().execute();
-                onItemsLoadComplete();
-            }
-
-            void onItemsLoadComplete() {
-                ca.notifyDataSetChanged();
-                mSwipeRefresh.setRefreshing(false);
             }
         });
-
-
-        //Toolbar toolbar = (Toolbar) cordLayout.findViewById(R.id.toolbar);
-        //toolbar.setNavigationIcon(R.drawable.ic_action_menu);
-        //AppCompatActivity activity = (AppCompatActivity) getActivity();
-        //activity.setSupportActionBar(toolbar);
-        //activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-
-    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-        @Override
-        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-            return false;
-        }
-
-        @Override
-        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-            //Remove swiped item from list and notify the RecyclerView
-            //System.out.println(viewHolder.getAdapterPosition());
-            String packageName = packages[viewHolder.getAdapterPosition()];
-            Uri packageURI = Uri.parse("package:" + packageName);
-            Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, packageURI);
-            startActivityForResult(uninstallIntent, 1);
-
-        }
-    };
-
-    //create List with all Plugins
-    private List<CardBean> createList(int size, String name[], String developer[], String packages[]) {
-
-        List<CardBean> result = new ArrayList<CardBean>();
-        for (int i = 0; i < size; i++) {
-
-            final String packName = packages[i];
-            String mDrawableName = "icon";
-            PackageManager manager = getActivity().getPackageManager();
-            Resources mApk1Resources;
-            try {
-                mApk1Resources = manager.getResourcesForApplication(packName);
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-                continue;
-            }
-
-            assert mApk1Resources != null;
-
-            int mDrawableResID = mApk1Resources.getIdentifier(mDrawableName, "drawable", packName);
-
-            Drawable myDrawable = mApk1Resources.getDrawable(mDrawableResID);
-
-            result.add(new CardBean(name[i], developer[i], myDrawable));
-        }
-        return result;
     }
 
     //create list if no plugins are installed
-    private List<CardBean> createList2() {
+    private List<Layer> createList2() {
 
-        List<CardBean> result = new ArrayList<CardBean>();
-        result.add(new CardBean(getString(R.string.tooBad), getString(R.string.noPlugins), getResources().getDrawable(R.drawable.ic_noplugin)));
-        result.add(new CardBean(getString(R.string.Showcase), getString(R.string.ShowCaseMore), getResources().getDrawable(R.mipmap.ic_launcher)));
-        result.add(new CardBean(getString(R.string.PlayStore), getString(R.string.PlayStoreMore), getResources().getDrawable(R.drawable.playstore)));
+        List<Layer> result = new ArrayList<>();
+        result.add(new Layer(getString(R.string.tooBad), getString(R.string.noPlugins), getResources().getDrawable(R.drawable.ic_noplugin, null)));
+        result.add(new Layer(getString(R.string.Showcase), getString(R.string.ShowCaseMore), getResources().getDrawable(R.mipmap.ic_launcher, null)));
+        result.add(new Layer(getString(R.string.PlayStore), getString(R.string.PlayStoreMore), getResources().getDrawable(R.drawable.playstore, null)));
         return result;
     }
 
-
-    public void onStart() {
-        super.onStart();
-        Log.d(LOG_TAG, "onStart");
-        getActivity().registerReceiver(packageBroadcastReceiver, packageFilter);
-    }
-
-
-    public void onStop() {
-        super.onStop();
-        Log.d(LOG_TAG, "onStop");
-        getActivity().unregisterReceiver(packageBroadcastReceiver);
-    }
 
     //open Plugin page after clicked on a cardview
     protected void onListItemClick(int position) {
         if (!TestBoolean) {
-            String package2 = packages[position];
-            String category = categories.get(position);
-            if (category.length() > 0) {
-
-
-                 ((menu) getActivity()).changeFragment2(category,package2);
-
-             }
+            ((menu) getActivity()).changeFragment2(ca.getLayerFromPosition(position));
         } else {
             if (position == 2) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.PlaystoreSearch))));
@@ -248,20 +139,6 @@ public class PluginFragment extends Fragment {
         }
     }
 
-
-    class PackageBroadcastReceiver extends BroadcastReceiver {
-        private static final String LOG_TAG = "PackageBroadcastReceiver";
-
-        //when a new Plugin is installed
-        @SuppressLint("LongLogTag")
-        public void onReceive(Context context, Intent intent) {
-            Log.d(LOG_TAG, "onReceive: " + intent);
-            services.clear();
-            new fillPluginList().execute();
-            ca.notifyDataSetChanged();
-        }
-    }
-
     private void NotAvailableSnackbar() {
         final View coordinatorLayoutView = cordLayout.findViewById(R.id.main_content2);
         Snackbar.make(coordinatorLayoutView, "Sorry, not available yet.", Snackbar.LENGTH_SHORT)
@@ -270,95 +147,96 @@ public class PluginFragment extends Fragment {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // check if the request code is same as what is passed  here it is 2
         if (requestCode == 1) {
-            services.clear();
             new fillPluginList().execute();
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.menu_pluginlist, menu);
+        switch (sortMode) {
+            default:
+                menu.findItem(R.id.menu_sortName).setChecked(true);
+                break;
+            case 2:
+                menu.findItem(R.id.menu_sortDeveloper).setChecked(true);
+                break;
+            case 3:
+                menu.findItem(R.id.menu_sortRandom).setChecked(true);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_reboot:
+                Commands.reboot(getActivity());
+                break;
+            case R.id.menu_sortName:
+                item.setChecked(true);
+                Commands.setSortMode(getActivity(),1);
+                new fillPluginList().execute();
+                break;
+            case R.id.menu_sortDeveloper:
+                item.setChecked(true);
+                Commands.setSortMode(getActivity(), 2);
+                new fillPluginList().execute();
+                break;
+            case R.id.menu_sortRandom:
+                item.setChecked(true);
+                Commands.setSortMode(getActivity(), 3);
+                new fillPluginList().execute();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        new fillPluginList().execute();
     }
 
     private class fillPluginList extends AsyncTask<Void, Void, Void> {
 
         protected void onPreExecute() {
+            mSwipeRefresh.setRefreshing(true);
         }
 
         @Override
         protected Void doInBackground(Void... params) {
 
-            services = new ArrayList<HashMap<String, String>>();
-            categories = new ArrayList<String>();
+            List<Layer> layerList = Layer.getLayersInSystem(PluginFragment.this.getActivity());
 
-            PackageManager packageManager = getActivity().getPackageManager();
-            Intent baseIntent = new Intent(ACTION_PICK_PLUGIN);
-            baseIntent.setFlags(Intent.FLAG_DEBUG_LOG_RESOLUTION);
-            ArrayList<ResolveInfo> list = (ArrayList<ResolveInfo>) packageManager.queryIntentServices(baseIntent,
-                    PackageManager.GET_RESOLVED_FILTER);
-
-            final String name[] = new String[list.size()];
-            final String developer[] = new String[list.size()];
-
-            for (int i = 0; i < list.size(); ++i) {
-
-                ResolveInfo info = list.get(i);
-                ServiceInfo sinfo = info.serviceInfo;
-                IntentFilter filter = info.filter;
-                Log.d(LOG_TAG, "fillPluginList: i: " + i + "; sinfo: " + sinfo + ";filter: " + filter);
-
-                ApplicationInfo ai = null;
-                try {
-                    ai = getActivity().getPackageManager().getApplicationInfo(sinfo.packageName, PackageManager.GET_META_DATA);
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
-                Bundle bundle = null;
-                if (ai != null) {
-                    bundle = ai.metaData;
-                }
-                name[i] = bundle.getString("Layers_Name");
-                developer[i] = bundle.getString("Layers_Developer");
-
-                if (sinfo != null) {
-                    HashMap<String, String> item = new HashMap<String, String>();
-                    item.put(KEY_PKG, name[i]);
-                    item.put(KEY_SERVICENAME, developer[i]);
-
-                    String firstCategory = null;
-                    if (filter != null) {
-                        StringBuilder actions = new StringBuilder();
-                        for (Iterator<String> actionIterator = filter.actionsIterator(); actionIterator.hasNext(); ) {
-                            String action = actionIterator.next();
-                            if (actions.length() > 0)
-                                actions.append(",");
-                            actions.append(action);
-                        }
-                        StringBuilder categories = new StringBuilder();
-                        for (Iterator<String> categoryIterator = filter.categoriesIterator();
-                             categoryIterator.hasNext(); ) {
-                            String category = categoryIterator.next();
-                            if (firstCategory == null)
-                                firstCategory = category;
-                            if (categories.length() > 0)
-                                categories.append(",");
-                            categories.append(category);
-                        }
-                        try {
-                            packages[i] = getActivity().getPackageManager().getApplicationInfo(sinfo.packageName, 0).packageName;
-                        } catch (PackageManager.NameNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        item.put(KEY_ACTIONS, "<null>");
-                        item.put(KEY_CATEGORIES, "<null>");
+            sortMode = Commands.getSortMode(getActivity());
+            if (sortMode == 1 || sortMode == 0) {
+                //Alphabetically NAME
+                Collections.sort(layerList, new Comparator<Layer>() {
+                    public int compare(Layer layer1, Layer layer2) {
+                        return layer1.getName().compareToIgnoreCase(layer2.getName());
                     }
-                    if (firstCategory == null)
-                        firstCategory = "";
-                    categories.add(firstCategory);
-                    services.add(item);
-                }
+                });
+            }
+            if (sortMode ==2){
+                //Alphabetically DEVELOPER
+                Collections.sort(layerList, new Comparator<Layer>() {
+                    public int compare(Layer layer1, Layer layer2) {
+                        return layer1.getDeveloper().compareToIgnoreCase(layer2.getDeveloper());
+                    }
+                });
+            }
+            if (sortMode ==3){
+                //RANDOM
+                long seed = System.nanoTime();
+                Collections.shuffle(layerList, new Random(seed));
+                Collections.shuffle(layerList, new Random(seed));
+
             }
 
-            if (list.size() > 0) {
-                ca = new CardViewAdapter(createList(list.size(), name, developer, packages));
+
+            if (layerList.size() > 0) {
+                ca = new CardViewAdapter(layerList);
             } else {
                 ca = new CardViewAdapter(createList2());
                 TestBoolean = true;
@@ -369,24 +247,12 @@ public class PluginFragment extends Fragment {
         }
 
         protected void onPostExecute(Void result) {
-
             recList = (RecyclerView) cordLayout.findViewById(R.id.cardList);
             recList.setHasFixedSize(true);
             recList.setAdapter(ca);
+            mSwipeRefresh.setRefreshing(false);
         }
-    }
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        menuInflater.inflate(R.menu.menu_main, menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_reboot:
-                Commands.reboot(getActivity());
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+
 }

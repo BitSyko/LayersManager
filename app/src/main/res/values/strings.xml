@@ -1,8 +1,10 @@
-<resources>
+<resources xmlns:https="http://schemas.android.com/apk/res-auto">
 
     <!-- MAIN Fragment -->
     <string name="layersmanager">Layers Manager</string>
-    <string name="PlaystoreSearch"><![CDATA[https://play.google.com/store/search?q=Layers+Theme&c=apps&docType=1&sp=CAFiDgoMTGF5ZXJzIFRoZW1legIYAIoBAggB:S:ANO1ljK_ZAY]]></string>
+    <string name="PlaystoreSearch"><![CDATA[
+        https://play.google.com/store/search?q=Layers+Theme&c=apps&docType=1&sp=CAFiDgoMTGF5ZXJzIFRoZW1legIYAIoBAggB:S:ANO1ljK_ZAY
+        ]]></string>
     <string name="tooBad">Too bad.</string>
     <string name="noPlugins">You don\'t have installed any compatible plugins yet, Use the FAB button for none plugin type overlays.</string>
     <string name="ShowCaseMore">Find some new beautiful overlays. Beta available now!</string>
@@ -63,6 +65,7 @@
     <string name="linkSyko">https://plus.google.com/u/0/+SykoPompos/posts</string>
     <string name="linkBranden">https://plus.google.com/u/0/101729058057775926785/posts</string>
     <string name="linkDenis">https://plus.google.com/u/0/+DenisSuarez98/posts</string>
+    <string name="linkAndrzej">https://plus.google.com/117376207394302665227/posts</string>
 
 
     <!-- PRODUCT TOUR -->
@@ -107,6 +110,7 @@
     <string name="OverlaysSelected">Overlays selected</string>
     <string name="PreformReboot">Perform a soft reboot?</string>
     <string name="uninstalled">Uninstalled selected Overlays</string>
+    <string name="uninstallingOverlays">Uninstalling Overlays</string>
 
     <!-- Backup Restore Fragment -->
     <string name="noBackups">No Backups available.\nMake one by clicking the FAB.</string>
@@ -164,9 +168,12 @@
     <string name="OverlaysInstalled">Overlays installed!</string>
     <string name="emptydirectory">This directory seems to be empty.</string>
     <string name="installingOverlays">Installing Overlays</string>
-    <string name="linkAndrzej"><![CDATA[https://plus.google.com/117376207394302665227/posts?utm_source=chrome_ntp_icon&utm_medium=chrome_app&utm_campaign=chrome]]></string>
-    <string name="LeadAppDeveloper">Lead App Developer</string>
-    <string name="uninstallingOverlays">Uninstalling Overlays</string>
+    <string name="Sort">Sort by</string>
+    <string name="sort_name">Name</string>
+    <string name="sort_developer">Developer</string>
+    <string name="sort_random">Random</string>
+    <string name="show">Show</string>
+    <string name="contains">contains:</string>
 
 
 </resources>

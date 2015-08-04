@@ -3,18 +3,18 @@
     android:layout_width="fill_parent"
     android:layout_height="match_parent">
 
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:id="@+id/deletecheckbox"
-            android:layout_centerVertical="true"
-            android:paddingStart="8dp"
-            android:textSize="17sp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="16dp" />
-    </RelativeLayout>
+    <CheckBox
+        android:id="@+id/deletecheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:paddingStart="8dp"
+        android:text=""
+        android:textSize="17sp" />
+</RelativeLayout>
 
 
 

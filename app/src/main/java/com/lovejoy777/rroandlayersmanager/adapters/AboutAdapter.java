@@ -20,19 +20,11 @@ public class AboutAdapter extends BaseExpandableListAdapter {
     private final List<String> headers;
     private final HashMap<String, List<DeveloperBean>> childData;
 
-    static class ViewHolder {
-        public ImageView image;
-        public TextView text;
-        public TextView text2;
-    }
-
-
     public AboutAdapter(Activity context, List<String> headers, HashMap<String, List<DeveloperBean>> childData) {
         this.context = context;
         this.headers = headers;
         this.childData = childData;
     }
-
 
     @Override
     public int getGroupCount() {
@@ -120,6 +112,12 @@ public class AboutAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int i, int i1) {
         return true;
+    }
+
+    static class ViewHolder {
+        public ImageView image;
+        public TextView text;
+        public TextView text2;
     }
 
 }

@@ -30,4 +30,6 @@ dependencies {
     compile 'com.afollestad:material-cab:0.1.4'
     compile 'com.android.support:palette-v7:22.2.1'
     compile 'com.github.jorgecastilloprz:fabprogresscircle:1.01@aar'
+    compile 'com.google.guava:guava:18.0'
+    compile 'commons-io:commons-io:2.4'
 }

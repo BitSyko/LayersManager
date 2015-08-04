@@ -9,7 +9,7 @@ public class FileBean {
 
     public FileBean(String location) {
         this.location = location;
-        this.name = location.replace(".apk","").replace("_"," ");
+        this.name = location.replace(".apk", "").replace("_", " ");
         this.fullname = location;
     }
 

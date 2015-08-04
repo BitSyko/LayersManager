@@ -3,24 +3,16 @@ package com.lovejoy777.rroandlayersmanager;
 import android.animation.Animator;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.IBinder;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -30,75 +22,35 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Pair;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.ViewGroup;
-import android.view.Window;
+import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Switch;
-import android.widget.TableRow;
-import android.widget.TextView;
-
+import android.widget.*;
+import com.bitsyko.liblayers.Layer;
+import com.bitsyko.liblayers.LayerFile;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-
-/**
- * Created by Niklas on 02.06.2015.
- */
 public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
-    List<Integer> InstallOverlayList = new ArrayList<Integer>();
-    List<String> OverlayPathList = new ArrayList<String>();
-    List<String> OverlayColorListPublic = new ArrayList<String>();
-    List<String> OverlayNameList = null;
-    private ArrayList<String> paths = new ArrayList<String>();
-
-    private String ThemeName;
-    private String ThemeFolder;
-    private String ThemeFolderGeneral;
-    private String category;
-    private String package2;
-    private String whichColor;
-    int atleastOneIsClicked;
-
-    private int NumberOfColors;
-    int NumberOfOverlays;
-    int NumberOfColorOverlays;
-    public static final int NumberOfScreenshotsMain = 3;
-
-
-    private IOperation opService;
-
+    private CheckBox dontShowAgain;
+    private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
+    private String layerPackageName;
+    private String choosedStyle = "";
+    private Layer layer;
     private Switch installEverything;
-    private FloatingActionButton fab2;
+    private FloatingActionButton installationFAB;
     private CoordinatorLayout cordLayout;
     private LoadDrawables imageLoader;
-    final ImageView ScreenshotimageView[] = new ImageView[NumberOfScreenshotsMain];
-    public CheckBox dontShowAgain;
 
-    private Drawable myDrawable;
-    Bitmap bitmap[] = new Bitmap[NumberOfScreenshotsMain];
-
-
-    /** Called when the activity is first created. */
     @Override
-    public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle
-            savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
 
         cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_plugindetail, container, false);
 
@@ -106,271 +58,122 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
         getIntent();
 
-        bindOpService();
+        cordLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                v.removeOnLayoutChangeListener(this);
+                loadBackdrop();
+            }
+        });
+
 
         createLayouts();
+
+        Log.d("Colors", String.valueOf(layer.getColors()));
 
         return cordLayout;
     }
 
-    @Override
-        public void onDestroy() {
-                if (imageLoader.getStatus() != AsyncTask.Status.FINISHED) {
-                        imageLoader.cancel(true);
-                    }
-                super.onDestroy();
+    private boolean isAnyCheckboxEnabled() {
+
+        for (CheckBox checkBox : checkBoxes) {
+            if (checkBox.isChecked()) {
+                return true;
             }
+        }
+        return false;
+    }
 
 
+    private void refreshFab() {
 
-    private void createThemeFolder() {
-        //create the Theme folder
-        File ThemeDirectory = new File(Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeName.replaceAll(" ", "") + "/");
-        ThemeDirectory.mkdirs();
+        if (isAnyCheckboxEnabled()) {
+            installationFAB.show();
+        } else {
+            installationFAB.hide();
+        }
+
     }
 
     private void loadOverlayCardviews() {
         //sort cardviews by number of Overlays
-        LinearLayout CardViewCategory1, CardViewCategory2;
-        TextView Category1Name, Category2Name;
-        if (NumberOfOverlays >= NumberOfColorOverlays) {
-            CardViewCategory1 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory1);
-            CardViewCategory2 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory2);
-            Category1Name = (TextView) cordLayout.findViewById(R.id.Tv_Category1Name);
-            Category1Name.setText(getResources().getString(R.string.Category1Name));
-            Category2Name = (TextView) cordLayout.findViewById(R.id.Tv_Category2Name);
-            Category2Name.setText(getResources().getString(R.string.Category2Name));
-        } else {
-            CardViewCategory1 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory2);
-            CardViewCategory2 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory1);
-            Category1Name = (TextView) cordLayout.findViewById(R.id.Tv_Category2Name);
-            Category1Name.setText(getResources().getString(R.string.Category1Name));
-            Category2Name = (TextView) cordLayout.findViewById(R.id.Tv_Category1Name);
-            Category2Name.setText(getResources().getString(R.string.Category2Name));
-        }
+        LinearLayout linearLayoutCategory1, linearLayoutCategory2;
+        linearLayoutCategory1 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory1);
+        linearLayoutCategory2 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory2);
+        CardView cardViewCategory1 = (CardView) cordLayout.findViewById(R.id.CardViewCategory1);
+        CardView cardViewCategory2 = (CardView) cordLayout.findViewById(R.id.CardViewCategory2);
 
-        //Cardview with normal Overlays
-        for (int i = 0; i < NumberOfOverlays; i++) {
+
+        List<LayerFile> layerFiles = layer.getLayersInPackage();
+
+
+        for (LayerFile layerFile : layerFiles) {
+
             TableRow row = new TableRow(getActivity());
             row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
 
-            final CheckBox[] check = new CheckBox[NumberOfOverlays];
-            check[i] = new CheckBox(getActivity());
-            check[i].setText(OverlayNameList.get(i));
-            check[i].setTag(i);
-            check[i].setId(i);
-            check[i].setTextColor(getResources().getColor(R.color.chooser_text_color));
-            check[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                //check if checkbox is clicked
+            CheckBox check = new CheckBox(getActivity());
+
+            check.setText(layerFile.getName());
+            check.setTag(layerFile);
+
+            row.addView(check);
+
+            if (layerFile.isColor()) {
+                linearLayoutCategory2.addView(row);
+            } else {
+                linearLayoutCategory1.addView(row);
+            }
+
+            check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                    for (int c = 0; c < NumberOfOverlays; c++) {
-                        if (buttonView.getTag().equals(c)) {
-                            if (buttonView.isChecked()) {
-                                InstallOverlayList.set(c, 1);
-
-                                atleastOneIsClicked = atleastOneIsClicked + 1;
-
-                            } else {
-
-                                InstallOverlayList.set(c, 0);
-                                atleastOneIsClicked = atleastOneIsClicked - 1;
-                            }
-                            if (atleastOneIsClicked > 0) {
-                                fab2.show();
-                            } else {
-                                fab2.hide();
-                            }
-                        }
-                    }
+                    refreshFab();
                 }
             });
-            row.addView(check[i]);
-            CardViewCategory1.addView(row);
-        }
 
-        //CardView with color specific Overlays
-        for (int i = NumberOfOverlays + 1; i < NumberOfColorOverlays + NumberOfOverlays + 1; i++) {
-            TableRow row = new TableRow(getActivity());
+            checkBoxes.add(check);
 
-            row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-            final CheckBox[] check = new CheckBox[NumberOfColorOverlays + NumberOfOverlays + 1];
-            check[i] = new CheckBox(getActivity());
-            check[i].setText(OverlayNameList.get(i));
-            check[i].setTag(i);
-            check[i].setId(i);
-            check[i].setTextColor(getResources().getColor(R.color.chooser_text_color));
-            check[i].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                    for (int c = NumberOfOverlays + 1; c < NumberOfColorOverlays + NumberOfOverlays + 1; c++) {
-
-                        if (buttonView.getTag().equals(c)) {
-
-                            if (buttonView.isChecked()) {
-                                InstallOverlayList.set(c, 1);
-
-                                atleastOneIsClicked = atleastOneIsClicked + 1;
-
-                            } else {
-                                atleastOneIsClicked = atleastOneIsClicked - 1;
-                                InstallOverlayList.set(c, 0);
-                            }
-                            if (atleastOneIsClicked > 0) {
-                                fab2.show();
-                            } else {
-                                fab2.hide();
-                            }
-                        }
-                    }
-                }
-            });
-            row.addView(check[i]);
-            CardViewCategory2.addView(row);
         }
 
 
-        //If there arent any color specific Overlays, hide the cardview
-        if (NumberOfColorOverlays == 0 || NumberOfOverlays == 0) {
-            CardView CardViewCategory = (CardView) cordLayout.findViewById(R.id.CardViewCategory2);
-            CardViewCategory.setVisibility(View.GONE);
+        //No styleSpecific Overlays
+        if (linearLayoutCategory2.getChildCount() == 0) {
+            cardViewCategory2.setVisibility(View.GONE);
         }
+        //No normal Overlays
+        if (linearLayoutCategory1.getChildCount() == 0) {
+            cardViewCategory1.setVisibility(View.GONE);
+        }
+
+
     }
 
     private void loadScreenshotCardview() {
-        //Scroll view with screenshots
-        LinearLayout screenshotLayout = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutScreenshots);
-
-        for (int i = 0; i < NumberOfScreenshotsMain; i++) {
-            LinearLayout linear = new LinearLayout(getActivity());
-
-            int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
-
-            LinearLayout.LayoutParams params
-                    = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-            params.rightMargin = margin;
-
-            ScreenshotimageView[i] = new ImageView(getActivity());
-            ScreenshotimageView[i].setBackgroundColor(getResources().getColor(R.color.accent));
-
-            linear.setLayoutParams(params);
-
-            linear.addView(ScreenshotimageView[i]);
-            screenshotLayout.addView(linear);
-        }
         loadScreenshots();
     }
 
-    private void generateFilepaths() {
-        //Generate filepaths of normal Overlays
-        if (NumberOfOverlays == 0) {
-            for (int i = 1; i < NumberOfOverlays + NumberOfColorOverlays + 1; i++) {
-                String CurrentOverlyName = OverlayNameList.get(i).replaceAll(" ", "");
-                OverlayPathList.add(i, ThemeName.replaceAll(" ", "") + "_" + CurrentOverlyName + ".apk");
-            }
-        } else {
-            for (int i = 0; i < NumberOfOverlays + NumberOfColorOverlays + 1; i++) {
-                String CurrentOverlyName = OverlayNameList.get(i).replaceAll(" ", "");
-                OverlayPathList.add(i, ThemeName.replaceAll(" ", "") + "_" + CurrentOverlyName + ".apk");
-            }
-        }
-
-    }
-
-
     private void receiveAndUseData() {
-        //get important data from Plugin´s Manifest
-        String Description;
-        String OverlayNameString;
-        String NormalOverlayNameString;
-        String StyleSpecificOverlayString;
-        String WhatsNew;
-        String OverlayColorString;
-        ApplicationInfo ai = null;
-        try {
-            ai = getActivity().getPackageManager().getApplicationInfo(package2, PackageManager.GET_META_DATA);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        Bundle bundle = null;
-        if (ai != null) {
-            bundle = ai.metaData;
-        }
-        ThemeName = bundle.getString("Layers_Name");
-        Description = bundle.getString("Layers_Description");
-        OverlayNameString = bundle.getString("Layers_OverlayNames");
-        OverlayColorString = bundle.getString("Layers_Colors");
-        WhatsNew = bundle.getString("Layers_WhatsNew");
-        NormalOverlayNameString = bundle.getString("Layers_NormalOverlays");
-        StyleSpecificOverlayString = bundle.getString("Layers_StyleSpecificOverlays");
-
-
-        //Use the received data
-        ThemeFolder = Environment.getExternalStorageDirectory() + "/Overlays/" + ThemeName.replaceAll(" ", "") + "/";
-        ThemeFolderGeneral = ThemeFolder + "General/";
-
-
-        if (OverlayNameString != null) {
-            OverlayNameList = new ArrayList<>(Arrays.asList(OverlayNameString.split(",")));
-        } else {
-            if (!NormalOverlayNameString.isEmpty()) {
-                OverlayNameList = new ArrayList<>(Arrays.asList(NormalOverlayNameString.split(",")));
-                OverlayNameList.add(" ");
-                if (!StyleSpecificOverlayString.isEmpty()) {
-                    OverlayNameList.addAll(Arrays.asList(StyleSpecificOverlayString.split(",")));
-                }
-            } else {
-                if (StyleSpecificOverlayString != null) {
-                    OverlayNameList = new ArrayList<>();
-                    OverlayNameList.add(" ");
-                    OverlayNameList.addAll(Arrays.asList(StyleSpecificOverlayString.split(",")));
-                }
-            }
-        }
-
-        List<String> OverlayColorList = null;
-        if (OverlayColorString != null) {
-            OverlayColorList = new ArrayList<>(Arrays.asList(OverlayColorString.split(",")));
-        }
-
-        if (OverlayNameList != null) {
-            NumberOfOverlays = OverlayNameList.indexOf(" ");
-            NumberOfColorOverlays = OverlayNameList.size() - OverlayNameList.indexOf(" ") - 1;
-        }
-
-
-        NumberOfColors = OverlayColorList.size();
 
         TextView tv_description = (TextView) cordLayout.findViewById(R.id.HeX1);
-        tv_description.setText(Description);
+        tv_description.setText(layer.getDescription());
 
         TextView tv_whatsNew = (TextView) cordLayout.findViewById(R.id.tv_whatsNew);
-        tv_whatsNew.setText(WhatsNew);
+        tv_whatsNew.setText(layer.getWhatsNew());
 
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) cordLayout.findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle(ThemeName);
+        collapsingToolbar.setTitle(layer.getName());
 
-        for (int i = 0; i < OverlayColorList.size(); i++) {
-            OverlayColorListPublic.add(OverlayColorList.get(i));
-        }
-        for (int i = 0; i < NumberOfColorOverlays + NumberOfOverlays + 1; i++) {
-            //OverlayPathList.add(null);
-            InstallOverlayList.add(0);
-        }
     }
 
     private void createLayouts() {
-        //switch
+        //switch to select all Checkboxes
         installEverything = (Switch) cordLayout.findViewById(R.id.allswitch);
 
         //Hide the FAB
-        fab2 = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab2);
-        fab2.hide();
+        installationFAB = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab2);
+        installationFAB.hide();
 
         //Initialize Layout
         Toolbar toolbar = (Toolbar) cordLayout.findViewById(R.id.toolbar);
@@ -380,10 +183,9 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_back);
 
 
-        fab2.setOnClickListener(new View.OnClickListener() {
+        installationFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fab2.setClickable(false);
                 installTheme();
             }
         });
@@ -393,7 +195,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
                 if (isChecked) {
                     checkall();
                 } else {
-                    UncheckAllCheckBoxes("Uncheck");
+                    uncheckAllCheckBoxes();
                 }
             }
         });
@@ -402,41 +204,29 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
     private void getIntent() {
         Bundle bundle2 = this.getArguments();
-        if (bundle2 != null) {
-            category = bundle2.getString(com.lovejoy777.rroandlayersmanager.menu.BUNDLE_EXTRAS_CATEGORY);
-            package2 = bundle2.getString(menu.BUNDLE_EXTRAS_PACKAGENAME);
+        layerPackageName = bundle2.getString("PackageName");
+        try {
+            layer = Layer.layerFromPackageName(layerPackageName, getActivity().getApplicationContext());
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            throw new RuntimeException();
         }
+        Log.d("PackageName: ", layerPackageName);
     }
 
     private void loadBackdrop() {
+
         ImageView imageView = (ImageView) cordLayout.findViewById(R.id.backdrop);
 
+        Drawable promo = layer.getPromo();
 
-        final String packName = package2;
-        String mDrawableName = "heroimage";
-        PackageManager manager = getActivity().getPackageManager();
-        Resources mApk1Resources = null;
-        try {
-            mApk1Resources = manager.getResourcesForApplication(packName);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        int mDrawableResID = 0;
-        if (mApk1Resources != null) {
-            mDrawableResID = mApk1Resources.getIdentifier(mDrawableName, "drawable", packName);
-        }
-        Drawable myDrawable = mApk1Resources.getDrawable(mDrawableResID);
-        //ImageView imageView = (ImageView) cordLayout.findViewById(R.id.backdrop);
-        if (myDrawable != null) {
-            imageView.setImageDrawable(myDrawable);
-        }
+        imageView.setImageDrawable(promo);
+
         final CollapsingToolbarLayout Collapsingtoolbar = (CollapsingToolbarLayout) cordLayout.findViewById(R.id.collapsing_toolbar);
 
-
-        Palette.from(((BitmapDrawable) myDrawable).getBitmap()).generate(new Palette.PaletteAsyncListener() {
+        Palette.from(((BitmapDrawable) promo).getBitmap()).generate(new Palette.PaletteAsyncListener() {
             public void onGenerated(Palette palette) {
                 Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
-                Palette.Swatch test = palette.getLightVibrantSwatch();
                 if (vibrantSwatch != null) {
                     Collapsingtoolbar.setContentScrimColor(vibrantSwatch.getRgb());
                     float[] hsv = new float[3];
@@ -445,9 +235,6 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
                     //int colorPrimaryDark = Color.HSVToColor(hsv);
                     Window window = getActivity().getWindow();
                     window.setStatusBarColor(Color.HSVToColor(hsv));
-
-
-
                 }
             }
         });
@@ -472,11 +259,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
             public void onAnimationEnd(Animator animation) {
                 if (isAdded()) {
                     loadOverlayCardviews();
-                    createThemeFolder();
-                    generateFilepaths();
                 }
-
-
             }
 
             @Override
@@ -495,71 +278,27 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     private void loadBackdrop2() {
         final ImageView imageView = (ImageView) cordLayout.findViewById(R.id.backdrop);
         imageView.setBackgroundResource(R.drawable.no_heroimage);
-
     }
 
     private void loadScreenshots() {
-
         imageLoader = new LoadDrawables();
         imageLoader.execute();
-
-    }
-
-
-    private void bindOpService() {
-        if (category != null) {
-            opServiceConnection = new OpServiceConnection();
-            Intent i = new Intent(menu.ACTION_PICK_PLUGIN);
-            ResolveInfo info = getActivity().getPackageManager().resolveService(i, Context.BIND_AUTO_CREATE);
-            i.setComponent(new ComponentName(package2, package2 + "." + category));
-            i.addCategory(category);
-            getActivity().bindService(i, opServiceConnection, Context.BIND_AUTO_CREATE);
-        }
-    }
-
-    private void releaseOpService() {
-        getActivity().unbindService(opServiceConnection);
-        opServiceConnection = null;
-    }
-
-    private OpServiceConnection opServiceConnection;
-
-    private static final String LOG_TAG = "InvokeOp";
-
-    class OpServiceConnection implements ServiceConnection {
-        public void onServiceConnected(ComponentName className,
-                                       IBinder boundService) {
-            opService = IOperation.Stub.asInterface(boundService);
-            Log.d(LOG_TAG, "onServiceConnected");
-            loadBackdrop();
-
-
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            opService = null;
-            Log.d(LOG_TAG, "onServiceDisconnected");
-            //onBackPressed();
-            loadBackdrop2();
-        }
     }
 
     //If FAB is clicked
     public void installTheme() {
 
-        int NumberOfSelectedNormalOverlays = 0;
-        for (int i = 0; i < NumberOfOverlays; i++) {
-            NumberOfSelectedNormalOverlays = NumberOfSelectedNormalOverlays + InstallOverlayList.get(i);
-        }
+        boolean isThereColorOverlay = false;
 
-        int NumberOfSelectedColorOverlays = 0;
-
-        for (int i = NumberOfOverlays + 1; i < NumberOfOverlays + NumberOfColorOverlays + 1; i++) {
-            NumberOfSelectedColorOverlays = NumberOfSelectedColorOverlays + InstallOverlayList.get(i);
+        for (CheckBox checkBox : checkBoxes) {
+            if (checkBox.isChecked() && ((LayerFile) checkBox.getTag()).isColor()) {
+                isThereColorOverlay = true;
+                break;
+            }
         }
 
         //when a color checkbox is checked
-        if (NumberOfSelectedColorOverlays != 0) {
+        if (isThereColorOverlay) {
             colorDialog();
         }
         //if only normal Overlays are selected
@@ -579,56 +318,29 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         return super.onOptionsItemSelected(item);
     }
 
-    private void UncheckAllCheckBoxes(String Mode) {
+    private void uncheckAllCheckBoxes() {
 
-        if (Mode.equals("Uncheck")) {
+        for (CheckBox checkBox : checkBoxes) {
 
-            fab2.hide();
-
-            for (int i = 0; i < NumberOfOverlays; i++) {
-                CheckBox checkBox = (CheckBox) cordLayout.findViewById(i);
-                checkBox.setChecked(false);
-                InstallOverlayList.set(i, 0);
+            if (checkBox.isChecked()) {
+                checkBox.performClick();
             }
 
-            for (int i = NumberOfOverlays + 1; i < NumberOfColorOverlays + NumberOfOverlays + 1; i++) {
-                CheckBox checkBox = (CheckBox) cordLayout.findViewById(i);
-                checkBox.setChecked(false);
-                InstallOverlayList.set(i, 0);
-            }
         }
 
-        if (Mode.equals("Disable")) {
-            //disable all Checkboxes
-            for (int i = 0; i < NumberOfOverlays; i++) {
-                CheckBox checkBox = (CheckBox) cordLayout.findViewById(i);
-                checkBox.setEnabled(false);
-            }
-
-            for (int i = NumberOfOverlays + 1; i < NumberOfColorOverlays + NumberOfOverlays + 1; i++) {
-                CheckBox checkBox = (CheckBox) cordLayout.findViewById(i);
-                checkBox.setEnabled(false);
-            }
-        }
     }
 
     private void checkall() {
 
-        fab2.show();
+        installationFAB.show();
 
-        for (int i = 0; i < NumberOfOverlays; i++) {
-            CheckBox checkBox = (CheckBox) cordLayout.findViewById(i);
-            checkBox.setChecked(true);
-            InstallOverlayList.set(i, 1);
+        for (CheckBox checkBox : checkBoxes) {
+            if (!checkBox.isChecked()) {
+                checkBox.performClick();
+            }
         }
 
-        for (int i = NumberOfOverlays + 1; i < NumberOfColorOverlays + NumberOfOverlays + 1; i++) {
-            CheckBox checkBox = (CheckBox) cordLayout.findViewById(i);
-            checkBox.setChecked(true);
-            InstallOverlayList.set(i, 1);
-        }
     }
-
 
 
     ///////////
@@ -673,16 +385,10 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
                 }
 
                 //start async task to install the Overlays
-                //(new InstallOverlays()).execute();
                 InstallAsyncOverlays();
             }
         });
-        installdialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                UncheckAllCheckBoxes("Uncheck");
-                installEverything.setChecked(false);
-            }
-        });
+        installdialog.setNegativeButton(android.R.string.cancel, null);
 
         SharedPreferences myprefs = getActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
         String skipMessage = myprefs.getString("ConfirmInstallationDialog", "unchecked");
@@ -690,44 +396,37 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
             installdialog.show();
         } else {
             InstallAsyncOverlays();
-            //(new InstallOverlays()).execute();
         }
     }
 
     private void InstallAsyncOverlays() {
 
-        ArrayList<Integer> OldInstallOverlay = new ArrayList<>(InstallOverlayList);
+        List<LayerFile> layersToInstall = new ArrayList<>();
 
-            //install Normal Overlays
-            for (int i = 0; i < NumberOfOverlays; i++) {
-                if (InstallOverlayList.get(i) == 1) {
-                    InstallOverlayList.set(i, 0);
-                    paths.add(ThemeFolderGeneral + OverlayPathList.get(i));
-                }
+        for (CheckBox checkBox : checkBoxes) {
+
+            if (checkBox.isChecked()) {
+                LayerFile layerFile = (LayerFile) checkBox.getTag();
+                layersToInstall.add(layerFile);
             }
 
-            //install Color Specific Overlays
-            for (int i4 = NumberOfOverlays + 1; i4 < NumberOfOverlays + NumberOfColorOverlays + 1; i4++) {
-                if (InstallOverlayList.get(i4) == 1) {
-                    InstallOverlayList.set(i4, 0);
-                    paths.add(ThemeFolder+whichColor+"/"+OverlayPathList.get(i4));
-                }
-            }
-        Commands.InstallOverlays asyncTask = new Commands.InstallOverlays("Plugin",getActivity(),ThemeName.replace(" ",""),paths,package2,NumberOfOverlays,NumberOfColorOverlays, OldInstallOverlay,whichColor, this);
-        asyncTask.execute();
+        }
+
+        Log.d("Choosed color", choosedStyle);
+
+        new Commands.InstallOverlaysBetterWay(layersToInstall, choosedStyle, getActivity(), this).execute();
+
+
     }
 
-    public void processFinish(){
-        fab2.setClickable(true);
+    public void processFinish() {
         installationFinishedSnackBar();
-        UncheckAllCheckBoxes("Uncheck");
-        paths.clear();
+        uncheckAllCheckBoxes();
         installEverything.setChecked(false);
     }
 
     //Dialog to choose color
     public void colorDialog() {
-
 
         final AlertDialog.Builder colorDialog = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -735,59 +434,50 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         View colordialogView = inflater.inflate(R.layout.dialog_colors, null);
         colorDialog.setView(colordialogView);
 
-        for (int i = 0; i < NumberOfColors; i++) {
+        final RadioGroup radioGroup = (RadioGroup) colordialogView.findViewById(R.id.radiogroup);
 
-            RadioGroup my_layout = (RadioGroup) colordialogView.findViewById(R.id.radiogroup);
+        RadioGroup.LayoutParams params
+                = new RadioGroup.LayoutParams(getActivity(), null);
 
-            RadioGroup.LayoutParams params
-                    = new RadioGroup.LayoutParams(getActivity(), null);
+        params.leftMargin = 66;
+        params.topMargin = 2;
+        params.bottomMargin = 2;
+        params.width = RadioGroup.LayoutParams.MATCH_PARENT;
 
-            params.leftMargin = 66;
-            params.topMargin = 2;
-            params.bottomMargin = 2;
-            params.width = RadioGroup.LayoutParams.MATCH_PARENT;
-
-            int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 44, getResources().getDisplayMetrics());
-            params.height = height;
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 44, getResources().getDisplayMetrics());
+        params.height = height;
 
 
-            RadioButton radioButton = new RadioButton(getActivity());
+        final List<String> colors = layer.getColors();
 
-            radioButton.setText(OverlayColorListPublic.get(i));
-            radioButton.setId(i);
-            radioButton.setTag("r" + i);
+        for (final String color : colors) {
+
+            final RadioButton radioButton = new RadioButton(getActivity());
+
+            radioButton.setText(color);
             radioButton.setLayoutParams(params);
             radioButton.setTextSize(18);
+            radioButton.setTag(color);
 
-            my_layout.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            radioGroup.addView(radioButton);
+
+            radioButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-                    whichColor = OverlayColorListPublic.get(checkedId);
+                public void onClick(View v) {
+                    choosedStyle = (String) v.getTag();
                 }
             });
 
-            if (i == 0) {
-                radioButton.setChecked(true);
+            if (colors.indexOf(color) == 0) {
+                radioButton.performClick();
             }
-            my_layout.addView(radioButton);
+
         }
 
         colorDialog.setCancelable(false);
         colorDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                int whichRadioButton = 0;
-                SharedPreferences myPrefs = getActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-                for (int e = 0; e < NumberOfColors; e++) {
-                    if (whichColor.equals(OverlayColorListPublic.get(e))) {
-                        whichRadioButton = e;
-
-                    }
-                }
-                SharedPreferences.Editor editor = myPrefs.edit();
-                editor.putInt("ColorDialogRadioButton", whichRadioButton);
-                editor.apply();
                 installDialog();
             }
         });
@@ -795,8 +485,6 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                UncheckAllCheckBoxes("Uncheck");
-                installEverything.setChecked(false);
                 dialog.dismiss();
             }
 
@@ -806,151 +494,77 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         colorDialog.show();
     }
 
-
-    private class LoadDrawables extends AsyncTask<Void, Void, Void> {
-
-
-        protected void onPreExecute() {
-
+    @Override
+    public void onDestroyView() {
+        loadBackdrop2();
+        if (imageLoader.getStatus() != AsyncTask.Status.FINISHED) {
+            imageLoader.cancel(true);
+        }
+        try {
+            layer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
+        super.onDestroyView();
+    }
+
+    private class LoadDrawables extends AsyncTask<Void, Drawable, Void> {
+
+        LinearLayout screenshotLayout;
+
+        @Override
+        protected void onPreExecute() {
+            screenshotLayout = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutScreenshots);
+        }
+
+        @Override
+        protected void onProgressUpdate(Drawable... values) {
+
+            for (Drawable screenshot : values) {
+
+                ImageView screenshotImageView;
+
+                try {
+                    screenshotImageView = new ImageView(getActivity());
+                } catch (NullPointerException e) {
+                    continue;
+                }
+
+                Bitmap bitmap = ((BitmapDrawable) screenshot).getBitmap();
+
+                //TODO: Rewrite
+                if (bitmap.getHeight() > 1000) {
+                    screenshotImageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * 0.4), (int) (bitmap.getHeight() * 0.4), true));
+                } else {
+                    screenshotImageView.setImageBitmap(bitmap);
+                }
+
+                LinearLayout linear = new LinearLayout(getActivity());
+
+                linear.addView(screenshotImageView);
+                screenshotLayout.addView(linear);
+            }
+
+        }
 
         @Override
         protected Void doInBackground(Void... params) {
 
-            for (int i = 0; i < NumberOfScreenshotsMain; i++) {
+            Pair<Integer, Drawable> pair;
 
+            while ((pair = layer.getNextScreenshot()).first != 0) {
 
-
-                Drawable Screenshots[] = new Drawable[NumberOfScreenshotsMain];
-                int j = i + 1;
-                final String packName = package2;
-                String mDrawableName = "screenshot" + j;
-                PackageManager manager = getActivity().getPackageManager();
-                Resources mApk1Resources = null;
-                try {
-                    mApk1Resources = manager.getResourcesForApplication(packName);
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
+                if (isCancelled()) {
+                    break;
                 }
 
-                int mDrawableResID = 0;
-                if (mApk1Resources != null) {
-                    mDrawableResID = mApk1Resources.getIdentifier(mDrawableName, "drawable", packName);
-                }
-
-                if (mApk1Resources != null) {
-                    //InputStream is = getResources().openRawResource(mApk1Resources.getDrawable(mDrawableResID));
-                    myDrawable = mApk1Resources.getDrawable(mDrawableResID);
-                    //Bitmap b1 = BitmapFactory.decodeResource(mApk1Resources.getDrawable(mDrawableResID));
-                }
-                //Screenshots[i] = myDrawable;
-                //myDrawable = null;
-                bitmap[i] = ((BitmapDrawable) myDrawable).getBitmap();
-                myDrawable = null;
-                //Screenshots[i] = null;
+                publishProgress(pair.second);
 
             }
+
             return null;
-
         }
 
-        protected void onPostExecute(Void result) {
-            if (isAdded()) {
-                for (int i = 0; i < NumberOfScreenshotsMain; i++) {
-
-                    if (bitmap[i].getHeight() > 1000){
-                        ScreenshotimageView[i].setImageBitmap(Bitmap.createScaledBitmap(bitmap[i], (int) (bitmap[i].getWidth() * 0.4), (int) (bitmap[i].getHeight() * 0.4), true));
-                    }else{
-                        ScreenshotimageView[i].setImageBitmap(bitmap[i]);
-                    }
-
-                    bitmap[i] = null;
-                    Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fadein);
-                    ScreenshotimageView[i].startAnimation(fadeInAnimation);
-                }
-            }
-        }
-    }
-
-
-    /*public void appendLog(List<String> text)
-    {
-        String filename = "OverlayLog";
-        File logFile = new File(OverlayDetailActivity.this.getFilesDir(), filename);
-        if (!logFile.exists())
-        {
-            try
-            {
-                logFile.createNewFile();
-            }
-            catch (IOException e)
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        try
-        {
-            //BufferedWriter for performance, true to set append to file flag
-            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
-            buf.append(" // "+ThemeName + " ,"+text.toString()+" // "/*.replace(ThemeName+"_","").replace(" ", ""));
-            //buf.newLine();
-            buf.close();
-        }
-        catch (IOException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        readLog();
-    }
-    public  void readLog() {
-        String filename = "OverlayLog";
-        //Get the text file
-        File logFile = new File(OverlayDetailActivity.this.getFilesDir(), filename);
-        //Read text from file
-        StringBuilder text = new StringBuilder();
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(logFile));
-            String line;
-            while ((line = br.readLine()) != null) {
-                text.append(line);
-                text.append('\n');
-            }
-            br.close();
-        } catch (IOException e) {
-            //You'll need to add proper error handling here
-        }
-        String test = text.toString().replaceAll("\\[","").replaceAll("\\]","").replaceAll(" , ","");
-        System.out.println("Test "+test);
-        InstalledOverlays = new ArrayList<>(Arrays.asList(test.split("//")));
-        System.out.println(InstalledOverlays.get(0));
-        //String Splitted = InstalledOverlays.toString();
-        //int position = -1;
-        for (int i = 0; i < InstalledOverlays.size()-2; i++){
-            String Splitted = InstalledOverlays.get(i+1).toString();
-            List<String> SplitedList = new ArrayList<>(Arrays.asList(Splitted.replaceAll(" ","").split(",")));
-            if (SplitedList.get(0).contains(ThemeName.replaceAll(" ",""))){
-                i = InstalledOverlays.size()-2;
-                SplitedList.remove(0);
-                System.out.println("YEAHHH"+SplitedList);
-            }
-        }
-    }*/
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        releaseOpService();
-    }
-
-    public void onInstallationFinished(){
-        //cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_plugindetail, container, false);
-        //fab2 = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab2);
-        fab2.setClickable(true);
-        installationFinishedSnackBar();
-         UncheckAllCheckBoxes("Uncheck");
-        installEverything.setChecked(false);
     }
 }
