@@ -60,7 +60,7 @@ public class LayerFile {
 
         File destFile = new File(tempDir +
                 File.separator + layer.getName() + "_" + color +
-                File.separator + layer.getName() + "_" + fileName + ".apk");
+                File.separator + (layer.getName() + "_" + fileName + ".apk").replaceAll(" ", ""));
 
 
         if (!destFile.exists()) {
