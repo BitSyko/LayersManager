@@ -73,7 +73,7 @@ Copyright (c) 2015 Aidan Michael Follestad\n\nPermission is hereby granted, free
   <string name="installed">Zainstalowano wybrane Nakładki</string>
   <string name="UninstallOverlays">Odinstaluj Nakładki</string>
   <string name="selectAll">Wybierz wszystko</string>
-  <string name="nothingApplied">Nie zastosowano żadnych Nakłdek.\nZainstaluj jakieś na ekranie głównym.</string>
+  <string name="nothingApplied">Nie zastosowano żadnych Nakładek.\nZainstaluj jakieś na ekranie głównym.</string>
   <string name="appliedOverlays">Zastosowane Nakładki:</string>
   <string name="OverlaysSelected">Wybrane Nakładki</string>
   <string name="PreformReboot">Wykonać miękki restart?</string>
