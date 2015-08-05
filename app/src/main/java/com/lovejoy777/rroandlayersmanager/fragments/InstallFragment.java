@@ -40,7 +40,7 @@ public class InstallFragment extends Fragment implements AsyncResponse {
     private CoordinatorLayout cordLayout = null;
     View.OnClickListener onclicklistener = new View.OnClickListener() {
         public void onClick(View v) {
-            Object clickedOn = v.getTag()/*.toString()*/;
+            String clickedOn = (String) v.getTag();
             Filedirectories.subList(Filedirectories.indexOf(clickedOn) + 1, Filedirectories.size()).clear();
             //System.out.println(Filedirectories.indexOf(clickedOn));
             LinearLayout HscrollView = (LinearLayout) cordLayout.findViewById(R.id.horizontalScrollView2);
