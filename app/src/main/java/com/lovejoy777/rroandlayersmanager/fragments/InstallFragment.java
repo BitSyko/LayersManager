@@ -113,8 +113,7 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
             }
         }
 
-        Commands.InstallOverlays asyncTask = new Commands.InstallOverlays("Normal", getActivity(), "0", paths, null, 0, 0, null, null, this);
-        asyncTask.execute();
+        new Commands.InstallZipBetterWay(getActivity(), this).execute(paths.toArray(new String[paths.size()]));
     }
 
     public void processFinish() {

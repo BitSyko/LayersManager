@@ -39,7 +39,7 @@ public class BackupRestoreFragment extends Fragment {
 
     private static final String TAG = null;
     FloatingActionButton fab2;
-    private ArrayList<String> Files = new ArrayList<>();
+    private ArrayList<String> files = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private CardViewAdapter3 mAdapter;
     private CoordinatorLayout cordLayout = null;
@@ -208,7 +208,8 @@ public class BackupRestoreFragment extends Fragment {
                     installdialog.setMessage(Html.fromHtml(getResources().getString(R.string.DoYouWantToRestore)));
                     installdialog.setPositiveButton(R.string.restore, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            new RestoreOverlays().execute(layerBackupName);
+                            new Commands.InstallZipBetterWay(BackupRestoreFragment.this.getActivity(), null)
+                                    .execute(Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + layerBackupName + "/overlay.zip");
                         }
                     });
                     installdialog.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
@@ -323,8 +324,6 @@ public class BackupRestoreFragment extends Fragment {
 
                 String sdOverlays = Environment.getExternalStorageDirectory() + "/Overlays";
 
-                ArrayList<String> backedupOverlays = Commands.loadFiles("/system/vendor/overlay");
-
                 // CREATES /SDCARD/OVERLAYS/BACKUP/TEMP
                 File dir1 = new File(sdOverlays + "/Backup/temp");
                 if (!dir1.exists() && !dir1.isDirectory()) {
@@ -354,11 +353,6 @@ public class BackupRestoreFragment extends Fragment {
 
                 // ZIP OVERLAY FOLDER
                 zipFolder(Environment.getExternalStorageDirectory() + "/Overlays/Backup/temp/overlay", Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + backupname + "/overlay.zip");
-
-                FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + backupname + "/content.txt");
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
-                oos.writeObject(backedupOverlays);
-                oos.close();
 
                 // CHANGE PERMISSIONS OF /VENDOR/OVERLAY/ 666  && /VENDOR/OVERLAY 777 && /SDCARD/OVERLAYS/BACKUP/ 666
                 CommandCapture command18 = new CommandCapture(0, "chmod 777 " + Environment.getExternalStorageDirectory() + "/Overlays/Backup/temp");
@@ -397,85 +391,6 @@ public class BackupRestoreFragment extends Fragment {
         }
     }
 
-    private class RestoreOverlays extends AsyncTask<String, String, Void> {
-        ProgressDialog progressBackup;
-
-        protected void onPreExecute() {
-
-            progressBackup = ProgressDialog.show(getActivity(), getString(R.string.Restore),
-                    getString(R.string.restoring) + "...", true);
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            String SZP = params[0];
-            SZP = Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + SZP + "/overlay.zip";
-            System.out.println(SZP);
-            try {
-
-                RootTools.remount("/system", "RW");
-
-                // MK DIR /SDCARD/OVERLAYS/BACKUP/TEMP
-                CommandCapture command4 = new CommandCapture(0, "mkdir" + Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp");
-
-                RootTools.getShell(true).add(command4);
-                while (!command4.isFinished()) {
-                    Thread.sleep(1);
-                }
-
-                // MK DIR /SDCARD/OVERLAYS/BACKUP/TEMP/OVERLAY
-                CommandCapture command5 = new CommandCapture(0, "mkdir" + Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp/overlay");
-
-                RootTools.getShell(true).add(command5);
-                while (!command5.isFinished()) {
-                    Thread.sleep(1);
-                }
-
-                // UNZIP SZP TO /SDCARD/OVERLAYS/BACKUP/TEMP/OVERLAY FOLDER
-                Commands.unzipNormalOverlays(SZP, Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp/overlay");
-
-                // MOVE STUFF FROM /SDCARD/OVERLAYS/BACKUP/TEMP/OVERLAY TO /SYSTEM/VENDOR/OVERLAY
-                RootCommands.moveRoot(Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp/overlay/*", "/system/vendor/overlay");
-
-                // DELETE /SDCARD/OVERLAYS/BACKUP/TEMP FOLDER
-                RootCommands.DeleteFileRoot(Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp");
-
-                // CHANGE PERMISSIONS OF /VENDOR/OVERLAY/ 666  && /VENDOR/OVERLAY 777 && /SDCARD/OVERLAYS/BACKUP/ 666
-                CommandCapture command7 = new CommandCapture(0, "chmod -R 666 /system/vendor/overlay", "chmod 755 /system/vendor/overlay", "chmod -R 666" + Environment.getExternalStorageDirectory() + "/Overlays/Backup");
-                RootTools.getShell(true).add(command7);
-                while (!command7.isFinished()) {
-                    Thread.sleep(1);
-                }
-
-                RootTools.remount("/system", "RO");
-
-                // CLOSE ALL SHELLS
-                RootTools.closeAllShells();
-
-            } catch (IOException | RootDeniedException | TimeoutException | InterruptedException e) {
-                e.printStackTrace();
-            }
-            return null;
-
-        }
-
-        protected void onPostExecute(Void result) {
-
-            progressBackup.dismiss();
-            CoordinatorLayout coordinatorLayoutView = (CoordinatorLayout) cordLayout.findViewById(R.id.main_content4);
-            Snackbar.make(coordinatorLayoutView, getResources().getString(R.string.restored), Snackbar.LENGTH_LONG)
-                    .setAction(R.string.Reboot, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            Commands.reboot(getActivity());
-                        }
-                    })
-                    .show();
-            new LoadAndSet().execute();
-        }
-    }
-
     private class LoadAndSet extends AsyncTask<String, String, Void> {
 
 
@@ -485,8 +400,8 @@ public class BackupRestoreFragment extends Fragment {
         @Override
         protected Void doInBackground(String... params) {
 
-            Files.clear();
-            Files = Commands.loadFolders(Environment.getExternalStorageDirectory() + "/Overlays/Backup");
+            files.clear();
+            files = Commands.loadFolders(Environment.getExternalStorageDirectory() + "/Overlays/Backup");
 
             return null;
 
@@ -494,9 +409,9 @@ public class BackupRestoreFragment extends Fragment {
 
         protected void onPostExecute(Void result) {
 
-            mAdapter = new CardViewAdapter3(Files, R.layout.adapter_backups, getActivity());
+            mAdapter = new CardViewAdapter3(files, R.layout.adapter_backups, getActivity());
             mRecyclerView.setAdapter(mAdapter);
-            if (Files == null) {
+            if (files == null) {
                 ImageView noOverlays = (ImageView) cordLayout.findViewById(R.id.imageView);
                 TextView noOverlaysText = (TextView) cordLayout.findViewById(R.id.textView7);
                 noOverlays.setVisibility(View.VISIBLE);
