@@ -684,14 +684,14 @@ public class Commands {
 
             try {
                 // Create vendor Overlay Folder
-                CommandCapture command7 = new CommandCapture(0, "mkdir /vendor/overlay");
+                CommandCapture command7 = new CommandCapture(0, "mkdir /system/vendor/overlay");
                 RootTools.getShell(true).add(command7);
                 while (!command7.isFinished()) {
                     Thread.sleep(1);
                 }
 
                 // CHANGE PERMISSIONS TO 777
-                CommandCapture command8 = new CommandCapture(0, "chmod -R 777 /vendor/overlay");
+                CommandCapture command8 = new CommandCapture(0, "chmod -R 777 /system/vendor/overlay");
                 RootTools.getShell(true).add(command8);
                 while (!command8.isFinished()) {
                     Thread.sleep(1);
@@ -721,7 +721,7 @@ public class Commands {
 
             try {
                 // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 644 RECURING
-                CommandCapture command9 = new CommandCapture(0, "chmod -R 644 /vendor/overlay");
+                CommandCapture command9 = new CommandCapture(0, "chmod -R 644 /system/vendor/overlay");
                 RootTools.getShell(true).add(command9);
                 while (!command9.isFinished()) {
                     Thread.sleep(1);
@@ -729,7 +729,7 @@ public class Commands {
 
 
                 // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER BACK TO 755
-                CommandCapture command10 = new CommandCapture(0, "chmod 755 /vendor/overlay");
+                CommandCapture command10 = new CommandCapture(0, "chmod 755 /system/vendor/overlay");
                 RootTools.getShell(true).add(command10);
                 while (!command10.isFinished()) {
                     Thread.sleep(1);

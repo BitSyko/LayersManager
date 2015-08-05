@@ -32,9 +32,6 @@ import com.lovejoy777.rroandlayersmanager.commands.Commands;
 
 import java.util.ArrayList;
 
-/**
- * Created by lovejoy777 on 13/06/15.
- */
 public class UninstallFragment extends Fragment implements MaterialCab.Callback, AsyncResponse {
 
     FloatingActionButton fab2;
