@@ -114,7 +114,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
             CheckBox check = new CheckBox(getActivity());
 
-            check.setText(layerFile.getName());
+            check.setText(layerFile.getNiceName());
             check.setTag(layerFile);
 
             row.addView(check);

@@ -80,6 +80,10 @@ public class LayerFile {
         return name;
     }
 
+    public String getNiceName() {
+        return name.replaceAll("_", " ");
+    }
+
     public boolean isColor() {
         return color;
     }

@@ -197,8 +197,9 @@ public class BackupRestoreFragment extends Fragment {
         @Override
         public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
 
-            viewHolder.themeName.setText(themes.get(i).replace(".apk", "").replace("_", " "));
-            viewHolder.themeName.setTag(themes.get(i));
+            final String layerBackupName = themes.get(i);
+
+            viewHolder.themeName.setText(layerBackupName);
             viewHolder.themeName.setId(i);
             viewHolder.themeName.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -207,23 +208,23 @@ public class BackupRestoreFragment extends Fragment {
                     installdialog.setMessage(Html.fromHtml(getResources().getString(R.string.DoYouWantToRestore)));
                     installdialog.setPositiveButton(R.string.restore, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            new RestoreOverlays().execute(Files.get(i));
+                            new RestoreOverlays().execute(layerBackupName);
                         }
                     });
                     installdialog.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            new DeleteBackup().execute(Files.get(i));
+                            new DeleteBackup().execute(layerBackupName);
                         }
                     });
                     installdialog.setNeutralButton(R.string.show, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             AlertDialog.Builder contentDialog = new AlertDialog.Builder(getActivity());
-                            contentDialog.setTitle(themes.get(i) + " " + getString(R.string.contains));
+                            contentDialog.setTitle(layerBackupName + " " + getString(R.string.contains));
                             try {
 
                                 String overlays = "";
 
-                                ArrayList<String> files = Commands.fileNamesFromZip(new File(Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + themes.get(i) + "/overlay.zip"));
+                                ArrayList<String> files = Commands.fileNamesFromZip(new File(Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + layerBackupName + "/overlay.zip"));
 
                                 for (int i = 0; i < files.size(); i++) {
                                     if (i == 0) {
@@ -232,7 +233,6 @@ public class BackupRestoreFragment extends Fragment {
                                         overlays = overlays + "\n" + files.get(i);
                                     }
                                 }
-
 
                                 contentDialog.setMessage(overlays.replace(".apk", "").replaceAll("_", " "));
                             } catch (IOException e) {
@@ -253,7 +253,7 @@ public class BackupRestoreFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return themes == null ? 0 : themes.size();
+            return themes.size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
