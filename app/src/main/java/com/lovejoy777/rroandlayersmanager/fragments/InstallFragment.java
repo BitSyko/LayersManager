@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
@@ -88,7 +89,6 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
             public void onClick(View v) {
                 fab2.setClickable(false);
                 InstallAsyncOverlays();
-                //new InstallOverlays().execute();
             }
         });
     }
@@ -183,7 +183,7 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
             }
             currentDir = BaseDir + currentDir;
 
-            ArrayList<String> loadedFiles = new ArrayList<String>();
+            ArrayList<String> loadedFiles = new ArrayList<>();
 
             loadedFiles.addAll(Commands.loadFiles(currentDir));
 
@@ -261,7 +261,7 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
                     img.setLayoutParams(params2);
                 }
             }
-            System.out.println("DIR: " + currentDir);
+            Log.d("DIR", currentDir);
         }
     }
 

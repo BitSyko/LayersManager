@@ -290,47 +290,19 @@ public class menu extends AppCompatActivity {
 
 
     private void createImportantDirectories() {
-        String sdOverlays = Environment.getExternalStorageDirectory() + "/Overlays";
-        String sdcard = Environment.getExternalStorageDirectory() + "";
-
-        RootTools.remount(sdcard, "RW");
-
-        // CREATES /SDCARD/OVERLAYS
-        File dir = new File(sdOverlays);
-        if (!dir.exists() && !dir.isDirectory()) {
-            CommandCapture command3 = new CommandCapture(0, "mkdir " + sdOverlays);
-            try {
-                RootTools.getShell(true).add(command3);
-                while (!command3.isFinished()) {
-                    Thread.sleep(1);
-                }
-
-            } catch (IOException | TimeoutException | InterruptedException | RootDeniedException e) {
-                e.printStackTrace();
-            }
-        }
 
         String sdOverlays1 = Environment.getExternalStorageDirectory() + "/Overlays/Backup";
         // CREATES /SDCARD/OVERLAYS/BACKUP
         File dir1 = new File(sdOverlays1);
-        if (!dir1.exists() && !dir1.isDirectory()) {
-            CommandCapture command4 = new CommandCapture(0, "mkdir " + sdOverlays1);
-            try {
-                RootTools.getShell(true).add(command4);
-                while (!command4.isFinished()) {
-                    Thread.sleep(1);
-                }
 
-            } catch (IOException | TimeoutException | InterruptedException | RootDeniedException e) {
-                e.printStackTrace();
-            }
-        }
+        dir1.mkdirs();
+
 
         RootTools.remount("/system", "RW");
-        String vendover = "/vendor/overlay";
+        String vendover = "/system/vendor/overlay";
         // CREATES /VENDOR/OVERLAY
         File dir2 = new File(vendover);
-        if (!dir2.exists() && !dir2.isDirectory()) {
+        if (!dir2.exists()) {
             CommandCapture command5 = new CommandCapture(0, "mkdir " + vendover);
             try {
                 RootTools.getShell(true).add(command5);
@@ -342,6 +314,9 @@ public class menu extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+
+        RootTools.remount("/system", "RO");
+
     }
 
     @Override

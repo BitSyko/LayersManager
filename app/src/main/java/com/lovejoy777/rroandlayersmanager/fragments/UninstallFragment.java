@@ -11,13 +11,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.*;
-import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
 import com.afollestad.materialcab.MaterialCab;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
@@ -25,16 +21,16 @@ import com.lovejoy777.rroandlayersmanager.beans.FileBean;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class UninstallFragment extends Fragment implements MaterialCab.Callback, AsyncResponse {
 
     private FloatingActionButton fab2;
-    private ArrayList<FileBean> files = new ArrayList<>();
-    private RecyclerView mRecyclerView;
-    private CardViewAdapter3 mAdapter;
+    private LinearLayout mLinearLayout;
     private MaterialCab mCab = null;
     private DrawerLayout mDrawerLayout;
     private CoordinatorLayout cordLayout = null;
+    private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
 
 
     @Override
@@ -72,9 +68,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
     private void loadToolbarRecylcerViewFab() {
 
-        mRecyclerView = (RecyclerView) cordLayout.findViewById(R.id.cardList);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mLinearLayout = (LinearLayout) cordLayout.findViewById(R.id.cardList);
 
         fab2 = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab6);
         fab2.hide();
@@ -91,9 +85,9 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
 
         ArrayList<String> paths = new ArrayList<>();
-        for (FileBean file : files) {
-            if (file.isChecked()) {
-                paths.add("/system/vendor/overlay/" + file.getLocation());
+        for (CheckBox checkBox : checkBoxes) {
+            if (checkBox.isChecked()) {
+                paths.add("/system/vendor/overlay/" + ((FileBean) checkBox.getTag()).getLocation());
             }
         }
 
@@ -104,8 +98,10 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
     //Check and Uncheck all Checkboxes
     private void checkAll() {
 
-        for (FileBean file : files) {
-            file.setChecked(true);
+        for (CheckBox checkBox : checkBoxes) {
+            if (!checkBox.isChecked()) {
+                checkBox.performClick();
+            }
         }
 
         refreshFab();
@@ -113,13 +109,14 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
     private void UncheckAll(boolean calledFromCabFinished) {
 
-        for (FileBean file : files) {
-            file.setChecked(false);
+        for (CheckBox checkBox : checkBoxes) {
+            if (checkBox.isChecked()) {
+                checkBox.performClick();
+            }
         }
 
         if (calledFromCabFinished) {
             fab2.hide();
-            mAdapter.notifyDataSetChanged();
         } else {
             refreshFab();
         }
@@ -153,9 +150,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
     //Overflow Menu
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (!files.isEmpty()) {
-            inflater.inflate(R.menu.overflow, menu);
-        }
+        inflater.inflate(R.menu.overflow, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -178,14 +173,12 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
         }
     }
 
-    private class LoadAndSet extends AsyncTask<Void, Void, Void> {
-
-        protected void onPreExecute() {
-            files.clear();
-        }
+    private class LoadAndSet extends AsyncTask<Void, Void, List<FileBean>> {
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected List<FileBean> doInBackground(Void... params) {
+
+            List<FileBean> files = new ArrayList<>();
 
             ArrayList<String> loadedFiles = new ArrayList<>();
 
@@ -195,19 +188,52 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
                 files.add(new FileBean(file));
             }
 
-            return null;
+            return files;
 
         }
 
-        protected void onPostExecute(Void result) {
+        @Override
+        protected void onPostExecute(List<FileBean> result) {
 
-            mAdapter = new CardViewAdapter3(files, R.layout.adapter_listlayout, getActivity());
-            mRecyclerView.setAdapter(mAdapter);
-            ActivityCompat.invalidateOptionsMenu(getActivity());
+            checkBoxes.clear();
+            mLinearLayout.removeAllViews();
+
+            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+
+            layoutParams.topMargin = 8;
+
+            for (FileBean fileBean : result) {
+
+                TableRow row = new TableRow(getActivity());
+                row.setLayoutParams(layoutParams);
+
+                CheckBox check = new CheckBox(getActivity());
+
+                check.setText(fileBean.getName());
+                check.setTag(fileBean);
+
+                row.addView(check);
+
+                mLinearLayout.addView(row);
+
+                final FileBean finalFileBean = fileBean;
+
+                check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        finalFileBean.setChecked(!finalFileBean.isChecked());
+                        refreshFab();
+                    }
+                });
+
+                checkBoxes.add(check);
+
+            }
+
 
             ImageView noOverlays = (ImageView) cordLayout.findViewById(R.id.imageView);
             TextView noOverlaysText = (TextView) cordLayout.findViewById(R.id.textView7);
-            if (files.isEmpty()) {
+            if (result.isEmpty()) {
                 noOverlays.setVisibility(View.VISIBLE);
                 noOverlaysText.setVisibility(View.VISIBLE);
             }
@@ -220,8 +246,8 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
         int checkedItems = 0;
 
-        for (FileBean fileBean : files) {
-            if (fileBean.isChecked()) {
+        for (CheckBox checkBox : checkBoxes) {
+            if (checkBox.isChecked()) {
                 checkedItems++;
             }
         }
@@ -250,62 +276,6 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
                 mCab = null;
             }
             fab2.hide();
-        }
-
-        mAdapter.notifyDataSetChanged();
-    }
-
-    //Adapter
-    private class CardViewAdapter3 extends RecyclerView.Adapter<CardViewAdapter3.ViewHolder> {
-
-        private ArrayList<FileBean> themes;
-        private int rowLayout;
-        private Context mContext;
-
-        public CardViewAdapter3(ArrayList<FileBean> themes, int rowLayout, Context context) {
-            this.themes = themes;
-            this.rowLayout = rowLayout;
-            this.mContext = context;
-        }
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            View v = LayoutInflater.from(viewGroup.getContext()).inflate(rowLayout, viewGroup, false);
-            return new ViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(ViewHolder viewHolder, final int i) {
-
-            final FileBean theme = themes.get(i);
-
-            viewHolder.themeName.setText(theme.getName());
-            viewHolder.themeName.setTag(theme.getLocation());
-            viewHolder.themeName.setId(i);
-            viewHolder.themeName.setChecked(theme.isChecked());
-
-            viewHolder.themeName.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    theme.setChecked(!theme.isChecked());
-                    refreshFab();
-                }
-
-            });
-        }
-
-        @Override
-        public int getItemCount() {
-            return themes.size();
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public CheckBox themeName;
-
-
-            public ViewHolder(View itemView) {
-                super(itemView);
-                themeName = (CheckBox) itemView.findViewById(R.id.deletecheckbox);
-            }
         }
     }
 }

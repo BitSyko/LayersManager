@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.lovejoy777.rroandlayersmanager"
-    android:process="com.android.Layers"
-    android:sharedUserId="android.uid.Manager">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.lovejoy777.rroandlayersmanager"
+          android:process="com.android.Layers"
+          android:sharedUserId="android.uid.Manager">
 
-    <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_ALL_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_SUPERUSER"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_ALL_EXTERNAL_STORAGE"/>
     <uses-permission
         android:name="android.permission.WRITE_MEDIA_STORAGE"
-        tools:ignore="ProtectedPermissions" />
+        tools:ignore="ProtectedPermissions"/>
 
 
     <application
@@ -29,8 +29,8 @@
             android:theme="@style/Base.Theme.Toolbar.TransparentStatusBar">
 
             <intent-filter>
-                <category android:name="android.intent.category.LAUNCHER" />
-                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
 
@@ -40,9 +40,9 @@
             android:label="Layers Manager"
             android:theme="@style/Base.Theme.Toolbar.TransparentStatusBar">
             <intent-filter android:label="Layers Manager">
-                <action android:name="android.intent.action.MAIN1" />
+                <action android:name="android.intent.action.MAIN1"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
@@ -52,9 +52,9 @@
             android:label=""
             android:parentActivityName=".menu">
             <intent-filter>
-                <action android:name="android.intent.action.INSTRUCTIONS" />
+                <action android:name="android.intent.action.INSTRUCTIONS"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity
@@ -63,22 +63,22 @@
             android:parentActivityName=".menu"
             android:theme="@style/Toolbar">
             <intent-filter>
-                <action android:name="android.intent.action.ABOUT" />
+                <action android:name="android.intent.action.ABOUT"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
         <activity
             android:name=".activities.IntroActivity"
             android:noHistory="true"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
         <activity
             android:name=".activities.SettingsActivity"
             android:label="Layers"
             android:parentActivityName=".menu"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"/>
 
     </application>
 
