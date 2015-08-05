@@ -13,24 +13,15 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.bitsyko.liblayers.LayerFile;
+import com.bitsyko.liblayers.NoFileInZipException;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -383,10 +374,8 @@ public class Commands {
         }
 
 
-        throw new RuntimeException("No " + file + " in " + zip.getAbsolutePath());
+        throw new NoFileInZipException("No " + file + " in " + zip.getAbsolutePath());
     }
-
-
 
 
     public static class InstallOverlays extends AsyncTask<Integer, Integer, Integer> {
@@ -659,7 +648,7 @@ public class Commands {
 
     }
 
-    public static class InstallOverlaysBetterWay extends AsyncTask<Void, Void, Void> {
+    public static class InstallOverlaysBetterWay extends AsyncTask<Void, String, Void> {
 
         ProgressDialog progress;
         private AsyncResponse delegate;
@@ -720,10 +709,13 @@ public class Commands {
                         RootCommands.moveCopyRoot(layerFile.getFile().getAbsolutePath(), "/system/vendor/overlay/");
                     }
 
+                    publishProgress();
                 } catch (IOException e) {
                     e.printStackTrace();
+                } catch (NoFileInZipException e1) {
+                    publishProgress(e1.getMessage());
                 }
-                publishProgress();
+
             }
 
 
@@ -756,7 +748,10 @@ public class Commands {
         }
 
         @Override
-        protected void onProgressUpdate(Void... values) {
+        protected void onProgressUpdate(String... values) {
+            if (values.length != 0) {
+                Toast.makeText(context, values[0], Toast.LENGTH_LONG).show();
+            }
             progress.setProgress(++i);
         }
 
@@ -769,11 +764,12 @@ public class Commands {
         }
 
     }
-    public static int getSortMode(Activity context){
+
+    public static int getSortMode(Activity context) {
         return PreferenceManager.getDefaultSharedPreferences(context).getInt("sortMode", 0);
     }
 
-    public static void setSortMode(Activity context, int mode){
+    public static void setSortMode(Activity context, int mode) {
         PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("sortMode", mode).commit();
     }
 }
