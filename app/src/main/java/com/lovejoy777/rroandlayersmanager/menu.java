@@ -28,10 +28,7 @@ import com.lovejoy777.rroandlayersmanager.activities.AboutActivity;
 import com.lovejoy777.rroandlayersmanager.activities.DetailedTutorialActivity;
 import com.lovejoy777.rroandlayersmanager.activities.IntroActivity;
 import com.lovejoy777.rroandlayersmanager.activities.SettingsActivity;
-import com.lovejoy777.rroandlayersmanager.fragments.BackupRestoreFragment;
-import com.lovejoy777.rroandlayersmanager.fragments.InstallFragment;
-import com.lovejoy777.rroandlayersmanager.fragments.PluginFragment;
-import com.lovejoy777.rroandlayersmanager.fragments.UninstallFragment;
+import com.lovejoy777.rroandlayersmanager.fragments.*;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
@@ -350,6 +347,11 @@ public class menu extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Fragment currentFragment = menu.this.getFragmentManager().findFragmentById(R.id.fragment_container);
+
+        if (currentFragment instanceof BackButtonListener && !((BackButtonListener) currentFragment).onBackButton()) {
+            return;
+        }
+
         if (currentFragment instanceof OverlayDetailActivity || currentFragment instanceof InstallFragment) {
             changeFragment(1, 1);
         } else {

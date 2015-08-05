@@ -621,11 +621,6 @@ public class Commands {
             this(paths, context, null);
         }
 
-        private static String getCommandLineString(String input) {
-            String UNIX_ESCAPE_EXPRESSION = "(\\(|\\)|\\[|\\]|\\s|\'|\"|`|\\{|\\}|&|\\\\|\\?)";
-            return input.replaceAll(UNIX_ESCAPE_EXPRESSION, "\\\\$1");
-        }
-
         protected void onPreExecute() {
             progress = new ProgressDialog(Context);
             progress.setTitle(R.string.uninstallingOverlays);
@@ -644,7 +639,7 @@ public class Commands {
                 Log.d("Removing: ", path);
                 i = i + 1;
                 try {
-                    RootTools.deleteFileOrDirectory(getCommandLineString(path), false);
+                    RootTools.deleteFileOrDirectory(RootCommands.getCommandLineString(path), false);
                 } catch (Exception e) {
                     Log.w("Cannot remove: ", path);
                     e.printStackTrace();

@@ -24,8 +24,9 @@ import com.lovejoy777.rroandlayersmanager.commands.Commands;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Stack;
 
-public class InstallFragment extends Fragment implements AsyncResponse {
+public class InstallFragment extends Fragment implements AsyncResponse, BackButtonListener {
 
     ArrayList<String> Filedirectories = new ArrayList<>();
     FloatingActionButton fab2;
@@ -38,9 +39,12 @@ public class InstallFragment extends Fragment implements AsyncResponse {
     private CardViewAdapter3 mAdapter;
     private DrawerLayout mDrawerLayout;
     private CoordinatorLayout cordLayout = null;
+    private Stack<ArrayList<String>> directoriesStack = new Stack<>();
+
     View.OnClickListener onclicklistener = new View.OnClickListener() {
         public void onClick(View v) {
             String clickedOn = (String) v.getTag();
+            directoriesStack.push(new ArrayList<>(Filedirectories));
             Filedirectories.subList(Filedirectories.indexOf(clickedOn) + 1, Filedirectories.size()).clear();
             //System.out.println(Filedirectories.indexOf(clickedOn));
             LinearLayout HscrollView = (LinearLayout) cordLayout.findViewById(R.id.horizontalScrollView2);
@@ -144,14 +148,30 @@ public class InstallFragment extends Fragment implements AsyncResponse {
         menuInflater.inflate(R.menu.menu_main, menu);
     }
 
-    private class LoadAndSet extends AsyncTask<String, String, Void> {
+    @Override
+    public boolean onBackButton() {
+
+        if (directoriesStack.empty()) {
+            return true;
+        }
+
+        Filedirectories = directoriesStack.pop();
+
+        new LoadAndSet().execute();
+
+
+        return false;
+
+    }
+
+    private class LoadAndSet extends AsyncTask<Void, String, Void> {
 
         protected void onPreExecute() {
 
         }
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Void doInBackground(Void... params) {
 
             files.clear();
 
@@ -291,6 +311,7 @@ public class InstallFragment extends Fragment implements AsyncResponse {
                 viewHolder.rel.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         fab2.hide();
+                        directoriesStack.push(new ArrayList<>(Filedirectories));
                         Filedirectories.add("/" + directories.get(i));
                         new LoadAndSet().execute();
                     }
