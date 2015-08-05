@@ -83,7 +83,6 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
     private void AsyncUninstallOverlays() {
 
-
         ArrayList<String> paths = new ArrayList<>();
         for (CheckBox checkBox : checkBoxes) {
             if (checkBox.isChecked()) {

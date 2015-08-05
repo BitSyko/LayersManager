@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
@@ -90,7 +89,7 @@ public class Commands {
 
         File f = new File(directory);
         ArrayList<String> files = new ArrayList<>();
-       // f.mkdirs();
+        // f.mkdirs();
 
         if (!f.exists() || !f.isDirectory()) {
             return files;
@@ -546,7 +545,7 @@ public class Commands {
 
 
                                     // COPY NEW FILES TO /VENDOR/OVERLAY FOLDER
-                                    RootCommands.moveCopyRoot(layersdata + "/", overlaypath);
+                                    RootCommands.moveRoot(layersdata + "/", overlaypath);
 
 
                                 } catch (RootDeniedException | TimeoutException | InterruptedException e) {
@@ -563,7 +562,7 @@ public class Commands {
 
                             // COPY NEW FILES TO /VENDOR/OVERLAY FOLDER
                             System.out.println(path);
-                            RootCommands.moveCopyRoot(path, overlaypath + "/overlay");
+                            RootCommands.moveRoot(path, overlaypath + "/overlay");
 
                         }
                     }
@@ -605,14 +604,15 @@ public class Commands {
         }
     }
 
-    public static class UnInstallOverlays extends AsyncTask<Integer, Integer, Integer> {
-        ProgressDialog progress;
-        ArrayList<String> Paths;
-        Context Context;
+    public static class UnInstallOverlays extends AsyncTask<Void, Void, Void> {
+        private ProgressDialog progress;
+        private ArrayList<String> paths;
+        private Context Context;
         private AsyncResponse delegate;
+        private int i = 0;
 
         public UnInstallOverlays(ArrayList<String> paths, Context context, AsyncResponse response) {
-            this.Paths = paths;
+            this.paths = paths;
             this.Context = context;
             this.delegate = response;
         }
@@ -628,33 +628,31 @@ public class Commands {
             progress.setProgress(0);
             progress.show();
             progress.setCancelable(false);
-            progress.setMax(Paths.size());
+            progress.setMax(paths.size());
         }
 
         @Override
-        protected Integer doInBackground(Integer... params) {
-            int i = 0;
+        protected Void doInBackground(Void... params) {
             RootTools.remount("/system", "RW");
-            for (String path : Paths) {
+            for (String path : paths) {
                 Log.d("Removing: ", path);
-                i = i + 1;
                 try {
                     RootTools.deleteFileOrDirectory(RootCommands.getCommandLineString(path), false);
                 } catch (Exception e) {
                     Log.w("Cannot remove: ", path);
                     e.printStackTrace();
                 }
-                publishProgress(i);
+                publishProgress();
             }
             RootTools.remount("/system", "RO");
             return null;
         }
 
-        protected void onProgressUpdate(Integer... progress2) {
-            progress.setProgress(progress2[0]);
+        protected void onProgressUpdate(Void... progress2) {
+            progress.setProgress(++i);
         }
 
-        protected void onPostExecute(Integer result) {
+        protected void onPostExecute(Void result) {
             progress.dismiss();
             if (delegate != null) {
                 delegate.processFinish();
@@ -720,11 +718,17 @@ public class Commands {
 
             for (LayerFile layerFile : layersToInstall) {
                 try {
+
+                    String filelocation;
+
                     if (layerFile.isColor()) {
-                        RootCommands.moveCopyRoot(layerFile.getFile(color).getAbsolutePath(), "/system/vendor/overlay/");
+                        //  RootCommands.moveRoot(layerFile.getFile(color).getAbsolutePath(), "/system/vendor/overlay/");
+                        filelocation = RootCommands.getCommandLineString(layerFile.getFile(color).getAbsolutePath());
                     } else {
-                        RootCommands.moveCopyRoot(layerFile.getFile().getAbsolutePath(), "/system/vendor/overlay/");
+                        filelocation = RootCommands.getCommandLineString(layerFile.getFile().getAbsolutePath());
                     }
+
+                    RootCommands.moveRoot(filelocation, "/system/vendor/overlay/");
 
                     publishProgress();
                 } catch (IOException e) {

@@ -14,10 +14,10 @@ public class RootCommands {
     }
     ////////////
 
-    public static void moveCopyRoot(String old, String newDir) {
+    public static void moveRoot(String old, String newDir) {
 
         try {
-            CommandCapture command3 = new CommandCapture(0, "cp -r " + old + " " + newDir);
+            CommandCapture command3 = new CommandCapture(0, "mv -f " + old + " " + newDir);
 
             RootTools.getShell(true).add(command3);
             while (!command3.isFinished()) {
