@@ -9,7 +9,7 @@ public class RootCommands {
     //Code that belongs to Simple Explorer (licensed under GNU)
     private static final String UNIX_ESCAPE_EXPRESSION = "(\\(|\\)|\\[|\\]|\\s|\'|\"|`|\\{|\\}|&|\\\\|\\?)";
 
-    private static String getCommandLineString(String input) {
+    public static String getCommandLineString(String input) {
         return input.replaceAll(UNIX_ESCAPE_EXPRESSION, "\\\\$1");
     }
     ////////////

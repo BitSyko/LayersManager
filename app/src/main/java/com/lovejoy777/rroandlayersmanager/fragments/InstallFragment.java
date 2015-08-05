@@ -15,20 +15,8 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
+import android.view.*;
+import android.widget.*;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.beans.FileBean;
@@ -47,8 +35,8 @@ public class InstallFragment extends Fragment implements AsyncResponse {
     int atleastOneIsClicked = 0;
     String currentDir = null;
     String BaseDir = null;
-    private ArrayList<FileBean> Files = new ArrayList<>();
-    private ArrayList<String> Directories = new ArrayList<>();
+    private ArrayList<FileBean> files = new ArrayList<>();
+    private ArrayList<String> directories = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private CardViewAdapter3 mAdapter;
     private DrawerLayout mDrawerLayout;
@@ -118,7 +106,7 @@ public class InstallFragment extends Fragment implements AsyncResponse {
     private void InstallAsyncOverlays() {
 
         ArrayList<String> paths = new ArrayList<String>();
-        for (FileBean file : Files) {
+        for (FileBean file : files) {
             if (file.isChecked()) {
                 paths.add(currentDir + "/" + file.getFullName());
             }
@@ -145,7 +133,7 @@ public class InstallFragment extends Fragment implements AsyncResponse {
 
     private void UncheckAll() {
 
-        for (FileBean file : Files) {
+        for (FileBean file : files) {
             file.setChecked(false);
         }
 
@@ -168,12 +156,10 @@ public class InstallFragment extends Fragment implements AsyncResponse {
         @Override
         protected Void doInBackground(String... params) {
 
-            if (Files != null) {
-                Files.clear();
-            }
-            if (Directories != null) {
-                Directories.clear();
-            }
+            files.clear();
+
+            directories.clear();
+
             currentDir = "";
             for (int i = 1; i < Filedirectories.size(); i++) {
                 currentDir = currentDir + Filedirectories.get(i);
@@ -182,22 +168,15 @@ public class InstallFragment extends Fragment implements AsyncResponse {
 
             ArrayList<String> loadedFiles = new ArrayList<String>();
 
-
-            try {
-                loadedFiles.addAll(Commands.loadFiles(currentDir));
-            } catch (NullPointerException e) {
-            }
-
+            loadedFiles.addAll(Commands.loadFiles(currentDir));
 
             for (String currentDir : loadedFiles) {
-                Files.add(new FileBean(currentDir));
+                files.add(new FileBean(currentDir));
 
             }
-            Directories = Commands.loadFolders(currentDir);
+            directories = Commands.loadFolders(currentDir);
 
-            if (Directories != null) {
-                Collections.sort(Directories, String.CASE_INSENSITIVE_ORDER);
-            }
+            Collections.sort(directories, String.CASE_INSENSITIVE_ORDER);
 
 
             return null;
@@ -208,7 +187,7 @@ public class InstallFragment extends Fragment implements AsyncResponse {
 
 
             atleastOneIsClicked = 0;
-            mAdapter = new CardViewAdapter3(Files, Directories, R.layout.adapter_install_layout, R.layout.adapter_listlayout, getActivity());
+            mAdapter = new CardViewAdapter3(files, directories, R.layout.adapter_install_layout, R.layout.adapter_listlayout, getActivity());
             mRecyclerView.setAdapter(mAdapter);
             ActivityCompat.invalidateOptionsMenu(getActivity());
 
@@ -314,7 +293,7 @@ public class InstallFragment extends Fragment implements AsyncResponse {
                 viewHolder.themeName.setId(i);
                 viewHolder.rel.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-
+                        fab2.hide();
                         Filedirectories.add("/" + directories.get(i));
                         new LoadAndSet().execute();
                     }
@@ -324,6 +303,11 @@ public class InstallFragment extends Fragment implements AsyncResponse {
                 viewHolder.check.setText(theme2.getFullName());
                 viewHolder.check.setTag(i);
                 viewHolder.check.setId(i);
+
+                if (!theme2.getFullName().endsWith(".zip")) {
+                    viewHolder.check.setEnabled(false);
+                }
+
                 viewHolder.check.setChecked(theme2.isChecked());
                 viewHolder.check.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {

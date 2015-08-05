@@ -88,7 +88,7 @@ public class Commands {
     public static ArrayList<String> loadFiles(String directory) {
 
         File f = new File(directory);
-        ArrayList<String> files = new ArrayList<String>();
+        ArrayList<String> files = new ArrayList<>();
         f.mkdirs();
 
         for (File file : f.listFiles()) {
@@ -103,7 +103,7 @@ public class Commands {
     public static ArrayList<String> loadFolders(String directory) {
 
         File f = new File(directory);
-        ArrayList<String> folders = new ArrayList<String>();
+        ArrayList<String> folders = new ArrayList<>();
 
         f.mkdirs();
         for (File file : f.listFiles()) {
@@ -694,6 +694,8 @@ public class Commands {
                 while (!command8.isFinished()) {
                     Thread.sleep(1);
                 }
+
+
             } catch (IOException | RootDeniedException | TimeoutException | InterruptedException e) {
                 e.printStackTrace();
             }
