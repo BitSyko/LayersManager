@@ -621,10 +621,8 @@ public class Commands {
             for (String path : Paths) {
                 Log.d("Removing: ", path);
                 i = i + 1;
-                if (!RootCommands.readReadWriteFile())
-                    RootTools.remount(path, "rw");
                 try {
-                    RootCommands.execute("rm -r " + getCommandLineString(path));
+                    RootTools.deleteFileOrDirectory(getCommandLineString(path), false);
                 } catch (Exception e) {
                     Log.w("Cannot remove: ", path);
                     e.printStackTrace();

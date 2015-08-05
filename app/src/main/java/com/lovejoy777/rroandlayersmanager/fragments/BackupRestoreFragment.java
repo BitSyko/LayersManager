@@ -412,6 +412,8 @@ public class BackupRestoreFragment extends Fragment {
                     Thread.sleep(1);
                 }
 
+                RootTools.remount("/system", "RW");
+
                 // CLOSE ALL SHELLS
                 RootTools.closeAllShells();
 
@@ -448,18 +450,19 @@ public class BackupRestoreFragment extends Fragment {
             System.out.println(SZP);
             try {
 
-                RootTools.remount("/system/", "RW");
+                RootTools.remount("/system", "RW");
 
                 // DELETE /VENDOR/OVERLAY
-                RootCommands.DeleteFileRoot("/vendor/overlay");
+                RootCommands.DeleteFileRoot("/system/vendor/overlay");
 
                 // MK DIR /VENDOR/OVERLAY
-                CommandCapture command3 = new CommandCapture(0, "mkdir /vendor/overlay");
+             /*   CommandCapture command3 = new CommandCapture(0, "mkdir /system/vendor/overlay");
 
                 RootTools.getShell(true).add(command3);
                 while (!command3.isFinished()) {
                     Thread.sleep(1);
                 }
+*/
 
                 // MK DIR /SDCARD/OVERLAYS/BACKUP/TEMP
                 CommandCapture command4 = new CommandCapture(0, "mkdir" + Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp");
@@ -477,28 +480,32 @@ public class BackupRestoreFragment extends Fragment {
                     Thread.sleep(1);
                 }
 
+                /*
                 // CHANGE PERMISSIONS OF /VENDOR/OVERLAY && /SDCARD/OVERLAYS/BACKUP
-                CommandCapture command6 = new CommandCapture(0, "chmod 755 /vendor/overlay", "chmod 755 " + Environment.getExternalStorageDirectory() + "/Overlays/Backup");
+                CommandCapture command6 = new CommandCapture(0, "chmod 755 /system/vendor/overlay", "chmod 755 " + Environment.getExternalStorageDirectory() + "/Overlays/Backup");
                 RootTools.getShell(true).add(command6);
                 while (!command6.isFinished()) {
                     Thread.sleep(1);
                 }
+*/
 
                 // UNZIP SZP TO /SDCARD/OVERLAYS/BACKUP/TEMP/OVERLAY FOLDER
                 Commands.unzipNormalOverlays(SZP, Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp/overlay");
 
                 // MOVE /SDCARD/OVERLAYS/BACKUP/TEMP/OVERLAY TO /VENDOR/
-                RootCommands.moveCopyRoot(Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp/overlay", "/vendor/");
+                RootCommands.moveCopyRoot(Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp/overlay", "/system/vendor/");
 
                 // DELETE /SDCARD/OVERLAYS/BACKUP/TEMP FOLDER
                 RootCommands.DeleteFileRoot(Environment.getExternalStorageDirectory() + "/Overlays/Backup/Temp");
 
                 // CHANGE PERMISSIONS OF /VENDOR/OVERLAY/ 666  && /VENDOR/OVERLAY 777 && /SDCARD/OVERLAYS/BACKUP/ 666
-                CommandCapture command7 = new CommandCapture(0, "chmod -R 666 /vendor/overlay", "chmod 755 /vendor/overlay", "chmod -R 666" + Environment.getExternalStorageDirectory() + "/Overlays/Backup");
+                CommandCapture command7 = new CommandCapture(0, "chmod -R 666 /system/vendor/overlay", "chmod 755 /system/vendor/overlay", "chmod -R 666" + Environment.getExternalStorageDirectory() + "/Overlays/Backup");
                 RootTools.getShell(true).add(command7);
                 while (!command7.isFinished()) {
                     Thread.sleep(1);
                 }
+
+                RootTools.remount("/system", "RO");
 
                 // CLOSE ALL SHELLS
                 RootTools.closeAllShells();
