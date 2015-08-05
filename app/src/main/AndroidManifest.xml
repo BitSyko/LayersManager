@@ -80,6 +80,10 @@
             android:parentActivityName=".menu"
             android:theme="@style/AppTheme"/>
 
+        <activity
+            android:name=".activities.OverlayDetailActivity"
+            android:theme="@style/Base.Theme.Toolbar"/>
+
     </application>
 
 </manifest>

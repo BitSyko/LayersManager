@@ -1,8 +1,7 @@
-package com.lovejoy777.rroandlayersmanager;
+package com.lovejoy777.rroandlayersmanager.activities;
 
 import android.animation.Animator;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -30,17 +29,18 @@ import android.view.animation.AnimationUtils;
 import android.widget.*;
 import com.bitsyko.liblayers.Layer;
 import com.bitsyko.liblayers.LayerFile;
+import com.lovejoy777.rroandlayersmanager.AsyncResponse;
+import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OverlayDetailActivity extends Fragment implements AsyncResponse {
+public class OverlayDetailActivity extends AppCompatActivity implements AsyncResponse {
 
     private CheckBox dontShowAgain;
     private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
-    private String layerPackageName;
     private String choosedStyle = "";
     private Layer layer;
     private Switch installEverything;
@@ -49,14 +49,13 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     private LoadDrawables imageLoader;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
-            savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_plugindetail);
 
-        cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_plugindetail, container, false);
+        cordLayout = (CoordinatorLayout) findViewById(R.id.main_content);
 
-        setHasOptionsMenu(true);
-
-        getIntent();
+        receiveIntent();
 
         cordLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
@@ -71,7 +70,6 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
         Log.d("Colors", String.valueOf(layer.getColors()));
 
-        return cordLayout;
     }
 
     private boolean isAnyCheckboxEnabled() {
@@ -109,10 +107,10 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
         for (LayerFile layerFile : layerFiles) {
 
-            TableRow row = new TableRow(getActivity());
+            TableRow row = new TableRow(this);
             row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
 
-            CheckBox check = new CheckBox(getActivity());
+            CheckBox check = new CheckBox(this);
 
             check.setText(layerFile.getNiceName());
             check.setTag(layerFile);
@@ -178,9 +176,8 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         //Initialize Layout
         Toolbar toolbar = (Toolbar) cordLayout.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.setSupportActionBar(toolbar);
-        activity.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_back);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_back);
 
 
         installationFAB.setOnClickListener(new View.OnClickListener() {
@@ -202,11 +199,10 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
     }
 
-    private void getIntent() {
-        Bundle bundle2 = this.getArguments();
-        layerPackageName = bundle2.getString("PackageName");
+    private void receiveIntent() {
+        String layerPackageName = getIntent().getStringExtra("PackageName");
         try {
-            layer = Layer.layerFromPackageName(layerPackageName, getActivity().getApplicationContext());
+            layer = Layer.layerFromPackageName(layerPackageName, getApplicationContext());
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
             throw new RuntimeException();
@@ -233,7 +229,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
                     Color.colorToHSV(vibrantSwatch.getRgb(), hsv);
                     hsv[2] *= 0.8f;
                     //int colorPrimaryDark = Color.HSVToColor(hsv);
-                    Window window = getActivity().getWindow();
+                    Window window = getWindow();
                     window.setStatusBarColor(Color.HSVToColor(hsv));
                 }
             }
@@ -249,17 +245,15 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
             public void onAnimationStart(Animator animation) {
                 loadScreenshotCardview();
                 receiveAndUseData();
-                Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fadein);
+              //  Animation fadeInAnimation = AnimationUtils.loadAnimation(OverlayDetailActivity.this, R.anim.fadein);
                 LinearLayout WN = (LinearLayout) cordLayout.findViewById(R.id.lin2);
                 WN.setVisibility(View.VISIBLE);
-                WN.startAnimation(fadeInAnimation);
+               // WN.startAnimation(fadeInAnimation);
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                if (isAdded()) {
                     loadOverlayCardviews();
-                }
             }
 
             @Override
@@ -312,7 +306,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                //NavUtils.navigateUpFromSameTask(getActivity());
+                finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -354,7 +348,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
                 .setAction(R.string.Reboot, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Commands.reboot(getActivity());
+                        Commands.reboot(OverlayDetailActivity.this);
                     }
                 })
                 .show();
@@ -366,8 +360,8 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     private void installDialog() {
 
         //if (showInstallationConfirmDialog()) {
-        AlertDialog.Builder installdialog = new AlertDialog.Builder(getActivity());
-        final LayoutInflater inflater = getActivity().getLayoutInflater();
+        AlertDialog.Builder installdialog = new AlertDialog.Builder(this);
+        final LayoutInflater inflater = getLayoutInflater();
         View dontShowAgainLayout = inflater.inflate(R.layout.dialog_donotshowagain, null);
         dontShowAgain = (CheckBox) dontShowAgainLayout.findViewById(R.id.skip);
 
@@ -378,7 +372,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
             public void onClick(DialogInterface dialog, int which) {
 
                 if (dontShowAgain.isChecked()) {
-                    SharedPreferences myprefs = getActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                    SharedPreferences myprefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = myprefs.edit();
                     editor.putString("ConfirmInstallationDialog", "checked");
                     editor.apply();
@@ -390,7 +384,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         });
         installdialog.setNegativeButton(android.R.string.cancel, null);
 
-        SharedPreferences myprefs = getActivity().getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+        SharedPreferences myprefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
         String skipMessage = myprefs.getString("ConfirmInstallationDialog", "unchecked");
         if (!skipMessage.equals("checked")) {
             installdialog.show();
@@ -414,7 +408,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
         Log.d("Choosed color", choosedStyle);
 
-        new Commands.InstallOverlaysBetterWay(layersToInstall, choosedStyle, getActivity(), this).execute();
+        new Commands.InstallOverlaysBetterWay(layersToInstall, choosedStyle, this, this).execute();
 
 
     }
@@ -428,8 +422,8 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     //Dialog to choose color
     private void colorDialog() {
 
-        final AlertDialog.Builder colorDialog = new AlertDialog.Builder(getActivity());
-        final LayoutInflater inflater = getActivity().getLayoutInflater();
+        final AlertDialog.Builder colorDialog = new AlertDialog.Builder(this);
+        final LayoutInflater inflater = getLayoutInflater();
         colorDialog.setTitle(R.string.pick_color);
         View colordialogView = inflater.inflate(R.layout.dialog_colors, null);
         colorDialog.setView(colordialogView);
@@ -437,7 +431,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
         final RadioGroup radioGroup = (RadioGroup) colordialogView.findViewById(R.id.radiogroup);
 
         RadioGroup.LayoutParams params
-                = new RadioGroup.LayoutParams(getActivity(), null);
+                = new RadioGroup.LayoutParams(this, null);
 
         params.leftMargin = 66;
         params.topMargin = 2;
@@ -452,7 +446,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
         for (final String color : colors) {
 
-            final RadioButton radioButton = new RadioButton(getActivity());
+            final RadioButton radioButton = new RadioButton(this);
 
             radioButton.setText(color);
             radioButton.setLayoutParams(params);
@@ -495,7 +489,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     }
 
     @Override
-    public void onDestroyView() {
+    public void onDestroy() {
         loadBackdrop2();
         if (imageLoader.getStatus() != AsyncTask.Status.FINISHED) {
             imageLoader.cancel(true);
@@ -506,7 +500,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
             e.printStackTrace();
         }
 
-        super.onDestroyView();
+        super.onDestroy();
     }
 
     private class LoadDrawables extends AsyncTask<Void, Drawable, Void> {
@@ -526,7 +520,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
                 ImageView screenshotImageView;
 
                 try {
-                    screenshotImageView = new ImageView(getActivity());
+                    screenshotImageView = new ImageView(OverlayDetailActivity.this);
                 } catch (NullPointerException e) {
                     continue;
                 }
@@ -540,7 +534,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
                     screenshotImageView.setImageBitmap(bitmap);
                 }
 
-                LinearLayout linear = new LinearLayout(getActivity());
+                LinearLayout linear = new LinearLayout(OverlayDetailActivity.this);
 
                 linear.addView(screenshotImageView);
                 screenshotLayout.addView(linear);

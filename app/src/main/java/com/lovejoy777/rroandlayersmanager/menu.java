@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,10 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitsyko.liblayers.Layer;
-import com.lovejoy777.rroandlayersmanager.activities.AboutActivity;
-import com.lovejoy777.rroandlayersmanager.activities.DetailedTutorialActivity;
-import com.lovejoy777.rroandlayersmanager.activities.IntroActivity;
-import com.lovejoy777.rroandlayersmanager.activities.SettingsActivity;
+import com.lovejoy777.rroandlayersmanager.activities.*;
 import com.lovejoy777.rroandlayersmanager.fragments.*;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
@@ -104,7 +100,7 @@ public class menu extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 Fragment currentFragment = menu.this.getFragmentManager().findFragmentById(R.id.fragment_container);
-                if (currentFragment instanceof OverlayDetailActivity || currentFragment instanceof InstallFragment) {
+                if (currentFragment instanceof InstallFragment) {
                     changeFragment(1, 1);
                 } else {
                     mDrawerLayout.openDrawer(GravityCompat.START);
@@ -259,20 +255,32 @@ public class menu extends AppCompatActivity {
         Bundle args = new Bundle();
         args.putString("PackageName", layer.getPackageName());
 
-        Fragment fragment = new OverlayDetailActivity();
-        fragment.setArguments(args);
 
-        elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
-        title2.setText("");
-        toolbar.setElevation(elevation);
+        Intent intent = new Intent(this, OverlayDetailActivity.class);
+
+        intent.putExtra("PackageName", layer.getPackageName());
+
+        startActivity(intent);
+
+      //  Activity activity = new OverlayDetailActivity();
+      ///  intent.putExtra("PackageName", layer.getPackageName());
+     //   fragment.setArguments(args);
+
+     //   elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
+     //   title2.setText("");
+     //   toolbar.setElevation(elevation);
 
 
+/*
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .addToBackStack("test")
                 .replace(R.id.fragment_container, fragment)
                 .commit();
-        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+  */
+
+
+    //    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
 
 
@@ -327,7 +335,7 @@ public class menu extends AppCompatActivity {
             return;
         }
 
-        if (currentFragment instanceof OverlayDetailActivity || currentFragment instanceof InstallFragment) {
+        if (currentFragment instanceof InstallFragment) {
             changeFragment(1, 1);
         } else {
             super.onBackPressed();

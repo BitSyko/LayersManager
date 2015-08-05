@@ -192,12 +192,6 @@ public class PluginFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        new fillPluginList().execute();
-    }
-
     private class fillPluginList extends AsyncTask<Void, Void, Void> {
 
         protected void onPreExecute() {
