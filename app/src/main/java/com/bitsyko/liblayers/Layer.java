@@ -14,6 +14,7 @@ import android.util.Log;
 
 import android.util.Pair;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
+import com.stericson.RootTools.RootTools;
 
 import java.io.Closeable;
 import java.io.File;
@@ -280,6 +281,7 @@ public class Layer implements Closeable {
     public void close() throws IOException {
         if (new File(getCacheDir() + File.separator + getName()).exists()) {
             RootCommands.DeleteFileRoot(getCacheDir() + File.separator + getName());
+            RootTools.remount("/system", "RO");
         }
     }
 }
