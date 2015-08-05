@@ -5,11 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -40,7 +36,7 @@ public class Commands {
 
 
     public static ArrayList<String> RootloadFiles(final Context context, final Activity act, String directory) {
-        ArrayList<String> files = new ArrayList<String>();
+        ArrayList<String> files = new ArrayList<>();
         if (RootTools.isAccessGiven()) {
             try {
                 String line;
@@ -138,7 +134,7 @@ public class Commands {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
-                    Process proc = Runtime.getRuntime()
+                    Runtime.getRuntime()
                             .exec(new String[]{"su", "-c", "busybox killall system_server"});
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -206,7 +202,9 @@ public class Commands {
 
             RootCommands.DeleteFileRoot(tempDir);
 
-            new File(tempDir).mkdirs();
+            if (!new File(tempDir).mkdirs()) {
+                throw new RuntimeException("Cannot create temp folder");
+            }
 
             try {
 
@@ -368,7 +366,6 @@ public class Commands {
                     String filelocation;
 
                     if (layerFile.isColor()) {
-                        //  RootCommands.moveRoot(layerFile.getFile(color).getAbsolutePath(), "/system/vendor/overlay/");
                         filelocation = RootCommands.getCommandLineString(layerFile.getFile(color).getAbsolutePath());
                     } else {
                         filelocation = RootCommands.getCommandLineString(layerFile.getFile().getAbsolutePath());

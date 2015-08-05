@@ -286,7 +286,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     }
 
     //If FAB is clicked
-    public void installTheme() {
+    private void installTheme() {
 
         boolean isThereColorOverlay = false;
 
@@ -363,7 +363,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
 
     /////////
     //Dialogs
-    public void installDialog() {
+    private void installDialog() {
 
         //if (showInstallationConfirmDialog()) {
         AlertDialog.Builder installdialog = new AlertDialog.Builder(getActivity());
@@ -426,7 +426,7 @@ public class OverlayDetailActivity extends Fragment implements AsyncResponse {
     }
 
     //Dialog to choose color
-    public void colorDialog() {
+    private void colorDialog() {
 
         final AlertDialog.Builder colorDialog = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();

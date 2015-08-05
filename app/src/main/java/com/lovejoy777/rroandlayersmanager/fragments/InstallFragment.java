@@ -9,8 +9,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,26 +27,23 @@ import java.util.Stack;
 
 public class InstallFragment extends Fragment implements AsyncResponse, BackButtonListener {
 
-    ArrayList<String> Filedirectories = new ArrayList<>();
-    FloatingActionButton fab2;
-    int atleastOneIsClicked = 0;
-    String currentDir = null;
-    String BaseDir = null;
+    private ArrayList<String> Filedirectories = new ArrayList<>();
+    private FloatingActionButton fab2;
+    private int atleastOneIsClicked = 0;
+    private String currentDir = null;
+    private String BaseDir = null;
     private ArrayList<FileBean> files = new ArrayList<>();
     private ArrayList<String> directories = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private CardViewAdapter3 mAdapter;
-    private DrawerLayout mDrawerLayout;
     private CoordinatorLayout cordLayout = null;
     private Stack<ArrayList<String>> directoriesStack = new Stack<>();
 
-    View.OnClickListener onclicklistener = new View.OnClickListener() {
+    private View.OnClickListener onclicklistener = new View.OnClickListener() {
         public void onClick(View v) {
             String clickedOn = (String) v.getTag();
             directoriesStack.push(new ArrayList<>(Filedirectories));
             Filedirectories.subList(Filedirectories.indexOf(clickedOn) + 1, Filedirectories.size()).clear();
-            //System.out.println(Filedirectories.indexOf(clickedOn));
-            LinearLayout HscrollView = (LinearLayout) cordLayout.findViewById(R.id.horizontalScrollView2);
             new LoadAndSet().execute();
         }
     };
@@ -93,20 +88,9 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
         });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     private void InstallAsyncOverlays() {
 
-        ArrayList<String> paths = new ArrayList<String>();
+        ArrayList<String> paths = new ArrayList<>();
         for (FileBean file : files) {
             if (file.isChecked()) {
                 paths.add(currentDir + "/" + file.getFullName());
@@ -203,7 +187,7 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
 
 
             atleastOneIsClicked = 0;
-            mAdapter = new CardViewAdapter3(files, directories, R.layout.adapter_install_layout, R.layout.adapter_listlayout, getActivity());
+            mAdapter = new CardViewAdapter3(files, directories, R.layout.adapter_install_layout, R.layout.adapter_listlayout);
             mRecyclerView.setAdapter(mAdapter);
             ActivityCompat.invalidateOptionsMenu(getActivity());
 
@@ -252,7 +236,6 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
                     ImageView img = new ImageView(getActivity().getApplicationContext());
                     img.setBackgroundResource(R.drawable.ic_action_up);
                     HscrollView.addView(img);
-                    ViewGroup.LayoutParams iv_params_b = img.getLayoutParams();
                     LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
                     params2.gravity = Gravity.CENTER;
@@ -271,13 +254,11 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
         private ArrayList<String> directories;
         private int rowLayout;
         private int checkboxLayout;
-        private Context mContext;
 
-        public CardViewAdapter3(ArrayList<FileBean> themes, ArrayList<String> directories, int rowLayout, int checkboxLayout, Context context) {
+        public CardViewAdapter3(ArrayList<FileBean> themes, ArrayList<String> directories, int rowLayout, int checkboxLayout) {
             this.directories = directories;
             this.themes = themes;
             this.rowLayout = rowLayout;
-            this.mContext = context;
             this.checkboxLayout = checkboxLayout;
         }
 
@@ -288,10 +269,10 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
             Context context = viewGroup.getContext();
 
             if (viewType == 1) {
-                v = LayoutInflater.from(viewGroup.getContext()).inflate(rowLayout, viewGroup, false);
+                v = LayoutInflater.from(context).inflate(rowLayout, viewGroup, false);
                 myViewholder = new MyViewHolder(v, 1);
             } else {
-                v = LayoutInflater.from(viewGroup.getContext()).inflate(checkboxLayout, viewGroup, false);
+                v = LayoutInflater.from(context).inflate(checkboxLayout, viewGroup, false);
                 myViewholder = new MyViewHolder(v, 0);
             }
 

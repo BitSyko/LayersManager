@@ -72,9 +72,9 @@ public class AboutActivity extends AppCompatActivity {
 
         ExpandableListView devlist = (ExpandableListView) findViewById(R.id.developers);
 
-        final HashMap<String, List<DeveloperBean>> listDataChild = new HashMap<String, List<DeveloperBean>>();
+        final HashMap<String, List<DeveloperBean>> listDataChild = new HashMap<>();
 
-        final ArrayList<String> listDataHeader = new ArrayList<String>();
+        final ArrayList<String> listDataHeader = new ArrayList<>();
         listDataHeader.add(getResources().getString(R.string.developedby));
         listDataHeader.add(getResources().getString(R.string.usefullinks));
         listDataHeader.add(getResources().getString(R.string.OpenSourceLicenses));

@@ -1,10 +1,8 @@
 package com.lovejoy777.rroandlayersmanager.fragments;
 
-
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,7 +27,10 @@ import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 import java.util.zip.ZipEntry;
@@ -37,11 +38,9 @@ import java.util.zip.ZipOutputStream;
 
 public class BackupRestoreFragment extends Fragment {
 
-    private static final String TAG = null;
-    FloatingActionButton fab2;
+    private FloatingActionButton fab2;
     private ArrayList<String> files = new ArrayList<>();
     private RecyclerView mRecyclerView;
-    private CardViewAdapter3 mAdapter;
     private CoordinatorLayout cordLayout = null;
 
     private static void zipFolder(String inputFolderPath, String outZipPath) {
@@ -180,12 +179,10 @@ public class BackupRestoreFragment extends Fragment {
 
         private ArrayList<String> themes;
         private int rowLayout;
-        private Context mContext;
 
-        public CardViewAdapter3(ArrayList<String> themes, int rowLayout, Context context) {
+        public CardViewAdapter3(ArrayList<String> themes, int rowLayout) {
             this.themes = themes;
             this.rowLayout = rowLayout;
-            this.mContext = context;
         }
 
         @Override
@@ -204,7 +201,7 @@ public class BackupRestoreFragment extends Fragment {
             viewHolder.themeName.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     AlertDialog.Builder installdialog = new AlertDialog.Builder(getActivity());
-                    installdialog.setTitle(themes.get(i));
+                    installdialog.setTitle(layerBackupName);
                     installdialog.setMessage(Html.fromHtml(getResources().getString(R.string.DoYouWantToRestore)));
                     installdialog.setPositiveButton(R.string.restore, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -409,7 +406,7 @@ public class BackupRestoreFragment extends Fragment {
 
         protected void onPostExecute(Void result) {
 
-            mAdapter = new CardViewAdapter3(files, R.layout.adapter_backups, getActivity());
+            CardViewAdapter3 mAdapter = new CardViewAdapter3(files, R.layout.adapter_backups);
             mRecyclerView.setAdapter(mAdapter);
             if (files == null) {
                 ImageView noOverlays = (ImageView) cordLayout.findViewById(R.id.imageView);

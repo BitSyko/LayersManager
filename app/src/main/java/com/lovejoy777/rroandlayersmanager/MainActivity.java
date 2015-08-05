@@ -40,7 +40,7 @@ public class MainActivity extends Activity {
             if ((line = br.readLine()) != null) {
                 noIcon = line;
 
-                if (noIcon.length() >= 3 && switch1 == true) {
+                if (noIcon.length() >= 3 && switch1) {
 
                     PackageManager p = getPackageManager();
                     ComponentName componentName = new ComponentName(this, com.lovejoy777.rroandlayersmanager.MainActivity.class); // activity which is first time open in manifiest file which is declare as <category android:name="android.intent.category.LAUNCHER" />

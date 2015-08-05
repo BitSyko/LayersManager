@@ -28,7 +28,6 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
     private FloatingActionButton fab2;
     private LinearLayout mLinearLayout;
     private MaterialCab mCab = null;
-    private DrawerLayout mDrawerLayout;
     private CoordinatorLayout cordLayout = null;
     private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
 
@@ -160,9 +159,6 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
                 if (item.isChecked()) item.setChecked(false);
                 else item.setChecked(true);
                 checkAll();
-                return true;
-            case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
             case R.id.menu_reboot:
                 Commands.reboot(getActivity());

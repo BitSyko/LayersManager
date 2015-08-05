@@ -11,12 +11,7 @@ import android.view.View;
 
 import com.lovejoy777.rroandlayersmanager.R;
 
-/**
- * Created by lovejoy on 05/10/14.
- */
 public class DetailedTutorialActivity extends AppCompatActivity {
-
-    CardView card1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +25,7 @@ public class DetailedTutorialActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-        card1 = (CardView) findViewById(R.id.CardView_Instructions6);
+        CardView card1 = (CardView) findViewById(R.id.CardView_Instructions6);
 
         // CARD 6
         card1.setOnClickListener(new View.OnClickListener() {

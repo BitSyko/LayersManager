@@ -11,7 +11,6 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-
 import android.util.Pair;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 import com.stericson.RootTools.RootTools;
@@ -27,33 +26,27 @@ import java.util.Map;
 public class Layer implements Closeable {
     private static final String ACTION_PICK_PLUGIN = "com.layers.plugins.PICK_OVERLAYS";
 
-    private String name;
-    private String packageName;
-    private String developer;
+    private final String name;
+    private final String packageName;
+    private final String developer;
     private List<Drawable> screenShots;
     private Drawable promo;
-    private PackageManager packageManager;
-    private ApplicationInfo applicationInfo;
-    private Resources resources;
-    private Context context;
-   private  List<LayerFile> files;
+    private final ApplicationInfo applicationInfo;
+    private final Resources resources;
+    private final Context context;
 
-    private Map<String, String> additionalData;
-
-    private Drawable icon;
+    private final Drawable icon;
 
     public Layer(String name, String developer, Drawable icon) {
-        this(name, developer, icon, null, null, null, null, null);
+        this(name, developer, icon, null, null, null, null);
     }
 
-    public Layer(String name, String developer, Drawable icon, String packageName,
-                 PackageManager packageManager, Resources resources, ApplicationInfo applicationInfo,
-                 Context context) {
+    private Layer(String name, String developer, Drawable icon, String packageName,
+                  Resources resources, ApplicationInfo applicationInfo, Context context) {
         this.name = name;
         this.developer = developer;
         this.icon = icon;
         this.packageName = packageName;
-        this.packageManager = packageManager;
         this.resources = resources;
         this.applicationInfo = applicationInfo;
         this.context = context;
@@ -78,7 +71,7 @@ public class Layer implements Closeable {
 
         Drawable icon = resources.getDrawable(iconID, null);
 
-        return new Layer(name, developer, icon, packageName, manager, resources, applicationInfo, context);
+        return new Layer(name, developer, icon, packageName, resources, applicationInfo, context);
     }
 
     public static List<Layer> getLayersInSystem(Activity activity) {
@@ -130,7 +123,7 @@ public class Layer implements Closeable {
         });
     }
 
-    int screenShotId = 1;
+    private int screenShotId = 1;
 
     public Pair<Integer, Drawable> getNextScreenshot() {
 
@@ -146,7 +139,7 @@ public class Layer implements Closeable {
 
         screenShotId++;
 
-        return new Pair<>(screenShotId-1, drawable);
+        return new Pair<>(screenShotId - 1, drawable);
     }
 
 
@@ -197,7 +190,7 @@ public class Layer implements Closeable {
 
         Bundle bundle = applicationInfo.metaData;
 
-        files = new ArrayList<>();
+        List<LayerFile> files = new ArrayList<>();
 
         if (bundle.containsKey("Layers_NormalOverlays")) {
             //v1.1

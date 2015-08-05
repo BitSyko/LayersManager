@@ -16,9 +16,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-/**
- * Created by Niklas on 04.07.2015.
- */
 public class SettingsActivity extends PreferenceActivity implements
 
         SharedPreferences.OnSharedPreferenceChangeListener {
@@ -78,7 +75,6 @@ public class SettingsActivity extends PreferenceActivity implements
             }
             p1.destroy();
         } catch (IOException e) {
-// TODO Auto-generated catch block
             e.printStackTrace();
         }
 
