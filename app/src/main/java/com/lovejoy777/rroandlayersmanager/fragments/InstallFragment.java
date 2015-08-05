@@ -25,9 +25,6 @@ import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import java.util.ArrayList;
 import java.util.Collections;
 
-/**
- * Created by lovejoy777 on 10/06/15.
- */
 public class InstallFragment extends Fragment implements AsyncResponse {
 
     ArrayList<String> Filedirectories = new ArrayList<>();
@@ -214,7 +211,7 @@ public class InstallFragment extends Fragment implements AsyncResponse {
 
                 tv.setLayoutParams(params);
                 tv.setTag(Filedirectories.get(i));
-                tv.setBackground(getActivity().getResources().getDrawable(R.drawable.rippleprimarys));
+                tv.setBackground(getActivity().getResources().getDrawable(R.drawable.rippleprimarys, null));
 
                 int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getActivity().getResources().getDisplayMetrics());
                 tv.setPadding(padding, padding, padding, padding);
@@ -326,6 +323,7 @@ public class InstallFragment extends Fragment implements AsyncResponse {
                         } else {
                             fab2.hide();
                         }
+
                         System.out.println(theme2.getName() + " Is checked " + theme2.isChecked());
                     }
                 });
@@ -335,14 +333,7 @@ public class InstallFragment extends Fragment implements AsyncResponse {
 
         @Override
         public int getItemCount() {
-            int Size = 0;
-            if (themes != null) {
-                Size = Size + themes.size();
-            }
-            if (directories != null) {
-                Size = Size + directories.size();
-            }
-            return Size;
+            return themes.size() + directories.size();
         }
 
         public boolean isFolder(int i) {

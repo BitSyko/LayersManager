@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
@@ -89,7 +90,11 @@ public class Commands {
 
         File f = new File(directory);
         ArrayList<String> files = new ArrayList<>();
-        f.mkdirs();
+       // f.mkdirs();
+
+        if (!f.exists() || !f.isDirectory()) {
+            return files;
+        }
 
         for (File file : f.listFiles()) {
             if (!file.isDirectory()) {
@@ -105,7 +110,10 @@ public class Commands {
         File f = new File(directory);
         ArrayList<String> folders = new ArrayList<>();
 
-        f.mkdirs();
+        if (!f.exists() || !f.isDirectory()) {
+            return folders;
+        }
+
         for (File file : f.listFiles()) {
             if (file.isDirectory()) {
                 folders.add(file.getName());
@@ -362,7 +370,6 @@ public class Commands {
 
     public static InputStream fileFromZip(File zip, String file) throws IOException {
 
-
         ZipFile zipFile = new ZipFile(zip);
         ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zip)));
         ZipEntry ze;
@@ -375,6 +382,21 @@ public class Commands {
 
 
         throw new NoFileInZipException("No " + file + " in " + zip.getAbsolutePath());
+    }
+
+    public static ArrayList<String> fileNamesFromZip(File zip) throws IOException {
+
+        ArrayList<String> files = new ArrayList<>();
+
+        ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zip)));
+        ZipEntry ze;
+
+        while ((ze = zis.getNextEntry()) != null) {
+            files.add(ze.getName());
+        }
+
+        return files;
+
     }
 
 

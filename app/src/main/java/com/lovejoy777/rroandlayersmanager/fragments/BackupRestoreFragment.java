@@ -6,32 +6,22 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Path;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
@@ -39,35 +29,17 @@ import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OptionalDataException;
-import java.io.StreamCorruptedException;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-/**
- * Created by Niklas Schnettler on 04/07/15.
- */
 public class BackupRestoreFragment extends Fragment {
 
     private static final String TAG = null;
     FloatingActionButton fab2;
-    private ArrayList<String> Files = new ArrayList<String>();
+    private ArrayList<String> Files = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private CardViewAdapter3 mAdapter;
     private CoordinatorLayout cordLayout = null;
@@ -246,39 +218,31 @@ public class BackupRestoreFragment extends Fragment {
                     installdialog.setNeutralButton(R.string.show, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             AlertDialog.Builder contentDialog = new AlertDialog.Builder(getActivity());
-                            contentDialog.setTitle(themes.get(i) +" "+ getString(R.string.contains));
-                            FileInputStream fis;
+                            contentDialog.setTitle(themes.get(i) + " " + getString(R.string.contains));
                             try {
-                                fis = new FileInputStream(Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + themes.get(i) + "/content.txt");
-                                ObjectInputStream ois = new ObjectInputStream(fis);
-                                List<String> content = (List<String>) ois.readObject();
-                                ois.close();
+
                                 String overlays = "";
-                                for (int i = 0; i < content.size(); i++) {
+
+                                ArrayList<String> files = Commands.fileNamesFromZip(new File(Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + themes.get(i) + "/overlay.zip"));
+
+                                for (int i = 0; i < files.size(); i++) {
                                     if (i == 0) {
-                                        overlays = content.get(i);
+                                        overlays = files.get(i);
                                     } else {
-                                        overlays = overlays + "\n" + content.get(i);
+                                        overlays = overlays + "\n" + files.get(i);
                                     }
                                 }
+
+
                                 contentDialog.setMessage(overlays.replace(".apk", "").replaceAll("_", " "));
-                            } catch (FileNotFoundException e) {
-                                contentDialog.setMessage("This feature is currently only available for Backups made with Layers Manager 4.3 or later...");
-                                e.printStackTrace();
-                            } catch (ClassNotFoundException e) {
-                                e.printStackTrace();
-                            } catch (OptionalDataException e) {
-                                e.printStackTrace();
-                            } catch (StreamCorruptedException e) {
-                                e.printStackTrace();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                             contentDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
+                                public void onClick(DialogInterface dialog, int which) {
 
-                                        }
-                                    });
+                                }
+                            });
                             contentDialog.show();
                         }
                     });
@@ -376,7 +340,6 @@ public class BackupRestoreFragment extends Fragment {
                 }
 
 
-
                 RootTools.remount("/system", "RW");
 
                 // CHANGE PERMISSIONS OF /VENDOR/OVERLAY && /SDCARD/OVERLAYS/BACKUP
@@ -392,7 +355,7 @@ public class BackupRestoreFragment extends Fragment {
                 // ZIP OVERLAY FOLDER
                 zipFolder(Environment.getExternalStorageDirectory() + "/Overlays/Backup/temp/overlay", Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + backupname + "/overlay.zip");
 
-                FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + backupname+"/content.txt");
+                FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + backupname + "/content.txt");
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
                 oos.writeObject(backedupOverlays);
                 oos.close();
