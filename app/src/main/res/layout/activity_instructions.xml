@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center">
 
     <android.support.v7.widget.Toolbar
-
         android:id="@+id/toolbar5"
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -33,7 +33,7 @@
         android:text="@string/instructionstitle"
         android:textColor="#ffffff"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <ScrollView
         android:id="@+id/layout1"
@@ -47,10 +47,10 @@
 
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/background_material_light"
-            android:orientation="vertical">
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:background="@color/background_material_light"
+                      android:orientation="vertical">
 
             <android.support.v7.widget.CardView
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -84,7 +84,7 @@
                         android:elevation="5dp"
                         android:text="@string/instructionscard1header"
                         android:textColor="@color/textColorPrimary"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"/>
 
 
                     <TextView
@@ -97,7 +97,7 @@
                         android:layout_marginTop="12dp"
                         android:elevation="5dp"
                         android:text="@string/instructionscard1"
-                        android:textColor="@color/text_color_secondary" />
+                        android:textColor="@color/text_color_secondary"/>
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -134,7 +134,7 @@
                         android:elevation="5dp"
                         android:text="@string/instructionscard2header"
                         android:textColor="@color/textColorPrimary"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"/>
 
 
                     <TextView
@@ -148,7 +148,7 @@
                         android:layout_marginTop="12dp"
                         android:elevation="5dp"
                         android:text="@string/instructionscard2"
-                        android:textColor="@color/text_color_secondary" />
+                        android:textColor="@color/text_color_secondary"/>
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -185,7 +185,7 @@
                         android:elevation="5dp"
                         android:text="@string/instructionscard3header"
                         android:textColor="@color/textColorPrimary"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"/>
 
 
                     <TextView
@@ -199,7 +199,7 @@
                         android:layout_marginTop="12dp"
                         android:elevation="5dp"
                         android:text="@string/instructionscard3"
-                        android:textColor="@color/text_color_secondary" />
+                        android:textColor="@color/text_color_secondary"/>
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -236,7 +236,7 @@
                         android:elevation="5dp"
                         android:text="@string/instructionscard4header"
                         android:textColor="@color/textColorPrimary"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"/>
 
 
                     <TextView
@@ -250,7 +250,7 @@
                         android:layout_marginTop="12dp"
                         android:elevation="5dp"
                         android:text="@string/instructionscard4"
-                        android:textColor="@color/text_color_secondary" />
+                        android:textColor="@color/text_color_secondary"/>
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -287,7 +287,7 @@
                         android:elevation="5dp"
                         android:text="@string/instructionscard5header"
                         android:textColor="@color/textColorPrimary"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"/>
 
 
                     <TextView
@@ -300,7 +300,7 @@
                         android:layout_marginTop="12dp"
                         android:elevation="5dp"
                         android:text="@string/instructionscard5"
-                        android:textColor="@color/text_color_secondary" />
+                        android:textColor="@color/text_color_secondary"/>
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -338,7 +338,7 @@
                         android:elevation="5dp"
                         android:text="@string/instructionscard6header"
                         android:textColor="@color/textColorPrimary"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"/>
 
 
                     <TextView
@@ -351,7 +351,7 @@
                         android:layout_marginTop="12dp"
                         android:elevation="5dp"
                         android:text="@string/instructionscard6"
-                        android:textColor="@color/text_color_secondary" />
+                        android:textColor="@color/text_color_secondary"/>
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>

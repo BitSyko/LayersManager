@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,7 +8,6 @@
     >
 
     <android.support.v7.widget.Toolbar
-
         android:id="@+id/toolbar4"
         android:layout_width="match_parent"
         android:layout_height="80dp"
@@ -15,7 +15,7 @@
         android:elevation="5dp"
         android:gravity="bottom"
         android:minHeight="?android:attr/actionBarSize"
-        tools:context="com.sh4dow.hex_layerstheme.activities.AboutActivity" />
+        tools:context="com.sh4dow.hex_layerstheme.activities.AboutActivity"/>
 
     <TextView
         android:id="@+id/tv_AppName"
@@ -27,7 +27,7 @@
         android:elevation="5dp"
         android:text="@string/layersmanager"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        android:textColor="@color/actionbar_text_color" />
+        android:textColor="@color/actionbar_text_color"/>
 
     <TextView
         android:id="@+id/tv_Version"
@@ -38,7 +38,7 @@
         android:elevation="5dp"
         android:text=""
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-        android:textColor="@color/actionbar_text_secondary_color" />
+        android:textColor="@color/actionbar_text_secondary_color"/>
 
     <ExpandableListView
         android:id="@+id/developers"
@@ -47,7 +47,7 @@
         android:layout_below="@+id/toolbar4"
         android:fillViewport="true"
 
-        android:scrollbars="none" />
+        android:scrollbars="none"/>
 
 
 </RelativeLayout>

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_content2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/relative"
         android:layout_width="match_parent"
@@ -26,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
 
-                android:layout_below="@+id/toolbar" />
+                android:layout_below="@+id/toolbar"/>
         </android.support.v4.widget.SwipeRefreshLayout>
 
 
@@ -43,5 +45,5 @@
         android:clickable="true"
         android:scaleType="center"
         android:src="@drawable/ic_drawer_install"
-        android:transitionName="fab" />
+        android:transitionName="fab"/>
 </android.support.design.widget.CoordinatorLayout>

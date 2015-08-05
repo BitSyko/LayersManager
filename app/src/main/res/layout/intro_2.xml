@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,7 +19,7 @@
         android:paddingRight="32dp"
         android:text="@string/Slide2_Heading"
         android:textColor="@color/tutorial_text_primary_color"
-        android:textSize="28sp" />
+        android:textSize="28sp"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -33,7 +34,7 @@
             android:layout_gravity="center"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:src="@drawable/intro_2" />
+            android:src="@drawable/intro_2"/>
     </LinearLayout>
 
     <TextView
@@ -46,9 +47,9 @@
         android:paddingRight="64dp"
         android:text="@string/Slide2_Text"
         android:textColor="@color/tutorial_text_secondary_color"
-        android:textSize="16sp" />
+        android:textSize="16sp"/>
 
     <TextView
         android:layout_width="fill_parent"
-        android:layout_height="64dp" />
+        android:layout_height="64dp"/>
 </LinearLayout>
