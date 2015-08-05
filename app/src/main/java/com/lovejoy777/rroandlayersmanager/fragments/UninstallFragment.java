@@ -14,16 +14,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.afollestad.materialcab.MaterialCab;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
@@ -34,8 +28,7 @@ import java.util.ArrayList;
 
 public class UninstallFragment extends Fragment implements MaterialCab.Callback, AsyncResponse {
 
-    FloatingActionButton fab2;
-    int atleastOneIsClicked = 0;
+    private FloatingActionButton fab2;
     private ArrayList<FileBean> files = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private CardViewAdapter3 mAdapter;
@@ -67,7 +60,6 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
                 .setAction(R.string.Reboot, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         Commands.reboot(getActivity());
                     }
                 })
@@ -98,10 +90,10 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
     private void AsyncUninstallOverlays() {
 
 
-        ArrayList<String> paths = new ArrayList<String>();
+        ArrayList<String> paths = new ArrayList<>();
         for (FileBean file : files) {
             if (file.isChecked()) {
-                paths.add("system/vendor/overlay/" + file.getLocation());
+                paths.add("/system/vendor/overlay/" + file.getLocation());
             }
         }
 
@@ -116,33 +108,22 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
             file.setChecked(true);
         }
 
-        atleastOneIsClicked = files.size();
-        mAdapter.notifyDataSetChanged();
-        fab2.show();
-        if (mCab == null)
-            mCab = new MaterialCab((AppCompatActivity) getActivity(), R.id.cab_stub)
-                    .reset()
-                    .setCloseDrawableRes(R.drawable.ic_action_check)
-                    .setMenu(R.menu.overflow)
-                    .start(UninstallFragment.this);
-        else if (!mCab.isActive())
-            mCab
-                    .reset().start(UninstallFragment.this)
-                    .setCloseDrawableRes(R.drawable.ic_action_check)
-                    .setMenu(R.menu.overflow);
-
-        mCab.setTitle(atleastOneIsClicked + " " + getResources().getString(R.string.OverlaysSelected));
+        refreshFab();
     }
 
-    private void UncheckAll() {
+    private void UncheckAll(boolean calledFromCabFinished) {
 
         for (FileBean file : files) {
             file.setChecked(false);
         }
 
-        atleastOneIsClicked = 0;
-        mAdapter.notifyDataSetChanged();
-        fab2.hide();
+        if (calledFromCabFinished) {
+            fab2.hide();
+            mAdapter.notifyDataSetChanged();
+        } else {
+            refreshFab();
+        }
+
     }
 
     //CAB methods
@@ -165,7 +146,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
     @Override
     public boolean onCabFinished(MaterialCab materialCab) {
-        UncheckAll();
+        UncheckAll(true);
         return true;
     }
 
@@ -197,16 +178,16 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
         }
     }
 
-    private class LoadAndSet extends AsyncTask<String, String, Void> {
+    private class LoadAndSet extends AsyncTask<Void, Void, Void> {
 
         protected void onPreExecute() {
             files.clear();
         }
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Void doInBackground(Void... params) {
 
-            ArrayList<String> loadedFiles = new ArrayList<String>();
+            ArrayList<String> loadedFiles = new ArrayList<>();
 
             loadedFiles.addAll(Commands.RootloadFiles(getActivity(), getActivity(), "/system/vendor/overlay"));
 
@@ -220,7 +201,6 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
         protected void onPostExecute(Void result) {
 
-            atleastOneIsClicked = 0;
             mAdapter = new CardViewAdapter3(files, R.layout.adapter_listlayout, getActivity());
             mRecyclerView.setAdapter(mAdapter);
             ActivityCompat.invalidateOptionsMenu(getActivity());
@@ -231,7 +211,48 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
                 noOverlays.setVisibility(View.VISIBLE);
                 noOverlaysText.setVisibility(View.VISIBLE);
             }
+
+            refreshFab();
         }
+    }
+
+    private void refreshFab() {
+
+        int checkedItems = 0;
+
+        for (FileBean fileBean : files) {
+            if (fileBean.isChecked()) {
+                checkedItems++;
+            }
+        }
+
+        if (mCab == null) {
+            mCab = new MaterialCab((AppCompatActivity) getActivity(), R.id.cab_stub)
+                    .reset()
+                    .setCloseDrawableRes(R.drawable.ic_action_check)
+                    .setMenu(R.menu.overflow)
+                    .start(UninstallFragment.this);
+        } else if (!mCab.isActive()) {
+            mCab
+                    .reset().start(UninstallFragment.this)
+                    .setCloseDrawableRes(R.drawable.ic_action_check)
+                    .setMenu(R.menu.overflow);
+        }
+
+        mCab.setTitle(checkedItems + " " + getResources().getString(R.string.OverlaysSelected));
+
+
+        if (checkedItems > 0) {
+            fab2.show();
+        } else {
+            if (mCab != null) {
+                mCab.finish();
+                mCab = null;
+            }
+            fab2.hide();
+        }
+
+        mAdapter.notifyDataSetChanged();
     }
 
     //Adapter
@@ -265,38 +286,10 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
             viewHolder.themeName.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    CheckBox cb = (CheckBox) v;
-                    System.out.println(v.getTag());
-                    if (cb.isChecked()) {
-                        theme.setChecked(true);
-                        atleastOneIsClicked = atleastOneIsClicked + 1;
-
-                    } else {
-                        theme.setChecked(false);
-                        atleastOneIsClicked = atleastOneIsClicked - 1;
-                    }
-                    if (mCab == null) {
-                        mCab = new MaterialCab((AppCompatActivity) getActivity(), R.id.cab_stub)
-                                .reset()
-                                .setCloseDrawableRes(R.drawable.ic_action_check)
-                                .setMenu(R.menu.overflow)
-                                .start(UninstallFragment.this);
-                    } else if (!mCab.isActive()) {
-                        mCab
-                                .reset().start(UninstallFragment.this)
-                                .setCloseDrawableRes(R.drawable.ic_action_check)
-                                .setMenu(R.menu.overflow);
-                    }
-
-                    mCab.setTitle(atleastOneIsClicked + " " + getResources().getString(R.string.OverlaysSelected));
-                    if (atleastOneIsClicked > 0) {
-                        fab2.show();
-                    } else {
-                        mCab.finish();
-                        mCab = null;
-                        fab2.hide();
-                    }
+                    theme.setChecked(!theme.isChecked());
+                    refreshFab();
                 }
+
             });
         }
 
