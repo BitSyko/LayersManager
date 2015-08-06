@@ -27,7 +27,7 @@ import java.util.Stack;
 
 public class InstallFragment extends Fragment implements AsyncResponse, BackButtonListener {
 
-    private ArrayList<String> Filedirectories = new ArrayList<>();
+    private ArrayList<String> fileDirectories = new ArrayList<>();
     private FloatingActionButton fab2;
     private int atleastOneIsClicked = 0;
     private String currentDir = null;
@@ -42,8 +42,8 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
     private View.OnClickListener onclicklistener = new View.OnClickListener() {
         public void onClick(View v) {
             String clickedOn = (String) v.getTag();
-            directoriesStack.push(new ArrayList<>(Filedirectories));
-            Filedirectories.subList(Filedirectories.indexOf(clickedOn) + 1, Filedirectories.size()).clear();
+            directoriesStack.push(new ArrayList<>(fileDirectories));
+            fileDirectories.subList(fileDirectories.indexOf(clickedOn) + 1, fileDirectories.size()).clear();
             new LoadAndSet().execute();
         }
     };
@@ -53,8 +53,8 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
 
         BaseDir = Environment.getExternalStorageDirectory() + "";
         currentDir = null;
-        Filedirectories.add("SD Card");
-        Filedirectories.add("/Overlays");
+        fileDirectories.add("SD Card");
+        fileDirectories.add("/Overlays");
 
         cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_install, container, false);
 
@@ -138,10 +138,9 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
             return true;
         }
 
-        Filedirectories = directoriesStack.pop();
+        fileDirectories = directoriesStack.pop();
 
         new LoadAndSet().execute();
-
 
         return false;
 
@@ -161,8 +160,8 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
             directories.clear();
 
             currentDir = "";
-            for (int i = 1; i < Filedirectories.size(); i++) {
-                currentDir = currentDir + Filedirectories.get(i);
+            for (int i = 1; i < fileDirectories.size(); i++) {
+                currentDir = currentDir + fileDirectories.get(i);
             }
             currentDir = BaseDir + currentDir;
 
@@ -201,11 +200,11 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
             }
 
 
-            for (int i = 0; i < Filedirectories.size(); i++) {
+            for (int i = 0; i < fileDirectories.size(); i++) {
 
 
                 TextView tv = new TextView(getActivity().getApplicationContext());
-                tv.setText(Filedirectories.get(i).replaceAll("/", "").toUpperCase());
+                tv.setText(fileDirectories.get(i).replaceAll("/", "").toUpperCase());
                 tv.setTextColor(getResources().getColor(R.color.white));
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 //int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getActivity().getResources().getDisplayMetrics());
@@ -213,7 +212,7 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
                 //params.setMarginStart(margin);
 
                 tv.setLayoutParams(params);
-                tv.setTag(Filedirectories.get(i));
+                tv.setTag(fileDirectories.get(i));
                 tv.setBackground(getActivity().getResources().getDrawable(R.drawable.rippleprimarys, null));
 
                 int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getActivity().getResources().getDisplayMetrics());
@@ -232,7 +231,7 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
                         scroller.fullScroll(View.FOCUS_RIGHT);
                     }
                 });
-                if (Filedirectories.size() > 1 && i != Filedirectories.size() - 1) {
+                if (fileDirectories.size() > 1 && i != fileDirectories.size() - 1) {
                     ImageView img = new ImageView(getActivity().getApplicationContext());
                     img.setBackgroundResource(R.drawable.ic_action_up);
                     HscrollView.addView(img);
@@ -291,8 +290,8 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
                 viewHolder.rel.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         fab2.hide();
-                        directoriesStack.push(new ArrayList<>(Filedirectories));
-                        Filedirectories.add("/" + directories.get(i));
+                        directoriesStack.push(new ArrayList<>(fileDirectories));
+                        fileDirectories.add("/" + directories.get(i));
                         new LoadAndSet().execute();
                     }
                 });
@@ -302,7 +301,7 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
                 viewHolder.check.setTag(i);
                 viewHolder.check.setId(i);
 
-                if (!theme2.getFullName().endsWith(".zip")) {
+                if (!theme2.getFullName().endsWith(".zip") && !theme2.getFullName().endsWith(".apk") ) {
                     viewHolder.check.setEnabled(false);
                 }
 

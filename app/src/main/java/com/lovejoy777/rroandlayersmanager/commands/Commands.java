@@ -85,7 +85,6 @@ public class Commands {
 
         File f = new File(directory);
         ArrayList<String> files = new ArrayList<>();
-        // f.mkdirs();
 
         if (!f.exists() || !f.isDirectory()) {
             return files;
@@ -196,7 +195,7 @@ public class Commands {
         }
 
         @Override
-        protected Void doInBackground(String... zips) {
+        protected Void doInBackground(String... files) {
 
             String tempDir = context.getCacheDir().getAbsolutePath() + File.separator + "zipCache/";
 
@@ -206,28 +205,47 @@ public class Commands {
                 throw new RuntimeException("Cannot create temp folder");
             }
 
-            try {
 
-                for (String zip : zips) {
+            for (String file : files) {
+
+                if (file.endsWith(".zip")) {
+
+                    Log.d("Extracting", file);
+
+                    try {
+
+                        ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(file)));
+                        ZipEntry ze;
+                        ZipFile zipFile = new ZipFile(file);
+
+                        while ((ze = zis.getNextEntry()) != null) {
+                            FileUtils.copyInputStreamToFile(zipFile.getInputStream(ze), new File(tempDir + ze.getName()));
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Log.e("Extracting failed", file);
+                    }
 
 
-                    Log.d("Extracting", zip);
+                } else if (file.endsWith(".apk")) {
 
-                    ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zip)));
-                    ZipEntry ze;
-                    ZipFile zipFile = new ZipFile(zip);
+                    Log.d("Copying", file);
 
-                    while ((ze = zis.getNextEntry()) != null) {
-                        // files.add(ze.getName());
-                        FileUtils.copyInputStreamToFile(zipFile.getInputStream(ze), new File(tempDir + ze.getName()));
+                    File apkFile = new File(file);
+
+                    try {
+                        FileUtils.copyFile(apkFile, new File(tempDir + apkFile.getName()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Log.e("Copying failed", file);
                     }
 
                 }
 
 
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+
 
             RootTools.remount("/system", "RW");
             RootCommands.moveRoot(tempDir + "*", "/system/vendor/overlay/");
