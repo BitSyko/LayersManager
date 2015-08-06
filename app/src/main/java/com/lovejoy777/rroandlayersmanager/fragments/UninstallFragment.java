@@ -12,6 +12,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
 import com.afollestad.materialcab.MaterialCab;
@@ -206,6 +207,10 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
                 check.setText(fileBean.getName());
                 check.setTag(fileBean);
+                check.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
+                check.setPadding(padding,padding,padding,padding);
+
 
                 row.addView(check);
 
