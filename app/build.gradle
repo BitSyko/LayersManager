@@ -8,8 +8,8 @@ android {
         applicationId "com.lovejoy777.rroandlayersmanager"
         minSdkVersion 21
         targetSdkVersion 22
-        versionCode 14
-        versionName "4.3"
+        versionCode 15
+        versionName "4.4b0"
     }
     buildTypes {
         release {
