@@ -9,17 +9,16 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.*;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
@@ -71,6 +70,26 @@ public class BackupRestoreFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_backuprestore, container, false);
+
+        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) getActivity().findViewById(R.id.toolbar);
+
+        ((NavigationView) getActivity().findViewById(R.id.nav_view)).getMenu().getItem(2).setChecked(true);
+
+        int elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 156, getResources().getDisplayMetrics());
+
+        toolbar.setNavigationIcon(R.drawable.ic_action_menu);
+
+        TextView toolbarTitle = (TextView) getActivity().findViewById(R.id.title2);
+        toolbarTitle.setText(getString(R.string.BackupRestore));
+
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, height
+        );
+
+        toolbar.setElevation(elevation);
+        toolbar.setLayoutParams(layoutParams);
+
 
         loadToolbarRecyclerViewFab();
 

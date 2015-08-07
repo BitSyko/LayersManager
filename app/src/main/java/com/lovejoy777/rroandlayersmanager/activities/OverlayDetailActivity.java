@@ -53,6 +53,8 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_plugindetail);
 
+        getWindow().setStatusBarColor(getResources().getColor(R.color.transparent));
+
         cordLayout = (CoordinatorLayout) findViewById(R.id.main_content);
 
         receiveIntent();
@@ -218,19 +220,20 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
         imageView.setImageDrawable(promo);
 
-        final CollapsingToolbarLayout Collapsingtoolbar = (CollapsingToolbarLayout) cordLayout.findViewById(R.id.collapsing_toolbar);
+        final CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) cordLayout.findViewById(R.id.collapsing_toolbar);
 
         Palette.from(((BitmapDrawable) promo).getBitmap()).generate(new Palette.PaletteAsyncListener() {
             public void onGenerated(Palette palette) {
                 Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
                 if (vibrantSwatch != null) {
-                    Collapsingtoolbar.setContentScrimColor(vibrantSwatch.getRgb());
+                    collapsingToolbar.setContentScrimColor(vibrantSwatch.getRgb());
                     float[] hsv = new float[3];
                     Color.colorToHSV(vibrantSwatch.getRgb(), hsv);
                     hsv[2] *= 0.8f;
+                    collapsingToolbar.setStatusBarScrimColor(Color.HSVToColor(hsv));
                     //int colorPrimaryDark = Color.HSVToColor(hsv);
-                    Window window = getWindow();
-                    window.setStatusBarColor(Color.HSVToColor(hsv));
+                  //  Window window = getWindow();
+                   // window.setStatusBarColor(Color.HSVToColor(hsv));
                 }
             }
         });

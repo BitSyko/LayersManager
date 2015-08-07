@@ -9,6 +9,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -57,6 +58,25 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
         fileDirectories.add("/Overlays");
 
         cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_install, container, false);
+
+        ((DrawerLayout) getActivity().findViewById(R.id.drawer_layout)).setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
+        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) getActivity().findViewById(R.id.toolbar);
+
+        int elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 96, getResources().getDisplayMetrics());
+        toolbar.setNavigationIcon(R.drawable.ic_action_back);
+
+
+        TextView toolbarTitle = (TextView) getActivity().findViewById(R.id.title2);
+        toolbarTitle.setText(getString(R.string.InstallOverlays2));
+
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, height
+        );
+
+        toolbar.setElevation(elevation);
+        toolbar.setLayoutParams(layoutParams);
 
 
         setHasOptionsMenu(true);
@@ -301,7 +321,7 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
                 viewHolder.check.setTag(i);
                 viewHolder.check.setId(i);
 
-                if (!theme2.getFullName().endsWith(".zip") && !theme2.getFullName().endsWith(".apk") ) {
+                if (!theme2.getFullName().endsWith(".zip") && !theme2.getFullName().endsWith(".apk")) {
                     viewHolder.check.setEnabled(false);
                 }
 

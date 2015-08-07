@@ -1,17 +1,14 @@
 package com.lovejoy777.rroandlayersmanager.fragments;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
@@ -37,6 +34,25 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_delete, container, false);
+
+        ((NavigationView) getActivity().findViewById(R.id.nav_view)).getMenu().getItem(1).setChecked(true);
+
+        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) getActivity().findViewById(R.id.toolbar);
+
+        int elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 156, getResources().getDisplayMetrics());
+        toolbar.setNavigationIcon(R.drawable.ic_action_menu);
+
+        TextView toolbarTitle = (TextView) getActivity().findViewById(R.id.title2);
+        toolbarTitle.setText(getString(R.string.UninstallOverlays));
+
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, height
+        );
+
+        toolbar.setElevation(elevation);
+        toolbar.setLayoutParams(layoutParams);
+
 
         setHasOptionsMenu(true);
 
@@ -209,7 +225,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
                 check.setTag(fileBean);
                 check.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
                 int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
-                check.setPadding(padding,padding,padding,padding);
+                check.setPadding(padding, padding, padding, padding);
 
 
                 row.addView(check);

@@ -14,14 +14,9 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.TypedValue;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.activities.*;
 import com.lovejoy777.rroandlayersmanager.fragments.*;
@@ -53,11 +48,11 @@ public class menu extends AppCompatActivity {
 
         changeFragment(1, 0);
 
-        LoadTutorial();
+        loadTutorial();
 
     }
 
-    private void LoadTutorial() {
+    private void loadTutorial() {
 
         Boolean tutorialShown = PreferenceManager.getDefaultSharedPreferences(menu.this).getBoolean("tutorialShown", false);
 
@@ -172,89 +167,38 @@ public class menu extends AppCompatActivity {
 
     public void changeFragment(int position, int mode) {
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
-        TextView title2 = (TextView) findViewById(R.id.title2);
-        RelativeLayout.LayoutParams layoutParams = null;
-        int height = 0;
-        int elevation = 0;
         Fragment fragment = null;
-        Bundle args = new Bundle();
         FragmentManager fragmentManager = getFragmentManager();
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         switch (position) {
             case 1:
-                elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
-                height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, getResources().getDisplayMetrics());
-                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_menu);
-                title2.setText(getString(R.string.InstallOverlays2));
                 fragment = new PluginFragment();
                 break;
             case 2:
-                elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
-                height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 156, getResources().getDisplayMetrics());
-                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_menu);
-                title2.setText(getString(R.string.UninstallOverlays));
                 fragment = new UninstallFragment();
                 break;
             case 3:
-                elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
-                height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 156, getResources().getDisplayMetrics());
-                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_menu);
-                title2.setText(getString(R.string.BackupRestore));
                 fragment = new BackupRestoreFragment();
                 break;
             case 4:
-                elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
-                height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 96, getResources().getDisplayMetrics());
-                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_back);
-                title2.setText(getString(R.string.InstallOverlays2));
                 fragment = new InstallFragment();
                 break;
         }
-        layoutParams = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, height
-        );
-        toolbar.setElevation(elevation);
-        toolbar.setLayoutParams(layoutParams);
-        title2.setElevation(elevation);
-
-        fragment.setArguments(args);
-        // Insert the fragment by replacing any existing fragment
-        if (mode == 1) {
-            FragmentManager fm = getFragmentManager();
-            fm.popBackStack();
-            Window window = getWindow();
-            window.setStatusBarColor(getResources().getColor(R.color.transparent));
-            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        } else {
 
 
-            if (position == 4) {
-
-                fragmentManager.beginTransaction()
-                        .addToBackStack("test")
-                        .replace(R.id.fragment_container, fragment)
-                        .commit();
-                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-
-            } else {
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, fragment)
-                        .commit();
-            }
-        }
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
 
 
     }
 
     public void changeFragment2(Layer layer) {
-        final android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
-        TextView title2 = (TextView) findViewById(R.id.title2);
-        int elevation;
-
         Bundle args = new Bundle();
         args.putString("PackageName", layer.getPackageName());
-
 
         Intent intent = new Intent(this, OverlayDetailActivity.class);
 
@@ -262,25 +206,6 @@ public class menu extends AppCompatActivity {
 
         startActivity(intent);
 
-      //  Activity activity = new OverlayDetailActivity();
-      ///  intent.putExtra("PackageName", layer.getPackageName());
-     //   fragment.setArguments(args);
-
-     //   elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
-     //   title2.setText("");
-     //   toolbar.setElevation(elevation);
-
-
-/*
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .addToBackStack("test")
-                .replace(R.id.fragment_container, fragment)
-                .commit();
-  */
-
-
-    //    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
 
 
@@ -304,7 +229,6 @@ public class menu extends AppCompatActivity {
         File dir1 = new File(sdOverlays1);
 
         dir1.mkdirs();
-
 
         RootTools.remount("/system", "RW");
         String vendover = "/system/vendor/overlay";
@@ -331,15 +255,25 @@ public class menu extends AppCompatActivity {
     public void onBackPressed() {
         Fragment currentFragment = menu.this.getFragmentManager().findFragmentById(R.id.fragment_container);
 
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawers();
+            return;
+        }
+
         if (currentFragment instanceof BackButtonListener && !((BackButtonListener) currentFragment).onBackButton()) {
             return;
         }
 
-        if (currentFragment instanceof InstallFragment) {
-            changeFragment(1, 1);
-        } else {
-            super.onBackPressed();
+        FragmentManager fm = getFragmentManager();
+
+        //First commit is omitted
+        if (fm.getBackStackEntryCount() > 1) {
+            fm.popBackStack();
+            return;
         }
 
+
+        super.onBackPressed();
     }
+
 }
