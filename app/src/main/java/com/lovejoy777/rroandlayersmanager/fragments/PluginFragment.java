@@ -58,7 +58,7 @@ public class PluginFragment extends Fragment {
 
         ((DrawerLayout) getActivity().findViewById(R.id.drawer_layout)).setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
 
-        ((NavigationView) getActivity().findViewById(R.id.nav_view)).getMenu().getItem(0).setChecked(true);
+        ((NavigationView) getActivity().findViewById(R.id.nav_view)).getMenu().findItem(R.id.nav_home).setChecked(true);
 
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
 

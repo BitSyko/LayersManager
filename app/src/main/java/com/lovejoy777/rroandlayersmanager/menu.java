@@ -4,7 +4,6 @@ import android.app.ActivityOptions;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -16,8 +15,8 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.activities.*;
@@ -33,9 +32,7 @@ import java.util.concurrent.TimeoutException;
 public class menu extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
-    private Boolean switch2;
-    private Boolean switch3;
-    private SharedPreferences myPrefs;
+    private NavigationView navigationView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,9 +40,7 @@ public class menu extends AppCompatActivity {
 
         setContentView(R.layout.fragment_container);
 
-        myPrefs = this.getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-        switch2 = myPrefs.getBoolean("switch2", false);
-        switch3 = myPrefs.getBoolean("switch3", false);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         if (!RootTools.isAccessGiven()) {
         }
@@ -57,6 +52,7 @@ public class menu extends AppCompatActivity {
         changeFragment(1, 0);
 
         loadTutorial();
+
 
     }
 
@@ -76,7 +72,7 @@ public class menu extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             changeFragment(1, 0);
-            this.finish();
+            finish();
         }
     }
 
@@ -116,6 +112,7 @@ public class menu extends AppCompatActivity {
 
     //set NavigationDrawerContent
     private void setupDrawerContent(NavigationView navigationView) {
+
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -160,40 +157,31 @@ public class menu extends AppCompatActivity {
                                     System.out.println("App is currently not installed on your phone");
                                     break;
                                 }
-
-
-                                if (switch2) {
-
-                                    case R.id.nav_boots:
-                                        boolean bootsinstalled = appInstalledOrNot("com.lovejoy777.rommate");
-                                        if (bootsinstalled) {
-                                            //This intent will help you to launch if the package is already installed
-                                            Intent intent = new Intent();
-                                            intent.setComponent(new ComponentName("com.lovejoy777.rommate", "com.lovejoy777.rommate.bootanimation.Screen1BootAnim"));
-                                            startActivity(intent);
-                                            break;
-                                        } else {
-                                            Toast.makeText(menu.this, "Please install RomMate", Toast.LENGTH_LONG).show();
-                                            System.out.println("RomMate is currently not installed on your phone");
-                                            break;
-                                        }
+                            case R.id.nav_boots:
+                                boolean bootsinstalled = appInstalledOrNot("com.lovejoy777.rommate");
+                                if (bootsinstalled) {
+                                    //This intent will help you to launch if the package is already installed
+                                    Intent intent = new Intent();
+                                    intent.setComponent(new ComponentName("com.lovejoy777.rommate", "com.lovejoy777.rommate.bootanimation.Screen1BootAnim"));
+                                    startActivity(intent);
+                                    break;
+                                } else {
+                                    Toast.makeText(menu.this, "Please install RomMate", Toast.LENGTH_LONG).show();
+                                    System.out.println("RomMate is currently not installed on your phone");
+                                    break;
                                 }
-
-                                if (switch3) {
-
-                                    case R.id.nav_fonts:
-                                        boolean fontsinstalled = appInstalledOrNot("com.lovejoy777.rommate");
-                                        if (fontsinstalled) {
-                                            //This intent will help you to launch if the package is already installed
-                                            Intent intent = new Intent();
-                                            intent.setComponent(new ComponentName("com.lovejoy777.rommate", "com.lovejoy777.rommate.fonts.Screen1Fonts"));
-                                            startActivity(intent);
-                                            break;
-                                        } else {
-                                            Toast.makeText(menu.this, "Please install RomMate", Toast.LENGTH_LONG).show();
-                                            System.out.println("RomMate is currently not installed on your phone");
-                                            break;
-                                        }
+                            case R.id.nav_fonts:
+                                boolean fontsinstalled = appInstalledOrNot("com.lovejoy777.rommate");
+                                if (fontsinstalled) {
+                                    //This intent will help you to launch if the package is already installed
+                                    Intent intent = new Intent();
+                                    intent.setComponent(new ComponentName("com.lovejoy777.rommate", "com.lovejoy777.rommate.fonts.Screen1Fonts"));
+                                    startActivity(intent);
+                                    break;
+                                } else {
+                                    Toast.makeText(menu.this, "Please install RomMate", Toast.LENGTH_LONG).show();
+                                    System.out.println("RomMate is currently not installed on your phone");
+                                    break;
                                 }
                             case R.id.nav_settings:
                                 Intent settings = new Intent(menu.this, SettingsActivity.class);
@@ -206,16 +194,6 @@ public class menu extends AppCompatActivity {
                         return false;
                     }
                 });
-    }
-
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        SharedPreferences myPrefs = this.getSharedPreferences("myPrefs", MODE_PRIVATE);
-
-        // Hiding Boots from nav drawer
-        Boolean HideBoots = myPrefs.getBoolean("switch2", false);
-        // Hiding Fonts from nav drawer
-        Boolean HideFonts = myPrefs.getBoolean("switch3", false);
-
     }
 
     public void changeFragment(int position, int mode) {
@@ -329,4 +307,23 @@ public class menu extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    //We're refresh RomMate stuff on resuming to main activity
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Log.d("Menu", "OnResume");
+
+        SharedPreferences myPrefs = this.getSharedPreferences("myPrefs", MODE_PRIVATE);
+
+        // Hiding Boots from nav drawer
+        Boolean HideBoots = myPrefs.getBoolean("switch2", false);
+        // Hiding Fonts from nav drawer
+        Boolean HideFonts = myPrefs.getBoolean("switch3", false);
+
+        navigationView.getMenu().findItem(R.id.nav_boots).setVisible(HideBoots);
+
+        navigationView.getMenu().findItem(R.id.nav_fonts).setVisible(HideFonts);
+
+    }
 }
