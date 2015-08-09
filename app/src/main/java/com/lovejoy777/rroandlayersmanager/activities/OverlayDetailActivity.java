@@ -38,7 +38,9 @@ import com.lovejoy777.rroandlayersmanager.helper.Helpers;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class OverlayDetailActivity extends AppCompatActivity implements AsyncResponse {
 
@@ -531,7 +533,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     }
 
 
-    private class LoadLayerApks extends AsyncTask<Void, Pair<Boolean, TableRow>, Void> {
+    private class LoadLayerApks extends AsyncTask<Void, Pair<Boolean, TableRow>, Set<String>> {
 
         private Context context;
         private CoordinatorLayout cordLayout;
@@ -553,8 +555,19 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Set<String> doInBackground(Void... params) {
 
+            HashSet<String> nullHashSet = new HashSet<>();
+            nullHashSet.add("ASDASDDASDADSADSAASD");
+
+            boolean newHashSet = true;
+
+            SharedPreferences myprefs = getSharedPreferences("layersData", Context.MODE_PRIVATE);
+            Set<String> filesToGreyOut = myprefs.getStringSet(layer.getPackageName(), nullHashSet);
+
+            if (filesToGreyOut.equals(nullHashSet)) {
+                newHashSet = false;
+            }
 
             List<LayerFile> layerFiles = layer.getLayersInPackage();
             List<String> packages = new ArrayList<>(Helpers.allPackagesInSystem(OverlayDetailActivity.this));
@@ -578,18 +591,27 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                 row.addView(check);
 
                 if (!layerFile.isColor()) {
-                    try {
-                        layerFile.getFile();
-                        Log.d("Manifest " + layerFile.getName(), layerFile.getRelatedPackage());
 
-                        if (!packages.contains(layerFile.getRelatedPackage())) {
-                            check.setEnabled(false);
+                    if (!newHashSet) {
+
+                        try {
+                            layerFile.getFile();
+                            Log.d("Manifest " + layerFile.getName(), layerFile.getRelatedPackage());
+
+                            if (!packages.contains(layerFile.getRelatedPackage())) {
+                                check.setEnabled(false);
+                                filesToGreyOut.add(layerFile.getName());
+                            }
+
+                        } catch (IOException | NoFileInZipException e) {
+                            e.printStackTrace();
+                            continue;
                         }
 
-                    } catch (IOException | NoFileInZipException e) {
-                        e.printStackTrace();
-                        continue;
+                    } else {
+                        check.setEnabled(!filesToGreyOut.contains(layerFile.getName()));
                     }
+
                 }
 
                 Pair<Boolean, TableRow> pair = new Pair<>(layerFile.isColor(), row);
@@ -609,7 +631,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             }
 
 
-            return null;
+            return filesToGreyOut;
 
         }
 
@@ -630,7 +652,10 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute(Set<String> aVoid) {
+
+            SharedPreferences myprefs = getSharedPreferences("layersData", Context.MODE_PRIVATE);
+            myprefs.edit().putStringSet(layer.getPackageName(), aVoid).apply();
 
             //No styleSpecific Overlays
             if (linearLayoutCategory2.getChildCount() == 0) {
@@ -640,6 +665,8 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             if (linearLayoutCategory1.getChildCount() == 0) {
                 cardViewCategory1.setVisibility(View.GONE);
             }
+
+            Toast.makeText(OverlayDetailActivity.this, "Generating complete", Toast.LENGTH_LONG).show();
 
         }
 
