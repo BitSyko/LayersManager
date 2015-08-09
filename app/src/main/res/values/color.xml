@@ -29,4 +29,7 @@
 
     <!-- other colors -->
     <color name="white">#ffffff</color>
+    <color name="imgtint">#727272</color>
+    <color name="fabbutton">#ffffff</color>
+
 </resources>
