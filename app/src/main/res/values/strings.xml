@@ -144,8 +144,13 @@
 
     <!-- Settings -->
     <string name="General">General</string>
+    <string name="rommate">RomMate</string>
     <string name="SettingLauncherIconDetail">Remove Launcher Icon</string>
     <string name="SettingLauncherIconWarning">Warning: you may not be able to launch this app unless your rom as it in the settings</string>
+    <string name="SettingRomMateBootsTitle">Boot Animation</string>
+    <string name="SettingRomMateBootsSum">Show boot animations in the nav drawer</string>
+    <string name="SettingRomMateFontsTitle">Fonts</string>
+    <string name="SettingRomMateFontsSum">Show fonts in the nav drawer</string>
     <string name="launcherIconRemoved">Launcher Icon removed</string>
     <string name="romNeedsSupport">Your rom needs support for this function</string>
     <string name="noBuildPropCommit">no build.prop commit</string>

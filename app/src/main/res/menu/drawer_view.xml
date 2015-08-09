@@ -39,6 +39,14 @@
                 android:icon="@drawable/ic_drawer_showcase"
                 android:title="@string/Showcase" />
             <item
+                android:id="@+id/nav_boots"
+                android:icon="@drawable/ic_drawer_showcase"
+                android:title="@string/SettingRomMateBootsTitle" />
+            <item
+                android:id="@+id/nav_fonts"
+                android:icon="@drawable/ic_drawer_showcase"
+                android:title="@string/SettingRomMateFontsTitle" />
+            <item
                 android:id="@+id/nav_playStore"
                 android:icon="@drawable/ic_drawer_playstore"
                 android:title="@string/PlayStore" />

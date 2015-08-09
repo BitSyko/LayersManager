@@ -13,4 +13,22 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:key="second_category"
+        android:title="@string/rommate">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="switch2"
+            android:summary="@string/SettingRomMateBootsSum"
+            android:title="@string/SettingRomMateBootsTitle" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="switch3"
+            android:summary="@string/SettingRomMateFontsSum"
+            android:title="@string/SettingRomMateFontsTitle" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

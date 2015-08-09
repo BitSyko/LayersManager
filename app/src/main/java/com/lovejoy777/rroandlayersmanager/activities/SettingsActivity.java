@@ -112,6 +112,8 @@ public class SettingsActivity extends PreferenceActivity implements
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         SharedPreferences myPrefs = this.getSharedPreferences("myPrefs", MODE_PRIVATE);
+
+        // Hiding Launcher Icon
         Boolean HideLauncherIcon = myPrefs.getBoolean("switch1", false);
 
         if (HideLauncherIcon) {
@@ -119,6 +121,12 @@ public class SettingsActivity extends PreferenceActivity implements
         } else {
             ReviveLauncherIcon();
         }
+
+        // Hiding Boots from nav drawer
+        Boolean HideBoots = myPrefs.getBoolean("switch2", false);
+        // Hiding Fonts from nav drawer
+        Boolean HideFonts = myPrefs.getBoolean("switch3", false);
+
     }
 
     @Override
