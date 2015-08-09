@@ -87,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:src="@drawable/ic_drawer_install"
-                android:tint="@color/fabbutton"
+                android:tint="@color/fab_tint"
                 app:elevation="@dimen/fab_elevation"/>
         </com.github.jorgecastilloprz.FABProgressCircle>
 

@@ -540,6 +540,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         private LinearLayout linearLayoutCategory1, linearLayoutCategory2;
         private CardView cardViewCategory1, cardViewCategory2;
         private boolean stop;
+        boolean newHashSet = true;
 
         public LoadLayerApks(Context context, CoordinatorLayout cordLayout) {
             this.context = context;
@@ -560,7 +561,6 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             HashSet<String> nullHashSet = new HashSet<>();
             nullHashSet.add("ASDASDDASDADSADSAASD");
 
-            boolean newHashSet = true;
 
             SharedPreferences myprefs = getSharedPreferences("layersData", Context.MODE_PRIVATE);
             Set<String> filesToGreyOut = myprefs.getStringSet(layer.getPackageName(), nullHashSet);
@@ -568,6 +568,8 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             if (filesToGreyOut.equals(nullHashSet)) {
                 newHashSet = false;
             }
+
+            filesToGreyOut.clear();
 
             List<LayerFile> layerFiles = layer.getLayersInPackage();
             List<String> packages = new ArrayList<>(Helpers.allPackagesInSystem(OverlayDetailActivity.this));
@@ -666,7 +668,9 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                 cardViewCategory1.setVisibility(View.GONE);
             }
 
-            Toast.makeText(OverlayDetailActivity.this, "Generating complete", Toast.LENGTH_LONG).show();
+            if (!newHashSet) {
+                Toast.makeText(OverlayDetailActivity.this, "Generating complete", Toast.LENGTH_LONG).show();
+            }
 
         }
 
