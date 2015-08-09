@@ -29,7 +29,6 @@
 
     <!-- other colors -->
     <color name="white">#ffffff</color>
-    <color name="imgtint">#727272</color>
-    <color name="fabbutton">#ffffff</color>
-
+    <color name="backup_restore_tint">#727272</color>
+    <color name="fab_tint">#ffffff</color>
 </resources>

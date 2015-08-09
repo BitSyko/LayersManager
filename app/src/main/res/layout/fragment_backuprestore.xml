@@ -32,7 +32,7 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
                     android:src="@drawable/ic_restore"
-                    android:tint="@color/imgtint"
+                    android:tint="@color/backup_restore_tint"
                     android:visibility="invisible"/>
 
                 <TextView
@@ -82,7 +82,7 @@
         android:clickable="true"
         android:scaleType="center"
         android:src="@drawable/ic_action_add"
-        android:tint="@color/fabbutton"/>
+        android:tint="@color/fab_tint"/>
 
 
 </android.support.design.widget.CoordinatorLayout>
