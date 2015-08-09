@@ -269,12 +269,14 @@ public class Layer implements Closeable {
         return context.getCacheDir().getAbsolutePath();
     }
 
+    public Context getRelatedContext() {
+        return context;
+    }
 
     @Override
     public void close() throws IOException {
         if (new File(getCacheDir() + File.separator + getName()).exists()) {
             RootCommands.DeleteFileRoot(getCacheDir() + File.separator + getName());
-            RootTools.remount("/system", "RO");
         }
     }
 }

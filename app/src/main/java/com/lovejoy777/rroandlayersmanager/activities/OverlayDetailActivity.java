@@ -23,15 +23,18 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
-import android.view.*;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.*;
 import com.bitsyko.liblayers.Layer;
 import com.bitsyko.liblayers.LayerFile;
+import com.bitsyko.liblayers.NoFileInZipException;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
+import com.lovejoy777.rroandlayersmanager.helper.Helpers;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,6 +50,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     private FloatingActionButton installationFAB;
     private CoordinatorLayout cordLayout;
     private LoadDrawables imageLoader;
+    private LoadLayerApks loadLayerApks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,57 +100,8 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     }
 
     private void loadOverlayCardviews() {
-        //sort cardviews by number of Overlays
-        LinearLayout linearLayoutCategory1, linearLayoutCategory2;
-        linearLayoutCategory1 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory1);
-        linearLayoutCategory2 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory2);
-        CardView cardViewCategory1 = (CardView) cordLayout.findViewById(R.id.CardViewCategory1);
-        CardView cardViewCategory2 = (CardView) cordLayout.findViewById(R.id.CardViewCategory2);
-
-
-        List<LayerFile> layerFiles = layer.getLayersInPackage();
-
-
-        for (LayerFile layerFile : layerFiles) {
-
-            TableRow row = new TableRow(this);
-            row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-
-            CheckBox check = new CheckBox(this);
-
-            check.setText(layerFile.getNiceName());
-            check.setTag(layerFile);
-
-            row.addView(check);
-
-            if (layerFile.isColor()) {
-                linearLayoutCategory2.addView(row);
-            } else {
-                linearLayoutCategory1.addView(row);
-            }
-
-            check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    refreshFab();
-                }
-            });
-
-            checkBoxes.add(check);
-
-        }
-
-
-        //No styleSpecific Overlays
-        if (linearLayoutCategory2.getChildCount() == 0) {
-            cardViewCategory2.setVisibility(View.GONE);
-        }
-        //No normal Overlays
-        if (linearLayoutCategory1.getChildCount() == 0) {
-            cardViewCategory1.setVisibility(View.GONE);
-        }
-
-
+        loadLayerApks = new LoadLayerApks(this, cordLayout);
+        loadLayerApks.execute();
     }
 
     private void loadScreenshotCardview() {
@@ -205,9 +160,14 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         String layerPackageName = getIntent().getStringExtra("PackageName");
         try {
             layer = Layer.layerFromPackageName(layerPackageName, getApplicationContext());
+            //We're removing previous apks
+            layer.close();
+
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
             throw new RuntimeException();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         Log.d("PackageName: ", layerPackageName);
     }
@@ -232,8 +192,8 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                     hsv[2] *= 0.8f;
                     collapsingToolbar.setStatusBarScrimColor(Color.HSVToColor(hsv));
                     //int colorPrimaryDark = Color.HSVToColor(hsv);
-                  //  Window window = getWindow();
-                   // window.setStatusBarColor(Color.HSVToColor(hsv));
+                    //  Window window = getWindow();
+                    // window.setStatusBarColor(Color.HSVToColor(hsv));
                 }
             }
         });
@@ -248,15 +208,15 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             public void onAnimationStart(Animator animation) {
                 loadScreenshotCardview();
                 receiveAndUseData();
-              //  Animation fadeInAnimation = AnimationUtils.loadAnimation(OverlayDetailActivity.this, R.anim.fadein);
+                //  Animation fadeInAnimation = AnimationUtils.loadAnimation(OverlayDetailActivity.this, R.anim.fadein);
                 LinearLayout WN = (LinearLayout) cordLayout.findViewById(R.id.lin2);
                 WN.setVisibility(View.VISIBLE);
-               // WN.startAnimation(fadeInAnimation);
+                // WN.startAnimation(fadeInAnimation);
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                    loadOverlayCardviews();
+                loadOverlayCardviews();
             }
 
             @Override
@@ -332,7 +292,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         installationFAB.show();
 
         for (CheckBox checkBox : checkBoxes) {
-            if (!checkBox.isChecked()) {
+            if (!checkBox.isChecked() && checkBox.isEnabled()) {
                 checkBox.performClick();
             }
         }
@@ -497,6 +457,11 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         if (imageLoader.getStatus() != AsyncTask.Status.FINISHED) {
             imageLoader.cancel(true);
         }
+
+        if (loadLayerApks.getStatus() != AsyncTask.Status.FINISHED) {
+            loadLayerApks.stop();
+        }
+
         try {
             layer.close();
         } catch (IOException e) {
@@ -561,6 +526,126 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             }
 
             return null;
+        }
+
+    }
+
+
+    private class LoadLayerApks extends AsyncTask<Void, Pair<Boolean, TableRow>, Void> {
+
+        private Context context;
+        private CoordinatorLayout cordLayout;
+        private LinearLayout linearLayoutCategory1, linearLayoutCategory2;
+        private CardView cardViewCategory1, cardViewCategory2;
+        private boolean stop;
+
+        public LoadLayerApks(Context context, CoordinatorLayout cordLayout) {
+            this.context = context;
+            this.cordLayout = cordLayout;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            linearLayoutCategory1 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory1);
+            linearLayoutCategory2 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory2);
+            cardViewCategory1 = (CardView) cordLayout.findViewById(R.id.CardViewCategory1);
+            cardViewCategory2 = (CardView) cordLayout.findViewById(R.id.CardViewCategory2);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+
+            List<LayerFile> layerFiles = layer.getLayersInPackage();
+            List<String> packages = new ArrayList<>(Helpers.allPackagesInSystem(OverlayDetailActivity.this));
+
+
+            for (final LayerFile layerFile : layerFiles) {
+
+                if (isCancelled() || stop) {
+                    return null;
+                }
+
+                TableRow row = new TableRow(context);
+                row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+
+                CheckBox check = new CheckBox(context);
+
+                check.setText(layerFile.getNiceName());
+                check.setTag(layerFile);
+
+
+                row.addView(check);
+
+                if (!layerFile.isColor()) {
+                    try {
+                        layerFile.getFile();
+                        Log.d("Manifest " + layerFile.getName(), layerFile.getRelatedPackage());
+
+                        if (!packages.contains(layerFile.getRelatedPackage())) {
+                            check.setEnabled(false);
+                        }
+
+                    } catch (IOException | NoFileInZipException e) {
+                        e.printStackTrace();
+                        continue;
+                    }
+                }
+
+                Pair<Boolean, TableRow> pair = new Pair<>(layerFile.isColor(), row);
+
+                publishProgress(pair);
+
+                check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        refreshFab();
+                    }
+                });
+
+
+                checkBoxes.add(check);
+
+            }
+
+
+            return null;
+
+        }
+
+
+        @Override
+        protected void onProgressUpdate(Pair<Boolean, TableRow>... values) {
+
+            for (Pair<Boolean, TableRow> row : values) {
+
+                if (row.first) {
+                    linearLayoutCategory2.addView(row.second);
+                    linearLayoutCategory2.invalidate();
+                } else {
+                    linearLayoutCategory1.addView(row.second);
+                    linearLayoutCategory1.invalidate();
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+            //No styleSpecific Overlays
+            if (linearLayoutCategory2.getChildCount() == 0) {
+                cardViewCategory2.setVisibility(View.GONE);
+            }
+            //No normal Overlays
+            if (linearLayoutCategory1.getChildCount() == 0) {
+                cardViewCategory1.setVisibility(View.GONE);
+            }
+
+        }
+
+        public void stop() {
+            cancel(true);
+            stop = true;
         }
 
     }
