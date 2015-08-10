@@ -37,10 +37,7 @@ import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.helper.Helpers;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class OverlayDetailActivity extends AppCompatActivity implements AsyncResponse {
 
@@ -540,7 +537,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         private LinearLayout linearLayoutCategory1, linearLayoutCategory2;
         private CardView cardViewCategory1, cardViewCategory2;
         private boolean stop;
-        boolean newHashSet = true;
+        boolean newSet = false;
 
         public LoadLayerApks(Context context, CoordinatorLayout cordLayout) {
             this.context = context;
@@ -558,18 +555,13 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         @Override
         protected Set<String> doInBackground(Void... params) {
 
-            HashSet<String> nullHashSet = new HashSet<>();
-            nullHashSet.add("ASDASDDASDADSADSAASD");
-
-
             SharedPreferences myprefs = getSharedPreferences("layersData", Context.MODE_PRIVATE);
-            Set<String> filesToGreyOut = myprefs.getStringSet(layer.getPackageName(), nullHashSet);
+            Set<String> filesToGreyOut = myprefs.getStringSet(layer.getPackageName(), null);
 
-            if (filesToGreyOut.equals(nullHashSet)) {
-                newHashSet = false;
+            if (filesToGreyOut == null) {
+                newSet = true;
+                filesToGreyOut = new HashSet<>();
             }
-
-            filesToGreyOut.clear();
 
             List<LayerFile> layerFiles = layer.getLayersInPackage();
             List<String> packages = new ArrayList<>(Helpers.allPackagesInSystem(OverlayDetailActivity.this));
@@ -594,7 +586,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
                 if (!layerFile.isColor()) {
 
-                    if (!newHashSet) {
+                    if (newSet) {
 
                         try {
                             layerFile.getFile();
@@ -656,9 +648,6 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         @Override
         protected void onPostExecute(Set<String> aVoid) {
 
-            SharedPreferences myprefs = getSharedPreferences("layersData", Context.MODE_PRIVATE);
-            myprefs.edit().putStringSet(layer.getPackageName(), aVoid).apply();
-
             //No styleSpecific Overlays
             if (linearLayoutCategory2.getChildCount() == 0) {
                 cardViewCategory2.setVisibility(View.GONE);
@@ -668,7 +657,9 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                 cardViewCategory1.setVisibility(View.GONE);
             }
 
-            if (!newHashSet) {
+            if (newSet) {
+                SharedPreferences myprefs = getSharedPreferences("layersData", Context.MODE_PRIVATE);
+                myprefs.edit().putStringSet(layer.getPackageName(), aVoid).apply();
                 Toast.makeText(OverlayDetailActivity.this, "Generating complete", Toast.LENGTH_LONG).show();
             }
 
