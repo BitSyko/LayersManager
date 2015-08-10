@@ -610,6 +610,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
                 Pair<Boolean, TableRow> pair = new Pair<>(layerFile.isColor(), row);
 
+                //noinspection unchecked
                 publishProgress(pair);
 
                 check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -630,8 +631,9 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         }
 
 
+        @SafeVarargs
         @Override
-        protected void onProgressUpdate(Pair<Boolean, TableRow>... values) {
+        protected final void onProgressUpdate(Pair<Boolean, TableRow>... values) {
 
             for (Pair<Boolean, TableRow> row : values) {
 
