@@ -1,5 +1,6 @@
 package com.lovejoy777.rroandlayersmanager.commands;
 
+import android.util.Log;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.execution.CommandCapture;
 
@@ -17,6 +18,9 @@ public class RootCommands {
     public static void moveRoot(String old, String newDir) {
 
         try {
+
+            Log.d("Moving", old + " to " + newDir);
+
             CommandCapture command3 = new CommandCapture(0, "mv -f " + old + " " + newDir);
 
             RootTools.getShell(true).add(command3);

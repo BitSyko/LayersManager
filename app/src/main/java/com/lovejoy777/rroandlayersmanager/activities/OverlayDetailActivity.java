@@ -558,9 +558,10 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             SharedPreferences myprefs = getSharedPreferences("layersData", Context.MODE_PRIVATE);
             Set<String> filesToGreyOut = myprefs.getStringSet(layer.getPackageName(), null);
 
-            if (filesToGreyOut == null) {
+            if (filesToGreyOut == null || !filesToGreyOut.contains(layer.getVersionCode())) {
                 newSet = true;
                 filesToGreyOut = new HashSet<>();
+                filesToGreyOut.add(layer.getVersionCode());
             }
 
             List<LayerFile> layerFiles = layer.getLayersInPackage();

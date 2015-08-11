@@ -99,6 +99,15 @@ public class Layer implements Closeable {
         return layerList;
     }
 
+    public String getVersionCode() {
+        try {
+            return context.getApplicationContext().getPackageManager().getPackageInfo(packageName, 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
+    }
+
     public String getName() {
         return name;
     }
