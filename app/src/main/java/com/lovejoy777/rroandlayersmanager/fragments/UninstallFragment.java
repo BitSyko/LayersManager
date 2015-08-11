@@ -28,7 +28,8 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
     private MaterialCab mCab = null;
     private CoordinatorLayout cordLayout = null;
     private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
-
+    android.support.v7.widget.Toolbar toolbar;
+    TextView toolbarTitle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -37,13 +38,13 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
         ((NavigationView) getActivity().findViewById(R.id.nav_view)).getMenu().getItem(1).setChecked(true);
 
-        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar = (android.support.v7.widget.Toolbar) getActivity().findViewById(R.id.toolbar);
 
         int elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
         int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 156, getResources().getDisplayMetrics());
         toolbar.setNavigationIcon(R.drawable.ic_action_menu);
 
-        TextView toolbarTitle = (TextView) getActivity().findViewById(R.id.title2);
+        toolbarTitle = (TextView) getActivity().findViewById(R.id.title2);
         toolbarTitle.setText(getString(R.string.UninstallOverlays));
 
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
@@ -141,6 +142,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
     //CAB methods
     @Override
     public boolean onCabCreated(MaterialCab materialCab, Menu menu) {
+        toolbarTitle.setText("");
         return true;
     }
 
@@ -159,6 +161,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
     @Override
     public boolean onCabFinished(MaterialCab materialCab) {
         UncheckAll(true);
+        toolbarTitle.setText(getString(R.string.UninstallOverlays));
         return true;
     }
 
