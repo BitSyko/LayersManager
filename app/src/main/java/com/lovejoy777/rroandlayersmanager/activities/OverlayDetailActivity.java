@@ -530,7 +530,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     }
 
 
-    private class LoadLayerApks extends AsyncTask<Void, Pair<Boolean, TableRow>, Set<String>> {
+    private class LoadLayerApks extends AsyncTask<Void, Pair<Boolean, TableRow>, Pair<Set<String>,Set<String>>> {
 
         private Context context;
         private CoordinatorLayout cordLayout;
@@ -538,6 +538,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         private CardView cardViewCategory1, cardViewCategory2;
         private boolean stop;
         boolean newSet = false;
+        boolean showNotInstalledApps;
 
         public LoadLayerApks(Context context, CoordinatorLayout cordLayout) {
             this.context = context;
@@ -553,13 +554,13 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         }
 
         @Override
-        protected Set<String> doInBackground(Void... params) {
+        protected Pair<Set<String>,Set<String>> doInBackground(Void... params) {
 
             SharedPreferences myprefs = getSharedPreferences("layersData", Context.MODE_PRIVATE);
             Set<String> filesToGreyOut = myprefs.getStringSet(layer.getPackageName(), null);
             Set<String> filesThatDontExist = myprefs.getStringSet(layer.getPackageName() + "_dontExist", null);
 
-            Boolean showNotInstalledApps = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+            showNotInstalledApps = !getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
                     .getBoolean("showNotInstalledApps", false);
 
             
