@@ -32,4 +32,9 @@ public class FileBean {
     public String getFullName() {
         return fullname;
     }
+
+    public boolean isInstallable() {
+        return getFullName().endsWith(".zip") || getFullName().endsWith(".apk");
+    }
+
 }

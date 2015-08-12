@@ -321,9 +321,7 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
                 viewHolder.check.setTag(i);
                 viewHolder.check.setId(i);
 
-                if (!theme2.getFullName().endsWith(".zip") && !theme2.getFullName().endsWith(".apk")) {
-                    viewHolder.check.setEnabled(false);
-                }
+                viewHolder.check.setEnabled(theme2.isInstallable());
 
                 viewHolder.check.setChecked(theme2.isChecked());
                 viewHolder.check.setOnClickListener(new View.OnClickListener() {
