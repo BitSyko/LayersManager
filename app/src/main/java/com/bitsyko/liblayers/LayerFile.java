@@ -61,9 +61,12 @@ public class LayerFile {
 
     public File getFile(String color) throws IOException {
 
-        if (file != null && file.exists()) {
+
+        if (file != null && file.exists() && color.equals(colorName)) {
             return file;
         }
+
+        this.colorName = color;
 
         String fileName = name.replaceAll(" ", "");
 
@@ -114,6 +117,9 @@ public class LayerFile {
     }
 
     public File getFile() throws IOException {
+        if (color) {
+            throw new RuntimeException("Don't use getFile() for color layers");
+        }
         return getFile("General");
     }
 
@@ -127,14 +133,6 @@ public class LayerFile {
 
     public boolean isColor() {
         return color;
-    }
-
-    public String getColorName() {
-        return colorName;
-    }
-
-    public void setColorName(String colorName) {
-        this.colorName = colorName;
     }
 
 }
