@@ -11,6 +11,12 @@
             android:summary="@string/SettingLauncherIconWarning"
             android:title="@string/SettingLauncherIconDetail" />
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="showNotInstalledApps"
+            android:summary="Disable Overlays for not installed Apps"
+            android:title="Hide unnecessary Overlays" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

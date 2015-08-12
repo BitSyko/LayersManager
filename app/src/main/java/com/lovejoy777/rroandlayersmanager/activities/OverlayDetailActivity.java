@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -555,17 +556,28 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         @Override
         protected Set<String> doInBackground(Void... params) {
 
-            SharedPreferences myprefs = getSharedPreferences("layersData", Context.MODE_PRIVATE);
-            Set<String> filesToGreyOut = myprefs.getStringSet(layer.getPackageName(), null);
+            SharedPreferences myprefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
 
-            if (filesToGreyOut == null || !filesToGreyOut.contains(layer.getVersionCode())) {
-                newSet = true;
-                filesToGreyOut = new HashSet<>();
-                filesToGreyOut.add(layer.getVersionCode());
+            Boolean showNotInstalledApps = myprefs.getBoolean("showNotInstalledApps", false);
+            Set<String> filesToGreyOut = null;
+            List<String> packages = null;
+            if (!showNotInstalledApps){
+                SharedPreferences myprefs2 = getSharedPreferences("layersData", Context.MODE_PRIVATE);
+                filesToGreyOut = myprefs2.getStringSet(layer.getPackageName(), null);
+
+                if (filesToGreyOut == null || !filesToGreyOut.contains(layer.getVersionCode())) {
+                    newSet = true;
+                    filesToGreyOut = new HashSet<>();
+                    filesToGreyOut.add(layer.getVersionCode());
+                }
+                packages = new ArrayList<>(Helpers.allPackagesInSystem(OverlayDetailActivity.this));
             }
 
+
+
+
             List<LayerFile> layerFiles = layer.getLayersInPackage();
-            List<String> packages = new ArrayList<>(Helpers.allPackagesInSystem(OverlayDetailActivity.this));
+
 
 
             for (final LayerFile layerFile : layerFiles) {
@@ -585,6 +597,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
                 row.addView(check);
 
+                if (!showNotInstalledApps){
                 if (!layerFile.isColor()) {
 
                     if (newSet) {
@@ -607,6 +620,9 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                         check.setEnabled(!filesToGreyOut.contains(layerFile.getName()));
                     }
 
+                }
+            } else{
+                    check.setEnabled(true);
                 }
 
                 Pair<Boolean, TableRow> pair = new Pair<>(layerFile.isColor(), row);
