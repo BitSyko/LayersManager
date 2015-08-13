@@ -26,6 +26,7 @@ public class MainActivity extends Activity {
             Toast.makeText(MainActivity.this, R.string.noRoot, Toast.LENGTH_LONG).show();
         }
 
+        DeviceSingleton.getInstance();
 
         // switch and build.prop call for no launcher Icon.
         SharedPreferences prefs = this.getSharedPreferences("switch1", Context.MODE_PRIVATE);
