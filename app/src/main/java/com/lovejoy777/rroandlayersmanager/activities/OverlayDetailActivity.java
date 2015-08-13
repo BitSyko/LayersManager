@@ -12,7 +12,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -531,7 +530,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     }
 
 
-    private class LoadLayerApks extends AsyncTask<Void, Pair<Boolean, TableRow>, Set<String>> {
+    private class LoadLayerApks extends AsyncTask<Void, Pair<Boolean, TableRow>, Pair<Set<String>,Set<String>>> {
 
         private Context context;
         private CoordinatorLayout cordLayout;
@@ -539,6 +538,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         private CardView cardViewCategory1, cardViewCategory2;
         private boolean stop;
         boolean newSet = false;
+        boolean showNotInstalledApps;
 
         public LoadLayerApks(Context context, CoordinatorLayout cordLayout) {
             this.context = context;
@@ -554,34 +554,28 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         }
 
         @Override
-        protected Set<String> doInBackground(Void... params) {
+        protected Pair<Set<String>,Set<String>> doInBackground(Void... params) {
 
-            SharedPreferences myprefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+            SharedPreferences myprefs = getSharedPreferences("layersData", Context.MODE_PRIVATE);
+            Set<String> filesToGreyOut = myprefs.getStringSet(layer.getPackageName(), null);
+            Set<String> filesThatDontExist = myprefs.getStringSet(layer.getPackageName() + "_dontExist", null);
 
-            Boolean showNotInstalledApps = myprefs.getBoolean("showNotInstalledApps", false);
-            Set<String> filesToGreyOut = null;
-            List<String> packages = null;
-            if (!showNotInstalledApps){
-                SharedPreferences myprefs2 = getSharedPreferences("layersData", Context.MODE_PRIVATE);
-                filesToGreyOut = myprefs2.getStringSet(layer.getPackageName(), null);
+            showNotInstalledApps = !getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+                    .getBoolean("showNotInstalledApps", false);
 
-                if (filesToGreyOut == null || !filesToGreyOut.contains(layer.getVersionCode())) {
-                    newSet = true;
-                    filesToGreyOut = new HashSet<>();
-                    filesToGreyOut.add(layer.getVersionCode());
-                }
-                packages = new ArrayList<>(Helpers.allPackagesInSystem(OverlayDetailActivity.this));
+            
+            if (filesToGreyOut == null || !filesToGreyOut.contains(layer.getVersionCode())) {
+                newSet = true;
+                filesToGreyOut = new HashSet<>();
+                filesThatDontExist = new HashSet<>();
+                filesToGreyOut.add(layer.getVersionCode());
             }
 
-
-
-
             List<LayerFile> layerFiles = layer.getLayersInPackage();
+            List<String> packages = new ArrayList<>(Helpers.allPackagesInSystem(OverlayDetailActivity.this));
 
-
-
-            for (final LayerFile layerFile : layerFiles) {
-
+            for (LayerFile layerFile : layerFiles) {
+                
                 if (isCancelled() || stop) {
                     return null;
                 }
@@ -597,32 +591,37 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
                 row.addView(check);
 
-                if (!showNotInstalledApps){
-                if (!layerFile.isColor()) {
+                if (newSet && !showNotInstalledApps) {
 
-                    if (newSet) {
+                    try {
 
-                        try {
+                        if (layerFile.isColor()) {
+                            layerFile.getFile(layer.getColors().get(0));
+                        } else {
                             layerFile.getFile();
-                            Log.d("Manifest " + layerFile.getName(), layerFile.getRelatedPackage());
-
-                            if (!packages.contains(layerFile.getRelatedPackage())) {
-                                check.setEnabled(false);
-                                filesToGreyOut.add(layerFile.getName());
-                            }
-
-                        } catch (IOException | NoFileInZipException e) {
-                            e.printStackTrace();
-                            continue;
                         }
 
-                    } else {
-                        check.setEnabled(!filesToGreyOut.contains(layerFile.getName()));
+                        Log.d("Manifest " + layerFile.getName(), layerFile.getRelatedPackage());
+
+                        if (!packages.contains(layerFile.getRelatedPackage())) {
+                            filesToGreyOut.add(layerFile.getName());
+                        }
+
+                    } catch (IOException | NoFileInZipException e) {
+                        e.printStackTrace();
+                        filesThatDontExist.add(layerFile.getName());
                     }
 
                 }
-            } else{
-                    check.setEnabled(true);
+                
+                if (!showNotInstalledApps) {
+
+                    check.setEnabled(!filesToGreyOut.contains(layerFile.getName()));
+
+                    if (filesThatDontExist.contains(layerFile.getName())) {
+                        check.setEnabled(false);
+                        check.setTextColor(getResources().getColor(R.color.accent));
+                    }
                 }
 
                 Pair<Boolean, TableRow> pair = new Pair<>(layerFile.isColor(), row);
@@ -643,7 +642,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             }
 
 
-            return filesToGreyOut;
+            return new Pair<>(filesToGreyOut, filesThatDontExist);
 
         }
 
@@ -665,7 +664,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         }
 
         @Override
-        protected void onPostExecute(Set<String> aVoid) {
+        protected void onPostExecute(Pair<Set<String>, Set<String>> aVoid) {
 
             //No styleSpecific Overlays
             if (linearLayoutCategory2.getChildCount() == 0) {
@@ -676,9 +675,10 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                 cardViewCategory1.setVisibility(View.GONE);
             }
 
-            if (newSet) {
+            if (newSet && !showNotInstalledApps) {
                 SharedPreferences myprefs = getSharedPreferences("layersData", Context.MODE_PRIVATE);
-                myprefs.edit().putStringSet(layer.getPackageName(), aVoid).apply();
+                myprefs.edit().putStringSet(layer.getPackageName(), aVoid.first).apply();
+                myprefs.edit().putStringSet(layer.getPackageName() + "_dontExist", aVoid.second).apply();
                 Toast.makeText(OverlayDetailActivity.this, "Generating complete", Toast.LENGTH_LONG).show();
             }
 

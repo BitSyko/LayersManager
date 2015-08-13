@@ -34,6 +34,7 @@ public class Layer implements Closeable {
     private final ApplicationInfo applicationInfo;
     private final Resources resources;
     private final Context context;
+    private List<String> colors;
 
     private final Drawable icon;
 
@@ -250,16 +251,20 @@ public class Layer implements Closeable {
 
     public List<String> getColors() {
 
-        Bundle bundle = applicationInfo.metaData;
+        if (colors == null) {
 
-        ArrayList<String> list = new ArrayList<>();
+            Bundle bundle = applicationInfo.metaData;
 
-        list.addAll(Arrays.asList(bundle.getString("Layers_Colors", "").split(",")));
-        list.addAll(Arrays.asList(bundle.getString("Styles", "").split(",")));
+            colors = new ArrayList<>();
 
-        list.remove("");
+            colors.addAll(Arrays.asList(bundle.getString("Layers_Colors", "").split(",")));
+            colors.addAll(Arrays.asList(bundle.getString("Styles", "").split(",")));
 
-        return list;
+            colors.remove("");
+
+        }
+
+        return colors;
     }
 
     public Resources getResources() {
