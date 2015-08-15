@@ -9,8 +9,8 @@ android {
         applicationId "com.lovejoy777.rroandlayersmanager"
         minSdkVersion 21
         targetSdkVersion 22
-        versionCode 19
-        versionName "4.3b2.1"
+        versionCode 20
+        versionName "4.3b3"
         archivesBaseName = "LayersManager"
     }
 
