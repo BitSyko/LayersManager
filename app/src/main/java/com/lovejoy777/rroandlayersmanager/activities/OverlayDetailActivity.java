@@ -599,7 +599,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                 check.setText(layerFile.getNiceName());
                 check.setTag(layerFile);
 
-                FrameLayout frameLayout = new CheckBoxHolder(OverlayDetailActivity.this, check, new CheckBoxHolder.CheckboxHolderCallback() {
+                FrameLayout frameLayout = new CheckBoxHolder(OverlayDetailActivity.this, check, new CheckBoxHolder.CheckBoxHolderCallback() {
                     @Override
                     public void onClick() {
                         refreshFab();
