@@ -207,6 +207,7 @@ public class Layer implements Closeable {
 
             Log.d("Normal overlays: ", bundle.getString("Layers_NormalOverlays"));
 
+
             String[] normalOverlayNames = bundle.getString("Layers_NormalOverlays").split(",");
 
             for (String layer : normalOverlayNames) {
@@ -215,10 +216,12 @@ public class Layer implements Closeable {
 
             String[] styleSpecificOverlayNames = bundle.getString("Layers_StyleSpecificOverlays", "").split(",");
 
-            for (String layer : styleSpecificOverlayNames) {
-                files.add(new LayerFile(this, layer, true));
-            }
 
+            for (String layer : styleSpecificOverlayNames) {
+                if (!layer.equals("")){
+                    files.add(new LayerFile(this, layer, true));
+                }
+            }
 
         } else {
             //v1.0
