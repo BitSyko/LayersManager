@@ -19,6 +19,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
+import com.lovejoy777.rroandlayersmanager.DeviceSingleton;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
@@ -355,13 +356,13 @@ public class BackupRestoreFragment extends Fragment {
                 }
 
 
-                RootTools.remount("/system", "RW");
+                RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RW");
 
                 // CHANGE PERMISSIONS OF /VENDOR/OVERLAY && /SDCARD/OVERLAYS/BACKUP
                 CommandCapture command2 = new CommandCapture(0,
-                        "chmod -R 755 /vendor/overlay",
+                        "chmod -R 755 " + DeviceSingleton.getInstance().getOverlayFolder(),
                         "chmod -R 755 " + Environment.getExternalStorageDirectory() + "/Overlays/Backup/",
-                        "cp -fr /vendor/overlay " + Environment.getExternalStorageDirectory() + "/Overlays/Backup/temp/");
+                        "cp -fr " + DeviceSingleton.getInstance().getOverlayFolder() + " " + Environment.getExternalStorageDirectory() + "/Overlays/Backup/temp/");
                 RootTools.getShell(true).add(command2);
                 while (!command2.isFinished()) {
                     Thread.sleep(1);
@@ -379,13 +380,17 @@ public class BackupRestoreFragment extends Fragment {
                 // DELETE /SDCARD/OVERLAYS/BACKUP/TEMP FOLDER
                 RootCommands.DeleteFileRoot(Environment.getExternalStorageDirectory() + "/Overlays/Backup/temp");
                 // CHANGE PERMISSIONS OF /VENDOR/OVERLAY/ 666  && /VENDOR/OVERLAY 777 && /SDCARD/OVERLAYS/BACKUP/ 666
-                CommandCapture command17 = new CommandCapture(0, "chmod -R 666 /vendor/overlay", "chmod 755 /vendor/overlay", "chmod -R 666" + Environment.getExternalStorageDirectory() + "/Overlays/Backup/");
+                CommandCapture command17 = new CommandCapture(0,
+                        "chmod -R 666 " +  DeviceSingleton.getInstance().getOverlayFolder(),
+                        "chmod 755 " +  DeviceSingleton.getInstance().getOverlayFolder(),
+                        "chmod -R 666" + Environment.getExternalStorageDirectory() + "/Overlays/Backup/");
+
                 RootTools.getShell(true).add(command17);
                 while (!command17.isFinished()) {
                     Thread.sleep(1);
                 }
 
-                RootTools.remount("/system", "RW");
+                RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RO");
 
                 // CLOSE ALL SHELLS
                 RootTools.closeAllShells();

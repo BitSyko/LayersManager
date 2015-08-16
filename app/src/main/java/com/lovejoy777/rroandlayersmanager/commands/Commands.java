@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.bitsyko.liblayers.LayerFile;
 import com.bitsyko.liblayers.NoFileInZipException;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
+import com.lovejoy777.rroandlayersmanager.DeviceSingleton;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
@@ -247,12 +248,13 @@ public class Commands {
             }
 
 
-            RootTools.remount("/system", "RW");
-            RootCommands.moveRoot(tempDir + "*", "/system/vendor/overlay/");
+            RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RW");
+
+            RootCommands.moveRoot(tempDir + "*", DeviceSingleton.getInstance().getOverlayFolder() + "/");
 
             try {
                 // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 644 RECURING
-                CommandCapture command9 = new CommandCapture(0, "chmod -R 644 /system/vendor/overlay");
+                CommandCapture command9 = new CommandCapture(0, "chmod -R 644 " + DeviceSingleton.getInstance().getOverlayFolder());
                 RootTools.getShell(true).add(command9);
                 while (!command9.isFinished()) {
                     Thread.sleep(1);
@@ -260,13 +262,13 @@ public class Commands {
 
 
                 // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER BACK TO 755
-                CommandCapture command10 = new CommandCapture(0, "chmod 755 /system/vendor/overlay");
+                CommandCapture command10 = new CommandCapture(0, "chmod 755 " + DeviceSingleton.getInstance().getOverlayFolder());
                 RootTools.getShell(true).add(command10);
                 while (!command10.isFinished()) {
                     Thread.sleep(1);
                 }
 
-                RootTools.remount("/system", "RO");
+                RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RO");
 
                 // CLOSE ALL SHELLS
                 RootTools.closeAllShells();
@@ -315,7 +317,7 @@ public class Commands {
 
         @Override
         protected Void doInBackground(Void... params) {
-            RootTools.remount("/system", "RW");
+            RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RW");
             for (String path : paths) {
                 Log.d("Removing: ", path);
                 try {
@@ -326,7 +328,7 @@ public class Commands {
                 }
                 publishProgress();
             }
-            RootTools.remount("/system", "RO");
+            RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RO");
             return null;
         }
 
@@ -375,7 +377,7 @@ public class Commands {
         protected Void doInBackground(Void... params) {
 
             // MOUNT /SYSTEM RW
-            RootTools.remount("/system", "RW");
+            RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RW");
 
 
             for (LayerFile layerFile : layersToInstall) {
@@ -389,7 +391,7 @@ public class Commands {
                         filelocation = RootCommands.getCommandLineString(layerFile.getFile().getAbsolutePath());
                     }
 
-                    RootCommands.moveRoot(filelocation, "/system/vendor/overlay/");
+                    RootCommands.moveRoot(filelocation, DeviceSingleton.getInstance().getOverlayFolder() + "/");
 
                     publishProgress();
                 } catch (IOException e) {
@@ -403,7 +405,7 @@ public class Commands {
 
             try {
                 // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 644 RECURING
-                CommandCapture command9 = new CommandCapture(0, "chmod -R 644 /system/vendor/overlay");
+                CommandCapture command9 = new CommandCapture(0, "chmod -R 644 " + DeviceSingleton.getInstance().getOverlayFolder());
                 RootTools.getShell(true).add(command9);
                 while (!command9.isFinished()) {
                     Thread.sleep(1);
@@ -411,13 +413,13 @@ public class Commands {
 
 
                 // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER BACK TO 755
-                CommandCapture command10 = new CommandCapture(0, "chmod 755 /system/vendor/overlay");
+                CommandCapture command10 = new CommandCapture(0, "chmod 755 " + DeviceSingleton.getInstance().getOverlayFolder());
                 RootTools.getShell(true).add(command10);
                 while (!command10.isFinished()) {
                     Thread.sleep(1);
                 }
 
-                RootTools.remount("/system", "RO");
+                RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RO");
 
                 // CLOSE ALL SHELLS
                 RootTools.closeAllShells();

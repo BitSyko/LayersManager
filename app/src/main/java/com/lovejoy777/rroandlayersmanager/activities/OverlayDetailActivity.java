@@ -35,6 +35,7 @@ import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.helper.Helpers;
+import com.lovejoy777.rroandlayersmanager.views.CheckBoxHolder;
 
 import java.io.IOException;
 import java.util.*;
@@ -99,6 +100,10 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     }
 
     private void loadOverlayCardviews() {
+
+        //We're checking if progress dialog is required
+
+
         loadLayerApks = new LoadLayerApks(this, cordLayout);
         loadLayerApks.execute();
     }
@@ -284,17 +289,19 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
         }
 
+        refreshFab();
+
     }
 
     private void checkall() {
-
-        installationFAB.show();
 
         for (CheckBox checkBox : checkBoxes) {
             if (!checkBox.isChecked() && checkBox.isEnabled()) {
                 checkBox.performClick();
             }
         }
+
+        refreshFab();
 
     }
 
@@ -304,7 +311,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
     private void installationFinishedSnackBar() {
 
-        //show SnackBar after sucessfull installation of the overlays
+        //show SnackBar after successful installation of the overlays
         final View coordinatorLayoutView = cordLayout.findViewById(R.id.main_content);
         Snackbar.make(coordinatorLayoutView, R.string.OverlaysInstalled, Snackbar.LENGTH_LONG)
                 .setAction(R.string.Reboot, new View.OnClickListener() {
@@ -574,6 +581,10 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             List<LayerFile> layerFiles = layer.getLayersInPackage();
             List<String> packages = new ArrayList<>(Helpers.allPackagesInSystem(OverlayDetailActivity.this));
 
+            if (newSet && !showNotInstalledApps) {
+                Log.d("Installed packages", String.valueOf(packages));
+            }
+
             for (LayerFile layerFile : layerFiles) {
                 
                 if (isCancelled() || stop) {
@@ -588,8 +599,15 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                 check.setText(layerFile.getNiceName());
                 check.setTag(layerFile);
 
+                FrameLayout frameLayout = new CheckBoxHolder(OverlayDetailActivity.this, check, new CheckBoxHolder.CheckBoxHolderCallback() {
+                    @Override
+                    public void onClick() {
+                        refreshFab();
+                    }
+                });
 
-                row.addView(check);
+                frameLayout.addView(check);
+                row.addView(frameLayout);
 
                 if (newSet && !showNotInstalledApps) {
 
@@ -628,14 +646,6 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
                 //noinspection unchecked
                 publishProgress(pair);
-
-                check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        refreshFab();
-                    }
-                });
-
 
                 checkBoxes.add(check);
 

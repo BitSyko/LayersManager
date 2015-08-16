@@ -14,6 +14,7 @@ import android.view.*;
 import android.widget.*;
 import com.afollestad.materialcab.MaterialCab;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
+import com.lovejoy777.rroandlayersmanager.DeviceSingleton;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.beans.FileBean;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
@@ -103,7 +104,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
         ArrayList<String> paths = new ArrayList<>();
         for (CheckBox checkBox : checkBoxes) {
             if (checkBox.isChecked()) {
-                paths.add("/system/vendor/overlay/" + ((FileBean) checkBox.getTag()).getLocation());
+                paths.add(DeviceSingleton.getInstance().getOverlayFolder() + "/" + ((FileBean) checkBox.getTag()).getLocation());
             }
         }
 
@@ -197,7 +198,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
             ArrayList<String> loadedFiles = new ArrayList<>();
 
-            loadedFiles.addAll(Commands.RootloadFiles(getActivity(), getActivity(), "/system/vendor/overlay"));
+            loadedFiles.addAll(Commands.RootloadFiles(getActivity(), getActivity(), DeviceSingleton.getInstance().getOverlayFolder()));
 
             for (String file : loadedFiles) {
                 files.add(new FileBean(file));
