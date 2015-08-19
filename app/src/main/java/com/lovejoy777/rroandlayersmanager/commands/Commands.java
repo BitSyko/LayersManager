@@ -191,8 +191,8 @@ public class Commands {
 
         @Override
         protected void onPreExecute() {
-            progressBackup = ProgressDialog.show(context, context.getString(R.string.Restore),
-                    context.getString(R.string.installingOverlays) + "...", true);
+            progressBackup = ProgressDialog.show(context, context.getString(R.string.installingOverlays),
+                    context.getString(R.string.installing) + "...", true);
         }
 
         @Override
