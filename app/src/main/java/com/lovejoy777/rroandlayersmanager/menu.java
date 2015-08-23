@@ -42,10 +42,6 @@ import java.util.concurrent.TimeoutException;
 public class menu extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
-    private final List<Fragment> mFragmentList = new ArrayList<>();
-    private final List<String> mFragmentTitleList = new ArrayList<>();
-    TabLayout tabLayout;
-
 
 
     @Override
@@ -61,18 +57,7 @@ public class menu extends AppCompatActivity {
 
         createImportantDirectories();
 
-        //ViewPager viewPager = (ViewPager) findViewById(R.id.tabanim_viewpager);
-        //TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-
-        ViewPager viewPager = (ViewPager) findViewById(R.id.tabanim_viewpager);
-        setupViewPager(viewPager);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-
-        //setupTablayout();
-
-
-        //changeFragment(1, 0);
+        changeFragment(1, 0);
 
         loadTutorial();
 
@@ -236,26 +221,17 @@ public class menu extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         switch (position) {
             case 1:
-                fragment = new PluginFragment();
-                viewPager.setVisibility(View.VISIBLE);
-                tabLayout.setVisibility(View.VISIBLE);
                 setupViewPager(viewPager);
                 tabLayout.setupWithViewPager(viewPager);
                 break;
             case 2:
                 fragment = new UninstallFragment();
-                viewPager.setVisibility(View.GONE);
-                tabLayout.setVisibility(View.GONE);
                 break;
             case 3:
                 fragment = new BackupRestoreFragment();
-                viewPager.setVisibility(View.GONE);
-                tabLayout.setVisibility(View.GONE);
                 break;
             case 4:
                 fragment = new InstallFragment();
-                viewPager.setVisibility(View.GONE);
-                tabLayout.setVisibility(View.GONE);
                 break;
         }
 
@@ -267,15 +243,14 @@ public class menu extends AppCompatActivity {
                     .addToBackStack(null)
                     .commit();
         } else{
-            fragmentManager
-                    .beginTransaction()
-                    .remove(getSupportFragmentManager().findFragmentByTag("TAG"))
-                    .commit();
-
+            android.support.v4.app.Fragment test = getSupportFragmentManager().findFragmentByTag("TAG");
+            if (test!=null){
+                fragmentManager
+                        .beginTransaction()
+                        .remove(getSupportFragmentManager().findFragmentByTag("TAG"))
+                        .commit();
+            }
         }
-
-
-
     }
 
     public void changeFragment2(Layer layer) {
@@ -335,11 +310,15 @@ public class menu extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Fragment currentFragment = menu.this.getFragmentManager().findFragmentById(R.id.fragment_container);
+        android.support.v4.app.Fragment currentFragment = menu.this.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawers();
             return;
+        }
+
+        if (currentFragment instanceof InstallFragment) {
+            changeFragment(1, 1);
         }
 
         //if (currentFragment instanceof BackButtonListener && !((BackButtonListener) currentFragment).onBackButton()) {

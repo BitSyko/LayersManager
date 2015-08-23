@@ -63,11 +63,15 @@ public class PluginFragment extends android.support.v4.app.Fragment implements A
         cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_plugins, container, false);
 
         ((DrawerLayout) getActivity().findViewById(R.id.drawer_layout)).setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-
         ((NavigationView) getActivity().findViewById(R.id.nav_view)).getMenu().getItem(0).setChecked(true);
-
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_action_menu);
+        toolbar.setTitle(getString(R.string.InstallOverlays));
 
+        ViewPager viewPager = (ViewPager) getActivity().findViewById(R.id.tabanim_viewpager);
+        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
+        viewPager.setVisibility(View.VISIBLE);
+        tabLayout.setVisibility(View.VISIBLE);
 
 
         TextView toolbarTitle = (TextView) getActivity().findViewById(R.id.title2);
@@ -75,8 +79,7 @@ public class PluginFragment extends android.support.v4.app.Fragment implements A
 
         int elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
         int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, getResources().getDisplayMetrics());
-        toolbar.setNavigationIcon(R.drawable.ic_action_menu);
-        toolbar.setTitle(getString(R.string.InstallOverlays));
+
 
         AppBarLayout.LayoutParams layoutParams = new AppBarLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, height

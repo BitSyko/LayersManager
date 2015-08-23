@@ -8,7 +8,9 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.*;
@@ -53,8 +55,13 @@ public class UninstallFragment extends android.support.v4.app.Fragment implement
                 ViewGroup.LayoutParams.MATCH_PARENT, height
         );
 
-        AppBarLayout test = (AppBarLayout) getActivity().findViewById(R.id.appBarlayout);
-        test.setElevation(0);
+        ViewPager viewPager = (ViewPager) getActivity().findViewById(R.id.tabanim_viewpager);
+        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
+        viewPager.setVisibility(View.GONE);
+        tabLayout.setVisibility(View.GONE);
+
+        AppBarLayout appbar = (AppBarLayout) getActivity().findViewById(R.id.appBarlayout);
+        appbar.setElevation(0);
         toolbar.setElevation(elevation);
         toolbar.setLayoutParams(layoutParams);
 

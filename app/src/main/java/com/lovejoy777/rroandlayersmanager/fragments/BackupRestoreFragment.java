@@ -1,7 +1,6 @@
 package com.lovejoy777.rroandlayersmanager.fragments;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -12,6 +11,8 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -73,27 +74,9 @@ public class BackupRestoreFragment extends android.support.v4.app.Fragment {
 
         cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_backuprestore, container, false);
 
-        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) getActivity().findViewById(R.id.toolbar);
-
-        ((NavigationView) getActivity().findViewById(R.id.nav_view)).getMenu().getItem(2).setChecked(true);
-
-        int elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
-        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 156, getResources().getDisplayMetrics());
-
-        toolbar.setNavigationIcon(R.drawable.ic_action_menu);
-
-        TextView toolbarTitle = (TextView) getActivity().findViewById(R.id.title2);
-        toolbarTitle.setText(getString(R.string.BackupRestore));
-
-        AppBarLayout.LayoutParams layoutParams = new AppBarLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, height
-        );
-
-        toolbar.setElevation(0);
-        toolbar.setLayoutParams(layoutParams);
-
-
-        loadToolbarRecyclerViewFab();
+        loadToolbar();
+        loadRecyclerView();
+        loadFAB();
 
         new LoadAndSet().execute();
 
@@ -102,13 +85,48 @@ public class BackupRestoreFragment extends android.support.v4.app.Fragment {
         return cordLayout;
     }
 
-    private void loadToolbarRecyclerViewFab() {
+    private void loadToolbar() {
+        //set toolbar
+        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_action_menu);
+
+        // appbar elevation
+        AppBarLayout appbar = (AppBarLayout) getActivity().findViewById(R.id.appBarlayout);
+        appbar.setElevation(0);
+
+        //change toolbars height
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 156, getResources().getDisplayMetrics());
+        AppBarLayout.LayoutParams layoutParams = new AppBarLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, height
+        );
+        toolbar.setLayoutParams(layoutParams);
+
+        //check line in Navigationview
+        ((NavigationView) getActivity().findViewById(R.id.nav_view)).getMenu().getItem(2).setChecked(true);
+
+        //set toolbars text
+        TextView toolbarTitle = (TextView) getActivity().findViewById(R.id.title2);
+        toolbarTitle.setText(getString(R.string.BackupRestore));
+
+        //hide viewpager and tablayout
+        ViewPager viewPager = (ViewPager) getActivity().findViewById(R.id.tabanim_viewpager);
+        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
+        viewPager.setVisibility(View.GONE);
+        viewPager.removeAllViews();
+        tabLayout.setVisibility(View.GONE);
+
+    }
+
+    private void loadRecyclerView() {
 
 
         mRecyclerView = (RecyclerView) cordLayout.findViewById(R.id.cardList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
+    }
+
+    private void loadFAB(){
         fab2 = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab6);
         fab2.setOnClickListener(new View.OnClickListener() {
             @Override
