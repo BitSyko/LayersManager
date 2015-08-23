@@ -163,7 +163,8 @@ public class InstallFragment extends android.support.v4.app.Fragment implements 
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        menuInflater.inflate(R.menu.menu_main, menu);
+        menu.removeItem(R.id.menu_sort);
+        super.onCreateOptionsMenu(menu, menuInflater);
     }
 
     @Override

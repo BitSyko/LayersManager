@@ -182,8 +182,10 @@ public class UninstallFragment extends android.support.v4.app.Fragment implement
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.overflow, menu);
+        menu.removeItem(R.id.menu_sort);
         super.onCreateOptionsMenu(menu, inflater);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

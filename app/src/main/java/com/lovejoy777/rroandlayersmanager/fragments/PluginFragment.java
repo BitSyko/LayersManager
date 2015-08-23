@@ -1,6 +1,5 @@
 package com.lovejoy777.rroandlayersmanager.fragments;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -20,8 +19,6 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.TypedValue;
 import android.view.*;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.R;

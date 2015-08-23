@@ -1,8 +1,6 @@
 package com.lovejoy777.rroandlayersmanager;
 
-import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -18,13 +16,10 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.activities.*;
@@ -62,12 +57,12 @@ public class menu extends AppCompatActivity {
         loadTutorial();
 
     }
-
+ private ViewPagerAdapter adapter;
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new PluginFragment(),"Overlays");
-        adapter.addFrag(new PluginFragment(),"Icon Overlays");
+        adapter.addFrag(new PluginFragment(), "Icon Overlays");
         viewPager.setAdapter(adapter);
     }
 
