@@ -1,5 +1,6 @@
 package com.lovejoy777.rroandlayersmanager;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -11,10 +12,18 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.bitsyko.liblayers.Layer;
@@ -26,11 +35,17 @@ import com.stericson.RootTools.execution.CommandCapture;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 public class menu extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
+    private final List<Fragment> mFragmentList = new ArrayList<>();
+    private final List<String> mFragmentTitleList = new ArrayList<>();
+    TabLayout tabLayout;
+
 
 
     @Override
@@ -46,11 +61,57 @@ public class menu extends AppCompatActivity {
 
         createImportantDirectories();
 
-        changeFragment(1, 0);
+        //ViewPager viewPager = (ViewPager) findViewById(R.id.tabanim_viewpager);
+        //TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+
+        ViewPager viewPager = (ViewPager) findViewById(R.id.tabanim_viewpager);
+        setupViewPager(viewPager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+        //setupTablayout();
+
+
+        //changeFragment(1, 0);
 
         loadTutorial();
 
     }
+
+
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFrag(new PluginFragment(),"Overlays");
+        adapter.addFrag(new PluginFragment(),"Icon Overlays");
+        viewPager.setAdapter(adapter);
+    }
+
+
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<android.support.v4.app.Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+        public ViewPagerAdapter(android.support.v4.app.FragmentManager manager) {
+            super(manager);
+        }
+        @Override
+        public android.support.v4.app.Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+        public void addFrag(android.support.v4.app.Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
+    }
+
+
 
     private void loadTutorial() {
 
@@ -94,7 +155,7 @@ public class menu extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Fragment currentFragment = menu.this.getFragmentManager().findFragmentById(R.id.fragment_container);
+                android.support.v4.app.Fragment currentFragment = menu.this.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
                 if (currentFragment instanceof InstallFragment) {
                     changeFragment(1, 1);
                 } else {
@@ -167,31 +228,52 @@ public class menu extends AppCompatActivity {
 
     public void changeFragment(int position, int mode) {
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
-        Fragment fragment = null;
-        FragmentManager fragmentManager = getFragmentManager();
+        android.support.v4.app.Fragment fragment = null;
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
+        ViewPager viewPager = (ViewPager) findViewById(R.id.tabanim_viewpager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         switch (position) {
             case 1:
                 fragment = new PluginFragment();
+                viewPager.setVisibility(View.VISIBLE);
+                tabLayout.setVisibility(View.VISIBLE);
+                setupViewPager(viewPager);
+                tabLayout.setupWithViewPager(viewPager);
                 break;
             case 2:
                 fragment = new UninstallFragment();
+                viewPager.setVisibility(View.GONE);
+                tabLayout.setVisibility(View.GONE);
                 break;
             case 3:
                 fragment = new BackupRestoreFragment();
+                viewPager.setVisibility(View.GONE);
+                tabLayout.setVisibility(View.GONE);
                 break;
             case 4:
                 fragment = new InstallFragment();
+                viewPager.setVisibility(View.GONE);
+                tabLayout.setVisibility(View.GONE);
                 break;
         }
 
 
-        fragmentManager
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit();
+        if (position !=1){
+            fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, fragment,"TAG")
+                    .addToBackStack(null)
+                    .commit();
+        } else{
+            fragmentManager
+                    .beginTransaction()
+                    .remove(getSupportFragmentManager().findFragmentByTag("TAG"))
+                    .commit();
+
+        }
+
 
 
     }
@@ -260,17 +342,17 @@ public class menu extends AppCompatActivity {
             return;
         }
 
-        if (currentFragment instanceof BackButtonListener && !((BackButtonListener) currentFragment).onBackButton()) {
-            return;
-        }
+        //if (currentFragment instanceof BackButtonListener && !((BackButtonListener) currentFragment).onBackButton()) {
+        //    return;
+        //}
 
         FragmentManager fm = getFragmentManager();
 
         //First commit is omitted
-        if (fm.getBackStackEntryCount() > 1) {
-            fm.popBackStack();
-            return;
-        }
+        //if (fm.getBackStackEntryCount() > 1) {
+        //    fm.popBackStack();
+        //    return;
+        //}
 
 
         super.onBackPressed();

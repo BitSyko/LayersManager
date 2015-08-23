@@ -130,6 +130,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         //switch to select all Checkboxes
         installEverything = (Switch) cordLayout.findViewById(R.id.allswitch);
 
+
         //Hide the FAB
         installationFAB = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab2);
         installationFAB.hide();

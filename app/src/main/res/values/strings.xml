@@ -175,6 +175,7 @@
     <string name="sort_random">Random</string>
     <string name="show">Show</string>
     <string name="contains">contains:</string>
+    <string name="InstallOverlays">Install Overlays</string>
 
 
 </resources>

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -36,7 +37,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class BackupRestoreFragment extends Fragment {
+public class BackupRestoreFragment extends android.support.v4.app.Fragment {
 
     private FloatingActionButton fab2;
     private ArrayList<String> files = new ArrayList<>();
@@ -84,11 +85,11 @@ public class BackupRestoreFragment extends Fragment {
         TextView toolbarTitle = (TextView) getActivity().findViewById(R.id.title2);
         toolbarTitle.setText(getString(R.string.BackupRestore));
 
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+        AppBarLayout.LayoutParams layoutParams = new AppBarLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, height
         );
 
-        toolbar.setElevation(elevation);
+        toolbar.setElevation(0);
         toolbar.setLayoutParams(layoutParams);
 
 
