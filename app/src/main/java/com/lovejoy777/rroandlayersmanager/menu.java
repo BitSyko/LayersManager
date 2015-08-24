@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -59,15 +60,37 @@ public class menu extends AppCompatActivity {
     }
  private ViewPagerAdapter adapter;
 
-    private void setupViewPager(ViewPager viewPager) {
+    private void setupViewPager(ViewPager viewPager,int mode) {
+        viewPager.removeAllViews();
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new PluginFragment(),"Overlays");
-        adapter.addFrag(new PluginFragment(), "Icon Overlays");
+        if (mode==0){
+            adapter.addFrag(new PluginFragment(),"Overlays");
+            adapter.addFrag(new PluginFragment(), "Icon Overlays");
+        }else {
+            System.out.println("TEST");
+            adapter.removeAllFrags();
+            adapter.notifyDataSetChanged();
+
+            UninstallFragment uninstallOverlays = new UninstallFragment();
+            UninstallFragment uninstallOverlays2 = new UninstallFragment();
+            Bundle args1 = new Bundle();
+            Bundle args2 = new Bundle();
+            args1.putInt("Mode", 0);
+            uninstallOverlays.setArguments(args1);
+            adapter.addFrag(uninstallOverlays, "Overlays");
+            args2.putInt("Mode", 1);
+            uninstallOverlays2.setArguments(args2);
+            adapter.addFrag(uninstallOverlays2,"Icon Overlays");
+            //adapter.addFrag(new UninstallFragment(), "Icon Overlays");
+
+        }
+
+
         viewPager.setAdapter(adapter);
     }
 
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
+    class ViewPagerAdapter extends FragmentStatePagerAdapter {
         private final List<android.support.v4.app.Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
         public ViewPagerAdapter(android.support.v4.app.FragmentManager manager) {
@@ -84,6 +107,10 @@ public class menu extends AppCompatActivity {
         public void addFrag(android.support.v4.app.Fragment fragment, String title) {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
+        }
+        public void removeAllFrags() {
+            mFragmentList.clear();
+            mFragmentTitleList.clear();
         }
         @Override
         public CharSequence getPageTitle(int position) {
@@ -216,11 +243,13 @@ public class menu extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         switch (position) {
             case 1:
-                setupViewPager(viewPager);
+                setupViewPager(viewPager,0);
                 tabLayout.setupWithViewPager(viewPager);
                 break;
             case 2:
-                fragment = new UninstallFragment();
+                setupViewPager(viewPager,1);
+                tabLayout.setupWithViewPager(viewPager);
+                //fragment = new UninstallFragment();
                 break;
             case 3:
                 fragment = new BackupRestoreFragment();
@@ -231,7 +260,7 @@ public class menu extends AppCompatActivity {
         }
 
 
-        if (position !=1){
+        if (position >2){
             fragmentManager
                     .beginTransaction()
                     .replace(R.id.fragment_container, fragment,"TAG")
