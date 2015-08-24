@@ -16,7 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
-import com.afollestad.materialcab.MaterialCab;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.DeviceSingleton;
 import com.lovejoy777.rroandlayersmanager.R;
@@ -26,16 +25,16 @@ import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UninstallFragment extends android.support.v4.app.Fragment implements MaterialCab.Callback, AsyncResponse {
+public class UninstallFragment extends android.support.v4.app.Fragment implements AsyncResponse {
 
     private FloatingActionButton fab2;
     private LinearLayout mLinearLayout;
-    private MaterialCab mCab = null;
     private CoordinatorLayout cordLayout = null;
     private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
     android.support.v7.widget.Toolbar toolbar;
     TextView toolbarTitle;
     private int mode;
+    private ActionMode mActionMode;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,13 +46,14 @@ public class UninstallFragment extends android.support.v4.app.Fragment implement
         ((NavigationView) getActivity().findViewById(R.id.nav_view)).getMenu().getItem(1).setChecked(true);
 
         toolbar = (android.support.v7.widget.Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.UninstallOverlays));
 
         int elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
         int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, getResources().getDisplayMetrics());
         toolbar.setNavigationIcon(R.drawable.ic_action_menu);
 
         toolbarTitle = (TextView) getActivity().findViewById(R.id.title2);
-        toolbarTitle.setText(getString(R.string.UninstallOverlays));
+        toolbarTitle.setText("");
 
         AppBarLayout.LayoutParams layoutParams = new AppBarLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, height
@@ -96,7 +96,8 @@ public class UninstallFragment extends android.support.v4.app.Fragment implement
                 .show();
 
         new LoadAndSet().execute();
-        mCab.finish();
+        mActionMode.finish();
+        mActionMode= null;
         ActivityCompat.invalidateOptionsMenu(getActivity());
     }
 
@@ -156,31 +157,6 @@ public class UninstallFragment extends android.support.v4.app.Fragment implement
 
     }
 
-    //CAB methods
-    @Override
-    public boolean onCabCreated(MaterialCab materialCab, Menu menu) {
-        toolbarTitle.setText("");
-        return true;
-    }
-
-    @Override
-    public boolean onCabItemClicked(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.menu_selectall:
-                if (menuItem.isChecked()) menuItem.setChecked(false);
-                else menuItem.setChecked(true);
-                checkAll();
-
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onCabFinished(MaterialCab materialCab) {
-        UncheckAll(true);
-        toolbarTitle.setText(getString(R.string.UninstallOverlays));
-        return true;
-    }
 
     //Overflow Menu
     @Override
@@ -300,30 +276,59 @@ public class UninstallFragment extends android.support.v4.app.Fragment implement
             }
         }
 
-        if (mCab == null) {
-            mCab = new MaterialCab((AppCompatActivity) getActivity(), R.id.cab_stub)
-                    .reset()
-                    .setCloseDrawableRes(R.drawable.ic_action_check)
-                    .setMenu(R.menu.overflow)
-                    .start(UninstallFragment.this);
-        } else if (!mCab.isActive()) {
-            mCab
-                    .reset().start(UninstallFragment.this)
-                    .setCloseDrawableRes(R.drawable.ic_action_check)
-                    .setMenu(R.menu.overflow);
-        }
-
-        mCab.setTitle(checkedItems + " " + getResources().getString(R.string.OverlaysSelected));
-
-
         if (checkedItems > 0) {
+            if (mActionMode==null) {
+                mActionMode = getActivity().startActionMode(new ActionBarCallBack());
+            }
             fab2.show();
         } else {
-            if (mCab != null) {
-                mCab.finish();
-                mCab = null;
+            if (mActionMode!=null){
+                mActionMode.finish();
+                mActionMode = null;
             }
+
             fab2.hide();
+        }
+    }
+
+    class ActionBarCallBack implements ActionMode.Callback {
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            // TODO Auto-generated method stub
+            switch (item.getItemId()) {
+                case R.id.menu_selectall:
+                    if (item.isChecked()) item.setChecked(false);
+                    else item.setChecked(true);
+                    checkAll();
+                    return true;
+                case R.id.menu_reboot:
+                    Commands.reboot(getActivity());
+                    return true;
+            }
+            return false;
+        }
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // TODO Auto-generated method stub
+            mode.getMenuInflater().inflate(R.menu.overflow, menu);
+            getActivity().getWindow().setStatusBarColor(getResources().getColor(R.color.primary_dark));
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            // TODO Auto-generated method stub
+            UncheckAll(true);
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            // TODO Auto-generated method stub
+
+            mode.setTitle(getResources().getString(R.string.OverlaysSelected));
+            return false;
         }
     }
 }

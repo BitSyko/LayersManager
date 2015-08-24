@@ -96,6 +96,8 @@ public class PluginFragment extends android.support.v4.app.Fragment implements A
         return cordLayout;
     }
 
+
+
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
         if (i == 0) {
