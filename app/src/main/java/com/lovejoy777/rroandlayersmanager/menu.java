@@ -15,11 +15,19 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
+
 import com.bitsyko.liblayers.Layer;
-import com.lovejoy777.rroandlayersmanager.activities.*;
-import com.lovejoy777.rroandlayersmanager.fragments.*;
+import com.lovejoy777.rroandlayersmanager.activities.AboutActivity;
+import com.lovejoy777.rroandlayersmanager.activities.DetailedTutorialActivity;
+import com.lovejoy777.rroandlayersmanager.activities.IntroActivity;
+import com.lovejoy777.rroandlayersmanager.activities.OverlayDetailActivity;
+import com.lovejoy777.rroandlayersmanager.activities.SettingsActivity;
+import com.lovejoy777.rroandlayersmanager.fragments.BackButtonListener;
+import com.lovejoy777.rroandlayersmanager.fragments.BackupRestoreFragment;
+import com.lovejoy777.rroandlayersmanager.fragments.InstallFragment;
+import com.lovejoy777.rroandlayersmanager.fragments.PluginFragment;
+import com.lovejoy777.rroandlayersmanager.fragments.UninstallFragment;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
@@ -155,6 +163,10 @@ public class menu extends AppCompatActivity {
                             case R.id.nav_settings:
                                 Intent settings = new Intent(menu.this, SettingsActivity.class);
                                 startActivity(settings, bndlanimation);
+                                break;
+                            case R.id.nav_donate:
+                                Intent donate = new Intent(menu.this, InAppBilling.class);
+                                startActivity(donate, bndlanimation);
                                 break;
                             case R.id.nav_playStore:
                                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/search?q=Layers+Theme&c=apps&docType=1&sp=CAFiDgoMTGF5ZXJzIFRoZW1legIYAIoBAggB:S:ANO1ljK_ZAY")), bndlanimation);

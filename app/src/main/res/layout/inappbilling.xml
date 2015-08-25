@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar4"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="?android:attr/colorPrimary"
+        android:elevation="5dp"
+        android:gravity="bottom"
+        android:minHeight="?android:attr/actionBarSize"
+        tools:context="com.sh4dow.hex_layerstheme.activities.AboutActivity"/>
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:id="@+id/linearLayout1"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="24dp"
+            android:text="Donations"
+            android:textColor="@color/primary"
+            android:layout_marginTop="20dp"
+            android:id="@+id/iabtv1"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="for the BitSyko developers"
+            android:id="@+id/iabtv2"
+            android:layout_gravity="center_horizontal" />
+
+    </LinearLayout>
+    <!-- Button 1 -->
+    <LinearLayout
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_below="@+id/linearLayout1"
+        android:layout_marginTop="40dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/linearLayout2">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:gravity="center">
+
+            <!-- Button 1 -->
+
+            <Button
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:text="@string/buy_string1"
+                android:id="@+id/donBtn1"
+                android:onClick="buyClick1">
+            </Button>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <!-- Button 2 -->
+    <LinearLayout
+        android:gravity="center_horizontal"
+        android:layout_centerInParent="true"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/linearLayout3">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:gravity="center" >
+
+            <!-- Button 2 -->
+
+            <Button
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:text="@string/buy_string2"
+                android:id="@+id/donBtn2"
+                android:onClick="buyClick2">
+            </Button>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <!-- Button 3 -->
+    <LinearLayout
+        android:gravity="center_horizontal"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/linearLayout3"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/linearLayout4">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:gravity="center" >
+
+            <!-- Button 3 -->
+
+            <Button
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:text="@string/buy_string3"
+                android:id="@+id/donBtn3"
+                android:onClick="buyClick3">
+            </Button>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <!-- Buttons 4 -->
+    <LinearLayout
+        android:gravity="center_horizontal"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/linearLayout4"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/linearLayout5">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:gravity="center" >
+
+            <!-- Buttons 4 -->
+
+            <Button
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:text="@string/buy_string4"
+                android:id="@+id/donBtn4"
+                android:onClick="buyClick4">
+            </Button>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Thankyou"
+        android:textSize="25sp"
+        android:id="@+id/iabtv3"
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/linearLayout5"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

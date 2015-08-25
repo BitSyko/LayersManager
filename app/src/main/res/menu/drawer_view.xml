@@ -61,6 +61,11 @@
                 android:icon="@drawable/ic_drawer_settings"
                 android:title="@string/Settings" />
 
+            <item
+                android:id="@+id/nav_donate"
+                android:icon="@drawable/ic_drawer_about"
+                android:title="@string/Donate" />
+
         </menu>
     </item>
 

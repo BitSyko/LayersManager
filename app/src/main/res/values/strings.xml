@@ -142,6 +142,7 @@
     <string name="discover">Discover</string>
     <string name="PlayStore">PlayStore</string>
     <string name="Settings">Settings</string>
+    <string name="Donate">Donate</string>
 
     <!-- Settings -->
     <string name="General">General</string>
@@ -175,6 +176,13 @@
     <string name="sort_random">Random</string>
     <string name="show">Show</string>
     <string name="contains">contains:</string>
+
+    <!-- inAppBilling -->
+    <string name="action_donate">Donations</string>
+    <string name="buy_string1">Donate $1.00</string>
+    <string name="buy_string2">Donate $2.00</string>
+    <string name="buy_string3">Donate $5.00</string>
+    <string name="buy_string4">Donate $10.00</string>
 
 
 </resources>
