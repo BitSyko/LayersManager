@@ -531,19 +531,20 @@ public class Commands {
 
                 }
 
-
-                try {
-                    // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER BACK TO 755
-                    CommandCapture command10 = new CommandCapture(0, "chmod +x " + appt.getAbsolutePath());
-                    RootTools.getShell(true).add(command10);
-                    while (!command10.isFinished()) {
-                        Thread.sleep(1);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
             }
+
+
+            try {
+                // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER BACK TO 755
+                CommandCapture command10 = new CommandCapture(0, "chmod 700 " + appt.getAbsolutePath());
+                RootTools.getShell(true).add(command10);
+                while (!command10.isFinished()) {
+                    Thread.sleep(1);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
 
 
             for (AppIcon app : list) {
