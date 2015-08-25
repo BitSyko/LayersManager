@@ -196,16 +196,20 @@ public class IconPackDetailActivity extends AppCompatActivity implements AsyncRe
     private void loadBackdrop() {
 
         ImageView imageView = (ImageView) cordLayout.findViewById(R.id.backdrop);
+        ImageView imageView2 = (ImageView) cordLayout.findViewById(R.id.backdropsmall);
 
         // Drawable promo = iconPack.getPromo();
 
-        Drawable promo = getDrawable(R.drawable.no_heroimage);
+        Drawable promo = getDrawable(R.drawable.background);
+        Drawable promo2 = iconPack.getIcon();
 
         imageView.setImageDrawable(promo);
 
+        imageView2.setImageDrawable(promo2);
+
         final CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) cordLayout.findViewById(R.id.collapsing_toolbar);
 
-        Palette.from(((BitmapDrawable) promo).getBitmap()).generate(new Palette.PaletteAsyncListener() {
+        Palette.from(((BitmapDrawable) promo2).getBitmap()).generate(new Palette.PaletteAsyncListener() {
             public void onGenerated(Palette palette) {
                 Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
                 if (vibrantSwatch != null) {
@@ -500,7 +504,7 @@ public class IconPackDetailActivity extends AppCompatActivity implements AsyncRe
 
                 CheckBox check = new CheckBox(IconPackDetailActivity.this);
 
-                check.setText(app.getName() + "(" + app.getPackageName() + ")");
+                check.setText(app.getName() + " (" + app.getPackageName() + ")");
                 check.setTag(app);
 
                 check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
