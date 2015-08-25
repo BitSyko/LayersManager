@@ -22,6 +22,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import com.bitsyko.libicons.IconPack;
 import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.activities.*;
 import com.lovejoy777.rroandlayersmanager.fragments.*;
@@ -58,15 +60,31 @@ public class menu extends AppCompatActivity {
         loadTutorial();
 
     }
- private ViewPagerAdapter adapter;
 
-    private void setupViewPager(ViewPager viewPager,int mode) {
+    private ViewPagerAdapter adapter;
+
+    private void setupViewPager(ViewPager viewPager, int mode) {
         viewPager.removeAllViews();
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        if (mode==0){
-            adapter.addFrag(new PluginFragment(),"Overlays");
-            adapter.addFrag(new PluginFragment(), "Icon Overlays");
-        }else {
+        if (mode == 0) {
+
+            PluginFragment overlayFragment = new PluginFragment();
+            PluginFragment iconFragment = new PluginFragment();
+
+            Bundle args1 = new Bundle();
+            Bundle args2 = new Bundle();
+            args1.putInt("Mode", 0);
+            args2.putInt("Mode", 1);
+
+            overlayFragment.setArguments(args1);
+            iconFragment.setArguments(args2);
+
+
+            adapter.addFrag(overlayFragment, "Overlays");
+            adapter.addFrag(iconFragment, "Icon Overlays");
+
+
+        } else {
             System.out.println("TEST");
             adapter.removeAllFrags();
             adapter.notifyDataSetChanged();
@@ -80,7 +98,7 @@ public class menu extends AppCompatActivity {
             adapter.addFrag(uninstallOverlays, "Overlays");
             args2.putInt("Mode", 1);
             uninstallOverlays2.setArguments(args2);
-            adapter.addFrag(uninstallOverlays2,"Icon Overlays");
+            adapter.addFrag(uninstallOverlays2, "Icon Overlays");
             //adapter.addFrag(new UninstallFragment(), "Icon Overlays");
 
         }
@@ -93,31 +111,36 @@ public class menu extends AppCompatActivity {
     class ViewPagerAdapter extends FragmentStatePagerAdapter {
         private final List<android.support.v4.app.Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
+
         public ViewPagerAdapter(android.support.v4.app.FragmentManager manager) {
             super(manager);
         }
+
         @Override
         public android.support.v4.app.Fragment getItem(int position) {
             return mFragmentList.get(position);
         }
+
         @Override
         public int getCount() {
             return mFragmentList.size();
         }
+
         public void addFrag(android.support.v4.app.Fragment fragment, String title) {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }
+
         public void removeAllFrags() {
             mFragmentList.clear();
             mFragmentTitleList.clear();
         }
+
         @Override
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
     }
-
 
 
     private void loadTutorial() {
@@ -243,11 +266,11 @@ public class menu extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         switch (position) {
             case 1:
-                setupViewPager(viewPager,0);
+                setupViewPager(viewPager, 0);
                 tabLayout.setupWithViewPager(viewPager);
                 break;
             case 2:
-                setupViewPager(viewPager,1);
+                setupViewPager(viewPager, 1);
                 tabLayout.setupWithViewPager(viewPager);
                 //fragment = new UninstallFragment();
                 break;
@@ -260,15 +283,15 @@ public class menu extends AppCompatActivity {
         }
 
 
-        if (position >2){
+        if (position > 2) {
             fragmentManager
                     .beginTransaction()
-                    .replace(R.id.fragment_container, fragment,"TAG")
+                    .replace(R.id.fragment_container, fragment, "TAG")
                     .addToBackStack(null)
                     .commit();
-        } else{
+        } else {
             android.support.v4.app.Fragment test = getSupportFragmentManager().findFragmentByTag("TAG");
-            if (test!=null){
+            if (test != null) {
                 fragmentManager
                         .beginTransaction()
                         .remove(getSupportFragmentManager().findFragmentByTag("TAG"))
@@ -277,13 +300,25 @@ public class menu extends AppCompatActivity {
         }
     }
 
-    public void changeFragment2(Layer layer) {
+    public void openOverlayDetailActivity(Layer layer) {
         Bundle args = new Bundle();
         args.putString("PackageName", layer.getPackageName());
 
         Intent intent = new Intent(this, OverlayDetailActivity.class);
 
         intent.putExtra("PackageName", layer.getPackageName());
+
+        startActivity(intent);
+
+    }
+
+    public void openIconPackDetailActivity(IconPack iconPack) {
+        Bundle args = new Bundle();
+        args.putString("PackageName", iconPack.getPackageName());
+
+        Intent intent = new Intent(this, IconPackDetailActivity.class);
+
+        intent.putExtra("PackageName", iconPack.getPackageName());
 
         startActivity(intent);
 

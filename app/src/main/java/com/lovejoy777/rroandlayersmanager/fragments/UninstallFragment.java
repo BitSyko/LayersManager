@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
+
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.DeviceSingleton;
 import com.lovejoy777.rroandlayersmanager.R;
@@ -41,7 +42,7 @@ public class UninstallFragment extends android.support.v4.app.Fragment implement
 
         cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_delete, container, false);
 
-        Bundle bundle=getArguments();
+        Bundle bundle = getArguments();
         mode = bundle.getInt("Mode");
         ((NavigationView) getActivity().findViewById(R.id.nav_view)).getMenu().getItem(1).setChecked(true);
 
@@ -97,7 +98,7 @@ public class UninstallFragment extends android.support.v4.app.Fragment implement
 
         new LoadAndSet().execute();
         mActionMode.finish();
-        mActionMode= null;
+        mActionMode = null;
         ActivityCompat.invalidateOptionsMenu(getActivity());
     }
 
@@ -196,12 +197,12 @@ public class UninstallFragment extends android.support.v4.app.Fragment implement
             loadedFiles.addAll(Commands.RootloadFiles(getActivity(), getActivity(), DeviceSingleton.getInstance().getOverlayFolder()));
             System.out.println(mode);
             for (String file : loadedFiles) {
-                if (mode==0){
-                    if(!file.contains("signed.")){
+                if (mode == 0) {
+                    if (!file.contains("signed.")) {
                         files.add(new FileBean(file));
                     }
-                }else {
-                    if(file.contains("signed.")){
+                } else {
+                    if (file.contains("signed.")) {
                         files.add(new FileBean(file));
                     }
                 }
@@ -277,12 +278,12 @@ public class UninstallFragment extends android.support.v4.app.Fragment implement
         }
 
         if (checkedItems > 0) {
-            if (mActionMode==null) {
+            if (mActionMode == null) {
                 mActionMode = getActivity().startActionMode(new ActionBarCallBack());
             }
             fab2.show();
         } else {
-            if (mActionMode!=null){
+            if (mActionMode != null) {
                 mActionMode.finish();
                 mActionMode = null;
             }
