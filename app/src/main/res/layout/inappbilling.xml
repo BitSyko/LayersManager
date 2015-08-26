@@ -11,13 +11,28 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar4"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="56dp"
         android:background="?android:attr/colorPrimary"
         android:elevation="5dp"
         android:gravity="bottom"
         android:minHeight="?android:attr/actionBarSize"
         tools:context="com.sh4dow.hex_layerstheme.activities.AboutActivity"/>
 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_below="@+id/toolbar4"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="16dp"
+        android:elevation="5dp"
+        android:text="@string/support_the_team"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
 
     <LinearLayout
         android:orientation="vertical"
@@ -26,25 +41,18 @@
         android:gravity="center_horizontal"
         android:id="@+id/linearLayout1"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="24dp"
-            android:text="Donations"
+            android:textSize="24sp"
+            android:text="@string/buy_something"
             android:textColor="@color/primary"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="80dp"
+            android:textStyle="bold"
             android:id="@+id/iabtv1"
-            android:layout_gravity="center_horizontal" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="for the BitSyko developers"
-            android:id="@+id/iabtv2"
             android:layout_gravity="center_horizontal" />
 
     </LinearLayout>
@@ -56,20 +64,20 @@
         android:layout_marginTop="40dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/linearLayout2">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="5dp"
             android:gravity="center">
 
             <!-- Button 1 -->
 
             <Button
                 android:layout_width="220dp"
+
                 android:layout_height="wrap_content"
                 android:text="@string/buy_string1"
                 android:id="@+id/donBtn1"
@@ -88,14 +96,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/linearLayout2"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/linearLayout3">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="5dp"
             android:gravity="center" >
 
             <!-- Button 2 -->
@@ -120,7 +127,6 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/linearLayout4">
 
@@ -128,7 +134,7 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="5dp"
             android:gravity="center" >
 
             <!-- Button 3 -->
@@ -153,7 +159,6 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/linearLayout5">
 
@@ -161,7 +166,7 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="5dp"
             android:gravity="center" >
 
             <!-- Buttons 4 -->
@@ -177,16 +182,5 @@
         </RelativeLayout>
 
     </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Thankyou"
-        android:textSize="25sp"
-        android:id="@+id/iabtv3"
-        android:layout_gravity="center_horizontal"
-        android:layout_below="@+id/linearLayout5"
-        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

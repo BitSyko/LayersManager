@@ -73,7 +73,7 @@
 
         <activity
             android:name=".InAppBilling"
-            android:label="Support the Team"
+            android:label=""
             android:parentActivityName=".menu"
             android:theme="@style/Toolbar">
             <intent-filter>
