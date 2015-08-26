@@ -181,15 +181,11 @@ public class IconPackDetailActivity extends AppCompatActivity implements AsyncRe
         String layerPackageName = getIntent().getStringExtra("PackageName");
         try {
             iconPack = new IconPack(layerPackageName, getApplicationContext());
-            //We're removing previous apks
-            iconPack.close();
-
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
             throw new RuntimeException();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
         Log.d("PackageName: ", layerPackageName);
     }
 
@@ -402,12 +398,6 @@ public class IconPackDetailActivity extends AppCompatActivity implements AsyncRe
             loadLayerApks.cancel(true);
         }
 
-        try {
-            iconPack.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         super.onDestroy();
     }
 
@@ -493,11 +483,10 @@ public class IconPackDetailActivity extends AppCompatActivity implements AsyncRe
         protected void onPostExecute(List<AppIcon> list) {
             //   super.onPostExecute(list);
 
-            LinearLayout linearLayout = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory1);
-
+            LinearLayout linearLayout1 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory1);
+            LinearLayout linearLayout2 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory2);
 
             for (AppIcon app : list) {
-
 
                 TableRow row = new TableRow(IconPackDetailActivity.this);
                 row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
@@ -518,14 +507,18 @@ public class IconPackDetailActivity extends AppCompatActivity implements AsyncRe
 
                 checkBoxes.add(check);
 
-                linearLayout.addView(row);
-                linearLayout.invalidate();
+                if (app.isInPack()) {
+                    linearLayout1.addView(row);
+                } else {
+                    linearLayout2.addView(row);
+                }
 
             }
 
-            linearLayout.invalidate();
+            linearLayout1.invalidate();
+            linearLayout2.invalidate();
 
-            cordLayout.findViewById(R.id.CardViewCategory2).setVisibility(View.GONE);
+            //cordLayout.findViewById(R.id.CardViewCategory2).setVisibility(View.GONE);
 
         }
     }

@@ -1,14 +1,24 @@
 package com.bitsyko.libicons;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.util.Pair;
+
+import com.bitsyko.libicons.shader.DataHolder;
+import com.bitsyko.libicons.shader.Exec;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -16,11 +26,14 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import kellinwood.security.zipsigner.ZipSigner;
 
@@ -30,6 +43,7 @@ public class AppIcon {
     private Resources res;
     private Context context;
     private IconPack iconPack;
+    private boolean inPack;
 
     //ClassName:Drawable
     List<Pair<String, String>> iconList = new ArrayList<>();
@@ -45,15 +59,16 @@ public class AppIcon {
         return false;
     }
 
-    public AppIcon(Context context, String packageName, IconPack iconPack) throws PackageManager.NameNotFoundException {
+    public AppIcon(Context context, String packageName, IconPack iconPack, boolean inPack) throws PackageManager.NameNotFoundException {
         this.context = context;
         this.applicationInfo = context.getPackageManager().getApplicationInfo(packageName, PackageManager.GET_ACTIVITIES);
         this.res = context.getPackageManager().getResourcesForApplication(applicationInfo);
         this.iconPack = iconPack;
+        this.inPack = inPack;
     }
 
-    public AppIcon(Context context, String packageName, IconPack iconPack, Collection<Pair<String, String>> iconList) throws PackageManager.NameNotFoundException {
-        this(context, packageName, iconPack);
+    public AppIcon(Context context, String packageName, IconPack iconPack, boolean inPack, Collection<Pair<String, String>> iconList) throws PackageManager.NameNotFoundException {
+        this(context, packageName, iconPack, inPack);
         this.iconList.addAll(iconList);
     }
 
@@ -73,9 +88,323 @@ public class AppIcon {
         return String.valueOf(applicationInfo.loadLabel(context.getPackageManager()));
     }
 
+
     public void install() throws Exception {
+        if (inPack) {
+            //Icon is in pack
+            Log.d("InPack", applicationInfo.packageName);
+            installInPack();
+        } else {
+            //Icon isn't in pack (apply masks and backs)
+            Log.d("NotInPack", applicationInfo.packageName);
+            installNotInPack();
+        }
+    }
+
+    public void installNotInPack() throws Exception {
+
+
+        List<String> list = getApplicationIcons();
+
+        if (list.isEmpty()) {
+            throw new RuntimeException("No application icon");
+        }
+
+        String appIcon = new File(list.get(0)).getName().replace(".png", "");
+
+        List<String> iconLocation = new ArrayList<>();
+
+        for (String string : list) {
+            iconLocation.add(new File(string).getParent());
+        }
+
+
+        Map<String, Collection<String>> installedAppsAndTheirLauncherActivities =
+                SystemApplicationHelper.getInstance(context).getInstalledAppsAndTheirLauncherActivities();
+
+
+        PackageInfo packageInfo = context.getPackageManager().getPackageInfo(applicationInfo.packageName,
+                PackageManager.GET_ACTIVITIES);
+
+        Collection<String> launcherActivities = installedAppsAndTheirLauncherActivities.get(applicationInfo.packageName);
+
+        Map<String, String> iconOverlaysData = iconPack.getIconOverlaysData();
+
+
+        for (android.content.pm.ActivityInfo a : packageInfo.activities) {
+
+            if (!(res.getDrawable(a.getIconResource(), null) instanceof BitmapDrawable)) {
+                continue;
+            }
+
+            if (!launcherActivities.contains(a.name)) {
+                continue;
+            }
+
+            String drawableName = StringUtils.substringAfter(res.getResourceName(a.getIconResource()), "/");
+            Bitmap icon = ((BitmapDrawable) res.getDrawable(a.getIconResource(), null)).getBitmap().copy(Bitmap.Config.ARGB_8888, true);
+            
+            List<Exec> execList = iconPack.getShader();
+
+
+            if (!execList.isEmpty()) {
+
+                for (int x = 0; x < icon.getWidth(); x++) {
+                    for (int y = 0; y < icon.getHeight(); y++) {
+
+                        int pixelColor = icon.getPixel(x, y);
+
+                        DataHolder dataHolder = new DataHolder();
+
+                        for (Exec exec : execList) {
+                            exec.parse(dataHolder, pixelColor);
+                        }
+
+                        icon.setPixel(x, y, Color.argb(dataHolder.A, dataHolder.R, dataHolder.G, dataHolder.B));
+
+                    }
+                }
+
+            }
+
+            String scale = iconOverlaysData.get("scale");
+
+            Bitmap backPicture = iconPack.getBitmapFromDrawable(iconOverlaysData.get("iconback"));
+            Bitmap uponPicture = iconPack.getBitmapFromDrawable(iconOverlaysData.get("iconupon"));
+            Bitmap maskPicture = iconPack.getBitmapFromDrawable(iconOverlaysData.get("iconmask"));
+
+
+            if (maskPicture != null) {
+                icon = overlay(icon, maskPicture);
+            } else {
+                Log.d("No picture", "Mask");
+            }
+
+
+            int integer = (int) (backPicture.getWidth() * Float.parseFloat(scale));
+
+            Bitmap bitmap2scaled = Bitmap.createScaledBitmap(icon, integer, integer, false);
+
+            Bitmap bitmap2moved = Bitmap.createBitmap(backPicture.getWidth(), backPicture.getHeight(), backPicture.getConfig());
+            Canvas canvas = new Canvas(bitmap2moved);
+
+
+            int margin = (backPicture.getWidth() - bitmap2scaled.getWidth()) / 2;
+            canvas.drawBitmap(bitmap2scaled, margin, margin, null);
+
+
+            Bitmap finalBitmap = overlay(backPicture, bitmap2moved).copy(Bitmap.Config.ARGB_8888, true);
+
+
+            //Clear rest of icon
+            for (int x = 0; x < finalBitmap.getWidth(); x++) {
+                for (int y = 0; y < finalBitmap.getHeight(); y++) {
+
+                    int alpha = Color.alpha(backPicture.getPixel(x, y));
+
+                    if (alpha == 0) {
+                        finalBitmap.setPixel(x, y, Color.argb(0, 0, 0, 0));
+                    }
+
+
+                }
+            }
+
+
+            if (uponPicture != null) {
+                finalBitmap = overlay(finalBitmap, uponPicture);
+            } else {
+                Log.d("No picture", "Upon");
+            }
+
+
+            // backPicture;
+
+
+            for (String location : iconLocation) {
+
+                File destFile = new File(context.getCacheDir() + "/tempFolder/" + applicationInfo.packageName + "/" + location + "/" + drawableName + ".png");
+
+                destFile.getParentFile().mkdirs();
+
+                FileOutputStream out = new FileOutputStream(destFile);
+                finalBitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+
+                out.close();
+
+            }
+
+
+        }
+
+
+        compileAndSign();
+
+    }
+
+    private Bitmap overlay(Bitmap bmp1, Bitmap bmp2) {
+        Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
+        Canvas canvas = new Canvas(bmOverlay);
+        canvas.drawBitmap(bmp1, new Matrix(), null);
+        canvas.drawBitmap(bmp2, 0, 0, null);
+        return bmOverlay;
+    }
+
+
+    public void installInPack() throws Exception {
 
         //Assumption: Icons are in the same folder as launcher icon
+
+
+        List<String> list = getApplicationIcons();
+
+        if (list.isEmpty()) {
+            throw new RuntimeException("No application icon");
+        }
+
+        String appIcon = new File(list.get(0)).getName().replace(".png", "");
+
+        List<String> iconLocation = new ArrayList<>();
+
+        for (String string : list) {
+            iconLocation.add(new File(string).getParent());
+        }
+
+        PackageInfo packageInfo = context.getPackageManager().getPackageInfo(getPackageName(),
+                PackageManager.GET_ACTIVITIES);
+
+
+        Map<String, String> activitiesWithIcons = new HashMap<>();
+
+        Resources appResources = context.getPackageManager().getResourcesForApplication(getPackageName());
+        Resources iconPackResources = context.getPackageManager().getResourcesForApplication(iconPack.getPackageName());
+
+        if (packageInfo.activities == null || packageInfo.activities.length == 0) {
+            Log.e(getPackageName(), "No activities");
+            return;
+        }
+
+        for (android.content.pm.ActivityInfo a : packageInfo.activities) {
+            activitiesWithIcons.put(a.name, StringUtils.substringAfter(appResources.getResourceName(a.getIconResource()), "/"));
+        }
+
+
+        Log.d("App Icon", appIcon);
+        Log.d("Icon locations", String.valueOf(iconLocation));
+        Log.d("Activities", String.valueOf(activitiesWithIcons));
+
+
+        for (Pair<String, String> activityWithIcon : iconList) {
+
+            if (!activitiesWithIcons.keySet().contains(activityWithIcon.first)) {
+                continue;
+            }
+
+            String iconName = activitiesWithIcons.get(activityWithIcon.first);
+
+            int drawableIconID = iconPackResources.getIdentifier(activityWithIcon.second, "drawable", iconPack.getPackageName());
+            int mipmapIconID = iconPackResources.getIdentifier(activityWithIcon.second, "mipmap", iconPack.getPackageName());
+
+            if (drawableIconID == 0 && mipmapIconID == 0) {
+                Log.e("No icon in iconpack", activityWithIcon.second);
+                continue;
+            }
+
+            int finalIconID = drawableIconID == 0 ? mipmapIconID : drawableIconID;
+
+            BitmapDrawable icon;
+
+            try {
+                icon = (BitmapDrawable) iconPackResources.getDrawable(finalIconID, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("No icon for", activityWithIcon.first + " " + activityWithIcon.second);
+                Log.e("Vector", "Not supported");
+                continue;
+            }
+
+            if (icon == null) {
+                Log.d("Missing resource", activityWithIcon.second);
+                continue;
+            }
+
+
+            for (String location : iconLocation) {
+
+                File destFile = new File(context.getCacheDir() + "/tempFolder/" + getPackageName() + "/" + location + "/" + iconName + ".png");
+
+                destFile.getParentFile().mkdirs();
+
+                FileOutputStream out = new FileOutputStream(destFile);
+                icon.getBitmap().compress(Bitmap.CompressFormat.PNG, 100, out);
+
+                out.close();
+
+            }
+
+
+        }
+
+
+        if (!(new File(context.getCacheDir() + "/tempFolder/" + getPackageName() + "/" + list.get(0)).exists())) {
+            Log.d("Fallback for: ", getPackageName());
+            installNotInPack();
+        } else {
+            compileAndSign();
+        }
+
+    }
+
+
+    private void compileAndSign() throws Exception {
+
+        File appt = new File(context.getCacheDir() + "/aapt");
+
+        String tempManifest =
+                IOUtils.toString(context.getAssets().open("AndroidManifest.xml"))
+                        .replace("<<TARGET_PACKAGE>>", getPackageName())
+                        .replace("<<PACKAGE_NAME>>", "pl.andrzejressel.icon." + getPackageName());
+
+
+        FileUtils.writeStringToFile(new File(context.getCacheDir() + "/tempFolder/" + getPackageName() + "/AndroidManifest.xml"), tempManifest);
+
+
+        if (!new File(context.getCacheDir() + "/tempFolder/" + getPackageName() + "/res").exists()) {
+            return;
+        }
+
+
+        File unsignedApp = new File(context.getCacheDir() + "/tempFolder/unsigned." + getPackageName() + ".apk");
+
+        File signedApp = new File(context.getCacheDir() + "/tempFolder/signed." + getPackageName() + ".apk");
+
+
+        Process nativeApp = Runtime.getRuntime().exec(new String[]{
+                appt.getAbsolutePath(), "p",
+                "-M", context.getCacheDir() + "/tempFolder/" + getPackageName() + "/AndroidManifest.xml",
+                "-S", context.getCacheDir() + "/tempFolder/" + getPackageName() + "/res",
+                "-I", "system/framework/framework-res.apk",
+                "-F", unsignedApp.getAbsolutePath()});
+
+
+        IOUtils.toString(nativeApp.getInputStream());
+        IOUtils.toString(nativeApp.getErrorStream());
+
+        nativeApp.waitFor();
+
+        Log.d("Signing start", "");
+
+        ZipSigner zipSigner = new ZipSigner();
+        zipSigner.setKeymode("testkey");
+        zipSigner.signZip(unsignedApp.getAbsolutePath(), signedApp.getAbsolutePath());
+
+        Log.d("Signing end", "");
+
+
+    }
+
+
+    private List<String> getApplicationIcons() throws IOException, InterruptedException {
 
         String apkLocation = applicationInfo.sourceDir;
         File appt = new File(context.getCacheDir() + "/aapt");
@@ -105,139 +434,12 @@ public class AppIcon {
             }
         }
 
-        if (list.isEmpty()) {
-            throw new RuntimeException("No application icon");
-        }
-
-        String appIcon = new File(list.get(0)).getName().replace(".png", "");
-
-        List<String> iconLocation = new ArrayList<>();
-
-        for (String string : list) {
-            iconLocation.add(new File(string).getParent());
-        }
-
-        PackageInfo packageInfo = context.getPackageManager().getPackageInfo(getPackageName(),
-                PackageManager.GET_ACTIVITIES);
-
-
-        Map<String, String> activitiesWithIcons = new HashMap<>();
-
-        Resources resources = context.getPackageManager().getResourcesForApplication(getPackageName());
-        Resources iconPackResources = context.getPackageManager().getResourcesForApplication(iconPack.getPackageName());
-
-        if (packageInfo.activities == null || packageInfo.activities.length == 0) {
-            Log.e(getPackageName(), "No activities");
-            return;
-        }
-
-        for (android.content.pm.ActivityInfo a : packageInfo.activities) {
-            activitiesWithIcons.put(a.name, StringUtils.substringAfter(resources.getResourceName(a.getIconResource()), "/"));
-        }
-
-
-        Log.d("App Icon", appIcon);
-        Log.d("Icon locations", String.valueOf(iconLocation));
-        Log.d("Activities", String.valueOf(activitiesWithIcons));
-
-
-        for (Pair<String, String> activityWithIcon : iconList) {
-
-            if (!activitiesWithIcons.keySet().contains(activityWithIcon.first)) {
-                continue;
-            }
-
-            String iconName = activitiesWithIcons.get(activityWithIcon.first);
-
-            int drawableIconID = iconPackResources.getIdentifier(activityWithIcon.second, "drawable", iconPack.getPackageName());
-            int mipmapIconID = iconPackResources.getIdentifier(activityWithIcon.second, "mipmap", iconPack.getPackageName());
-
-            if (drawableIconID == 0 && mipmapIconID == 0) {
-                Log.e("No icon found", activityWithIcon.second);
-            }
-
-            int finalIconID = drawableIconID == 0 ? mipmapIconID : drawableIconID;
-
-            BitmapDrawable icon;
-
-            try {
-                icon = (BitmapDrawable) iconPackResources.getDrawable(finalIconID, null);
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.e("Vector", "Not supported");
-                continue;
-            }
-
-            if (icon == null) {
-                Log.d("Missing resource", activityWithIcon.second);
-                continue;
-            }
-
-
-            for (String location : iconLocation) {
-
-                File destFile = new File(context.getCacheDir() + "/tempFolder/" + getPackageName() + "/" + location + "/" + iconName + ".png");
-
-                destFile.getParentFile().mkdirs();
-
-                FileOutputStream out = new FileOutputStream(destFile);
-                icon.getBitmap().compress(Bitmap.CompressFormat.PNG, 100, out);
-
-                out.close();
-
-            }
-
-
-        }
-
-
-
-        String tempManifest =
-                IOUtils.toString(context.getAssets().open("AndroidManifest.xml"))
-                        .replace("<<TARGET_PACKAGE>>", getPackageName())
-                        .replace("<<PACKAGE_NAME>>", "pl.andrzejressel.icon." + getPackageName());
-
-
-        FileUtils.writeStringToFile(new File(context.getCacheDir() + "/tempFolder/" + getPackageName() + "/AndroidManifest.xml"), tempManifest);
-
-
-        if (!new File(context.getCacheDir() + "/tempFolder/" + getPackageName() + "/res").exists()) {
-            return;
-        }
-
-
-        File unsignedApp = new File(context.getCacheDir() + "/tempFolder/unsigned." + getPackageName() + ".apk");
-
-        File signedApp = new File(context.getCacheDir() + "/tempFolder/signed." + getPackageName() + ".apk");
-
-
-
-        nativeApp = Runtime.getRuntime().exec(new String[]{
-                appt.getAbsolutePath(), "p",
-                "-M", context.getCacheDir() + "/tempFolder/" + getPackageName() + "/AndroidManifest.xml",
-                "-S", context.getCacheDir() + "/tempFolder/" + getPackageName() + "/res",
-                "-I", "system/framework/framework-res.apk",
-                "-F", unsignedApp.getAbsolutePath()});
-
-
-        IOUtils.toString(nativeApp.getInputStream());
-        IOUtils.toString(nativeApp.getErrorStream());
-
-        nativeApp.waitFor();
-
-        Log.d("Signing start", "");
-
-        ZipSigner zipSigner = new ZipSigner();
-        zipSigner.setKeymode("testkey");
-        zipSigner.signZip(unsignedApp.getAbsolutePath(), signedApp.getAbsolutePath());
-
-        Log.d("Signing end", "");
-
-
-
-
+        return list;
 
     }
 
 
+    public boolean isInPack() {
+        return inPack;
+    }
 }

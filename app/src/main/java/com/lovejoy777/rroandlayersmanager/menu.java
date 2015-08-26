@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bitsyko.libicons.IconPack;
+import com.bitsyko.libicons.SystemApplicationHelper;
 import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.activities.*;
 import com.lovejoy777.rroandlayersmanager.fragments.*;

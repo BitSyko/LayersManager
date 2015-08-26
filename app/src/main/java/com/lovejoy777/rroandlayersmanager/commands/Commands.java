@@ -21,7 +21,9 @@ import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
@@ -102,6 +104,7 @@ public class Commands {
                 files.add(file.getName());
             }
         }
+
         Collections.sort(files, String.CASE_INSENSITIVE_ORDER);
         return files;
     }
@@ -120,6 +123,7 @@ public class Commands {
                 folders.add(file.getName());
             }
         }
+
         return folders;
     }
 
@@ -546,12 +550,11 @@ public class Commands {
             }
 
 
-
             for (AppIcon app : list) {
                 Log.d("Installing", app.getPackageName());
                 try {
                     app.install();
-                    publishProgress( );
+                    publishProgress();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -561,7 +564,6 @@ public class Commands {
             Log.d("Icon", "Moving");
 
             RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RW");
-
 
 
             try {
@@ -598,8 +600,6 @@ public class Commands {
             }
 
             RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RO");
-
-
 
 
             return null;

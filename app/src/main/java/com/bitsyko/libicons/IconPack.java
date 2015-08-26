@@ -8,28 +8,32 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
+import com.bitsyko.libicons.shader.Exec;
+
+import org.apache.commons.io.IOUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class IconPack implements com.bitsyko.ApplicationInfo, Closeable {
+public class IconPack implements com.bitsyko.ApplicationInfo {
 
     Context context;
     ApplicationInfo applicationInfo;
@@ -63,89 +67,6 @@ public class IconPack implements com.bitsyko.ApplicationInfo, Closeable {
     }
 
 
-    private XmlPullParser getXml(String file) {
-
-        XmlPullParser parser = null;
-
-        InputStream inputStream;
-
-        try {
-            inputStream = res.getAssets().open(file + ".xml");
-            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            parser = factory.newPullParser();
-            parser.setInput(inputStream, "UTF-8");
-        } catch (Exception e) {
-            // Catch any exception since we want to fall back to parsing the xml/
-            // resource in all cases
-            int resId = res.getIdentifier(file, "xml", getPackageName());
-            if (resId != 0) {
-                parser = res.getXml(resId);
-            }
-        }
-
-        return parser;
-    }
-
-
-    private static Set<String> getSupportedPackages(Activity activity) {
-        Intent i = new Intent();
-
-        Set<String> packages = new HashSet<>();
-        PackageManager packageManager = activity.getPackageManager();
-        for (String action : sSupportedActions) {
-            i.setAction(action);
-            for (ResolveInfo r : packageManager.queryIntentActivities(i, 0)) {
-                packages.add(r.activityInfo.packageName);
-            }
-        }
-        i = new Intent(Intent.ACTION_MAIN);
-        for (String category : sSupportedCategories) {
-            i.addCategory(category);
-            for (ResolveInfo r : packageManager.queryIntentActivities(i, 0)) {
-                packages.add(r.activityInfo.packageName);
-            }
-            i.removeCategory(category);
-        }
-        return packages;
-    }
-
-    public final static String[] sSupportedActions = new String[]{
-            "org.adw.launcher.THEMES",
-            "com.gau.go.launcherex.theme"
-    };
-
-    public static final String[] sSupportedCategories = new String[]{
-            "com.fede.launcher.THEME_ICONPACK",
-            "com.anddoes.launcher.THEME",
-            "com.teslacoilsw.launcher.THEME"
-    };
-
-
-    @Override
-    public String getName() {
-        return String.valueOf(applicationInfo.loadLabel(context.getPackageManager()));
-    }
-
-    @Override
-    public String getDeveloper() {
-        return "";
-    }
-
-    @Override
-    public Drawable getIcon() {
-        return applicationInfo.loadIcon(context.getPackageManager());
-    }
-
-    @Override
-    public String getPackageName() {
-        return applicationInfo.packageName;
-    }
-
-    @Override
-    public void close() throws IOException {
-
-    }
-
     public List<AppIcon> getCompatibleApps() {
 
         Map<String, List<Pair<String, String>>> map = new HashMap<>();
@@ -160,6 +81,7 @@ public class IconPack implements com.bitsyko.ApplicationInfo, Closeable {
         List<AppIcon> appList = new ArrayList<>();
 
         List<ApplicationInfo> packages = context.getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA);
+        Collection<String> installedPackagesWithLauncher = SystemApplicationHelper.getInstance(context).getInstalledAppsWithLauncherActivities();
 
         List<String> installedPackages = new ArrayList<>();
 
@@ -168,20 +90,49 @@ public class IconPack implements com.bitsyko.ApplicationInfo, Closeable {
         }
 
 
-        for (String appName : map.keySet()) {
-            if (!installedPackages.contains(appName)) {
-                continue;
-            }
+        for (String appName : installedPackages) {
+
+            boolean appInIconPack = map.keySet().contains(appName);
+            boolean overlayIcons = overlayIcons();
+
 
             try {
-                appList.add(new AppIcon(context, appName, this, map.get(appName)));
+                if (appInIconPack) {
+                    appList.add(new AppIcon(context, appName, this, true, map.get(appName)));
+                } else {
+                    if (installedPackagesWithLauncher.contains(appName) && overlayIcons) {
+                        appList.add(new AppIcon(context, appName, this, false));
+                    }
+                }
+
+
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
+
+
         }
 
-
         return appList;
+    }
+
+
+    public String getDescription() {
+        try {
+            return getTextInTag(getXml("themecfg"), "themeName");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String getWhatsNew() {
+        try {
+            return getTextInTag(getXml("themecfg"), "themeInfo");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 
@@ -218,6 +169,103 @@ public class IconPack implements com.bitsyko.ApplicationInfo, Closeable {
 
     }
 
+    public boolean overlayIcons() {
+
+        Map<String, String> map;
+
+        try {
+            map = getIconOverlaysData(getXml("appfilter"));
+        } catch (XmlPullParserException | IOException e) {
+            return false;
+        }
+
+        if (map.isEmpty()) {
+            return false;
+        }
+
+
+        if (!map.keySet().contains("scale")) {
+            return false;
+        }
+
+        //We're checking if these overlays exist
+
+        boolean atLeastOneExist = false;
+
+        for (String icon : map.values()) {
+
+            int drawableId = res.getIdentifier(icon, "drawable", getPackageName());
+
+            if (drawableId != 0) {
+                atLeastOneExist = true;
+            }
+
+        }
+
+
+        return atLeastOneExist;
+    }
+
+    @Override
+    public String getName() {
+        return String.valueOf(applicationInfo.loadLabel(context.getPackageManager()));
+    }
+
+    @Override
+    public String getDeveloper() {
+        return "";
+    }
+
+    @Override
+    public Drawable getIcon() {
+        return applicationInfo.loadIcon(context.getPackageManager());
+    }
+
+    @Override
+    public String getPackageName() {
+        return applicationInfo.packageName;
+    }
+
+    private XmlPullParser getXml(String file) {
+
+        XmlPullParser parser = null;
+
+        InputStream inputStream;
+/*
+        try {
+            inputStream = res.getAssets().open(file + ".xml");
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            parser = factory.newPullParser();
+            parser.setInput(inputStream, "UTF-8");
+        } catch (Exception e) {
+            // Catch any exception since we want to fall back to parsing the xml/
+            // resource in all cases
+            int resId = res.getIdentifier(file, "xml", getPackageName());
+            if (resId != 0) {
+                parser = res.getXml(resId);
+            }
+        }
+*/
+
+        int resId = res.getIdentifier(file, "xml", getPackageName());
+        if (resId != 0) {
+            parser = res.getXml(resId);
+        } else {
+            try {
+                inputStream = res.getAssets().open(file + ".xml");
+                XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+                parser = factory.newPullParser();
+                parser.setInput(inputStream, "UTF-8");
+            } catch (Exception e) {
+            }
+
+        }
+
+
+        return parser;
+    }
+
+
     private List<String> getPreviewImagesXml(XmlPullParser parser, String tag) throws XmlPullParserException, IOException {
 
         List<String> images = new ArrayList<>();
@@ -244,6 +292,18 @@ public class IconPack implements com.bitsyko.ApplicationInfo, Closeable {
 
     }
 
+    public Bitmap getBitmapFromDrawable(String name) {
+
+        try {
+            int backId = res.getIdentifier(name, "drawable", getPackageName());
+            return ((BitmapDrawable) res.getDrawable(backId, null)).getBitmap().copy(Bitmap.Config.ARGB_8888, false);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
     private String getFirstTagElement(XmlPullParser parser, String tag) throws XmlPullParserException, IOException {
 
         int eventType = parser.getEventType();
@@ -264,6 +324,65 @@ public class IconPack implements com.bitsyko.ApplicationInfo, Closeable {
 
         return null;
 
+    }
+
+    public Map<String, String> getIconOverlaysData() {
+        try {
+            return getIconOverlaysData(getXml("appfilter"));
+        } catch (XmlPullParserException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Map<String, String> getIconOverlaysData(XmlPullParser parser) throws XmlPullParserException, IOException {
+
+        Map<String, String> data = new HashMap<>();
+
+      //  List<String> validTags = Arrays.asList("iconback", "iconmask", "iconupon", "scale");
+
+        int eventType = parser.getEventType();
+        do {
+
+            if (data.keySet().size() == 4) {
+                break;
+            }
+
+            if (eventType != XmlPullParser.START_TAG) {
+                continue;
+            }
+
+            if (parser.getName().equalsIgnoreCase("config")) {
+                String iconback = parser.getAttributeValue(null, "defaultBack");
+
+                if (iconback != null) {
+                    data.put("iconback", iconback);
+                }
+
+                String iconmask = parser.getAttributeValue(null, "defaultMask");
+
+                if (iconmask != null) {
+                    data.put("iconmask", iconmask);
+                }
+
+
+                String iconupon = parser.getAttributeValue(null, "defaultUpon");
+
+                if (iconupon != null) {
+                    data.put("iconupon", iconupon);
+                }
+
+
+            }
+
+            if (parser.getName().equalsIgnoreCase("scale")) {
+                data.put("scale", parser.getAttributeValue(null, "factor"));
+            }
+
+
+        } while ((eventType = parser.next()) != XmlPullParser.END_DOCUMENT);
+
+
+        return data;
     }
 
 
@@ -288,25 +407,6 @@ public class IconPack implements com.bitsyko.ApplicationInfo, Closeable {
 
         return null;
 
-    }
-
-
-    public String getDescription() {
-        try {
-            return getTextInTag(getXml("themecfg"), "themeName");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public String getWhatsNew() {
-        try {
-            return getTextInTag(getXml("themecfg"), "themeInfo");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
 
@@ -360,6 +460,91 @@ public class IconPack implements com.bitsyko.ApplicationInfo, Closeable {
             }
 
         } while ((eventType = parser.next()) != XmlPullParser.END_DOCUMENT);
+    }
+
+
+    private static Set<String> getSupportedPackages(Activity activity) {
+        Intent i = new Intent();
+
+        Set<String> packages = new HashSet<>();
+        PackageManager packageManager = activity.getPackageManager();
+        for (String action : sSupportedActions) {
+            i.setAction(action);
+            for (ResolveInfo r : packageManager.queryIntentActivities(i, 0)) {
+                packages.add(r.activityInfo.packageName);
+            }
+        }
+        i = new Intent(Intent.ACTION_MAIN);
+        for (String category : sSupportedCategories) {
+            i.addCategory(category);
+            for (ResolveInfo r : packageManager.queryIntentActivities(i, 0)) {
+                packages.add(r.activityInfo.packageName);
+            }
+            i.removeCategory(category);
+        }
+        return packages;
+    }
+
+    private static final String[] sSupportedActions = new String[]{
+            "org.adw.launcher.THEMES",
+            "com.gau.go.launcherex.theme"
+    };
+
+    private static final String[] sSupportedCategories = new String[]{
+            "com.fede.launcher.THEME_ICONPACK",
+            "com.anddoes.launcher.THEME",
+            "com.teslacoilsw.launcher.THEME"
+    };
+
+
+    private List<Exec> execList;
+
+    public List<Exec> getShader() {
+
+        if (execList == null) {
+            execList = getShaderFromXml();
+        }
+
+        return execList;
+    }
+
+
+    private List<Exec> getShaderFromXml() {
+        try {
+            return getShaderFromXml(getXml("shader"));
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
+
+
+    private List<Exec> getShaderFromXml(XmlPullParser parser) throws Exception {
+
+        List<Exec> execList = new ArrayList<>();
+
+        int eventType = parser.getEventType();
+        do {
+
+            if (eventType != XmlPullParser.START_TAG) {
+                continue;
+            }
+
+            if (!parser.getName().equalsIgnoreCase("exec")) {
+                continue;
+            }
+
+            String t = parser.getAttributeValue(null, "t");
+            String m = parser.getAttributeValue(null, "m");
+            String v = parser.getAttributeValue(null, "v");
+
+
+            execList.add(new Exec(t, m, v));
+
+        } while ((eventType = parser.next()) != XmlPullParser.END_DOCUMENT);
+
+
+        return execList;
+
     }
 
 
