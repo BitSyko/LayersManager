@@ -185,5 +185,7 @@
     <string name="buy_string2">Coffee $2.00</string>
     <string name="buy_string3">Beer $5.00</string>
     <string name="buy_string4">Pizza $10.00</string>
+    <string name="disclaimer">Disclaimer</string>
+    <string name="disclaimer_text">Donations are not mandatory.\nDonations will be used towards the server cost and the remains will be divided among developers.\nDonating does not give you access to any additional feature.\nBitSyko apps are and will always be free and open source.</string>
 
 </resources>
