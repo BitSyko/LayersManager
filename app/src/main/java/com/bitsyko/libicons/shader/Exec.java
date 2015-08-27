@@ -33,7 +33,7 @@ public class Exec {
         return v;
     }
 
-    public void parse(DataHolder holder, int pixelColor) {
+    public void parse(DataHolder holder, int pixelColor, long bitmapBrightness) {
 
         char channel = t.charAt(1);
 
@@ -53,7 +53,7 @@ public class Exec {
                 output = new Green();
                 break;
             default:
-                throw new RuntimeException("Wrong channel");
+                throw new RuntimeException("Wrong channel "  + channel);
 
         }
 
@@ -68,13 +68,10 @@ public class Exec {
 
         } else {
 
-            TargetChannelInterface input;
-
             switch (v.charAt(1)) {
 
                 case 'A':
                     value = Color.alpha(pixelColor);
-                    ;
                     break;
                 case 'B':
                     value = Color.blue(pixelColor);
@@ -88,8 +85,11 @@ public class Exec {
                 case 'I':
                     value = calculateIntensity(pixelColor);
                     break;
+                case 'H':
+                    value = bitmapBrightness;
+                    break;
                 default:
-                    throw new RuntimeException("Wrong input channel");
+                    throw new RuntimeException("Wrong input channel " + v.charAt(1));
             }
 
             // value = input.load(holder);
@@ -123,6 +123,7 @@ public class Exec {
 
         return (int) (0.21 * R + 0.72 * G + 0.07 * B);
     }
+
 
 }
 

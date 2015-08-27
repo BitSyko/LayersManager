@@ -231,21 +231,6 @@ public class IconPack implements com.bitsyko.ApplicationInfo {
         XmlPullParser parser = null;
 
         InputStream inputStream;
-/*
-        try {
-            inputStream = res.getAssets().open(file + ".xml");
-            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            parser = factory.newPullParser();
-            parser.setInput(inputStream, "UTF-8");
-        } catch (Exception e) {
-            // Catch any exception since we want to fall back to parsing the xml/
-            // resource in all cases
-            int resId = res.getIdentifier(file, "xml", getPackageName());
-            if (resId != 0) {
-                parser = res.getXml(resId);
-            }
-        }
-*/
 
         int resId = res.getIdentifier(file, "xml", getPackageName());
         if (resId != 0) {
@@ -336,14 +321,17 @@ public class IconPack implements com.bitsyko.ApplicationInfo {
 
     private Map<String, String> getIconOverlaysData(XmlPullParser parser) throws XmlPullParserException, IOException {
 
-        Map<String, String> data = new HashMap<>();
+        Map<String, String> config = new HashMap<>();
 
-      //  List<String> validTags = Arrays.asList("iconback", "iconmask", "iconupon", "scale");
+        //iconback/iconmask/iconupon
+        Map<String, String> icon = new HashMap<>();
+
+        List<String> validTags = Arrays.asList("iconback", "iconmask", "iconupon", "scale");
 
         int eventType = parser.getEventType();
         do {
 
-            if (data.keySet().size() == 4) {
+            if (config.keySet().size() == 4 || icon.keySet().size() == 4) {
                 break;
             }
 
@@ -355,34 +343,42 @@ public class IconPack implements com.bitsyko.ApplicationInfo {
                 String iconback = parser.getAttributeValue(null, "defaultBack");
 
                 if (iconback != null) {
-                    data.put("iconback", iconback);
+                    config.put("iconback", iconback);
                 }
 
                 String iconmask = parser.getAttributeValue(null, "defaultMask");
 
                 if (iconmask != null) {
-                    data.put("iconmask", iconmask);
+                    config.put("iconmask", iconmask);
                 }
 
 
                 String iconupon = parser.getAttributeValue(null, "defaultUpon");
 
                 if (iconupon != null) {
-                    data.put("iconupon", iconupon);
+                    config.put("iconupon", iconupon);
                 }
 
 
             }
 
+            if (validTags.contains(parser.getName().toLowerCase())) {
+                icon.put(parser.getName().toLowerCase(), parser.getAttributeValue(0));
+            }
+
+
             if (parser.getName().equalsIgnoreCase("scale")) {
-                data.put("scale", parser.getAttributeValue(null, "factor"));
+                config.put("scale", parser.getAttributeValue(null, "factor"));
+                icon.put("scale", parser.getAttributeValue(null, "factor"));
             }
 
 
         } while ((eventType = parser.next()) != XmlPullParser.END_DOCUMENT);
 
 
-        return data;
+        return icon;
+
+      //  return config.keySet().size() == 1 && config.keySet().contains("scale") ? icon : config;
     }
 
 
@@ -499,22 +495,43 @@ public class IconPack implements com.bitsyko.ApplicationInfo {
 
     private List<Exec> execList;
 
-    public List<Exec> getShader() {
+    public XmlPullParser getShader() {
 
-        if (execList == null) {
-            execList = getShaderFromXml();
-        }
+      //  if (execList == null) {
+         //   execList = getShaderXml();
+     //   }
 
-        return execList;
+        return getShaderXml();
     }
 
 
-    private List<Exec> getShaderFromXml() {
+    private XmlPullParser getShaderXml() {
+
+        XmlPullParser parser = null;
+
+
+        parser = getXml("shader");
+
+        if (parser == null) {
+            parser = getXml("noshader");
+        }
+
+        return parser;
+
+        /*
+
         try {
             return getShaderFromXml(getXml("shader"));
         } catch (Exception e) {
-            return new ArrayList<>();
+            try {
+                return getShaderFromXml(getXml("noshader"));
+            } catch (Exception e1) {
+                return new ArrayList<>();
+            }
         }
+
+        */
+
     }
 
 

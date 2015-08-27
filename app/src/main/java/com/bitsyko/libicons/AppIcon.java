@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.util.Pair;
 
@@ -23,6 +24,7 @@ import com.bitsyko.libicons.shader.Exec;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.xmlpull.v1.XmlPullParser;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,6 +36,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.adw.launcher.*;
 
 import kellinwood.security.zipsigner.ZipSigner;
 
@@ -142,12 +146,46 @@ public class AppIcon {
             }
 
             String drawableName = StringUtils.substringAfter(res.getResourceName(a.getIconResource()), "/");
-            Bitmap icon = ((BitmapDrawable) res.getDrawable(a.getIconResource(), null)).getBitmap().copy(Bitmap.Config.ARGB_8888, true);
-            
-            List<Exec> execList = iconPack.getShader();
+            //Bitmap icon = ((BitmapDrawable) res.getDrawable(a.getIconResource(), null)).getBitmap().copy(Bitmap.Config.ARGB_8888, true);
 
+            Drawable iconDrawable = res.getDrawable(a.getIconResource(), null);
+
+            XmlPullParser shaders = iconPack.getShader();
+
+
+            IconShader.CompiledIconShader compiledIconShader = IconShader.parseXml(shaders);
+
+            Bitmap icon = ((BitmapDrawable) (iconDrawable)).getBitmap();
+
+            icon = Bitmap.createScaledBitmap(icon, 72, 72, true);
+
+            icon = IconShader.processIcon(icon, compiledIconShader);
+
+            /*
 
             if (!execList.isEmpty()) {
+
+
+                //Calculating overall picture brightness
+
+                long brightness = 0;
+
+                for (int x = 0; x < icon.getWidth(); x++) {
+                    for (int y = 0; y < icon.getHeight(); y++) {
+
+                       // brightness += calculateBrightness(icon.getPixel(x, y));
+
+                        float hsv[] = new float[3];
+
+                        Color.colorToHSV(icon.getPixel(x, y), hsv);
+
+                        brightness += (hsv[2] * 255);
+
+
+                    }
+                }
+
+                brightness = brightness / (icon.getWidth() * icon.getHeight());
 
                 for (int x = 0; x < icon.getWidth(); x++) {
                     for (int y = 0; y < icon.getHeight(); y++) {
@@ -157,8 +195,14 @@ public class AppIcon {
                         DataHolder dataHolder = new DataHolder();
 
                         for (Exec exec : execList) {
-                            exec.parse(dataHolder, pixelColor);
+                            exec.parse(dataHolder, pixelColor, brightness);
                         }
+
+                        dataHolder.A %= 255;
+                        dataHolder.B %= 255;
+                        dataHolder.G %= 255;
+                        dataHolder.R %= 255;
+
 
                         icon.setPixel(x, y, Color.argb(dataHolder.A, dataHolder.R, dataHolder.G, dataHolder.B));
 
@@ -167,23 +211,22 @@ public class AppIcon {
 
             }
 
+*/
+
             String scale = iconOverlaysData.get("scale");
 
             Bitmap backPicture = iconPack.getBitmapFromDrawable(iconOverlaysData.get("iconback"));
             Bitmap uponPicture = iconPack.getBitmapFromDrawable(iconOverlaysData.get("iconupon"));
             Bitmap maskPicture = iconPack.getBitmapFromDrawable(iconOverlaysData.get("iconmask"));
 
+            icon = icon.copy(Bitmap.Config.ARGB_8888, true);
 
-            if (maskPicture != null) {
-                icon = overlay(icon, maskPicture);
-            } else {
-                Log.d("No picture", "Mask");
-            }
+            //Scale down picture
 
 
-            int integer = (int) (backPicture.getWidth() * Float.parseFloat(scale));
+            int destSize = (int) (backPicture.getWidth() * Float.parseFloat(scale));
 
-            Bitmap bitmap2scaled = Bitmap.createScaledBitmap(icon, integer, integer, false);
+            Bitmap bitmap2scaled = Bitmap.createScaledBitmap(icon, destSize, destSize, false);
 
             Bitmap bitmap2moved = Bitmap.createBitmap(backPicture.getWidth(), backPicture.getHeight(), backPicture.getConfig());
             Canvas canvas = new Canvas(bitmap2moved);
@@ -192,18 +235,46 @@ public class AppIcon {
             int margin = (backPicture.getWidth() - bitmap2scaled.getWidth()) / 2;
             canvas.drawBitmap(bitmap2scaled, margin, margin, null);
 
+            icon = bitmap2moved;
 
-            Bitmap finalBitmap = overlay(backPicture, bitmap2moved).copy(Bitmap.Config.ARGB_8888, true);
+            if (maskPicture != null) {
+                icon = Bitmap.createScaledBitmap(icon, maskPicture.getWidth(), maskPicture.getHeight(), true);
+                icon = overlay(icon, maskPicture);
+                icon = icon.copy(Bitmap.Config.ARGB_8888, true);
+            } else {
+                Log.d("No picture", "Mask");
+            }
 
+
+            //Mask
+            for (int x = 0; x < icon.getWidth(); x++) {
+                for (int y = 0; y < icon.getHeight(); y++) {
+
+                    int color = icon.getPixel(x, y);
+
+                    int r = Color.red(color);
+                    int g = Color.green(color);
+                    int b = Color.blue(color);
+
+
+                    if (r == 0 && g == 0 && b == 0) {
+                        icon.setPixel(x, y, Color.argb(0, 0, 0, 0));
+                    }
+
+
+                }
+            }
+
+            icon = overlay(backPicture, icon).copy(Bitmap.Config.ARGB_8888, true);
 
             //Clear rest of icon
-            for (int x = 0; x < finalBitmap.getWidth(); x++) {
-                for (int y = 0; y < finalBitmap.getHeight(); y++) {
+            for (int x = 0; x < icon.getWidth(); x++) {
+                for (int y = 0; y < icon.getHeight(); y++) {
 
                     int alpha = Color.alpha(backPicture.getPixel(x, y));
 
                     if (alpha == 0) {
-                        finalBitmap.setPixel(x, y, Color.argb(0, 0, 0, 0));
+                        icon.setPixel(x, y, Color.argb(0, 0, 0, 0));
                     }
 
 
@@ -212,14 +283,13 @@ public class AppIcon {
 
 
             if (uponPicture != null) {
-                finalBitmap = overlay(finalBitmap, uponPicture);
+                icon = overlay(icon, uponPicture);
             } else {
                 Log.d("No picture", "Upon");
             }
 
 
             // backPicture;
-
 
             for (String location : iconLocation) {
 
@@ -228,7 +298,7 @@ public class AppIcon {
                 destFile.getParentFile().mkdirs();
 
                 FileOutputStream out = new FileOutputStream(destFile);
-                finalBitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+                icon.compress(Bitmap.CompressFormat.PNG, 100, out);
 
                 out.close();
 
@@ -401,6 +471,14 @@ public class AppIcon {
         Log.d("Signing end", "");
 
 
+    }
+
+    private int calculateBrightness(int color) {
+        int R = Color.red(color);
+        int G = Color.green(color);
+        int B = Color.blue(color);
+
+        return (int) (0.21 * R + 0.72 * G + 0.07 * B);
     }
 
 
