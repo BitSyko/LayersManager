@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="<<PACKAGE_NAME>>" platformBuildVersionCode="21" platformBuildVersionName="5.0.1-1624448">
     <overlay android:priority="1000" android:targetPackage="<<TARGET_PACKAGE>>"/>
     <meta-data android:name="rom" android:value=""/>
-    <meta-data android:name="infoShort" android:value="Themes Settings"/>
+    <meta-data android:name="infoShort" android:value=""/>
     <meta-data android:name="infoLong" android:value=""/>
-    <meta-data android:name="author" android:value="dully79"/>
+    <meta-data android:name="author" android:value="Icon generator"/>
 </manifest>
