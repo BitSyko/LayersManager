@@ -464,7 +464,7 @@ public class Commands {
             "https://www.dropbox.com/s/5x2fpgw6ojyao2d/aapt_arm?dl=1"};
 
 
-    public static class InstallIcons extends AsyncTask<Void, Integer, Void> {
+    public static class InstallIcons extends AsyncTask<Void, String, Void> {
 
         ProgressDialog progress;
         Context context;
@@ -490,9 +490,12 @@ public class Commands {
         }
 
         @Override
-        protected void onProgressUpdate(Integer... values) {
+        protected void onProgressUpdate(String... values) {
             //super.onProgressUpdate(values);
             progress.setProgress(++i);
+            if (values.length != 0) {
+                Toast.makeText(context, values[0], Toast.LENGTH_LONG).show();
+            }
         }
 
         @Override
@@ -557,6 +560,7 @@ public class Commands {
                     publishProgress();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    publishProgress(e.getMessage());
                 }
             }
 
