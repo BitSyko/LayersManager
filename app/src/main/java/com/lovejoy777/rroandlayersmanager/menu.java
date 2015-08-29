@@ -230,8 +230,8 @@ public class menu extends AppCompatActivity {
 
         dir1.mkdirs();
 
-        RootTools.remount("/system", "RW");
-        String vendover = "/system/vendor/overlay";
+        RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RW");
+        String vendover = DeviceSingleton.getInstance().getOverlayFolder();
         // CREATES /VENDOR/OVERLAY
         File dir2 = new File(vendover);
         if (!dir2.exists()) {
@@ -247,7 +247,7 @@ public class menu extends AppCompatActivity {
             }
         }
 
-        RootTools.remount("/system", "RO");
+        RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RO");
 
     }
 
