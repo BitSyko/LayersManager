@@ -40,7 +40,7 @@ public class InAppBilling extends AppCompatActivity {
         donBtn4 = (Button)findViewById(R.id.donBtn4);
 
 
-        String base64EncodedPublicKey = "enter-key-here";
+        String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxhTS1N1U8E0p07cx5Y8Fu4M++5YO6CBEVISXGab10xlXQD14J2LgeCmH7P1614RiWQ8meo3piaklcjripvB/cEjfdfx0F07iijfogz2NWC85XSEitwjngZjFXF5T6b7fRTfO4YYqLaC+fz1UNFpwzecJ2exfhQE/lTquTsAGu5ZRZq7eyyKGvWSbaoX+JrDIrB+aI73NYj8WVCmneu45GXfma8j92Ry1WAdWxaf3Q84t50azyCx2guyc0KMcXnyGfq//YceNJq/UUEnuQzZrnkc1UxjpBNOl6P0ehdXaL1XFgmljiYRehIZ2UmxJTC2LGfMd2ETsM1Iy8jVTMxTrdwIDAQAB";
 
         mHelper = new IabHelper(this, base64EncodedPublicKey);
 
