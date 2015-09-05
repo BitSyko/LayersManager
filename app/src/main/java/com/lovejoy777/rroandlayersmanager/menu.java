@@ -202,6 +202,8 @@ public class menu extends AppCompatActivity {
 
         Intent intent = new Intent(this, OverlayDetailActivity.class);
 
+
+        
         intent.putExtra("PackageName", layer.getPackageName());
 
         startActivity(intent);
