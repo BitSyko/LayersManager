@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.github.triplet.play'
+apply plugin: 'com.github.triplet.play
 
 android {
     compileSdkVersion 22
