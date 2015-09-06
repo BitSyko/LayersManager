@@ -87,7 +87,7 @@ public class menu extends AppCompatActivity {
             setupDrawerContent(navigationView);
         }
     }
-
+    
 
     //navigationDrawerIcon Onclick
     @Override
