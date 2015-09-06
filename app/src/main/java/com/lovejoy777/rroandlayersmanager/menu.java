@@ -88,8 +88,6 @@ public class menu extends AppCompatActivity {
         }
     }
 
-
-
     
     //navigationDrawerIcon Onclick
     @Override
