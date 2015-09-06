@@ -1,14 +1,16 @@
 package com.lovejoy777.rroandlayersmanager.fragments;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
 
-public class InstallFragment extends Fragment implements AsyncResponse, BackButtonListener {
+public class InstallFragment extends android.support.v4.app.Fragment implements AsyncResponse, BackButtonListener {
 
     private ArrayList<String> fileDirectories = new ArrayList<>();
     private FloatingActionButton fab2;
@@ -61,27 +63,9 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
 
         ((DrawerLayout) getActivity().findViewById(R.id.drawer_layout)).setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
-        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) getActivity().findViewById(R.id.toolbar);
-
-        int elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
-        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 96, getResources().getDisplayMetrics());
-        toolbar.setNavigationIcon(R.drawable.ic_action_back);
-
-
-        TextView toolbarTitle = (TextView) getActivity().findViewById(R.id.title2);
-        toolbarTitle.setText(getString(R.string.InstallOverlays2));
-
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, height
-        );
-
-        toolbar.setElevation(elevation);
-        toolbar.setLayoutParams(layoutParams);
-
-
-        setHasOptionsMenu(true);
-
-        loadToolbarRecylcerViewFab();
+        loadAppbar();
+        loadRecylcerView();
+        loadFAB();
 
         new LoadAndSet().execute();
 
@@ -90,13 +74,44 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
         return cordLayout;
     }
 
-    private void loadToolbarRecylcerViewFab() {
+    private void loadAppbar() {
+        //set toolbar
+        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_action_back);
 
+        //toolbar height
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 96, getResources().getDisplayMetrics());
+        AppBarLayout.LayoutParams layoutParams = new AppBarLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, height
+        );
+        toolbar.setLayoutParams(layoutParams);
+
+        //appbar elevation
+        AppBarLayout appbar = (AppBarLayout) getActivity().findViewById(R.id.appBarlayout);
+        int elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
+        appbar.setElevation(elevation);
+
+        //hide viewpager and tablayout
+        ViewPager viewPager = (ViewPager) getActivity().findViewById(R.id.tabanim_viewpager);
+        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
+        viewPager.setVisibility(View.GONE);
+        tabLayout.setVisibility(View.GONE);
+        viewPager.removeAllViews();
+
+        //toolbar text
+        TextView toolbarTitle = (TextView) getActivity().findViewById(R.id.title2);
+        toolbarTitle.setText(getString(R.string.InstallOverlays2));
+    }
+
+    private void loadRecylcerView() {
 
         mRecyclerView = (RecyclerView) cordLayout.findViewById(R.id.cardList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
+    }
+
+    private void loadFAB(){
         fab2 = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab6);
         fab2.hide();
         fab2.setOnClickListener(new View.OnClickListener() {
@@ -148,7 +163,8 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        menuInflater.inflate(R.menu.menu_main, menu);
+        menu.removeItem(R.id.menu_sort);
+        super.onCreateOptionsMenu(menu, menuInflater);
     }
 
     @Override

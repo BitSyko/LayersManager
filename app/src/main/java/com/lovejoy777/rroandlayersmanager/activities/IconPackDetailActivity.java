@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -27,7 +28,20 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
-import android.widget.*;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Switch;
+import android.widget.TableRow;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.bitsyko.libicons.AppIcon;
+import com.bitsyko.libicons.IconPack;
 import com.bitsyko.liblayers.Layer;
 import com.bitsyko.liblayers.LayerFile;
 import com.bitsyko.liblayers.NoFileInZipException;
@@ -38,14 +52,20 @@ import com.lovejoy777.rroandlayersmanager.helper.Helpers;
 import com.lovejoy777.rroandlayersmanager.views.CheckBoxHolder;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-public class OverlayDetailActivity extends AppCompatActivity implements AsyncResponse {
+public class IconPackDetailActivity extends AppCompatActivity implements AsyncResponse {
 
     private CheckBox dontShowAgain;
     private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
     private String choosedStyle = "";
-    private Layer layer;
+    private IconPack iconPack;
     private Switch installEverything;
     private FloatingActionButton installationFAB;
     private CoordinatorLayout cordLayout;
@@ -74,7 +94,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
         createLayouts();
 
-        Log.d("Colors", String.valueOf(layer.getColors()));
+        // Log.d("Colors", String.valueOf(iconPack.getColors()));
 
     }
 
@@ -100,11 +120,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     }
 
     private void loadOverlayCardviews() {
-
-        //We're checking if progress dialog is required
-
-
-        loadLayerApks = new LoadLayerApks(this, cordLayout);
+        loadLayerApks = new LoadLayerApks();
         loadLayerApks.execute();
     }
 
@@ -115,14 +131,14 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     private void receiveAndUseData() {
 
         TextView tv_description = (TextView) cordLayout.findViewById(R.id.HeX1);
-        tv_description.setText(layer.getDescription());
+        tv_description.setText(iconPack.getDescription());
 
         TextView tv_whatsNew = (TextView) cordLayout.findViewById(R.id.tv_whatsNew);
-        tv_whatsNew.setText(layer.getWhatsNew());
+        tv_whatsNew.setText(iconPack.getWhatsNew());
 
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) cordLayout.findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle(layer.getName());
+        collapsingToolbar.setTitle(iconPack.getName());
 
     }
 
@@ -132,7 +148,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
 
         //Hide the FAB
-        installationFAB = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab2);
+        installationFAB = (FloatingActionButton) cordLayout.findViewById(R.id.fab2);
         installationFAB.hide();
 
         //Initialize Layout
@@ -145,7 +161,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         installationFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                installTheme();
+                installDialog();
             }
         });
 
@@ -164,30 +180,32 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     private void receiveIntent() {
         String layerPackageName = getIntent().getStringExtra("PackageName");
         try {
-            layer = Layer.layerFromPackageName(layerPackageName, getApplicationContext());
-            //We're removing previous apks
-            layer.close();
-
+            iconPack = new IconPack(layerPackageName, getApplicationContext());
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
             throw new RuntimeException();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
         Log.d("PackageName: ", layerPackageName);
     }
 
     private void loadBackdrop() {
 
         ImageView imageView = (ImageView) cordLayout.findViewById(R.id.backdrop);
+        ImageView imageView2 = (ImageView) cordLayout.findViewById(R.id.backdropsmall);
 
-        Drawable promo = layer.getPromo();
+        // Drawable promo = iconPack.getPromo();
+
+        Drawable promo = getDrawable(R.drawable.background);
+        Drawable promo2 = iconPack.getIcon();
 
         imageView.setImageDrawable(promo);
 
+        imageView2.setImageDrawable(promo2);
+
         final CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) cordLayout.findViewById(R.id.collapsing_toolbar);
 
-        Palette.from(((BitmapDrawable) promo).getBitmap()).generate(new Palette.PaletteAsyncListener() {
+        Palette.from(((BitmapDrawable) promo2).getBitmap()).generate(new Palette.PaletteAsyncListener() {
             public void onGenerated(Palette palette) {
                 Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
                 if (vibrantSwatch != null) {
@@ -196,9 +214,6 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                     Color.colorToHSV(vibrantSwatch.getRgb(), hsv);
                     hsv[2] *= 0.8f;
                     collapsingToolbar.setStatusBarScrimColor(Color.HSVToColor(hsv));
-                    //int colorPrimaryDark = Color.HSVToColor(hsv);
-                    //  Window window = getWindow();
-                    // window.setStatusBarColor(Color.HSVToColor(hsv));
                 }
             }
         });
@@ -249,24 +264,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
     //If FAB is clicked
     private void installTheme() {
-
-        boolean isThereColorOverlay = false;
-
-        for (CheckBox checkBox : checkBoxes) {
-            if (checkBox.isChecked() && ((LayerFile) checkBox.getTag()).isColor()) {
-                isThereColorOverlay = true;
-                break;
-            }
-        }
-
-        //when a color checkbox is checked
-        if (isThereColorOverlay) {
-            colorDialog();
-        }
-        //if only normal Overlays are selected
-        else {
-            installDialog();
-        }
+        installDialog();
     }
 
     @Override
@@ -318,7 +316,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                 .setAction(R.string.Reboot, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Commands.reboot(OverlayDetailActivity.this);
+                        Commands.reboot(IconPackDetailActivity.this);
                     }
                 })
                 .show();
@@ -365,97 +363,28 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
     private void InstallAsyncOverlays() {
 
-        List<LayerFile> layersToInstall = new ArrayList<>();
+        List<AppIcon> iconsToInstall = new ArrayList<>();
 
         for (CheckBox checkBox : checkBoxes) {
 
             if (checkBox.isChecked()) {
-                LayerFile layerFile = (LayerFile) checkBox.getTag();
-                layersToInstall.add(layerFile);
+                iconsToInstall.add((AppIcon)checkBox.getTag());
             }
 
         }
 
         Log.d("Choosed color", choosedStyle);
 
-        new Commands.InstallOverlaysBetterWay(layersToInstall, choosedStyle, this, this).execute();
+        new Commands.InstallIcons(this, iconsToInstall, this).execute();
 
 
     }
 
+    @Override
     public void processFinish() {
         installationFinishedSnackBar();
         uncheckAllCheckBoxes();
         installEverything.setChecked(false);
-    }
-
-    //Dialog to choose color
-    private void colorDialog() {
-
-        final AlertDialog.Builder colorDialog = new AlertDialog.Builder(this);
-        final LayoutInflater inflater = getLayoutInflater();
-        colorDialog.setTitle(R.string.pick_color);
-        View colordialogView = inflater.inflate(R.layout.dialog_colors, null);
-        colorDialog.setView(colordialogView);
-
-        final RadioGroup radioGroup = (RadioGroup) colordialogView.findViewById(R.id.radiogroup);
-
-        RadioGroup.LayoutParams params
-                = new RadioGroup.LayoutParams(this, null);
-
-        params.leftMargin = 66;
-        params.topMargin = 2;
-        params.bottomMargin = 2;
-        params.width = RadioGroup.LayoutParams.MATCH_PARENT;
-
-        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 44, getResources().getDisplayMetrics());
-        params.height = height;
-
-
-        final List<String> colors = layer.getColors();
-
-        for (final String color : colors) {
-
-            final RadioButton radioButton = new RadioButton(this);
-
-            radioButton.setText(color);
-            radioButton.setLayoutParams(params);
-            radioButton.setTextSize(18);
-            radioButton.setTag(color);
-
-            radioGroup.addView(radioButton);
-
-            radioButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    choosedStyle = (String) v.getTag();
-                }
-            });
-
-            if (colors.indexOf(color) == 0) {
-                radioButton.performClick();
-            }
-
-        }
-
-        colorDialog.setCancelable(false);
-        colorDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                installDialog();
-            }
-        });
-        colorDialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-
-
-        });
-        colorDialog.create();
-        colorDialog.show();
     }
 
     @Override
@@ -466,13 +395,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         }
 
         if (loadLayerApks.getStatus() != AsyncTask.Status.FINISHED) {
-            loadLayerApks.stop();
-        }
-
-        try {
-            layer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            loadLayerApks.cancel(true);
         }
 
         super.onDestroy();
@@ -488,6 +411,17 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         }
 
         @Override
+        protected Void doInBackground(Void... params) {
+            List<Drawable> drawables = iconPack.getPreviewImages();
+
+            for (Drawable drawable : drawables) {
+                publishProgress(drawable);
+            }
+
+            return null;
+        }
+
+        @Override
         protected void onProgressUpdate(Drawable... values) {
 
             for (Drawable screenshot : values) {
@@ -495,7 +429,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                 ImageView screenshotImageView;
 
                 try {
-                    screenshotImageView = new ImageView(OverlayDetailActivity.this);
+                    screenshotImageView = new ImageView(IconPackDetailActivity.this);
                 } catch (NullPointerException e) {
                     continue;
                 }
@@ -509,7 +443,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                     screenshotImageView.setImageBitmap(bitmap);
                 }
 
-                LinearLayout linear = new LinearLayout(OverlayDetailActivity.this);
+                LinearLayout linear = new LinearLayout(IconPackDetailActivity.this);
 
                 linear.addView(screenshotImageView);
                 screenshotLayout.addView(linear);
@@ -517,188 +451,77 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
         }
 
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            Pair<Integer, Drawable> pair;
-
-            while ((pair = layer.getNextScreenshot()).first != 0) {
-
-                if (isCancelled()) {
-                    break;
-                }
-
-                publishProgress(pair.second);
-
-            }
-
-            return null;
-        }
 
     }
 
 
-    private class LoadLayerApks extends AsyncTask<Void, Pair<Boolean, TableRow>, Pair<Set<String>,Set<String>>> {
+    private class LoadLayerApks extends AsyncTask<Void, Void, List<AppIcon>> {
 
-        private Context context;
-        private CoordinatorLayout cordLayout;
-        private LinearLayout linearLayoutCategory1, linearLayoutCategory2;
-        private CardView cardViewCategory1, cardViewCategory2;
-        private boolean stop;
-        boolean newSet = false;
-        boolean showNotInstalledApps;
-
-        public LoadLayerApks(Context context, CoordinatorLayout cordLayout) {
-            this.context = context;
-            this.cordLayout = cordLayout;
-        }
+        LinearLayout screenshotLayout;
 
         @Override
         protected void onPreExecute() {
-            linearLayoutCategory1 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory1);
-            linearLayoutCategory2 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory2);
-            cardViewCategory1 = (CardView) cordLayout.findViewById(R.id.CardViewCategory1);
-            cardViewCategory2 = (CardView) cordLayout.findViewById(R.id.CardViewCategory2);
+            screenshotLayout = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutScreenshots);
         }
 
         @Override
-        protected Pair<Set<String>,Set<String>> doInBackground(Void... params) {
+        protected List<AppIcon> doInBackground(Void... params) {
+            List<AppIcon> apps = iconPack.getCompatibleApps();
 
-            SharedPreferences myprefs = getSharedPreferences("layersData", Context.MODE_PRIVATE);
-            Set<String> filesToGreyOut = myprefs.getStringSet(layer.getPackageName(), null);
-            Set<String> filesThatDontExist = myprefs.getStringSet(layer.getPackageName() + "_dontExist", null);
-
-            showNotInstalledApps = !getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-                    .getBoolean("showNotInstalledApps", false);
-
-            
-            if (filesToGreyOut == null || !filesToGreyOut.contains(layer.getVersionCode())) {
-                newSet = true;
-                filesToGreyOut = new HashSet<>();
-                filesThatDontExist = new HashSet<>();
-                filesToGreyOut.add(layer.getVersionCode());
-            }
-
-            List<LayerFile> layerFiles = layer.getLayersInPackage();
-            List<String> packages = new ArrayList<>(Helpers.allPackagesInSystem(OverlayDetailActivity.this));
-
-            if (newSet && !showNotInstalledApps) {
-                Log.d("Installed packages", String.valueOf(packages));
-            }
-
-            for (LayerFile layerFile : layerFiles) {
-                
-                if (isCancelled() || stop) {
-                    return null;
+            Collections.sort(apps, new Comparator<AppIcon>() {
+                @Override
+                public int compare(AppIcon lhs, AppIcon rhs) {
+                    return lhs.getName().compareToIgnoreCase(rhs.getName());
                 }
+            });
 
-                TableRow row = new TableRow(context);
+            return apps;
+
+        }
+
+        @Override
+        protected void onPostExecute(List<AppIcon> list) {
+            //   super.onPostExecute(list);
+
+            LinearLayout linearLayout1 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory1);
+            LinearLayout linearLayout2 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory2);
+
+            for (AppIcon app : list) {
+
+                TableRow row = new TableRow(IconPackDetailActivity.this);
                 row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
 
-                CheckBox check = new CheckBox(context);
+                CheckBox check = new CheckBox(IconPackDetailActivity.this);
 
-                check.setText(layerFile.getNiceName());
-                check.setTag(layerFile);
+                check.setText(app.getName() + " (" + app.getPackageName() + ")");
+                check.setTag(app);
 
-                FrameLayout frameLayout = new CheckBoxHolder(OverlayDetailActivity.this, check, new CheckBoxHolder.CheckBoxHolderCallback() {
+                check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
-                    public void onClick() {
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         refreshFab();
                     }
                 });
 
-                frameLayout.addView(check);
-                row.addView(frameLayout);
-
-                if (newSet && !showNotInstalledApps) {
-
-                    try {
-
-                        if (layerFile.isColor()) {
-                            layerFile.getFile(layer.getColors().get(0));
-                        } else {
-                            layerFile.getFile();
-                        }
-
-                        Log.d("Manifest " + layerFile.getName(), layerFile.getRelatedPackage());
-
-                        if (!packages.contains(layerFile.getRelatedPackage())) {
-                            filesToGreyOut.add(layerFile.getName());
-                        }
-
-                    } catch (IOException | NoFileInZipException e) {
-                        e.printStackTrace();
-                        filesThatDontExist.add(layerFile.getName());
-                    }
-
-                }
-                
-                if (!showNotInstalledApps) {
-
-                    check.setEnabled(!filesToGreyOut.contains(layerFile.getName()));
-
-                    if (filesThatDontExist.contains(layerFile.getName())) {
-                        check.setEnabled(false);
-                        check.setTextColor(getResources().getColor(R.color.accent));
-                    }
-                }
-
-                Pair<Boolean, TableRow> pair = new Pair<>(layerFile.isColor(), row);
-
-                //noinspection unchecked
-                publishProgress(pair);
+                row.addView(check);
 
                 checkBoxes.add(check);
 
-            }
-
-
-            return new Pair<>(filesToGreyOut, filesThatDontExist);
-
-        }
-
-
-        @SafeVarargs
-        @Override
-        protected final void onProgressUpdate(Pair<Boolean, TableRow>... values) {
-
-            for (Pair<Boolean, TableRow> row : values) {
-
-                if (row.first) {
-                    linearLayoutCategory2.addView(row.second);
-                    linearLayoutCategory2.invalidate();
+                if (app.isInPack()) {
+                    linearLayout1.addView(row);
                 } else {
-                    linearLayoutCategory1.addView(row.second);
-                    linearLayoutCategory1.invalidate();
+                    linearLayout2.addView(row);
                 }
-            }
-        }
 
-        @Override
-        protected void onPostExecute(Pair<Set<String>, Set<String>> aVoid) {
-
-            //No styleSpecific Overlays
-            if (linearLayoutCategory2.getChildCount() == 0) {
-                cardViewCategory2.setVisibility(View.GONE);
-            }
-            //No normal Overlays
-            if (linearLayoutCategory1.getChildCount() == 0) {
-                cardViewCategory1.setVisibility(View.GONE);
             }
 
-            if (newSet && !showNotInstalledApps) {
-                SharedPreferences myprefs = getSharedPreferences("layersData", Context.MODE_PRIVATE);
-                myprefs.edit().putStringSet(layer.getPackageName(), aVoid.first).apply();
-                myprefs.edit().putStringSet(layer.getPackageName() + "_dontExist", aVoid.second).apply();
-                Toast.makeText(OverlayDetailActivity.this, "Generating complete", Toast.LENGTH_LONG).show();
-            }
+            linearLayout1.invalidate();
+            linearLayout2.invalidate();
+
+            //cordLayout.findViewById(R.id.CardViewCategory2).setVisibility(View.GONE);
 
         }
-
-        public void stop() {
-            cancel(true);
-            stop = true;
-        }
-
     }
+
+
 }

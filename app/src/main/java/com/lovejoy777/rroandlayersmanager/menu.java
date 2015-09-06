@@ -1,7 +1,6 @@
 package com.lovejoy777.rroandlayersmanager;
 
 import android.app.ActivityOptions;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -11,12 +10,21 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.RelativeLayout;
+import android.view.View;
 import android.widget.Toast;
+
+import com.bitsyko.libicons.IconPack;
+import com.bitsyko.libicons.SystemApplicationHelper;
 import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.activities.*;
 import com.lovejoy777.rroandlayersmanager.fragments.*;
@@ -26,6 +34,8 @@ import com.stericson.RootTools.execution.CommandCapture;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 public class menu extends AppCompatActivity {
@@ -51,6 +61,88 @@ public class menu extends AppCompatActivity {
         loadTutorial();
 
     }
+
+    private ViewPagerAdapter adapter;
+
+    private void setupViewPager(ViewPager viewPager, int mode) {
+        viewPager.removeAllViews();
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        if (mode == 0) {
+
+            PluginFragment overlayFragment = new PluginFragment();
+            PluginFragment iconFragment = new PluginFragment();
+
+            Bundle args1 = new Bundle();
+            Bundle args2 = new Bundle();
+            args1.putInt("Mode", 0);
+            args2.putInt("Mode", 1);
+
+            overlayFragment.setArguments(args1);
+            iconFragment.setArguments(args2);
+
+
+            adapter.addFrag(overlayFragment, "Overlays");
+            adapter.addFrag(iconFragment, "Icon Overlays");
+
+
+        } else {
+            System.out.println("TEST");
+            adapter.removeAllFrags();
+            adapter.notifyDataSetChanged();
+
+            UninstallFragment uninstallOverlays = new UninstallFragment();
+            UninstallFragment uninstallOverlays2 = new UninstallFragment();
+            Bundle args1 = new Bundle();
+            Bundle args2 = new Bundle();
+            args1.putInt("Mode", 0);
+            uninstallOverlays.setArguments(args1);
+            adapter.addFrag(uninstallOverlays, "Overlays");
+            args2.putInt("Mode", 1);
+            uninstallOverlays2.setArguments(args2);
+            adapter.addFrag(uninstallOverlays2, "Icon Overlays");
+            //adapter.addFrag(new UninstallFragment(), "Icon Overlays");
+
+        }
+
+
+        viewPager.setAdapter(adapter);
+    }
+
+
+    class ViewPagerAdapter extends FragmentStatePagerAdapter {
+        private final List<android.support.v4.app.Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(android.support.v4.app.FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public android.support.v4.app.Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFrag(android.support.v4.app.Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        public void removeAllFrags() {
+            mFragmentList.clear();
+            mFragmentTitleList.clear();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
+    }
+
 
     private void loadTutorial() {
 
@@ -94,7 +186,7 @@ public class menu extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Fragment currentFragment = menu.this.getFragmentManager().findFragmentById(R.id.fragment_container);
+                android.support.v4.app.Fragment currentFragment = menu.this.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
                 if (currentFragment instanceof InstallFragment) {
                     changeFragment(1, 1);
                 } else {
@@ -167,16 +259,21 @@ public class menu extends AppCompatActivity {
 
     public void changeFragment(int position, int mode) {
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
-        Fragment fragment = null;
-        FragmentManager fragmentManager = getFragmentManager();
+        android.support.v4.app.Fragment fragment = null;
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
+        ViewPager viewPager = (ViewPager) findViewById(R.id.tabanim_viewpager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         switch (position) {
             case 1:
-                fragment = new PluginFragment();
+                setupViewPager(viewPager, 0);
+                tabLayout.setupWithViewPager(viewPager);
                 break;
             case 2:
-                fragment = new UninstallFragment();
+                setupViewPager(viewPager, 1);
+                tabLayout.setupWithViewPager(viewPager);
+                //fragment = new UninstallFragment();
                 break;
             case 3:
                 fragment = new BackupRestoreFragment();
@@ -187,22 +284,42 @@ public class menu extends AppCompatActivity {
         }
 
 
-        fragmentManager
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit();
-
-
+        if (position > 2) {
+            fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, fragment, "TAG")
+                    .addToBackStack(null)
+                    .commit();
+        } else {
+            android.support.v4.app.Fragment test = getSupportFragmentManager().findFragmentByTag("TAG");
+            if (test != null) {
+                fragmentManager
+                        .beginTransaction()
+                        .remove(getSupportFragmentManager().findFragmentByTag("TAG"))
+                        .commit();
+            }
+        }
     }
 
-    public void changeFragment2(Layer layer) {
+    public void openOverlayDetailActivity(Layer layer) {
         Bundle args = new Bundle();
         args.putString("PackageName", layer.getPackageName());
 
         Intent intent = new Intent(this, OverlayDetailActivity.class);
 
         intent.putExtra("PackageName", layer.getPackageName());
+
+        startActivity(intent);
+
+    }
+
+    public void openIconPackDetailActivity(IconPack iconPack) {
+        Bundle args = new Bundle();
+        args.putString("PackageName", iconPack.getPackageName());
+
+        Intent intent = new Intent(this, IconPackDetailActivity.class);
+
+        intent.putExtra("PackageName", iconPack.getPackageName());
 
         startActivity(intent);
 
@@ -230,8 +347,8 @@ public class menu extends AppCompatActivity {
 
         dir1.mkdirs();
 
-        RootTools.remount("/system", "RW");
-        String vendover = "/system/vendor/overlay";
+        RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RW");
+        String vendover = DeviceSingleton.getInstance().getOverlayFolder();
         // CREATES /VENDOR/OVERLAY
         File dir2 = new File(vendover);
         if (!dir2.exists()) {
@@ -247,30 +364,34 @@ public class menu extends AppCompatActivity {
             }
         }
 
-        RootTools.remount("/system", "RO");
+        RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RO");
 
     }
 
     @Override
     public void onBackPressed() {
-        Fragment currentFragment = menu.this.getFragmentManager().findFragmentById(R.id.fragment_container);
+        android.support.v4.app.Fragment currentFragment = menu.this.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawers();
             return;
         }
 
-        if (currentFragment instanceof BackButtonListener && !((BackButtonListener) currentFragment).onBackButton()) {
-            return;
+        if (currentFragment instanceof InstallFragment) {
+            changeFragment(1, 1);
         }
+
+        //if (currentFragment instanceof BackButtonListener && !((BackButtonListener) currentFragment).onBackButton()) {
+        //    return;
+        //}
 
         FragmentManager fm = getFragmentManager();
 
         //First commit is omitted
-        if (fm.getBackStackEntryCount() > 1) {
-            fm.popBackStack();
-            return;
-        }
+        //if (fm.getBackStackEntryCount() > 1) {
+        //    fm.popBackStack();
+        //    return;
+        //}
 
 
         super.onBackPressed();
