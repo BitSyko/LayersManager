@@ -89,8 +89,6 @@ public class menu extends AppCompatActivity {
     }
 
 
-
-    
     //navigationDrawerIcon Onclick
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
