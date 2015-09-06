@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class Layer implements Closeable {
+public class Layer implements Closeable, com.bitsyko.ApplicationInfo {
     private static final String ACTION_PICK_PLUGIN = "com.layers.plugins.PICK_OVERLAYS";
 
     private final String name;
@@ -37,10 +37,6 @@ public class Layer implements Closeable {
     private List<String> colors;
 
     private final Drawable icon;
-
-    public Layer(String name, String developer, Drawable icon) {
-        this(name, developer, icon, null, null, null, null);
-    }
 
     private Layer(String name, String developer, Drawable icon, String packageName,
                   Resources resources, ApplicationInfo applicationInfo, Context context) {
@@ -284,10 +280,6 @@ public class Layer implements Closeable {
 
     public String getCacheDir() {
         return context.getCacheDir().getAbsolutePath();
-    }
-
-    public Context getRelatedContext() {
-        return context;
     }
 
     @Override

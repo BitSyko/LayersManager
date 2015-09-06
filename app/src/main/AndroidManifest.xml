@@ -86,12 +86,14 @@
             android:exported="true"
             android:theme="@style/Base.Theme.Toolbar"/>
 
+        <activity
+            android:name=".activities.IconPackDetailActivity"
+            android:exported="true"
+            android:theme="@style/Base.Theme.Toolbar"/>
 
         <activity
             android:name=".activities.GoogleDriveActivity"
             android:label="Install layer">
-
-            <!-- ... -->
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
