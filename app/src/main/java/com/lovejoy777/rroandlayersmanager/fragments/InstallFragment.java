@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
 
-public class InstallFragment extends Fragment implements AsyncResponse, BackButtonListener {
+public class InstallFragment extends android.support.v4.app.Fragment implements AsyncResponse, BackButtonListener {
 
     private ArrayList<String> fileDirectories = new ArrayList<>();
     private FloatingActionButton fab2;
@@ -71,7 +72,7 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
         TextView toolbarTitle = (TextView) getActivity().findViewById(R.id.title2);
         toolbarTitle.setText(getString(R.string.InstallOverlays2));
 
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+        AppBarLayout.LayoutParams layoutParams = new AppBarLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, height
         );
 

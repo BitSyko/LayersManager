@@ -3,6 +3,7 @@ package com.lovejoy777.rroandlayersmanager.fragments;
 import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -22,7 +23,7 @@ import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UninstallFragment extends Fragment implements MaterialCab.Callback, AsyncResponse {
+public class UninstallFragment extends android.support.v4.app.Fragment implements MaterialCab.Callback, AsyncResponse {
 
     private FloatingActionButton fab2;
     private LinearLayout mLinearLayout;
@@ -48,15 +49,19 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
         toolbarTitle = (TextView) getActivity().findViewById(R.id.title2);
         toolbarTitle.setText(getString(R.string.UninstallOverlays));
 
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+        AppBarLayout.LayoutParams layoutParams = new AppBarLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, height
         );
 
+        AppBarLayout test = (AppBarLayout) getActivity().findViewById(R.id.appBarlayout);
+        test.setElevation(0);
         toolbar.setElevation(elevation);
         toolbar.setLayoutParams(layoutParams);
 
 
         setHasOptionsMenu(true);
+
+        ActivityCompat.invalidateOptionsMenu(getActivity());
 
         loadToolbarRecylcerViewFab();
 
