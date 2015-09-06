@@ -92,7 +92,7 @@
             android:layout_alignParentEnd="true"
             android:layout_gravity="bottom|end"
             android:layout_margin="15dp"
-            android:elevation="@dimen/fab_elevation"
+            android:elevation="@dimen/design_fab_elevation"
             app:arcColor="@color/primary"
             app:reusable="true">
 
@@ -103,7 +103,7 @@
                 android:clickable="true"
                 android:src="@drawable/ic_drawer_delete"
                 android:tint="@color/white"
-                app:elevation="@dimen/fab_elevation"/>
+                app:elevation="@dimen/design_fab_elevation"/>
         </com.github.jorgecastilloprz.FABProgressCircle>
 
 
