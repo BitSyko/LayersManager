@@ -1,12 +1,10 @@
 package com.lovejoy777.rroandlayersmanager.fragments;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,28 +12,37 @@ import android.os.Environment;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v13.app.FragmentCompat;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.*;
-import android.widget.*;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.beans.FileBean;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
-import com.lovejoy777.rroandlayersmanager.helper.Helpers;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
 
-import static android.support.v4.app.ActivityCompat.requestPermissions;
-import static android.support.v4.app.ActivityCompat.shouldShowRequestPermissionRationale;
-import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
 public class InstallFragment extends Fragment implements AsyncResponse, BackButtonListener {
 
@@ -94,8 +101,8 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
 
         loadToolbarRecylcerViewFab();
 
-        if (checkSelfPermission(getActivity(),Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
+
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             askForPermission(1);
         } else{
             new LoadAndSet().execute();
@@ -184,6 +191,8 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
         return false;
 
     }
+
+
 
     private class LoadAndSet extends AsyncTask<Void, String, Void> {
 
@@ -408,14 +417,16 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
 
     public void askForPermission(int mode){
         // Should we show an explanation?
-        if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        if (FragmentCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE)) {
             // Explain to the user why we need to read the contacts
         }
 
-        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},mode);
+        FragmentCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, mode);
 
         return;
     }
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,

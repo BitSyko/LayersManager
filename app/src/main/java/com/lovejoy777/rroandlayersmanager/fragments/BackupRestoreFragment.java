@@ -13,6 +13,8 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v13.app.FragmentCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -98,7 +100,7 @@ public class BackupRestoreFragment extends Fragment {
 
         loadToolbarRecyclerViewFab();
 
-        if (checkSelfPermission(getActivity(),Manifest.permission.READ_EXTERNAL_STORAGE)
+        if (ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             askForPermission(1);
         } else{
@@ -452,11 +454,11 @@ public class BackupRestoreFragment extends Fragment {
 
     public void askForPermission(int mode){
         // Should we show an explanation?
-        if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        if (FragmentCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             // Explain to the user why we need to read the contacts
         }
 
-        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},mode);
+        FragmentCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},mode);
 
         return;
     }
