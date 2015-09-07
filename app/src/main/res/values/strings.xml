@@ -175,6 +175,8 @@
     <string name="sort_random">Random</string>
     <string name="show">Show</string>
     <string name="contains">contains:</string>
+    <string name="noPermission">No Permission</string>
+    <string name="noPermissionDescription">No permission to view your phone´s internal storage granted.\nYou won´t be able to use this feature until you grant this permission.</string>
 
 
 </resources>

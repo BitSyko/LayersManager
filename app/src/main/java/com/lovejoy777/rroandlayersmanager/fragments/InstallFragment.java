@@ -1,7 +1,13 @@
 package com.lovejoy777.rroandlayersmanager.fragments;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,10 +27,15 @@ import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.beans.FileBean;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
+import com.lovejoy777.rroandlayersmanager.helper.Helpers;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
+
+import static android.support.v4.app.ActivityCompat.requestPermissions;
+import static android.support.v4.app.ActivityCompat.shouldShowRequestPermissionRationale;
+import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
 public class InstallFragment extends Fragment implements AsyncResponse, BackButtonListener {
 
@@ -83,12 +94,20 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
 
         loadToolbarRecylcerViewFab();
 
-        new LoadAndSet().execute();
+        if (checkSelfPermission(getActivity(),Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            askForPermission(1);
+        } else{
+            new LoadAndSet().execute();
+        }
+
+        //
 
         setHasOptionsMenu(true);
 
         return cordLayout;
     }
+
 
     private void loadToolbarRecylcerViewFab() {
 
@@ -384,6 +403,47 @@ public class InstallFragment extends Fragment implements AsyncResponse, BackButt
                     check = (CheckBox) itemView.findViewById(R.id.deletecheckbox);
                 }
             }
+        }
+    }
+
+    public void askForPermission(int mode){
+        // Should we show an explanation?
+        if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            // Explain to the user why we need to read the contacts
+        }
+
+        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},mode);
+
+        return;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    new LoadAndSet().execute();
+
+                } else {
+
+                    AlertDialog.Builder noPermissionDialog = new AlertDialog.Builder(getActivity());
+                    noPermissionDialog.setTitle(R.string.noPermission);
+                    noPermissionDialog.setMessage(R.string.noPermissionDescription);
+                    noPermissionDialog.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            getActivity().onBackPressed();
+                        }
+                    });
+                    noPermissionDialog.show();
+
+                }
+                return;
+            }
+
+            // other 'switch' lines to check for other
+            // permissions this app might request
         }
     }
 }
