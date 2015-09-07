@@ -28,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.widget.*;
+
 import com.bitsyko.liblayers.Layer;
 import com.bitsyko.liblayers.LayerFile;
 import com.bitsyko.liblayers.NoFileInZipException;
@@ -35,10 +36,16 @@ import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.helper.Helpers;
+import com.lovejoy777.rroandlayersmanager.interfaces.Callback;
+import com.lovejoy777.rroandlayersmanager.interfaces.StoppableAsyncTask;
+import com.lovejoy777.rroandlayersmanager.loadingpackages.CreateList;
+import com.lovejoy777.rroandlayersmanager.loadingpackages.ShowAllPackagesFromLayer;
+import com.lovejoy777.rroandlayersmanager.loadingpackages.ShowPackagesFromList;
 import com.lovejoy777.rroandlayersmanager.views.CheckBoxHolder;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.Executor;
 
 public class OverlayDetailActivity extends AppCompatActivity implements AsyncResponse {
 
@@ -50,7 +57,21 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     private FloatingActionButton installationFAB;
     private CoordinatorLayout cordLayout;
     private LoadDrawables imageLoader;
-    private LoadLayerApks loadLayerApks;
+    private List<StoppableAsyncTask<Void, ?, ?>> loadLayerApks = new ArrayList<>();
+
+    private CheckBoxHolder.CheckBoxHolderCallback checkBoxHolderCallback = new CheckBoxHolder.CheckBoxHolderCallback() {
+        @Override
+        public void onClick() {
+            refreshFab();
+        }
+    };
+
+    private Callback<CheckBox> checkBoxCallback = new Callback<CheckBox>() {
+        @Override
+        public void callback(CheckBox item) {
+            checkBoxes.add(item);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,15 +118,6 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             installationFAB.hide();
         }
 
-    }
-
-    private void loadOverlayCardviews() {
-
-        //We're checking if progress dialog is required
-
-
-        loadLayerApks = new LoadLayerApks(this, cordLayout);
-        loadLayerApks.execute();
     }
 
     private void loadScreenshotCardview() {
@@ -464,8 +476,14 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             imageLoader.cancel(true);
         }
 
-        if (loadLayerApks.getStatus() != AsyncTask.Status.FINISHED) {
-            loadLayerApks.stop();
+
+        for (StoppableAsyncTask asyncTask : loadLayerApks) {
+
+            if (asyncTask.getStatus() != AsyncTask.Status.FINISHED) {
+                asyncTask.stop();
+                asyncTask.cancel(true);
+            }
+
         }
 
         try {
@@ -475,6 +493,49 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         }
 
         super.onDestroy();
+    }
+
+    private void loadOverlayCardviews() {
+
+        //We're checking if progress dialog is required
+
+
+        boolean disableNotInstalledApps = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+                .getBoolean("disableNotInstalledApps", false);
+
+
+        /**
+         * We need 3 asynctasks:
+         * 1. When we create list
+         * 2. When we create from existing list
+         * 3. When we don't care about list
+         */
+
+        SharedPreferences myprefs = getSharedPreferences("layersData", Context.MODE_PRIVATE);
+
+        Set<String> filesToGreyOut = myprefs.getStringSet(layer.getPackageName(), null);
+
+        boolean createList = (filesToGreyOut == null || !filesToGreyOut.contains(layer.getVersionCode()));
+
+        loadLayerApks.clear();
+
+        if (disableNotInstalledApps) {
+
+            if (createList) {
+                loadLayerApks.add(new CreateList(this, layer));
+            }
+
+            loadLayerApks.add(new ShowPackagesFromList(this, cordLayout, layer, checkBoxCallback, checkBoxHolderCallback));
+
+        } else {
+            loadLayerApks.add(new ShowAllPackagesFromLayer(this, cordLayout, layer, checkBoxCallback, checkBoxHolderCallback));
+        }
+
+
+        for (AsyncTask<Void, ?, ?> asyncTask : loadLayerApks) {
+            asyncTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+        }
+
     }
 
     private class LoadDrawables extends AsyncTask<Void, Drawable, Void> {
@@ -537,7 +598,9 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     }
 
 
-    private class LoadLayerApks extends AsyncTask<Void, Pair<Boolean, TableRow>, Pair<Set<String>,Set<String>>> {
+
+/*
+    private class LoadLayerApks extends StoppableAsyncTask<Void, Pair<Boolean, TableRow>, Pair<Set<String>, Set<String>>> {
 
         private Context context;
         private CoordinatorLayout cordLayout;
@@ -561,16 +624,16 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         }
 
         @Override
-        protected Pair<Set<String>,Set<String>> doInBackground(Void... params) {
+        protected Pair<Set<String>, Set<String>> doInBackground(Void... params) {
 
             SharedPreferences myprefs = getSharedPreferences("layersData", Context.MODE_PRIVATE);
             Set<String> filesToGreyOut = myprefs.getStringSet(layer.getPackageName(), null);
             Set<String> filesThatDontExist = myprefs.getStringSet(layer.getPackageName() + "_dontExist", null);
 
             showNotInstalledApps = !getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-                    .getBoolean("showNotInstalledApps", false);
+                    .getBoolean("disableNotInstalledApps", false);
 
-            
+
             if (filesToGreyOut == null || !filesToGreyOut.contains(layer.getVersionCode())) {
                 newSet = true;
                 filesToGreyOut = new HashSet<>();
@@ -586,7 +649,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             }
 
             for (LayerFile layerFile : layerFiles) {
-                
+
                 if (isCancelled() || stop) {
                     return null;
                 }
@@ -631,7 +694,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                     }
 
                 }
-                
+
                 if (!showNotInstalledApps) {
 
                     check.setEnabled(!filesToGreyOut.contains(layerFile.getName()));
@@ -674,7 +737,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         }
 
         @Override
-        protected void onPostExecute(Pair<Set<String>, Set<String>> aVoid) {
+        protected void onPostExecute(Pair<Set<String>, Set<String>> pair) {
 
             //No styleSpecific Overlays
             if (linearLayoutCategory2.getChildCount() == 0) {
@@ -687,17 +750,21 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
             if (newSet && !showNotInstalledApps) {
                 SharedPreferences myprefs = getSharedPreferences("layersData", Context.MODE_PRIVATE);
-                myprefs.edit().putStringSet(layer.getPackageName(), aVoid.first).apply();
-                myprefs.edit().putStringSet(layer.getPackageName() + "_dontExist", aVoid.second).apply();
+                myprefs.edit().putStringSet(layer.getPackageName(), pair.first).apply();
+                myprefs.edit().putStringSet(layer.getPackageName() + "_dontExist", pair.second).apply();
                 Toast.makeText(OverlayDetailActivity.this, "Generating complete", Toast.LENGTH_LONG).show();
             }
 
         }
 
+        @Override
         public void stop() {
             cancel(true);
             stop = true;
         }
 
     }
+
+    */
+
 }

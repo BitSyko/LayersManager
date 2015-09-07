@@ -13,7 +13,7 @@
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="showNotInstalledApps"
+            android:key="disableNotInstalledApps"
             android:summary="Disable Overlays for not installed Apps"
             android:title="Hide unnecessary Overlays" />
 
