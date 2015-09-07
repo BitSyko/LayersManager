@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitsyko.ApplicationInfo;
 import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.R;
 
@@ -14,13 +15,13 @@ import java.util.List;
 
 public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ContactViewHolder> {
 
-    private List<Layer> layersList;
+    private List<? extends ApplicationInfo> layersList;
 
-    public CardViewAdapter(List<Layer> layersList) {
+    public CardViewAdapter(List<? extends ApplicationInfo> layersList) {
         this.layersList = layersList;
     }
 
-    public Layer getLayerFromPosition(int position) {
+    public ApplicationInfo getLayerFromPosition(int position) {
         return layersList.get(position);
     }
 
@@ -31,7 +32,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Contac
 
     @Override
     public void onBindViewHolder(ContactViewHolder contactViewHolder, int i) {
-        Layer layer = layersList.get(i);
+        ApplicationInfo layer = layersList.get(i);
         contactViewHolder.name.setText(layer.getName());
         contactViewHolder.developer.setText(layer.getDeveloper());
         contactViewHolder.image.setImageDrawable(layer.getIcon());

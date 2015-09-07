@@ -9,6 +9,8 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.bitsyko.libicons.AppIcon;
 import com.bitsyko.liblayers.LayerFile;
 import com.bitsyko.liblayers.NoFileInZipException;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
@@ -17,9 +19,15 @@ import com.lovejoy777.rroandlayersmanager.R;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
+
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -96,6 +104,7 @@ public class Commands {
                 files.add(file.getName());
             }
         }
+
         Collections.sort(files, String.CASE_INSENSITIVE_ORDER);
         return files;
     }
@@ -114,6 +123,7 @@ public class Commands {
                 folders.add(file.getName());
             }
         }
+
         return folders;
     }
 
@@ -449,8 +459,167 @@ public class Commands {
 
     }
 
+    private static final String[] aaptUrls = {
+            "https://www.dropbox.com/s/au7ccu1gtroqvzt/aapt_x86?dl=1",
+            "https://www.dropbox.com/s/5x2fpgw6ojyao2d/aapt_arm?dl=1"};
+
+
+    public static class InstallIcons extends AsyncTask<Void, String, Void> {
+
+        ProgressDialog progress;
+        Context context;
+        List<AppIcon> list;
+        AsyncResponse asyncResponse;
+        int i = 0;
+
+        public InstallIcons(Context context, List<AppIcon> list, AsyncResponse asyncResponse) {
+            this.context = context;
+            this.list = list;
+            this.asyncResponse = asyncResponse;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progress = new ProgressDialog(context);
+            progress.setTitle(R.string.installingOverlays);
+            progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progress.setProgress(0);
+            progress.setCancelable(false);
+            progress.setMax(list.size());
+            progress.show();
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            //super.onProgressUpdate(values);
+            progress.setProgress(++i);
+            if (values.length != 0) {
+                Toast.makeText(context, values[0], Toast.LENGTH_LONG).show();
+            }
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            try {
+                FileUtils.deleteDirectory(new File(context.getCacheDir() + "/tempFolder/"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //Downloading aapt
+            File appt = new File(context.getCacheDir() + "/aapt");
+
+            if (!appt.exists()) {
+
+                for (String url : aaptUrls) {
+
+                    try {
+                        FileUtils.copyURLToFile(new URL(url), appt);
+
+                        Process checkAapt = Runtime.getRuntime().exec(new String[]{
+                                appt.getAbsolutePath(), "v"});
+
+                        String data = IOUtils.toString(checkAapt.getInputStream());
+                        String error = IOUtils.toString(checkAapt.getErrorStream());
+
+                        checkAapt.waitFor();
+
+                        if (StringUtils.isEmpty(error)) {
+                            Log.d("AAPT", data);
+                            break;
+                        }
+
+
+                    } catch (IOException | InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+
+            }
+
+
+            try {
+                // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER BACK TO 755
+                CommandCapture command10 = new CommandCapture(0, "chmod 700 " + appt.getAbsolutePath());
+                RootTools.getShell(true).add(command10);
+                while (!command10.isFinished()) {
+                    Thread.sleep(1);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+            for (AppIcon app : list) {
+                Log.d("Installing", app.getPackageName());
+                try {
+                    app.install();
+                    publishProgress();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    publishProgress(e.getMessage());
+                }
+            }
+
+
+            Log.d("Icon", "Moving");
+
+            RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RW");
+
+
+            try {
+
+
+                CommandCapture command3 = new CommandCapture(0, "mv -f " + context.getCacheDir() + "/tempFolder/signed*" + " " + DeviceSingleton.getInstance().getOverlayFolder());
+
+                RootTools.getShell(true).add(command3);
+                while (!command3.isFinished()) {
+                    Thread.sleep(1);
+                }
+
+
+                // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 644 RECURING
+                CommandCapture command9 = new CommandCapture(0, "chmod -R 644 " + DeviceSingleton.getInstance().getOverlayFolder());
+                RootTools.getShell(true).add(command9);
+                while (!command9.isFinished()) {
+                    Thread.sleep(1);
+                }
+
+
+                // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER BACK TO 755
+                CommandCapture command10 = new CommandCapture(0, "chmod 755 " + DeviceSingleton.getInstance().getOverlayFolder());
+                RootTools.getShell(true).add(command10);
+                while (!command10.isFinished()) {
+                    Thread.sleep(1);
+                }
+
+
+                RootTools.closeAllShells();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RO");
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            progress.dismiss();
+            asyncResponse.processFinish();
+        }
+    }
+
+
     public static int getSortMode(Activity context) {
-        return PreferenceManager.getDefaultSharedPreferences(context).getInt("sortMode", 0);
+        return PreferenceManager.getDefaultSharedPreferences(context).getInt("sortMode", 1);
     }
 
     public static void setSortMode(Activity context, int mode) {
