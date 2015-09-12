@@ -367,7 +367,7 @@ public class BackupRestoreFragment extends Fragment {
                 }
 
 
-                RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RW");
+                Commands.remountSystem("rw");
 
                 // CHANGE PERMISSIONS OF /VENDOR/OVERLAY && /SDCARD/OVERLAYS/BACKUP
                 CommandCapture command2 = new CommandCapture(0,
@@ -401,7 +401,7 @@ public class BackupRestoreFragment extends Fragment {
                     Thread.sleep(1);
                 }
 
-                RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RO");
+                Commands.remountSystem("ro");
 
                 // CLOSE ALL SHELLS
                 RootTools.closeAllShells();

@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.activities.*;
+import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.fragments.*;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
@@ -230,7 +231,7 @@ public class menu extends AppCompatActivity {
 
         dir1.mkdirs();
 
-        RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RW");
+        Commands.remountSystem("rw");
         String vendover = DeviceSingleton.getInstance().getOverlayFolder();
         // CREATES /VENDOR/OVERLAY
         File dir2 = new File(vendover);
@@ -247,7 +248,7 @@ public class menu extends AppCompatActivity {
             }
         }
 
-        RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RO");
+        Commands.remountSystem("ro");
 
     }
 
