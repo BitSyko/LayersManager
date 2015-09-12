@@ -248,7 +248,7 @@ public class Commands {
             }
 
 
-            RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RW");
+            remountSystem("rw");
 
             RootCommands.moveRoot(tempDir + "*", DeviceSingleton.getInstance().getOverlayFolder() + "/");
 
@@ -268,8 +268,7 @@ public class Commands {
                     Thread.sleep(1);
                 }
 
-                RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RO");
-
+                remountSystem("ro");
                 // CLOSE ALL SHELLS
                 RootTools.closeAllShells();
 
@@ -289,6 +288,44 @@ public class Commands {
                 callback.processFinish();
             }
         }
+    }
+
+    public static BufferedReader runCommand(String cmd) {
+        BufferedReader reader;
+        try {
+            Process process = Runtime.getRuntime().exec("su");
+            DataOutputStream os = new DataOutputStream(
+                    process.getOutputStream());
+            os.writeBytes(cmd + "\n");
+            os.writeBytes("exit\n");
+            reader = new BufferedReader(new InputStreamReader(
+                    process.getInputStream()));
+            String err = (new BufferedReader(new InputStreamReader(
+                    process.getErrorStream()))).readLine();
+            os.flush();
+
+            if (process.waitFor() != 0 || (!"".equals(err) && null != err)) {
+                Log.e("Root Error, cmd: " + cmd, err);
+                return null;
+            }
+            return reader;
+        } catch (IOException|InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static boolean remountSystem(String mountType) {
+        String mountPoint = DeviceSingleton.getInstance().getMountFolder();
+        BufferedReader reader = runCommand("busybox mount -o remount,"
+                + mountType + " " + mountPoint + "\n");
+        try {
+            if (reader != null) reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
 
@@ -317,7 +354,7 @@ public class Commands {
 
         @Override
         protected Void doInBackground(Void... params) {
-            RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RW");
+            remountSystem("rw");
             for (String path : paths) {
                 Log.d("Removing: ", path);
                 try {
@@ -328,7 +365,7 @@ public class Commands {
                 }
                 publishProgress();
             }
-            RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RO");
+            remountSystem("ro");
             return null;
         }
 
@@ -377,8 +414,7 @@ public class Commands {
         protected Void doInBackground(Void... params) {
 
             // MOUNT /SYSTEM RW
-            RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RW");
-
+            remountSystem("rw");
 
             for (LayerFile layerFile : layersToInstall) {
                 try {
@@ -419,7 +455,7 @@ public class Commands {
                     Thread.sleep(1);
                 }
 
-                RootTools.remount(DeviceSingleton.getInstance().getMountFolder(), "RO");
+                remountSystem("ro");
 
                 // CLOSE ALL SHELLS
                 RootTools.closeAllShells();
