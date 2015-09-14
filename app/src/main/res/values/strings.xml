@@ -101,7 +101,6 @@
     <!-- Install Fragment -->
     <string name="InstallOverlays2">Install Overlays</string>
     <string name="installed">Installed selected Overlays</string>
-    <string name="installing">Installing</string>
 
     <!-- UnInstall Fragment -->
     <string name="UninstallOverlays">Uninstall Overlays</string>
