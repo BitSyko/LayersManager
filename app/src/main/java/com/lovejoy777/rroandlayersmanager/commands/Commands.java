@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.bitsyko.liblayers.LayerFile;
 import com.bitsyko.liblayers.NoFileInZipException;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
@@ -17,11 +18,13 @@ import com.lovejoy777.rroandlayersmanager.R;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
+
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.zip.ZipEntry;
@@ -146,20 +149,30 @@ public class Commands {
     }
 
 
-    public static InputStream fileFromZip(File zip, String file) throws IOException {
+    public static InputStream fileFromZip(ZipFile zipFile, String file) throws IOException {
 
-        ZipFile zipFile = new ZipFile(zip);
-        ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zip)));
-        ZipEntry ze;
+        ZipEntry ze = zipFile.getEntry(file);
 
-        while ((ze = zis.getNextEntry()) != null) {
+        if (ze != null) {
+
+            //First, we're checking if file is in zip
+            InputStream fileInputStream = zipFile.getInputStream(ze);
+
+            if (fileInputStream != null) {
+                Log.d("Found", "File found");
+                return fileInputStream;
+            }
+        }
+
+        for (Enumeration<? extends ZipEntry> zes = zipFile.entries(); zes.hasMoreElements(); ) {
+            ze = zes.nextElement();
+
             if (ze.getName().equalsIgnoreCase(file.replaceAll(" ", ""))) {
                 return zipFile.getInputStream(ze);
             }
         }
 
-
-        throw new NoFileInZipException("No " + file + " in " + zip.getAbsolutePath());
+        throw new NoFileInZipException("No " + file + " in " + zipFile.getName());
     }
 
     public static ArrayList<String> fileNamesFromZip(File zip) throws IOException {
@@ -309,7 +322,7 @@ public class Commands {
                 return null;
             }
             return reader;
-        } catch (IOException|InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         return null;
@@ -430,14 +443,20 @@ public class Commands {
                     RootCommands.moveRoot(filelocation, DeviceSingleton.getInstance().getOverlayFolder() + "/");
 
                     publishProgress();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
-                } catch (NoFileInZipException e1) {
-                    publishProgress(e1.getMessage());
+                    publishProgress(e.getMessage());
                 }
 
             }
 
+            if (!layersToInstall.isEmpty()) {
+                try {
+                    layersToInstall.get(0).getLayer().close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
             try {
                 // CHANGE PERMISSIONS OF FINAL /VENDOR/OVERLAY FOLDER & FILES TO 644 RECURING

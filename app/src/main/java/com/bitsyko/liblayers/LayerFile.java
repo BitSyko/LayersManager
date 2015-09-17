@@ -1,8 +1,11 @@
 package com.bitsyko.liblayers;
 
 import android.content.res.AssetManager;
+import android.util.Pair;
+
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.helper.AndroidXMLDecompress;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -61,7 +64,6 @@ public class LayerFile {
 
     public File getFile(String color) throws IOException {
 
-
         if (file != null && file.exists() && color.equals(colorName)) {
             return file;
         }
@@ -93,6 +95,16 @@ public class LayerFile {
         }
 
 
+        ZipFile zipFile1;
+
+        if (!layer.mapHasFile(zipFile.getName())) {
+            zipFile1 = new ZipFile(zipFile);
+            layer.putFileToMap(zipFile1, zipFile.getName());
+        } else {
+            zipFile1 = layer.getFileFromMap(zipFile.getName());
+        }
+
+
         //We're extracting apk from zip
         File zipTempDir = new File(tempDir + File.separator + layer.getName() + "_" + color);
 
@@ -107,7 +119,7 @@ public class LayerFile {
 
 
         if (!destFile.exists()) {
-            FileUtils.copyInputStreamToFile(Commands.fileFromZip(zipFile, layer.getName() + "_" + fileName + ".apk"), destFile);
+            FileUtils.copyInputStreamToFile(Commands.fileFromZip(zipFile1, layer.getName() + "_" + fileName + ".apk"), destFile);
         }
 
         file = destFile;
@@ -135,4 +147,7 @@ public class LayerFile {
         return color;
     }
 
+    public Layer getLayer() {
+        return layer;
+    }
 }

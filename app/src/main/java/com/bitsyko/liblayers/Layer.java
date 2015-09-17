@@ -10,8 +10,10 @@ import android.content.pm.ServiceInfo;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.ArrayMap;
 import android.util.Log;
 import android.util.Pair;
+
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
 import com.stericson.RootTools.RootTools;
 
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipFile;
 
 public class Layer implements Closeable {
     private static final String ACTION_PICK_PLUGIN = "com.layers.plugins.PICK_OVERLAYS";
@@ -35,6 +38,9 @@ public class Layer implements Closeable {
     private final Resources resources;
     private final Context context;
     private List<String> colors;
+
+    //Map for unpacked zipfiles from layer
+    private Map<String, ZipFile> zipFileMap = new ArrayMap<>();
 
     private final Drawable icon;
 
@@ -218,7 +224,7 @@ public class Layer implements Closeable {
 
 
             for (String layer : styleSpecificOverlayNames) {
-                if (!layer.equals("")){
+                if (!layer.equals("")) {
                     files.add(new LayerFile(this, layer, true));
                 }
             }
@@ -290,10 +296,28 @@ public class Layer implements Closeable {
         return context;
     }
 
+    public ZipFile getFileFromMap(String name) {
+        return zipFileMap.get(name);
+    }
+
+    public ZipFile putFileToMap(ZipFile zipFile, String name) {
+        return zipFileMap.put(name, zipFile);
+    }
+
+    public boolean mapHasFile(String name) {
+        return zipFileMap.containsKey(name);
+    }
+
     @Override
     public void close() throws IOException {
         if (new File(getCacheDir() + File.separator + getName()).exists()) {
             RootCommands.DeleteFileRoot(getCacheDir() + File.separator + getName());
         }
+
+        for (ZipFile zipFile : zipFileMap.values()) {
+            zipFile.close();
+        }
+
+        zipFileMap.clear();
     }
 }

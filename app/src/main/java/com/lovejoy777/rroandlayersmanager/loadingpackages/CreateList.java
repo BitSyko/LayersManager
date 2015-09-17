@@ -88,6 +88,12 @@ public class CreateList extends StoppableAsyncTask<Void, Void, Pair<Set<String>,
 
         }
 
+        try {
+            layer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         SharedPreferences myprefs = context.getSharedPreferences("layersData", Context.MODE_PRIVATE);
 
 
