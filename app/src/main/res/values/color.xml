@@ -4,6 +4,7 @@
     <!-- Primary & Accent colors -->
     <color name="primary">#ff3F51B5</color>
     <color name="primary_dark">#ff303F9F</color>
+    <color name="primary_light">#7986CB</color>
     <color name="accent">#ffFF5252</color>
 
 
