@@ -1,18 +1,22 @@
 package com.lovejoy777.rroandlayersmanager.fragments;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
-import com.afollestad.materialcab.MaterialCab;
+
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.DeviceSingleton;
 import com.lovejoy777.rroandlayersmanager.R;
@@ -22,41 +26,54 @@ import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UninstallFragment extends Fragment implements MaterialCab.Callback, AsyncResponse {
+public class UninstallFragment extends android.support.v4.app.Fragment implements AsyncResponse {
 
     private FloatingActionButton fab2;
     private LinearLayout mLinearLayout;
-    private MaterialCab mCab = null;
     private CoordinatorLayout cordLayout = null;
     private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
     android.support.v7.widget.Toolbar toolbar;
     TextView toolbarTitle;
+    private int mode;
+    private ActionMode mActionMode;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_delete, container, false);
 
+        Bundle bundle = getArguments();
+        mode = bundle.getInt("Mode");
         ((NavigationView) getActivity().findViewById(R.id.nav_view)).getMenu().getItem(1).setChecked(true);
 
         toolbar = (android.support.v7.widget.Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(getString(R.string.UninstallOverlays));
 
         int elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
-        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 156, getResources().getDisplayMetrics());
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, getResources().getDisplayMetrics());
         toolbar.setNavigationIcon(R.drawable.ic_action_menu);
 
         toolbarTitle = (TextView) getActivity().findViewById(R.id.title2);
-        toolbarTitle.setText(getString(R.string.UninstallOverlays));
+        toolbarTitle.setText("");
 
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+        AppBarLayout.LayoutParams layoutParams = new AppBarLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, height
         );
 
+        ViewPager viewPager = (ViewPager) getActivity().findViewById(R.id.tabanim_viewpager);
+        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.tabs);
+        viewPager.setVisibility(View.VISIBLE);
+        tabLayout.setVisibility(View.VISIBLE);
+
+        AppBarLayout appbar = (AppBarLayout) getActivity().findViewById(R.id.appBarlayout);
+        appbar.setElevation(0);
         toolbar.setElevation(elevation);
         toolbar.setLayoutParams(layoutParams);
 
 
         setHasOptionsMenu(true);
+
+        ActivityCompat.invalidateOptionsMenu(getActivity());
 
         loadToolbarRecylcerViewFab();
 
@@ -80,7 +97,8 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
                 .show();
 
         new LoadAndSet().execute();
-        mCab.finish();
+        mActionMode.finish();
+        mActionMode = null;
         ActivityCompat.invalidateOptionsMenu(getActivity());
     }
 
@@ -140,38 +158,15 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
     }
 
-    //CAB methods
-    @Override
-    public boolean onCabCreated(MaterialCab materialCab, Menu menu) {
-        toolbarTitle.setText("");
-        return true;
-    }
-
-    @Override
-    public boolean onCabItemClicked(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.menu_selectall:
-                if (menuItem.isChecked()) menuItem.setChecked(false);
-                else menuItem.setChecked(true);
-                checkAll();
-
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onCabFinished(MaterialCab materialCab) {
-        UncheckAll(true);
-        toolbarTitle.setText(getString(R.string.UninstallOverlays));
-        return true;
-    }
 
     //Overflow Menu
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.overflow, menu);
+        menu.removeItem(R.id.menu_sort);
         super.onCreateOptionsMenu(menu, inflater);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -191,6 +186,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
     private class LoadAndSet extends AsyncTask<Void, Void, List<FileBean>> {
 
+
         @Override
         protected List<FileBean> doInBackground(Void... params) {
 
@@ -199,9 +195,18 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
             ArrayList<String> loadedFiles = new ArrayList<>();
 
             loadedFiles.addAll(Commands.RootloadFiles(getActivity(), getActivity(), DeviceSingleton.getInstance().getOverlayFolder()));
-
+            System.out.println(mode);
             for (String file : loadedFiles) {
-                files.add(new FileBean(file));
+                if (mode == 0) {
+                    if (!file.contains("signed.")) {
+                        files.add(new FileBean(file));
+                    }
+                } else {
+                    if (file.contains("signed.")) {
+                        files.add(new FileBean(file));
+                    }
+                }
+
             }
 
             return files;
@@ -272,30 +277,59 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
             }
         }
 
-        if (mCab == null) {
-            mCab = new MaterialCab((AppCompatActivity) getActivity(), R.id.cab_stub)
-                    .reset()
-                    .setCloseDrawableRes(R.drawable.ic_action_check)
-                    .setMenu(R.menu.overflow)
-                    .start(UninstallFragment.this);
-        } else if (!mCab.isActive()) {
-            mCab
-                    .reset().start(UninstallFragment.this)
-                    .setCloseDrawableRes(R.drawable.ic_action_check)
-                    .setMenu(R.menu.overflow);
-        }
-
-        mCab.setTitle(checkedItems + " " + getResources().getString(R.string.OverlaysSelected));
-
-
         if (checkedItems > 0) {
+            if (mActionMode == null) {
+                mActionMode = getActivity().startActionMode(new ActionBarCallBack());
+            }
             fab2.show();
         } else {
-            if (mCab != null) {
-                mCab.finish();
-                mCab = null;
+            if (mActionMode != null) {
+                mActionMode.finish();
+                mActionMode = null;
             }
+
             fab2.hide();
+        }
+    }
+
+    class ActionBarCallBack implements ActionMode.Callback {
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            // TODO Auto-generated method stub
+            switch (item.getItemId()) {
+                case R.id.menu_selectall:
+                    if (item.isChecked()) item.setChecked(false);
+                    else item.setChecked(true);
+                    checkAll();
+                    return true;
+                case R.id.menu_reboot:
+                    Commands.reboot(getActivity());
+                    return true;
+            }
+            return false;
+        }
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // TODO Auto-generated method stub
+            mode.getMenuInflater().inflate(R.menu.overflow, menu);
+            getActivity().getWindow().setStatusBarColor(getResources().getColor(R.color.primary_dark));
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            // TODO Auto-generated method stub
+            UncheckAll(true);
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            // TODO Auto-generated method stub
+
+            mode.setTitle(getResources().getString(R.string.OverlaysSelected));
+            return false;
         }
     }
 }

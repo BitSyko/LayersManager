@@ -10,8 +10,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 23
-        versionName "4.3b4"
-        archivesBaseName = "LayersManager"
+        versionName "4.3b4-ICONSUPPORT"
+        archivesBaseName = "LayersManager-ICONSUPPORT"
     }
 
     lintOptions {
@@ -42,6 +42,14 @@ android {
         }
     }
 
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'LICENSE.txt'
+    }
+
 }
 
 dependencies {
@@ -56,4 +64,5 @@ dependencies {
     compile 'com.android.support:palette-v7:23.0.0'
     compile 'com.github.jorgecastilloprz:fabprogresscircle:1.01@aar'
     compile 'commons-io:commons-io:2.4'
+    compile 'org.apache.commons:commons-lang3:3.4'
 }
