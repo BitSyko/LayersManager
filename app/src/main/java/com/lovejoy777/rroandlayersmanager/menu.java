@@ -150,7 +150,8 @@ public class menu extends AppCompatActivity {
                                     break;
                                 } else {
                                     Toast.makeText(menu.this, "Please install the layers showcase plugin", Toast.LENGTH_LONG).show();
-                                    System.out.println("App is currently not installed on your phone");
+                                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.lovejoy777.showcase")), bndlanimation);
+                                    //System.out.println("App is currently not installed on your phone");
                                     break;
                                 }
                             case R.id.nav_settings:
