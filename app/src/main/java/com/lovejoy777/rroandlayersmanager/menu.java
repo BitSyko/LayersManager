@@ -40,12 +40,13 @@ public class menu extends AppCompatActivity {
 
         setContentView(R.layout.fragment_container);
 
-        if (!RootTools.isAccessGiven()) {
-        }
-
         loadToolbarNavDrawer();
-
-        createImportantDirectories();
+        
+        if (!RootTools.isAccessGiven()) {
+            Toast.makeText(this, getString(R.string.noRoot), Toast.LENGTH_LONG).show();
+        } else {
+            createImportantDirectories();
+        }
 
         changeFragment(1, 0);
 
@@ -225,6 +226,7 @@ public class menu extends AppCompatActivity {
 
 
     private void createImportantDirectories() {
+
 
         String sdOverlays1 = Environment.getExternalStorageDirectory() + "/Overlays/Backup";
         // CREATES /SDCARD/OVERLAYS/BACKUP

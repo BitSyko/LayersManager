@@ -18,6 +18,17 @@ android {
         abortOnError false
     }
 
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'LICENSE.txt'
+    }
+
     play {
         serviceAccountEmail = System.getenv("CART_EMAIL")
         pk12File = file(System.getenv("CERT_LOCATION") == null ? 'cert.cert' : System.getenv("CERT_LOCATION"))
@@ -56,4 +67,5 @@ dependencies {
     compile 'com.android.support:palette-v7:23.0.1'
     compile 'com.github.jorgecastilloprz:fabprogresscircle:1.01@aar'
     compile 'commons-io:commons-io:2.4'
+    compile 'org.apache.commons:commons-lang3:3.4'
 }
