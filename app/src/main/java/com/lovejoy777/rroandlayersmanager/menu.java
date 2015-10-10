@@ -41,7 +41,7 @@ public class menu extends AppCompatActivity {
         setContentView(R.layout.fragment_container);
 
         loadToolbarNavDrawer();
-        
+
         if (!RootTools.isAccessGiven()) {
             Toast.makeText(this, getString(R.string.noRoot), Toast.LENGTH_LONG).show();
         } else {
