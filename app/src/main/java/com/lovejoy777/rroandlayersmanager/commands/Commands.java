@@ -214,10 +214,16 @@ public class Commands {
 
             String tempDir = context.getCacheDir().getAbsolutePath() + File.separator + "zipCache/";
 
-            RootCommands.DeleteFileRoot(tempDir);
+            try {
+                FileUtils.deleteDirectory(new File(tempDir));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
             if (!new File(tempDir).mkdirs()) {
-                throw new RuntimeException("Cannot create temp folder");
+                if (!new File(tempDir).exists()) {
+                    throw new RuntimeException("Cannot create temp folder");
+                }
             }
 
 
