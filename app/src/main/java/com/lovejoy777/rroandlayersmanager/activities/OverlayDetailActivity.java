@@ -472,14 +472,14 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     @Override
     public void onDestroy() {
         loadBackdrop2();
-        if (imageLoader.getStatus() != AsyncTask.Status.FINISHED) {
+        if (imageLoader != null && imageLoader.getStatus() != AsyncTask.Status.FINISHED) {
             imageLoader.cancel(true);
         }
 
 
         for (StoppableAsyncTask asyncTask : loadLayerApks) {
 
-            if (asyncTask.getStatus() != AsyncTask.Status.FINISHED) {
+            if (asyncTask != null && asyncTask.getStatus() != AsyncTask.Status.FINISHED) {
                 asyncTask.stop();
                 asyncTask.cancel(true);
             }
@@ -498,7 +498,6 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     private void loadOverlayCardviews() {
 
         //We're checking if progress dialog is required
-
 
         boolean disableNotInstalledApps = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
                 .getBoolean("disableNotInstalledApps", false);
