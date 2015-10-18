@@ -32,6 +32,8 @@ import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -297,7 +299,6 @@ public class BackupRestoreFragment extends Fragment {
         }
     }
 
-    //Delete Overlays
     private class DeleteBackup extends AsyncTask<String, String, Void> {
         ProgressDialog progressBackup;
 
@@ -311,17 +312,14 @@ public class BackupRestoreFragment extends Fragment {
         protected Void doInBackground(String... params) {
             String backupName = params[0];
             backupName = Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + backupName;
+
             try {
-
-                // DELETE /VENDOR/OVERLAY
-                RootCommands.DeleteFileRoot(backupName);
-
-                // CLOSE ALL SHELLS
-                RootTools.closeAllShells();
-
+                FileUtils.deleteDirectory(new File(backupName));
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+
             return null;
 
         }
