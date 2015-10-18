@@ -23,6 +23,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
+
 import com.lovejoy777.rroandlayersmanager.DeviceSingleton;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
@@ -100,10 +101,10 @@ public class BackupRestoreFragment extends Fragment {
 
         loadToolbarRecyclerViewFab();
 
-        if (ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.READ_EXTERNAL_STORAGE)
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             askForPermission(1);
-        } else{
+        } else {
             new LoadAndSet().execute();
         }
 
@@ -144,11 +145,11 @@ public class BackupRestoreFragment extends Fragment {
                                     //finish();
 
                                 } else {
-                                    File directory = new File("/vendor/overlay");
+                                    File directory = new File(DeviceSingleton.getInstance().getOverlayFolder());
                                     File[] contents = directory.listFiles();
 
                                     // Folder is empty
-                                    if (contents.length == 0) {
+                                    if (contents == null || contents.length == 0) {
 
                                         Toast.makeText(getActivity(), R.string.nothingToBackup, Toast.LENGTH_LONG).show();
 
@@ -392,8 +393,8 @@ public class BackupRestoreFragment extends Fragment {
                 RootCommands.DeleteFileRoot(Environment.getExternalStorageDirectory() + "/Overlays/Backup/temp");
                 // CHANGE PERMISSIONS OF /VENDOR/OVERLAY/ 666  && /VENDOR/OVERLAY 777 && /SDCARD/OVERLAYS/BACKUP/ 666
                 CommandCapture command17 = new CommandCapture(0,
-                        "chmod -R 666 " +  DeviceSingleton.getInstance().getOverlayFolder(),
-                        "chmod 755 " +  DeviceSingleton.getInstance().getOverlayFolder(),
+                        "chmod -R 666 " + DeviceSingleton.getInstance().getOverlayFolder(),
+                        "chmod 755 " + DeviceSingleton.getInstance().getOverlayFolder(),
                         "chmod -R 666" + Environment.getExternalStorageDirectory() + "/Overlays/Backup/");
 
                 RootTools.getShell(true).add(command17);
@@ -452,13 +453,13 @@ public class BackupRestoreFragment extends Fragment {
         }
     }
 
-    public void askForPermission(int mode){
+    public void askForPermission(int mode) {
         // Should we show an explanation?
         if (FragmentCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             // Explain to the user why we need to read the contacts
         }
 
-        FragmentCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},mode);
+        FragmentCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, mode);
 
         return;
     }
