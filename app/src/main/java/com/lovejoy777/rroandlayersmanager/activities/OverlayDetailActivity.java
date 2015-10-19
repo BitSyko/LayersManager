@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -19,10 +20,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +38,7 @@ import com.bitsyko.liblayers.LayerFile;
 import com.bitsyko.liblayers.NoFileInZipException;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
+import com.lovejoy777.rroandlayersmanager.adapters.ScreenshotAdapter;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.helper.Helpers;
 import com.lovejoy777.rroandlayersmanager.interfaces.Callback;
@@ -122,6 +127,11 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
     private void loadScreenshotCardview() {
         loadScreenshots();
+
+
+
+        //  recyclerView.setMinimumWidth(2000);
+
     }
 
     private void receiveAndUseData() {
@@ -537,63 +547,50 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
     }
 
-    private class LoadDrawables extends AsyncTask<Void, Drawable, Void> {
+    private class LoadDrawables extends AsyncTask<Void, Void, Void> {
 
         LinearLayout screenshotLayout;
 
+
+
         @Override
         protected void onPreExecute() {
-            screenshotLayout = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutScreenshots);
+            // screenshotLayout = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutScreenshots);
         }
 
         @Override
-        protected void onProgressUpdate(Drawable... values) {
+        protected void onProgressUpdate(Void... values) {
 
-            for (Drawable screenshot : values) {
 
-                ImageView screenshotImageView;
-
-                try {
-                    screenshotImageView = new ImageView(OverlayDetailActivity.this);
-                } catch (NullPointerException e) {
-                    continue;
-                }
-
-                Bitmap bitmap = ((BitmapDrawable) screenshot).getBitmap();
-
-                //TODO: Rewrite
-                if (bitmap.getHeight() > 1000) {
-                    screenshotImageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * 0.4), (int) (bitmap.getHeight() * 0.4), true));
-                } else {
-                    screenshotImageView.setImageBitmap(bitmap);
-                }
-
-                LinearLayout linear = new LinearLayout(OverlayDetailActivity.this);
-
-                linear.addView(screenshotImageView);
-                screenshotLayout.addView(linear);
-            }
 
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-
-            Pair<Integer, Drawable> pair;
-
-            while ((pair = layer.getNextScreenshot()).first != 0) {
-
-                if (isCancelled()) {
-                    break;
-                }
-
-                publishProgress(pair.second);
-
-            }
-
+            layer.getScreenShotsNumber();
             return null;
         }
 
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.horizontalScrollView);
+
+            Display display = getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+
+            recyclerView.setMinimumHeight(size.y / 2);
+
+            RecyclerView.Adapter adapter = new ScreenshotAdapter(OverlayDetailActivity.this, layer, size.y);
+
+            LinearLayoutManager layoutManager
+                    = new LinearLayoutManager(OverlayDetailActivity.this, LinearLayoutManager.HORIZONTAL, false);
+
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setNestedScrollingEnabled(false);
+
+        }
     }
 
 

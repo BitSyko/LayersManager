@@ -8,6 +8,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.ArrayMap;
@@ -139,6 +141,38 @@ public class Layer implements Closeable {
     }
 
     private int screenShotId = 1;
+
+    private int screenShotNumber = -1;
+
+    public int getScreenShotsNumber() {
+
+        if (screenShotNumber == -1) {
+
+            int i = 0;
+
+            int screenShotId = 0;
+
+            do {
+                i++;
+
+                String drawableName = "screenshot" + i;
+
+                screenShotId = resources.getIdentifier(drawableName, "drawable", packageName);
+
+            } while (screenShotId != 0);
+
+            screenShotNumber = i;
+
+        }
+
+        return screenShotNumber;
+
+    }
+
+    public Drawable getScreenshot(int id) {
+        int resId = (resources.getIdentifier("screenshot" + id, "drawable", packageName));
+        return resources.getDrawable(resId, null);
+    }
 
     public Pair<Integer, Drawable> getNextScreenshot() {
 
