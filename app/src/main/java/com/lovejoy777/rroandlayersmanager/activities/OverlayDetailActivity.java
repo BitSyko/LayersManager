@@ -7,17 +7,16 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.Pair;
@@ -27,7 +26,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
-import android.widget.*;
+import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import com.bitsyko.liblayers.Layer;
 import com.bitsyko.liblayers.LayerFile;
@@ -42,9 +51,29 @@ import com.lovejoy777.rroandlayersmanager.loadingpackages.ShowPackagesFromList;
 import com.lovejoy777.rroandlayersmanager.views.CheckBoxHolder;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
-public class OverlayDetailActivity extends AppCompatActivity implements AsyncResponse {
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class OverlayDetailActivity extends AppCompatActivity implements AsyncResponse, AppBarLayout.OnOffsetChangedListener {
+
+    //New header thing :D
+    private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR  = 0.9f;
+    private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS     = 0.3f;
+    private static final int ALPHA_ANIMATIONS_DURATION              = 200;
+
+    private boolean mIsTheTitleVisible          = false;
+    private boolean mIsTheTitleContainerVisible = true;
+
+    private LinearLayout mTitleContainer;
+    private TextView mTitle;
+    private AppBarLayout mAppBarLayout;
+    private ImageView mImageparallax;
+    private FrameLayout mFrameParallax;
+    private Toolbar mToolbar;
+
 
     private CheckBox dontShowAgain;
     private ArrayList<CheckBox> checkBoxesGeneral = new ArrayList<>();
@@ -71,7 +100,6 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         public void callback(CheckBox item) {
             if (((LayerFile) item.getTag()).isColor()){
                 checkBoxesStyle.add(item);
-
             }else{
                 checkBoxesGeneral.add(item);
             }
@@ -84,7 +112,14 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_plugindetail);
 
-        getWindow().setStatusBarColor(getResources().getColor(R.color.transparent));
+
+        bindActivity();
+        mToolbar.setTitle("");
+        mAppBarLayout.addOnOffsetChangedListener(this);
+
+        setSupportActionBar(mToolbar);
+        startAlphaAnimation(mTitle, 0, View.INVISIBLE);
+        initParallaxValues();
 
         cordLayout = (CoordinatorLayout) findViewById(R.id.main_content);
 
@@ -104,6 +139,8 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         Log.d("Colors", String.valueOf(layer.getColors()));
 
     }
+
+
 
     private boolean isAnyCheckboxEnabled() {
 
@@ -136,23 +173,28 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     }
 
     private void receiveAndUseData() {
-
-        TextView tv_description = (TextView) cordLayout.findViewById(R.id.HeX1);
+        //Description
+        TextView tv_description = (TextView) cordLayout.findViewById(R.id.tv_description);
         tv_description.setText(layer.getDescription());
 
+        //Whats New
         TextView tv_whatsNew = (TextView) cordLayout.findViewById(R.id.tv_whatsNew);
         tv_whatsNew.setText(layer.getWhatsNew());
 
-        CollapsingToolbarLayout collapsingToolbar =
-                (CollapsingToolbarLayout) cordLayout.findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle(layer.getName());
+        //Title
+        TextView titleBig = (TextView) cordLayout.findViewById(R.id.tv_appNameBig);
+        TextView titleSmall = (TextView) cordLayout.findViewById(R.id.main_textview_title);
+        titleBig.setText(layer.getName());
+        titleSmall.setText(layer.getName());
 
     }
 
     private void createLayouts() {
+
         //switch to select all Checkboxes
         installAllGeneral = (Switch) cordLayout.findViewById(R.id.Tv_Category1Name);
         installAllStyle = (Switch) cordLayout.findViewById(R.id.Tv_Category2Name);
+
 
 
         //Hide the FAB
@@ -160,10 +202,11 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         installationFAB.hide();
 
         //Initialize Layout
-        Toolbar toolbar = (Toolbar) cordLayout.findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_action_back);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_back);
+
+
+       mToolbar.setNavigationIcon(R.drawable.ic_action_back);
+       setSupportActionBar(mToolbar);
+       getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_back);
 
 
         installationFAB.setOnClickListener(new View.OnClickListener() {
@@ -213,29 +256,16 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
     private void loadBackdrop() {
 
-        ImageView imageView = (ImageView) cordLayout.findViewById(R.id.backdrop);
+        ImageView imageView = (ImageView) cordLayout.findViewById(R.id.main_imageview_placeholder);
+        CircleImageView appIconImageView = (CircleImageView) cordLayout.findViewById(R.id.img_appIcon);
 
         Drawable promo = layer.getPromo();
+        Drawable appIcon = layer.getIcon();
 
         imageView.setImageDrawable(promo);
+        appIconImageView.setImageDrawable(appIcon);
 
-        final CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) cordLayout.findViewById(R.id.collapsing_toolbar);
 
-        Palette.from(((BitmapDrawable) promo).getBitmap()).generate(new Palette.PaletteAsyncListener() {
-            public void onGenerated(Palette palette) {
-                Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
-                if (vibrantSwatch != null) {
-                    collapsingToolbar.setContentScrimColor(vibrantSwatch.getRgb());
-                    float[] hsv = new float[3];
-                    Color.colorToHSV(vibrantSwatch.getRgb(), hsv);
-                    hsv[2] *= 0.8f;
-                    collapsingToolbar.setStatusBarScrimColor(Color.HSVToColor(hsv));
-                    //int colorPrimaryDark = Color.HSVToColor(hsv);
-                    //  Window window = getWindow();
-                    // window.setStatusBarColor(Color.HSVToColor(hsv));
-                }
-            }
-        });
         Animator reveal = ViewAnimationUtils.createCircularReveal(imageView,
                 imageView.getWidth() / 2,
                 imageView.getHeight() / 2,
@@ -247,10 +277,6 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             public void onAnimationStart(Animator animation) {
                 loadScreenshotCardview();
                 receiveAndUseData();
-                //  Animation fadeInAnimation = AnimationUtils.loadAnimation(OverlayDetailActivity.this, R.anim.fadein);
-                LinearLayout WN = (LinearLayout) cordLayout.findViewById(R.id.lin2);
-                WN.setVisibility(View.VISIBLE);
-                // WN.startAnimation(fadeInAnimation);
             }
 
             @Override
@@ -272,7 +298,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     }
 
     private void loadBackdrop2() {
-        final ImageView imageView = (ImageView) cordLayout.findViewById(R.id.backdrop);
+        final ImageView imageView = (ImageView) cordLayout.findViewById(R.id.main_imageview_placeholder);
         imageView.setBackgroundResource(R.drawable.no_heroimage);
     }
 
@@ -642,6 +668,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
         @Override
         protected void onPreExecute() {
+
             screenshotLayout = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutScreenshots);
         }
 
@@ -693,6 +720,87 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             return null;
         }
 
+    }
+
+
+
+
+
+
+
+    private void bindActivity() {
+        mToolbar        = (Toolbar) findViewById(R.id.main_toolbar);
+        mTitle          = (TextView) findViewById(R.id.main_textview_title);
+        mTitleContainer = (LinearLayout) findViewById(R.id.main_linearlayout_title);
+        mAppBarLayout   = (AppBarLayout) findViewById(R.id.main_appbar);
+        mImageparallax  = (ImageView) findViewById(R.id.main_imageview_placeholder);
+        mFrameParallax  = (FrameLayout) findViewById(R.id.main_framelayout_title);
+    }
+
+    private void initParallaxValues() {
+        CollapsingToolbarLayout.LayoutParams petDetailsLp =
+                (CollapsingToolbarLayout.LayoutParams) mImageparallax.getLayoutParams();
+
+        CollapsingToolbarLayout.LayoutParams petBackgroundLp =
+                (CollapsingToolbarLayout.LayoutParams) mFrameParallax.getLayoutParams();
+
+        petDetailsLp.setParallaxMultiplier(0.9f);
+        petBackgroundLp.setParallaxMultiplier(0.3f);
+
+        mImageparallax.setLayoutParams(petDetailsLp);
+        mFrameParallax.setLayoutParams(petBackgroundLp);
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
+        int maxScroll = appBarLayout.getTotalScrollRange();
+        float percentage = (float) Math.abs(offset) / (float) maxScroll;
+
+        handleAlphaOnTitle(percentage);
+        handleToolbarTitleVisibility(percentage);
+    }
+
+    private void handleToolbarTitleVisibility(float percentage) {
+        if (percentage >= PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR) {
+
+            if(!mIsTheTitleVisible) {
+                startAlphaAnimation(mTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                mIsTheTitleVisible = true;
+            }
+
+        } else {
+
+            if (mIsTheTitleVisible) {
+                startAlphaAnimation(mTitle, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+                mIsTheTitleVisible = false;
+            }
+        }
+    }
+
+    private void handleAlphaOnTitle(float percentage) {
+        if (percentage >= PERCENTAGE_TO_HIDE_TITLE_DETAILS) {
+            if(mIsTheTitleContainerVisible) {
+                startAlphaAnimation(mTitleContainer, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+                mIsTheTitleContainerVisible = false;
+            }
+
+        } else {
+
+            if (!mIsTheTitleContainerVisible) {
+                startAlphaAnimation(mTitleContainer, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                mIsTheTitleContainerVisible = true;
+            }
+        }
+    }
+
+    public static void startAlphaAnimation (View v, long duration, int visibility) {
+        AlphaAnimation alphaAnimation = (visibility == View.VISIBLE)
+                ? new AlphaAnimation(0f, 1f)
+                : new AlphaAnimation(1f, 0f);
+
+        alphaAnimation.setDuration(duration);
+        alphaAnimation.setFillAfter(true);
+        v.startAnimation(alphaAnimation);
     }
 
 
