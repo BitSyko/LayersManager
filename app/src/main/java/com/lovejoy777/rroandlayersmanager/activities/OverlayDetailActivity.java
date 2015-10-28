@@ -352,10 +352,25 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                     installAllGeneral.setChecked(true);
                     installAllStyle.setChecked(true);
                 }
+                return true;
+            case R.id.menu_refresh:
+                clearOverlaysData();
+                loadOverlayCardviews();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private void clearOverlaysData() {
+        checkBoxesGeneral.clear();
+        checkBoxesStyle.clear();
+
+        ((LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory1)).removeAllViews();
+        ((LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory2)).removeAllViews();
+
+        SharedPreferences myprefs = getSharedPreferences("layersData", Context.MODE_PRIVATE);
+        myprefs.edit().remove(layer.getPackageName()).commit();
+    }
 
     private void changeCheckBoxCheckedStatus(int mode, boolean checked) {
         //Mode: 0 = uncheck General
