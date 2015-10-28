@@ -17,7 +17,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.Pair;
@@ -27,7 +26,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -56,8 +54,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class OverlayDetailActivity extends AppCompatActivity implements AsyncResponse, AppBarLayout.OnOffsetChangedListener {
@@ -360,35 +356,33 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         return super.onOptionsItemSelected(item);
     }
 
-    private void uncheckAllCheckBoxes(int mode) {
+
+    private void changeCheckBoxCheckedStatus(int mode, boolean checked) {
         //Mode: 0 = uncheck General
         //      1 = uncheck Style
         //      2 = uncheck both
 
-        if (mode==1){
-            for (CheckBox checkBox : checkBoxesStyle) {
-                if (checkBox.isChecked()) {
-                    checkBox.performClick();
-                }
-            }
-        }else {
-            if (mode == 0) {
-                for (CheckBox checkBox : checkBoxesGeneral) {
-                    if (checkBox.isChecked()) {
-                        checkBox.performClick();
-                    }
-                }
-            }else {
-                for (CheckBox checkBox : checkBoxesGeneral) {
-                    if (checkBox.isChecked()) {
-                        checkBox.performClick();
-                    }
-                }
-                for (CheckBox checkBox : checkBoxesStyle) {
-                    if (checkBox.isChecked()) {
-                        checkBox.performClick();
-                    }
-                }
+        //Checkboxes which checking status will be changed
+        List<CheckBox> checkBoxList = new ArrayList<>();
+
+        switch (mode) {
+            case 0:
+                checkBoxList.addAll(checkBoxesGeneral);
+                break;
+
+            case 1:
+                checkBoxList.addAll(checkBoxesStyle);
+                break;
+
+            case 2:
+                checkBoxList.addAll(checkBoxesGeneral);
+                checkBoxList.addAll(checkBoxesStyle);
+                break;
+        }
+
+        for (CheckBox checkBox : checkBoxList) {
+            if (checkBox.isEnabled()) {
+                checkBox.setChecked(checked);
             }
         }
 
@@ -396,39 +390,22 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
     }
 
+
+    private void uncheckAllCheckBoxes(int mode) {
+        //Mode: 0 = uncheck General
+        //      1 = uncheck Style
+        //      2 = uncheck both
+
+        changeCheckBoxCheckedStatus(mode, false);
+
+    }
+
     private void checkall(int mode) {
         //Mode: 0 = uncheck General
         //      1 = uncheck Style
         //      2 = uncheck both
-        if (mode==1){
-            for (CheckBox checkBox : checkBoxesStyle) {
-                if (!checkBox.isChecked() && checkBox.isEnabled()) {
-                    checkBox.performClick();
-                }
-            }
-        }else{
-            if (mode==0){
-                for (CheckBox checkBox : checkBoxesGeneral) {
-                    if (!checkBox.isChecked() && checkBox.isEnabled()) {
-                        checkBox.performClick();
-                    }
-                }
-            } else{
-                for (CheckBox checkBox : checkBoxesStyle) {
-                    if (!checkBox.isChecked() && checkBox.isEnabled()) {
-                        checkBox.performClick();
-                    }
-                }
-                for (CheckBox checkBox : checkBoxesGeneral) {
-                    if (!checkBox.isChecked() && checkBox.isEnabled()) {
-                        checkBox.performClick();
-                    }
-                }
-            }
-        }
 
-
-        refreshFab();
+        changeCheckBoxCheckedStatus(mode, true);
 
     }
 
@@ -795,175 +772,5 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         alphaAnimation.setFillAfter(true);
         v.startAnimation(alphaAnimation);
     }
-
-
-
-/*
-    private class LoadLayerApks extends StoppableAsyncTask<Void, Pair<Boolean, TableRow>, Pair<Set<String>, Set<String>>> {
-
-        private Context context;
-        private CoordinatorLayout cordLayout;
-        private LinearLayout linearLayoutCategory1, linearLayoutCategory2;
-        private CardView cardViewCategory1, cardViewCategory2;
-        private boolean stop;
-        boolean newSet = false;
-        boolean showNotInstalledApps;
-
-        public LoadLayerApks(Context context, CoordinatorLayout cordLayout) {
-            this.context = context;
-            this.cordLayout = cordLayout;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            linearLayoutCategory1 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory1);
-            linearLayoutCategory2 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory2);
-            cardViewCategory1 = (CardView) cordLayout.findViewById(R.id.CardViewCategory1);
-            cardViewCategory2 = (CardView) cordLayout.findViewById(R.id.CardViewCategory2);
-        }
-
-        @Override
-        protected Pair<Set<String>, Set<String>> doInBackground(Void... params) {
-
-            SharedPreferences myprefs = getSharedPreferences("layersData", Context.MODE_PRIVATE);
-            Set<String> filesToGreyOut = myprefs.getStringSet(layer.getPackageName(), null);
-            Set<String> filesThatDontExist = myprefs.getStringSet(layer.getPackageName() + "_dontExist", null);
-
-            showNotInstalledApps = !getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-                    .getBoolean("disableNotInstalledApps", false);
-
-
-            if (filesToGreyOut == null || !filesToGreyOut.contains(layer.getVersionCode())) {
-                newSet = true;
-                filesToGreyOut = new HashSet<>();
-                filesThatDontExist = new HashSet<>();
-                filesToGreyOut.add(layer.getVersionCode());
-            }
-
-            List<LayerFile> layerFiles = layer.getLayersInPackage();
-            List<String> packages = new ArrayList<>(Helpers.allPackagesInSystem(OverlayDetailActivity.this));
-
-            if (newSet && !showNotInstalledApps) {
-                Log.d("Installed packages", String.valueOf(packages));
-            }
-
-            for (LayerFile layerFile : layerFiles) {
-
-                if (isCancelled() || stop) {
-                    return null;
-                }
-
-                TableRow row = new TableRow(context);
-                row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-
-                CheckBox check = new CheckBox(context);
-
-                check.setText(layerFile.getNiceName());
-                check.setTag(layerFile);
-
-                FrameLayout frameLayout = new CheckBoxHolder(OverlayDetailActivity.this, check, new CheckBoxHolder.CheckBoxHolderCallback() {
-                    @Override
-                    public void onClick() {
-                        refreshFab();
-                    }
-                });
-
-                frameLayout.addView(check);
-                row.addView(frameLayout);
-
-                if (newSet && !showNotInstalledApps) {
-
-                    try {
-
-                        if (layerFile.isColor()) {
-                            layerFile.getFile(layer.getColors().get(0));
-                        } else {
-                            layerFile.getFile();
-                        }
-
-                        Log.d("Manifest " + layerFile.getName(), layerFile.getRelatedPackage());
-
-                        if (!packages.contains(layerFile.getRelatedPackage())) {
-                            filesToGreyOut.add(layerFile.getName());
-                        }
-
-                    } catch (IOException | NoFileInZipException e) {
-                        e.printStackTrace();
-                        filesThatDontExist.add(layerFile.getName());
-                    }
-
-                }
-
-                if (!showNotInstalledApps) {
-
-                    check.setEnabled(!filesToGreyOut.contains(layerFile.getName()));
-
-                    if (filesThatDontExist.contains(layerFile.getName())) {
-                        check.setEnabled(false);
-                        check.setTextColor(getResources().getColor(R.color.accent));
-                    }
-                }
-
-                Pair<Boolean, TableRow> pair = new Pair<>(layerFile.isColor(), row);
-
-                //noinspection unchecked
-                publishProgress(pair);
-
-                checkBoxesGeneral.add(check);
-
-            }
-
-
-            return new Pair<>(filesToGreyOut, filesThatDontExist);
-
-        }
-
-
-        @SafeVarargs
-        @Override
-        protected final void onProgressUpdate(Pair<Boolean, TableRow>... values) {
-
-            for (Pair<Boolean, TableRow> row : values) {
-
-                if (row.first) {
-                    linearLayoutCategory2.addView(row.second);
-                    linearLayoutCategory2.invalidate();
-                } else {
-                    linearLayoutCategory1.addView(row.second);
-                    linearLayoutCategory1.invalidate();
-                }
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Pair<Set<String>, Set<String>> pair) {
-
-            //No styleSpecific Overlays
-            if (linearLayoutCategory2.getChildCount() == 0) {
-                cardViewCategory2.setVisibility(View.GONE);
-            }
-            //No normal Overlays
-            if (linearLayoutCategory1.getChildCount() == 0) {
-                cardViewCategory1.setVisibility(View.GONE);
-            }
-
-            if (newSet && !showNotInstalledApps) {
-                SharedPreferences myprefs = getSharedPreferences("layersData", Context.MODE_PRIVATE);
-                myprefs.edit().putStringSet(layer.getPackageName(), pair.first).apply();
-                myprefs.edit().putStringSet(layer.getPackageName() + "_dontExist", pair.second).apply();
-                Toast.makeText(OverlayDetailActivity.this, "Generating complete", Toast.LENGTH_LONG).show();
-            }
-
-        }
-
-        @Override
-        public void stop() {
-            cancel(true);
-            stop = true;
-        }
-
-    }
-
-    */
 
 }
