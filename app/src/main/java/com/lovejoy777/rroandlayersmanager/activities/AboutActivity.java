@@ -51,7 +51,9 @@ public class AboutActivity extends AppCompatActivity {
         DeveloperBean[] libraries = {
                 new LicenceBean(getString(R.string.License1), getString(R.string.License1about), getDrawable(R.drawable.ic_opensource), getString(R.string.License1github), generateLicense(getString(R.string.License1about), "Apache", "2012")),
                 new LicenceBean(getString(R.string.License2), getString(R.string.License2about), getDrawable(R.drawable.ic_opensource), getString(R.string.License2github), generateLicense(getString(R.string.License2about), "Apache", "2015")),
-                new LicenceBean(getString(R.string.License3), getString(R.string.License3about), getDrawable(R.drawable.ic_opensource), getString(R.string.License3github), generateLicense(getString(R.string.License3about), "MIT", "2015"))
+                new LicenceBean(getString(R.string.License3), getString(R.string.License3about), getDrawable(R.drawable.ic_opensource), getString(R.string.License3github), generateLicense(getString(R.string.License3about), "MIT", "2015")),
+                new LicenceBean(getString(R.string.License4), getString(R.string.License4about), getDrawable(R.drawable.ic_opensource), getString(R.string.License4github), generateLicense(getString(R.string.License4about), "Apache", "2014 - 2015"))
+
         };
 
         //set Toolbar
