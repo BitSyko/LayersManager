@@ -18,12 +18,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -31,11 +31,9 @@ import android.widget.*;
 
 import com.bitsyko.liblayers.Layer;
 import com.bitsyko.liblayers.LayerFile;
-import com.bitsyko.liblayers.NoFileInZipException;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
-import com.lovejoy777.rroandlayersmanager.helper.Helpers;
 import com.lovejoy777.rroandlayersmanager.interfaces.Callback;
 import com.lovejoy777.rroandlayersmanager.interfaces.StoppableAsyncTask;
 import com.lovejoy777.rroandlayersmanager.loadingpackages.CreateList;
@@ -45,15 +43,16 @@ import com.lovejoy777.rroandlayersmanager.views.CheckBoxHolder;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.Executor;
 
 public class OverlayDetailActivity extends AppCompatActivity implements AsyncResponse {
 
     private CheckBox dontShowAgain;
-    private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
+    private ArrayList<CheckBox> checkBoxesGeneral = new ArrayList<>();
+    private ArrayList<CheckBox> checkBoxesStyle = new ArrayList<>();
     private String choosedStyle = "";
     private Layer layer;
-    private Switch installEverything;
+    private Switch installAllGeneral;
+    private Switch installAllStyle;
     private FloatingActionButton installationFAB;
     private CoordinatorLayout cordLayout;
     private LoadDrawables imageLoader;
@@ -67,9 +66,16 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     };
 
     private Callback<CheckBox> checkBoxCallback = new Callback<CheckBox>() {
+
         @Override
         public void callback(CheckBox item) {
-            checkBoxes.add(item);
+            if (((LayerFile) item.getTag()).isColor()){
+                checkBoxesStyle.add(item);
+
+            }else{
+                checkBoxesGeneral.add(item);
+            }
+
         }
     };
 
@@ -101,8 +107,13 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
     private boolean isAnyCheckboxEnabled() {
 
-        for (CheckBox checkBox : checkBoxes) {
+        for (CheckBox checkBox : checkBoxesGeneral) {
             if (checkBox.isChecked()) {
+                return true;
+            }
+        }
+        for (CheckBox checkBox : checkBoxesStyle){
+            if (checkBox.isChecked()){
                 return true;
             }
         }
@@ -140,7 +151,9 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
     private void createLayouts() {
         //switch to select all Checkboxes
-        installEverything = (Switch) cordLayout.findViewById(R.id.allswitch);
+        installAllGeneral = (Switch) cordLayout.findViewById(R.id.Tv_Category1Name);
+        installAllStyle = (Switch) cordLayout.findViewById(R.id.Tv_Category2Name);
+
 
         //Hide the FAB
         installationFAB = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab2);
@@ -160,12 +173,22 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             }
         });
 
-        installEverything.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        installAllStyle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    checkall();
+                    checkall(1);
                 } else {
-                    uncheckAllCheckBoxes();
+                    uncheckAllCheckBoxes(1);
+                }
+            }
+        });
+
+        installAllGeneral.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    checkall(0);
+                } else {
+                    uncheckAllCheckBoxes(0);
                 }
             }
         });
@@ -263,8 +286,8 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
         boolean isThereColorOverlay = false;
 
-        for (CheckBox checkBox : checkBoxes) {
-            if (checkBox.isChecked() && ((LayerFile) checkBox.getTag()).isColor()) {
+        for (CheckBox checkBox : checkBoxesStyle) {
+            if (checkBox.isChecked()) {
                 isThereColorOverlay = true;
                 break;
             }
@@ -281,41 +304,116 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_plugindetail, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.menu_selectall:
+                int atleastonechecked =0;
+                for (CheckBox checkBox : checkBoxesGeneral) {
+                    if (checkBox.isChecked()) {
+                        atleastonechecked++;
+                    }
+                }
+                for (CheckBox checkBox : checkBoxesStyle) {
+                    if (checkBox.isChecked()) {
+                        atleastonechecked++;
+                    }
+                }
+                if (atleastonechecked > 0){
+                    uncheckAllCheckBoxes(2);
+                    installAllGeneral.setChecked(false);
+                    installAllStyle.setChecked(false);
+                } else {
+                    checkall(2);
+                    installAllGeneral.setChecked(true);
+                    installAllStyle.setChecked(true);
+                }
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void uncheckAllCheckBoxes() {
+    private void uncheckAllCheckBoxes(int mode) {
+        //Mode: 0 = uncheck General
+        //      1 = uncheck Style
+        //      2 = uncheck both
 
-        for (CheckBox checkBox : checkBoxes) {
-
-            if (checkBox.isChecked()) {
-                checkBox.performClick();
+        if (mode==1){
+            for (CheckBox checkBox : checkBoxesStyle) {
+                if (checkBox.isChecked()) {
+                    checkBox.performClick();
+                }
             }
-
+        }else {
+            if (mode == 0) {
+                for (CheckBox checkBox : checkBoxesGeneral) {
+                    if (checkBox.isChecked()) {
+                        checkBox.performClick();
+                    }
+                }
+            }else {
+                for (CheckBox checkBox : checkBoxesGeneral) {
+                    if (checkBox.isChecked()) {
+                        checkBox.performClick();
+                    }
+                }
+                for (CheckBox checkBox : checkBoxesStyle) {
+                    if (checkBox.isChecked()) {
+                        checkBox.performClick();
+                    }
+                }
+            }
         }
 
         refreshFab();
 
     }
 
-    private void checkall() {
-
-        for (CheckBox checkBox : checkBoxes) {
-            if (!checkBox.isChecked() && checkBox.isEnabled()) {
-                checkBox.performClick();
+    private void checkall(int mode) {
+        //Mode: 0 = uncheck General
+        //      1 = uncheck Style
+        //      2 = uncheck both
+        if (mode==1){
+            for (CheckBox checkBox : checkBoxesStyle) {
+                if (!checkBox.isChecked() && checkBox.isEnabled()) {
+                    checkBox.performClick();
+                }
+            }
+        }else{
+            if (mode==0){
+                for (CheckBox checkBox : checkBoxesGeneral) {
+                    if (!checkBox.isChecked() && checkBox.isEnabled()) {
+                        checkBox.performClick();
+                    }
+                }
+            } else{
+                for (CheckBox checkBox : checkBoxesStyle) {
+                    if (!checkBox.isChecked() && checkBox.isEnabled()) {
+                        checkBox.performClick();
+                    }
+                }
+                for (CheckBox checkBox : checkBoxesGeneral) {
+                    if (!checkBox.isChecked() && checkBox.isEnabled()) {
+                        checkBox.performClick();
+                    }
+                }
             }
         }
+
 
         refreshFab();
 
     }
+
+
 
 
     ///////////
@@ -378,7 +476,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
         List<LayerFile> layersToInstall = new ArrayList<>();
 
-        for (CheckBox checkBox : checkBoxes) {
+        for (CheckBox checkBox : checkBoxesGeneral) {
 
             if (checkBox.isChecked()) {
                 LayerFile layerFile = (LayerFile) checkBox.getTag();
@@ -396,8 +494,9 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
     public void processFinish() {
         installationFinishedSnackBar();
-        uncheckAllCheckBoxes();
-        installEverything.setChecked(false);
+        uncheckAllCheckBoxes(2);
+        installAllStyle.setChecked(false);
+        installAllGeneral.setChecked(false);
     }
 
     //Dialog to choose color
@@ -709,7 +808,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                 //noinspection unchecked
                 publishProgress(pair);
 
-                checkBoxes.add(check);
+                checkBoxesGeneral.add(check);
 
             }
 

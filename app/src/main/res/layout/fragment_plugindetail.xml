@@ -186,50 +186,7 @@
                 android:orientation="vertical"
                 android:weightSum="1">
 
-                <android.support.v7.widget.CardView
 
-                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/CardViewCategory0"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:elegantTextHeight="false"
-                    android:elevation="5dp"
-                    card_view:cardBackgroundColor="@color/card_background">
-
-                    <TextView
-                        android:id="@+id/Tv_Category0Name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
-                        android:elevation="5dp"
-                        android:text="@string/installeverything"
-                        android:textColor="@color/accent"
-                        android:textSize="16sp"
-                        android:textStyle="bold"/>
-
-                    <LinearLayout
-                        android:id="@+id/LinearLayoutCategory0"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:layout_marginBottom="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="48dp"
-                        android:orientation="vertical">
-
-                        <Switch
-                            android:id="@+id/allswitch"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/selectalloverlays"/>
-                    </LinearLayout>
-
-                </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
 
@@ -245,12 +202,13 @@
                     android:elevation="5dp"
                     card_view:cardBackgroundColor="@color/card_background">
 
-                    <TextView
+                    <Switch
                         android:id="@+id/Tv_Category1Name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
+                        android:layout_marginEnd="6dp"
                         android:elevation="5dp"
                         android:text="@string/Category1Name"
                         android:textColor="@color/accent"
@@ -284,11 +242,12 @@
                     android:elevation="5dp"
                     card_view:cardBackgroundColor="@color/card_background">
 
-                    <TextView
+                    <Switch
                         android:id="@+id/Tv_Category2Name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
+                        android:layout_marginEnd="6dp"
                         android:layout_marginTop="16dp"
                         android:elevation="5dp"
                         android:text="@string/Category2Name"
