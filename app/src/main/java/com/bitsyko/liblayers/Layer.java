@@ -98,7 +98,6 @@ public class Layer implements Closeable {
                 layerList.add(layerFromPackageName(sinfo.packageName, activity));
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
-                throw new ErrorThatShouldNeverHappen();
             }
 
         }

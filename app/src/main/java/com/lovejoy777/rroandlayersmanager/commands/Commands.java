@@ -20,6 +20,7 @@ import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -213,10 +214,16 @@ public class Commands {
 
             String tempDir = context.getCacheDir().getAbsolutePath() + File.separator + "zipCache/";
 
-            RootCommands.DeleteFileRoot(tempDir);
+            try {
+                FileUtils.deleteDirectory(new File(tempDir));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
             if (!new File(tempDir).mkdirs()) {
-                throw new RuntimeException("Cannot create temp folder");
+                if (!new File(tempDir).exists()) {
+                    throw new RuntimeException("Cannot create temp folder");
+                }
             }
 
 
@@ -317,8 +324,14 @@ public class Commands {
                     process.getErrorStream()))).readLine();
             os.flush();
 
-            if (process.waitFor() != 0 || (!"".equals(err) && null != err)) {
-                Log.e("Root Error, cmd: " + cmd, err);
+            if (process.waitFor() != 0 || !StringUtils.isEmpty(err)) {
+
+                if (err != null) {
+                    Log.e("Root Error, cmd: " + cmd, err);
+                } else {
+                    Log.e("Root Error, cmd: " + cmd, "");
+                }
+
                 return null;
             }
             return reader;
@@ -330,7 +343,7 @@ public class Commands {
 
     public static boolean remountSystem(String mountType) {
         String mountPoint = DeviceSingleton.getInstance().getMountFolder();
-        BufferedReader reader = runCommand("busybox mount -o remount,"
+        BufferedReader reader = runCommand("mount -o remount,"
                 + mountType + " " + mountPoint + "\n");
         try {
             if (reader != null) reader.close();
