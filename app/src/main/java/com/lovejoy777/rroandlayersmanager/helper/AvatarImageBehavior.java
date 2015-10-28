@@ -1,9 +1,11 @@
-package com.lovejoy777.rroandlayersmanager;
+package com.lovejoy777.rroandlayersmanager.helper;
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.lovejoy777.rroandlayersmanager.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 

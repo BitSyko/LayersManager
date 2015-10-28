@@ -17,6 +17,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.Pair;
@@ -43,6 +44,7 @@ import com.bitsyko.liblayers.LayerFile;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
+import com.lovejoy777.rroandlayersmanager.helper.ExpandableTextView;
 import com.lovejoy777.rroandlayersmanager.interfaces.Callback;
 import com.lovejoy777.rroandlayersmanager.interfaces.StoppableAsyncTask;
 import com.lovejoy777.rroandlayersmanager.loadingpackages.CreateList;
@@ -56,6 +58,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class OverlayDetailActivity extends AppCompatActivity implements AsyncResponse, AppBarLayout.OnOffsetChangedListener {
 
@@ -178,7 +181,8 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         tv_description.setText(layer.getDescription());
 
         //Whats New
-        TextView tv_whatsNew = (TextView) cordLayout.findViewById(R.id.tv_whatsNew);
+
+        ExpandableTextView tv_whatsNew = (ExpandableTextView) cordLayout.findViewById(R.id.tv_whatsNew);
         tv_whatsNew.setText(layer.getWhatsNew());
 
         //Title

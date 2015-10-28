@@ -8,6 +8,6 @@
     <dimen name="second_keyline">72dp</dimen>
     <dimen name="toolbar_h_padding">4dp</dimen>
     <dimen name="spacing_normal">16dp</dimen>
-    <dimen name="image_width">120dp</dimen>
+    <dimen name="image_width">104dp</dimen>
     <dimen name="image_final_width">32dp</dimen>
 </resources>
