@@ -4,5 +4,5 @@
     <item
         android:id="@+id/menu_selectall"
         android:orderInCategory="2"
-        android:title="@string/selectAll" />
+        android:title="@string/toogleCheckboxes" />
 </menu>
