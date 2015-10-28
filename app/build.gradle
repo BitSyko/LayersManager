@@ -65,7 +65,6 @@ dependencies {
     compile 'com.github.paolorotolo:appintro:3.0.0'
     compile 'com.afollestad:material-cab:0.1.4'
     compile 'com.android.support:palette-v7:23.0.1'
-    compile 'com.github.jorgecastilloprz:fabprogresscircle:1.01@aar'
     compile 'commons-io:commons-io:2.4'
     compile 'org.apache.commons:commons-lang3:3.4'
 }
