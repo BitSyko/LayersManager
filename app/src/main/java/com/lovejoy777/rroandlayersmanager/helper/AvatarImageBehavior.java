@@ -1,4 +1,5 @@
 package com.lovejoy777.rroandlayersmanager.helper;
+
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.Toolbar;
@@ -12,8 +13,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 @SuppressWarnings("unused")
 public class AvatarImageBehavior extends CoordinatorLayout.Behavior<CircleImageView> {
 
-    private final static float MIN_AVATAR_PERCENTAGE_SIZE   = 0.3f;
-    private final static int EXTRA_FINAL_AVATAR_PADDING     = 80;
+    private final static float MIN_AVATAR_PERCENTAGE_SIZE = 0.3f;
+    private final static int EXTRA_FINAL_AVATAR_PADDING = 80;
 
     private final static String TAG = "behavior";
     private final Context mContext;
@@ -21,7 +22,7 @@ public class AvatarImageBehavior extends CoordinatorLayout.Behavior<CircleImageV
 
     private float mFinalLeftAvatarPadding;
     private float mStartPosition;
-    private int mStartXPosition;
+    private float mStartXPosition;
     private float mStartToolbarPosition;
 
     public AvatarImageBehavior(Context context, AttributeSet attrs) {
@@ -46,6 +47,7 @@ public class AvatarImageBehavior extends CoordinatorLayout.Behavior<CircleImageV
     private int finalHeight;
     private int mStartHeight;
     private int mFinalXPosition;
+
     @Override
     public boolean layoutDependsOn(CoordinatorLayout parent, CircleImageView child, View dependency) {
         return dependency instanceof Toolbar;
@@ -59,10 +61,10 @@ public class AvatarImageBehavior extends CoordinatorLayout.Behavior<CircleImageV
         float expandedPercentageFactor = dependency.getY() / maxScrollDistance;
 
         float distanceYToSubtract = ((mStartYPosition - mFinalYPosition)
-                * (1f - expandedPercentageFactor)) + (child.getHeight()/2);
+                * (1f - expandedPercentageFactor)) + (child.getHeight() / 2);
 
         float distanceXToSubtract = ((mStartXPosition - mFinalXPosition)
-                * (1f - expandedPercentageFactor)) + (child.getWidth()/2);
+                * (1f - expandedPercentageFactor)) + (child.getWidth() / 2);
 
         float heightToSubtract = ((mStartHeight - finalHeight) * (1f - expandedPercentageFactor));
 
@@ -83,7 +85,7 @@ public class AvatarImageBehavior extends CoordinatorLayout.Behavior<CircleImageV
             mStartYPosition = (int) (child.getY() + (child.getHeight() / 2));
 
         if (mFinalYPosition == 0)
-            mFinalYPosition = (dependency.getHeight() /2);
+            mFinalYPosition = (dependency.getHeight() / 2);
 
         if (mStartHeight == 0)
             mStartHeight = child.getHeight();
@@ -92,13 +94,13 @@ public class AvatarImageBehavior extends CoordinatorLayout.Behavior<CircleImageV
             finalHeight = mContext.getResources().getDimensionPixelOffset(R.dimen.image_final_width);
 
         if (mStartXPosition == 0)
-            mStartXPosition = (int) (child.getX() + (child.getWidth() / 2));
+            mStartXPosition = child.getX() + (child.getWidth() / 2);
 
         if (mFinalXPosition == 0)
-            mFinalXPosition = mContext.getResources().getDimensionPixelOffset(R.dimen.abc_action_bar_content_inset_material) + (finalHeight / 2)+96;
+            mFinalXPosition = mContext.getResources().getDimensionPixelOffset(R.dimen.abc_action_bar_content_inset_material) + (finalHeight / 2);
 
         if (mStartToolbarPosition == 0)
-            mStartToolbarPosition = dependency.getY() + (dependency.getHeight()/2);
+            mStartToolbarPosition = dependency.getY() + (dependency.getHeight() / 2);
     }
 
     public int getStatusBarHeight() {

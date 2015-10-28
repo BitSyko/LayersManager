@@ -281,11 +281,12 @@
                 android:orientation="horizontal"
                 >
 
+                <!--
                 <Space
                     android:layout_width="@dimen/image_final_width"
                     android:layout_height="@dimen/image_final_width"
                     />
-
+-->
                 <TextView
                     android:id="@+id/main.textview.title"
                     android:layout_width="wrap_content"
@@ -300,18 +301,17 @@
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
 
+        <!--
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="@dimen/image_width"
             android:layout_height="@dimen/image_width"
             android:layout_gravity="top"
             android:layout_marginTop="144dp"
             android:src="@mipmap/ic_launcher"
-            app:civ_border_color="@android:color/white"
-            app:civ_border_width="2dp"
-            app:civ_fill_color="@color/primary"
             app:layout_behavior="com.lovejoy777.rroandlayersmanager.helper.AvatarImageBehavior"
             android:id="@+id/img_appIcon"
             />
+        -->
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab2"

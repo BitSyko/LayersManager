@@ -261,13 +261,13 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     private void loadBackdrop() {
 
         ImageView imageView = (ImageView) cordLayout.findViewById(R.id.main_imageview_placeholder);
-        CircleImageView appIconImageView = (CircleImageView) cordLayout.findViewById(R.id.img_appIcon);
+        //CircleImageView appIconImageView = (CircleImageView) cordLayout.findViewById(R.id.img_appIcon);
 
         Drawable promo = layer.getPromo();
         Drawable appIcon = layer.getIcon();
 
         imageView.setImageDrawable(promo);
-        appIconImageView.setImageDrawable(appIcon);
+       // appIconImageView.setImageDrawable(appIcon);
 
 
         Animator reveal = ViewAnimationUtils.createCircularReveal(imageView,
