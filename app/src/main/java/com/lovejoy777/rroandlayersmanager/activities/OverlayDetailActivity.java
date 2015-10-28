@@ -343,18 +343,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                 finish();
                 return true;
             case R.id.menu_selectall:
-                int atleastonechecked =0;
-                for (CheckBox checkBox : checkBoxesGeneral) {
-                    if (checkBox.isChecked()) {
-                        atleastonechecked++;
-                    }
-                }
-                for (CheckBox checkBox : checkBoxesStyle) {
-                    if (checkBox.isChecked()) {
-                        atleastonechecked++;
-                    }
-                }
-                if (atleastonechecked > 0){
+                if (isAnyCheckboxEnabled()){
                     uncheckAllCheckBoxes(2);
                     installAllGeneral.setChecked(false);
                     installAllStyle.setChecked(false);
