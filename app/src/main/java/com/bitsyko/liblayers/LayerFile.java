@@ -32,6 +32,11 @@ public class LayerFile {
         this.color = color;
     }
 
+    public LayerFile(File file) {
+        this.file = file;
+        this.colorName = "General";
+    }
+
     public String getRelatedPackage() {
 
         if (file == null) {
