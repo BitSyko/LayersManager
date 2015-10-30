@@ -216,23 +216,36 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
-            layoutParams.topMargin = 8;
+            layoutParams.topMargin = 12;
 
             for (FileBean fileBean : result) {
 
                 TableRow row = new TableRow(getActivity());
                 row.setLayoutParams(layoutParams);
 
+                // Implemented LinearLayout because a TableRow can't have more than one View added to it. LinearLayout can have, so we add a
+                // LinearLayout to TableRow
+                LinearLayout rowlayout = new LinearLayout(getActivity());
+                rowlayout.setOrientation(LinearLayout.VERTICAL);
+
                 CheckBox check = new CheckBox(getActivity());
 
+                TextView summary = new TextView(getActivity());
+
                 check.setText(fileBean.getName());
+                summary.setText(fileBean.getRelatedPackage());
                 check.setTag(fileBean);
                 check.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                summary.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                 int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
-                check.setPadding(padding, padding, padding, padding);
+                check.setPadding(padding, 0, padding, 0);
+                check.setMinHeight(0);
+                summary.setPadding(5 * padding, 0, padding, 0);
 
+                rowlayout.addView(check);
+                rowlayout.addView(summary);
 
-                row.addView(check);
+                row.addView(rowlayout);
 
                 mLinearLayout.addView(row);
 
