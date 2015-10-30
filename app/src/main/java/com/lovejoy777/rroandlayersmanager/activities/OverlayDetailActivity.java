@@ -496,6 +496,15 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
         }
 
+        for (CheckBox checkBox : checkBoxesStyle) {
+
+            if (checkBox.isChecked()) {
+                LayerFile layerFile = (LayerFile) checkBox.getTag();
+                layersToInstall.add(layerFile);
+            }
+
+        }
+
         Log.d("Choosed color", choosedStyle);
 
         new Commands.InstallOverlaysBetterWay(layersToInstall, choosedStyle, this, this).execute();
