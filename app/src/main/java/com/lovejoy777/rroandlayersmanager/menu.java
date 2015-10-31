@@ -1,32 +1,48 @@
 package com.lovejoy777.rroandlayersmanager;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.VoiceInteractor;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.activities.*;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.fragments.*;
+import com.rubengees.introduction.IntroductionActivity;
+import com.rubengees.introduction.IntroductionBuilder;
+import com.rubengees.introduction.IntroductionConfiguration;
+import com.rubengees.introduction.entity.Option;
+import com.rubengees.introduction.entity.Slide;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 public class menu extends AppCompatActivity {
@@ -48,30 +64,70 @@ public class menu extends AppCompatActivity {
             createImportantDirectories();
         }
 
-        changeFragment(1, 0);
-
-        loadTutorial();
-
-    }
-
-    private void loadTutorial() {
-
         Boolean tutorialShown = PreferenceManager.getDefaultSharedPreferences(menu.this).getBoolean("tutorialShown", false);
-
         if (!tutorialShown) {
-            Intent intent = new Intent(this, IntroActivity.class);
-            startActivityForResult(intent, 1);
-            PreferenceManager.getDefaultSharedPreferences(menu.this).edit().putBoolean("tutorialShown", true).commit();
+            loadTutorial(this);
+        }else{
+            changeFragment(1, 0);
         }
     }
+
+    public static void loadTutorial(final Activity context) {
+        new IntroductionBuilder(context).withSlides(generateSlides()).introduceMyself();
+    }
+
+    public static List<Slide> generateSlides() {
+        List<Slide> slides = new ArrayList<>();
+
+        slides.add(new Slide().withTitle(R.string.Slide1_Heading).withDescription(R.string.Slide1_Text).
+                withColorResource(R.color.tutorial_background_1).withImage(R.drawable.layersmanager));
+        slides.add(new Slide().withTitle(R.string.Slide2_Heading).withDescription(R.string.Slide2_Text)
+                .withColorResource(R.color.tutorial_background_2).withImage(R.drawable.intro_2));
+        slides.add(new Slide().withTitle(R.string.Slide3_Heading).withDescription(R.string.Slide3_Text)
+                .withColorResource(R.color.tutorial_background_3).withImage(R.drawable.intro_3));
+        slides.add(new Slide().withTitle(R.string.Slide4_Heading).withDescription(R.string.Slide4_Text)
+                .withColorResource(R.color.tutorial_background_4).withImage(R.drawable.intro_4));
+        slides.add(new Slide().withTitle(R.string.Slide5_Heading).withDescription(R.string.Slide5_Text)
+                .withColorResource(R.color.tutorial_background_5).withImage(R.drawable.intro_5));
+        slides.add(new Slide().withTitle(R.string.Slide6_Heading).withOption(new Option(R.string.SettingLauncherIconDetail))
+                .withColorResource(R.color.tutorial_background_6).withImage(R.drawable.layersmanager_crossed));
+        slides.add(new Slide().withTitle(R.string.Slide7_Heading).withOption(new Option(R.string.SettingsHideOverlays))
+                .withColorResource(R.color.tutorial_background_6).withImage(R.drawable.intro_7));
+        return slides;
+    }
+
+
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            changeFragment(1, 0);
-            this.finish();
+        if (requestCode == IntroductionBuilder.INTRODUCTION_REQUEST_CODE &&
+                resultCode == RESULT_OK) {
+
+            for (Option option : data.<Option>getParcelableArrayListExtra(IntroductionActivity.
+                    OPTION_RESULT)) {
+
+                if (option.getPosition()==5 && option.isActivated()){
+                    SharedPreferences myprefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                    myprefs.edit().putBoolean("switch1",true).commit();
+                    Commands.killLauncherIcon(this);
+                }
+                if (option.getPosition()==6 && option.isActivated()){
+                    SharedPreferences myprefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                    myprefs.edit().putBoolean("disableNotInstalledApps",true).commit();
+                }
+                PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("tutorialShown", true).commit();
+                changeFragment(1, 0);
+
+            }
+        }else{
+            if (resultCode == RESULT_CANCELED){
+                loadTutorial(this);
+            }
         }
+
     }
 
     private void loadToolbarNavDrawer() {

@@ -27,6 +27,7 @@
     <color name="tutorial_background_3">#ff5C6BC0</color>
     <color name="tutorial_background_4">#ffF44336</color>
     <color name="tutorial_background_5">#ffFF9800</color>
+    <color name="tutorial_background_6">#607D8B</color>
 
     <!-- other colors -->
     <color name="white">#ffffff</color>

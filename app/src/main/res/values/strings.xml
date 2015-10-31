@@ -38,9 +38,9 @@
     <string name="License1about" translatable="false">Stephen Erickson, Chris Ravenscroft, Dominik Schuermann, Adam Shanks</string>
     <string name="License1github" translatable="false">https://github.com/Stericson/RootTools</string>
 
-    <string name="License2">App Intro</string>
-    <string name="License2about" translatable="false">Paolo Rotolo</string>
-    <string name="License2github">https://github.com/PaoloRotolo/AppIntro</string>
+    <string name="License2">Introduction</string>
+    <string name="License2about" translatable="false">Ruben Gees</string>
+    <string name="License2github">https://github.com/rubengees/introduction</string>
 
     <string name="License3">Material CAB</string>
     <string name="License3about" translatable="false">Aidan Michael Follestad</string>
@@ -83,6 +83,8 @@
     <string name="Slide4_Text">Uninstall the Overlays you do not want to use anymore.</string>
     <string name="Slide5_Heading">Backup &amp; Restore</string>
     <string name="Slide5_Text">Backup your favorite Overlays to restore them later.</string>
+    <string name="Slide6_Heading">Hide Launcher Icon?</string>
+    <string name="Slide7_Heading">Hide unnecessary Overlays?</string>
 
 
     <!-- INSTRUCTIONS/TUTORIAL -->
@@ -154,7 +156,8 @@
     <string name="launcherIconRemoved">Launcher Icon removed</string>
     <string name="romNeedsSupport">Your rom needs support for this function</string>
     <string name="noBuildPropCommit">no build.prop commit</string>
-
+    <string name="SettingsHideOverlays">Hide unnecessary Overlays</string>
+    <string name="SettingsHideOverlaysDetail">Disable Overlays for not installed Apps</string>
 
     <!-- Dialogs -->
 
@@ -184,6 +187,7 @@
     <string name="noPermissionDescription">No permission to view your phone´s internal storage granted.\nYou won´t be able to use this feature until you grant this permission.</string>
     <string name="toggleCheckboxes">Toggle Checkboxes</string>
     <string name="refreshOverlays">Refresh Overlays</string>
+
 
 
 </resources>

@@ -3,8 +3,11 @@ package com.lovejoy777.rroandlayersmanager.commands;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -15,6 +18,7 @@ import com.bitsyko.liblayers.NoFileInZipException;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.DeviceSingleton;
 import com.lovejoy777.rroandlayersmanager.R;
+import com.lovejoy777.rroandlayersmanager.activities.SettingsActivity;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
@@ -524,4 +528,57 @@ public class Commands {
     public static void setSortMode(Activity context, int mode) {
         PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("sortMode", mode).commit();
     }
+
+
+    public static void killLauncherIcon(Context context) {
+
+        Process p1 = null;
+        String noIcon = "";
+        try {
+            p1 = new ProcessBuilder("/system/bin/getprop", "ro.layers.noIcon").redirectErrorStream(true).start();
+            BufferedReader br = new BufferedReader(new InputStreamReader(p1.getInputStream()));
+            String line = "";
+            if ((line = br.readLine()) != null) {
+                noIcon = line;
+
+                if (noIcon.length() >= 3) {
+
+                    PackageManager p = context.getPackageManager();
+                    ComponentName componentName = new ComponentName(context, com.lovejoy777.rroandlayersmanager.MainActivity.class); // activity which is first time open in manifiest file which is declare as <category android:name="android.intent.category.LAUNCHER" />
+                    p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                    Toast.makeText(context, context.getResources().getString(R.string.launcherIconRemoved), Toast.LENGTH_SHORT).show();
+
+                } else {
+
+                    Toast.makeText(context, context.getResources().getString(R.string.romNeedsSupport), Toast.LENGTH_LONG).show();
+                    SharedPreferences myPrefs = context.getSharedPreferences("myPrefs", context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = myPrefs.edit();
+                    editor.putBoolean("switch1", false);
+                    editor.apply();
+
+                }
+
+            } else {
+
+                Toast.makeText(context, context.getResources().getString(R.string.noBuildPropCommit), Toast.LENGTH_LONG).show();
+                SharedPreferences myPrefs = context.getSharedPreferences("myPrefs", context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = myPrefs.edit();
+                editor.putBoolean("switch1", false);
+                editor.apply();
+            }
+            p1.destroy();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void ReviveLauncherIcon(Context context) {
+
+        PackageManager p = context.getPackageManager();
+        ComponentName componentName = new ComponentName(context, com.lovejoy777.rroandlayersmanager.MainActivity.class);
+        p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+
+    }
+
 }
