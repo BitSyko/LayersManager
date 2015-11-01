@@ -12,14 +12,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
+
 import com.afollestad.materialcab.MaterialCab;
+import com.bitsyko.liblayers.LayerFile;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.DeviceSingleton;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.beans.FileBean;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class UninstallFragment extends Fragment implements MaterialCab.Callback, AsyncResponse {
@@ -194,17 +200,15 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
         @Override
         protected List<FileBean> doInBackground(Void... params) {
 
-            List<FileBean> files = new ArrayList<>();
+            Collection<File> files = FileUtils.listFiles(new File(DeviceSingleton.getInstance().getOverlayFolder()), new String[]{"apk"}, false);
 
-            ArrayList<String> loadedFiles = new ArrayList<>();
+            List<FileBean> fileBeans = new ArrayList<>();
 
-            loadedFiles.addAll(Commands.RootloadFiles(getActivity(), getActivity(), DeviceSingleton.getInstance().getOverlayFolder()));
-
-            for (String file : loadedFiles) {
-                files.add(new FileBean(file));
+            for (File file : files) {
+                fileBeans.add(new FileBean(file));
             }
 
-            return files;
+            return fileBeans;
 
         }
 
@@ -216,23 +220,37 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
-            layoutParams.topMargin = 8;
+            layoutParams.topMargin = 12;
 
             for (FileBean fileBean : result) {
 
                 TableRow row = new TableRow(getActivity());
                 row.setLayoutParams(layoutParams);
 
+                // Implemented LinearLayout because a TableRow can't have more than one View added to it. LinearLayout can have, so we add a
+                // LinearLayout to TableRow
+                LinearLayout rowlayout = new LinearLayout(getActivity());
+                rowlayout.setOrientation(LinearLayout.VERTICAL);
+
                 CheckBox check = new CheckBox(getActivity());
 
+                TextView summary = new TextView(getActivity());
+
                 check.setText(fileBean.getName());
+                summary.setText(new LayerFile(fileBean.getFile()).getRelatedPackage());
+
                 check.setTag(fileBean);
                 check.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                summary.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                 int padding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics());
-                check.setPadding(padding, padding, padding, padding);
+                check.setPadding(padding, 0, padding, 0);
+                check.setMinHeight(0);
+                summary.setPadding(5 * padding, 0, padding, 0);
 
+                rowlayout.addView(check);
+                rowlayout.addView(summary);
 
-                row.addView(check);
+                row.addView(rowlayout);
 
                 mLinearLayout.addView(row);
 
