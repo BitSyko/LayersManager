@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,8 +29,25 @@ public class Helpers {
         }
 
 
-
         return packagesString;
+    }
+
+
+    public static String commandToString(String command) {
+        try {
+            Process process = new ProcessBuilder()
+                    .command(command)
+                    .redirectErrorStream(true)
+                    .start();
+
+            InputStream input = process.getInputStream();
+
+            return IOUtils.toString(input);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }
