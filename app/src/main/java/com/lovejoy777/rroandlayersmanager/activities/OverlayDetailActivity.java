@@ -145,7 +145,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             public void onClick(DialogInterface dialog, int which) {
                 //installDialog();
                 item.setSelectedStyle(NewchoosedStyle);
-                whichcheckbox.setText(item.getName() + " --> " + NewchoosedStyle);
+                whichcheckbox.setText(item.getName() + ": " + NewchoosedStyle);
             }
         });
         colorDialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
