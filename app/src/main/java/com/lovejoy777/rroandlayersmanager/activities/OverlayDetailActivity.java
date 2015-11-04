@@ -51,6 +51,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     private ArrayList<CheckBox> checkBoxesGeneral = new ArrayList<>();
     private ArrayList<CheckBox> checkBoxesStyle = new ArrayList<>();
     private String choosedStyle = "";
+    private String NewchoosedStyle;
     private Layer layer;
     private Switch installAllGeneral;
     private Switch installAllStyle;
@@ -61,8 +62,14 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
     private CheckBoxHolder.CheckBoxHolderCallback checkBoxHolderCallback = new CheckBoxHolder.CheckBoxHolderCallback() {
         @Override
-        public void onClick() {
-            refreshFab();
+        public void onClick(CheckBox which, boolean checked) {
+
+            if (layer.getPluginVersion()==3 &&(((LayerFile) which.getTag()).hasStyles()) && which.isChecked()){
+                styleDialog((LayerFile) which.getTag(),which);
+            }else{
+                refreshFab();
+            }
+
         }
     };
 
@@ -75,10 +82,87 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
             }else{
                 checkBoxesGeneral.add(item);
+
+            }
+        }
+    };
+
+
+
+
+    private void styleDialog(final LayerFile item, final CheckBox whichcheckbox) {
+
+        final AlertDialog.Builder colorDialog = new AlertDialog.Builder(this);
+        final LayoutInflater inflater = getLayoutInflater();
+        colorDialog.setTitle(getString(R.string.pick_color) + " for " + item.getName());
+        View colordialogView = inflater.inflate(R.layout.dialog_colors, null);
+        colorDialog.setView(colordialogView);
+
+        final RadioGroup radioGroup = (RadioGroup) colordialogView.findViewById(R.id.radiogroup);
+
+        RadioGroup.LayoutParams params
+                = new RadioGroup.LayoutParams(this, null);
+
+        params.leftMargin = 66;
+        params.topMargin = 2;
+        params.bottomMargin = 2;
+        params.width = RadioGroup.LayoutParams.MATCH_PARENT;
+
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 44, getResources().getDisplayMetrics());
+        params.height = height;
+
+
+        final List<String> colors = item.getColors();
+
+        for (final String color : colors) {
+
+            final RadioButton radioButton = new RadioButton(this);
+
+            radioButton.setText(color);
+            radioButton.setLayoutParams(params);
+            radioButton.setTextSize(18);
+            radioButton.setTag(color);
+
+            radioGroup.addView(radioButton);
+
+            radioButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NewchoosedStyle = (String) v.getTag();
+                    refreshFab();
+                }
+            });
+
+            if (colors.indexOf(color) == 0) {
+                radioButton.performClick();
             }
 
         }
-    };
+
+        colorDialog.setCancelable(false);
+        colorDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //installDialog();
+                item.setSelectedStyle(NewchoosedStyle);
+                whichcheckbox.setText(item.getName() + " --> " + NewchoosedStyle);
+            }
+        });
+        colorDialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                whichcheckbox.setChecked(false);
+                whichcheckbox.setText(item.getName());
+                refreshFab();
+            }
+
+
+        });
+        colorDialog.create();
+        colorDialog.show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +187,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         createLayouts();
 
         Log.d("Colors", String.valueOf(layer.getColors()));
-
+        Log.d("PluginVersion", String.valueOf(layer.getPluginVersion()));
     }
 
     private boolean isAnyCheckboxEnabled() {

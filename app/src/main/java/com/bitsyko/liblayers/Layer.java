@@ -216,7 +216,8 @@ public class Layer implements Closeable {
             String[] normalOverlayNames = bundle.getString("Layers_NormalOverlays").split(",");
 
             for (String layer : normalOverlayNames) {
-                files.add(new LayerFile(this, layer, false));
+
+                files.add(new LayerFile(this, layer, false, getPluginVersion()));
             }
 
             String[] styleSpecificOverlayNames = bundle.getString("Layers_StyleSpecificOverlays", "").split(",");
@@ -224,7 +225,7 @@ public class Layer implements Closeable {
 
             for (String layer : styleSpecificOverlayNames) {
                 if (!layer.equals("")) {
-                    files.add(new LayerFile(this, layer, true));
+                    files.add(new LayerFile(this, layer, true, getPluginVersion()));
                 }
             }
 
@@ -246,7 +247,7 @@ public class Layer implements Closeable {
                     continue;
                 }
 
-                files.add(new LayerFile(this, overlay, !normalOverlay));
+                files.add(new LayerFile(this, overlay, !normalOverlay,getPluginVersion()));
 
             }
 
@@ -255,6 +256,15 @@ public class Layer implements Closeable {
 
         return files;
 
+    }
+
+    public int getPluginVersion(){
+        int mPluginVersion = 2;
+        Bundle bundle = applicationInfo.metaData;
+        if (bundle.containsKey("Layers_PluginVersion")){
+            mPluginVersion = Integer.parseInt(bundle.getString("Layers_PluginVersion"));
+        }
+        return mPluginVersion;
     }
 
     public List<String> getColors() {
