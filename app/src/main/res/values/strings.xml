@@ -187,7 +187,9 @@
     <string name="noPermissionDescription">No permission to view your phone´s internal storage granted.\nYou won´t be able to use this feature until you grant this permission.</string>
     <string name="toggleCheckboxes">Toggle Checkboxes</string>
     <string name="refreshOverlays">Refresh Overlays</string>
-
+    <string name="next">next</string>
+    <string name="remove">remove</string>
+    <string name="skip">Skip</string>
 
 
 </resources>
