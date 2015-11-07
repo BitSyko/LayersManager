@@ -6,9 +6,7 @@ import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -540,72 +538,10 @@ public class Commands {
 
     public static void killLauncherIcon(Context context) {
 
-        Process p1 = null;
-        Process p2 = null;
-        String noIcon = "";
-        Boolean mShowLauncherShortcut = true;
-        String settingsPackageName= "com.android.settings";
-        String settingsLayersDrawableName = "ic_bitsyko_layers";
-
-        try {
-            Resources res = context.getPackageManager().getResourcesForApplication(settingsPackageName);
-            int drawableid = res.getIdentifier(settingsPackageName+":drawable/"+settingsLayersDrawableName, "drawable", settingsPackageName);
-            if ( drawableid != 0 ) {
-                mShowLauncherShortcut = false;
-                Log.d("myTag", "checked settings for icon, true");
-            } else {
-                Log.d("myTag", "checked settings for icon, false");
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            p1 = new ProcessBuilder("/system/bin/getprop", "ro.layers.noIcon").redirectErrorStream(true).start();
-            p2 = new ProcessBuilder("/system/bin/getprop", "ro.layers.launcher_shortcut").redirectErrorStream(true).start();
-
-            BufferedReader br1 = new BufferedReader(new InputStreamReader(p1.getInputStream()));
-            BufferedReader br2 = new BufferedReader(new InputStreamReader(p2.getInputStream()));
-            String line = "";
-            if (!br1.readLine().equals("")) {
-                noIcon = line;
-                Log.d("myTag", "older working");
-            } else if (!br2.readLine().equals("")) {
-                mShowLauncherShortcut = !(line == "false");
-                Log.d("myTag", mShowLauncherShortcut.toString());
-            // if mShowLauncherShortcut is still true, then
-            } else if (mShowLauncherShortcut) {
-                Log.d("myTag", "this else run");
-                Toast.makeText(context, context.getResources().getString(R.string.noBuildPropCommit), Toast.LENGTH_LONG).show();
-                SharedPreferences myPrefs = context.getSharedPreferences("myPrefs", context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = myPrefs.edit();
-                editor.putBoolean("switch1", false);
-                editor.apply();
-
-            }
-
-            if (noIcon.length() >= 3 | !mShowLauncherShortcut) {
-
-                PackageManager p = context.getPackageManager();
-                ComponentName componentName = new ComponentName(context, com.lovejoy777.rroandlayersmanager.MainActivity.class); // activity which is first time open in manifiest file which is declare as <category android:name="android.intent.category.LAUNCHER" />
-                p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-                Toast.makeText(context, context.getResources().getString(R.string.launcherIconRemoved), Toast.LENGTH_SHORT).show();
-
-            } else {
-                Log.d("myTag", "needs support");
-                Toast.makeText(context, context.getResources().getString(R.string.romNeedsSupport), Toast.LENGTH_LONG).show();
-                SharedPreferences myPrefs = context.getSharedPreferences("myPrefs", context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = myPrefs.edit();
-                editor.putBoolean("switch1", false);
-                editor.apply();
-
-            }
-
-            p1.destroy();
-            p2.destroy();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        PackageManager p = context.getPackageManager();
+        ComponentName componentName = new ComponentName(context, com.lovejoy777.rroandlayersmanager.MainActivity.class); // activity which is first time open in manifiest file which is declare as <category android:name="android.intent.category.LAUNCHER" />
+        p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+        Toast.makeText(context, context.getResources().getString(R.string.launcherIconRemoved), Toast.LENGTH_SHORT).show();
 
     }
 
@@ -614,6 +550,7 @@ public class Commands {
         PackageManager p = context.getPackageManager();
         ComponentName componentName = new ComponentName(context, com.lovejoy777.rroandlayersmanager.MainActivity.class);
         p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+        Toast.makeText(context, context.getResources().getString(R.string.launcherIconRevived), Toast.LENGTH_SHORT).show();
 
     }
 
