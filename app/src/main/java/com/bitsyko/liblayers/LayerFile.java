@@ -105,7 +105,7 @@ public class LayerFile {
 
         //Plugin Version 3 // One zip for each Overlay
         File zipFile;
-        if (pluginVersion==3){
+        if (pluginVersion==3 && hasStyles() && !isColor()){
             //PackName_OverlayName.zip
             zipFile = new File(tempDir + File.separator + layer.getName() + "_" + name + ".zip");
 
@@ -158,13 +158,20 @@ public class LayerFile {
                 zipTempDir.mkdirs();
             }
 
-            destFile = new File(tempDir +
-                    File.separator + layer.getName() + "_" + name + File.separator+ selectedStyle+
-                    File.separator + (layer.getName() + "_" + fileName + ".apk").replaceAll(" ", ""));
-
-            if (!destFile.exists()) {
-                FileUtils.copyInputStreamToFile(Commands.fileFromZip(zipFile1, getSelectedStyle()+ File.separator +layer.getName() + "_" + fileName + ".apk"), destFile);
+            if (!isColor() && hasStyles()){
+                destFile = new File(tempDir + File.separator + layer.getName() + "_" + name + File.separator+ selectedStyle+ File.separator + (layer.getName() + "_" + fileName + ".apk").replaceAll(" ", ""));
+                if (!destFile.exists()) {
+                    FileUtils.copyInputStreamToFile(Commands.fileFromZip(zipFile1, getSelectedStyle()+ File.separator +layer.getName() + "_" + fileName + ".apk"), destFile);
+                }
+            } else{
+                destFile = new File(tempDir + File.separator + layer.getName() + "_" + color + File.separator + (layer.getName() + "_" + fileName + ".apk").replaceAll(" ", ""));
+                if (!destFile.exists()) {
+                    FileUtils.copyInputStreamToFile(Commands.fileFromZip(zipFile1, layer.getName() + "_" + fileName + ".apk"), destFile);
+                }
             }
+
+
+
 
         }
         //Plugin 1
