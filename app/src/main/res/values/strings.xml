@@ -187,7 +187,8 @@
     <string name="noPermissionDescription">No permission to view your phone´s internal storage granted.\nYou won´t be able to use this feature until you grant this permission.</string>
     <string name="toggleCheckboxes">Toggle Checkboxes</string>
     <string name="refreshOverlays">Refresh Overlays</string>
-
+    <string name="layerNotSupported">Layer not supported</string>
+    <string name="plugin3NotSupportedDetail">Sorry, this version of Layers Manager does not support Plugin Version 3 Layers. Get a newer LM Version from our G+ Community.</string>
 
 
 </resources>

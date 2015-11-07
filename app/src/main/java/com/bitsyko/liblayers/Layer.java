@@ -319,4 +319,13 @@ public class Layer implements Closeable {
 
         zipFileMap.clear();
     }
+
+    public int getPluginVersion(){
+        int mPluginVersion = 2;
+        Bundle bundle = applicationInfo.metaData;
+        if (bundle.containsKey("Layers_PluginVersion")){
+            mPluginVersion = Integer.parseInt(bundle.getString("Layers_PluginVersion"));
+        }
+        return mPluginVersion;
+    }
 }

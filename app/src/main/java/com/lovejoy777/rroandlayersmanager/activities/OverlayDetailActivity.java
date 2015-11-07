@@ -4,12 +4,14 @@ import android.animation.Animator;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -210,6 +212,24 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             e.printStackTrace();
         }
         Log.d("PackageName: ", layerPackageName);
+        if (layer.getPluginVersion()==3){
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.layerNotSupported)
+                    .setCancelable(false)
+                    .setMessage(R.string.plugin3NotSupportedDetail)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.linkCommunity))));
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel,new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .show();
+        }
     }
 
     private void loadBackdrop() {
