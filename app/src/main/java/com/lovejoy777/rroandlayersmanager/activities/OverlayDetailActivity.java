@@ -387,24 +387,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             e.printStackTrace();
         }
         Log.d("PackageName: ", layerPackageName);
-        if (layer.getPluginVersion()==3){
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.layerNotSupported)
-                    .setCancelable(false)
-                    .setMessage(R.string.plugin3NotSupportedDetail)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.linkCommunity))));
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel,new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    })
-                    .show();
-        }
+
     }
 
     private void loadBackdrop() {
