@@ -151,11 +151,11 @@
 
     <!-- Settings -->
     <string name="General">General</string>
-    <string name="SettingLauncherIconDetail">Remove Launcher Icon</string>
-    <string name="SettingLauncherIconWarning">Warning: you may not be able to launch this app unless your rom as it in the settings</string>
-    <string name="launcherIconRemoved">Launcher Icon removed</string>
-    <string name="romNeedsSupport">Your rom needs support for this function</string>
-    <string name="noBuildPropCommit">no build.prop commit</string>
+    <string name="SettingLauncherIconDetail">Remove Launcher icon</string>
+    <string name="LauncherIconSummaryEnabled">Your ROM supports the Settings dashboard Layers shortcut</string>
+    <string name="LauncherIconSummaryDisabled">Your ROM doesn\'t support this option</string>
+    <string name="launcherIconRemoved">Launcher icon is removed</string>
+    <string name="launcherIconRevived">Launcher icon is back</string>
     <string name="SettingsHideOverlays">Hide unnecessary Overlays</string>
     <string name="SettingsHideOverlaysDetail">Disable Overlays for not installed Apps</string>
 
@@ -189,6 +189,5 @@
     <string name="refreshOverlays">Refresh Overlays</string>
     <string name="layerNotSupported">Layer not supported</string>
     <string name="plugin3NotSupportedDetail">Sorry, this version of Layers Manager does not support Plugin Version 3 Layers. Get a newer LM Version from our G+ Community.</string>
-
 
 </resources>

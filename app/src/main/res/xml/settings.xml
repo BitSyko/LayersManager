@@ -8,7 +8,7 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="switch1"
-            android:summary="@string/SettingLauncherIconWarning"
+            android:summary="@string/LauncherIconSummaryEnabled"
             android:title="@string/SettingLauncherIconDetail" />
 
         <SwitchPreference
