@@ -461,6 +461,7 @@ public class Commands {
                         filelocation = RootCommands.getCommandLineString(layerFile.getFile(color).getAbsolutePath());
                     } else {
                         filelocation = RootCommands.getCommandLineString(layerFile.getFile().getAbsolutePath());
+                        System.out.println(filelocation);
                     }
 
                     RootCommands.moveRoot(filelocation, DeviceSingleton.getInstance().getOverlayFolder() + "/");

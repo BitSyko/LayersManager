@@ -59,35 +59,37 @@ public class CreateList extends StoppableAsyncTask<Void, Void, Pair<Set<String>,
 
 
         for (LayerFile layerFile : layerFiles) {
-
-            publishProgress();
-
-            if (isCancelled() || stop) {
-                return null;
+            if (layer.getPluginVersion()==3 && layerFile.hasStyles() && !layerFile.isColor()){
+                    publishProgress();
             }
+            else{
 
-            try {
+                    publishProgress();
 
-                if (layerFile.isColor()) {
-                    layerFile.getFile(layer.getColors().get(0));
-                } else {
-                    layerFile.getFile();
+                    if (isCancelled() || stop) {
+                        return null;
+                    }
+
+                    try {
+
+                        if (layerFile.isColor()) {
+                            layerFile.getFile(layer.getColors().get(0));
+                        } else {
+                            layerFile.getFile();
+                        }
+
+                        Log.d("Manifest " + layerFile.getName(), layerFile.getRelatedPackage());
+
+                        if (!packages.contains(layerFile.getRelatedPackage())) {
+                            filesToGreyOut.add(layerFile.getName());
+                        }
+
+                    } catch (IOException | NoFileInZipException e) {
+                        e.printStackTrace();
+                        filesThatDontExist.add(layerFile.getName());
+                    }
                 }
-
-                Log.d("Manifest " + layerFile.getName(), layerFile.getRelatedPackage());
-
-                if (!packages.contains(layerFile.getRelatedPackage())) {
-                    filesToGreyOut.add(layerFile.getName());
-                }
-
-            } catch (IOException | NoFileInZipException e) {
-                e.printStackTrace();
-                filesThatDontExist.add(layerFile.getName());
             }
-
-
-        }
-
         try {
             layer.close();
         } catch (IOException e) {

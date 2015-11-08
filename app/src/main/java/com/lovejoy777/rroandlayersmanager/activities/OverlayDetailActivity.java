@@ -53,6 +53,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     private ArrayList<CheckBox> checkBoxesGeneral = new ArrayList<>();
     private ArrayList<CheckBox> checkBoxesStyle = new ArrayList<>();
     private String choosedStyle = "";
+    private String NewchoosedStyle;
     private Layer layer;
     private Switch installAllGeneral;
     private Switch installAllStyle;
@@ -63,8 +64,15 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
     private CheckBoxHolder.CheckBoxHolderCallback checkBoxHolderCallback = new CheckBoxHolder.CheckBoxHolderCallback() {
         @Override
-        public void onClick() {
-            refreshFab();
+        public void onClick(CheckBox which, boolean checked) {
+
+            if (layer.getPluginVersion()==3 &&(((LayerFile) which.getTag()).hasStyles()) && which.isChecked()){
+                styleDialog((LayerFile) which.getTag(),which);
+            }else{
+                refreshFab();
+                refreshSwitches();
+            }
+
         }
     };
 
@@ -77,10 +85,90 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
             }else{
                 checkBoxesGeneral.add(item);
+
             }
 
         }
     };
+
+
+
+
+    private void styleDialog(final LayerFile item, final CheckBox whichcheckbox) {
+
+        final AlertDialog.Builder colorDialog = new AlertDialog.Builder(this);
+        final LayoutInflater inflater = getLayoutInflater();
+        colorDialog.setTitle(getString(R.string.pick_color) + " for " + item.getName());
+        View colordialogView = inflater.inflate(R.layout.dialog_colors, null);
+        colorDialog.setView(colordialogView);
+
+        final RadioGroup radioGroup = (RadioGroup) colordialogView.findViewById(R.id.radiogroup);
+
+        RadioGroup.LayoutParams params
+                = new RadioGroup.LayoutParams(this, null);
+
+        params.leftMargin = 66;
+        params.topMargin = 2;
+        params.bottomMargin = 2;
+        params.width = RadioGroup.LayoutParams.MATCH_PARENT;
+
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 44, getResources().getDisplayMetrics());
+        params.height = height;
+
+
+        final List<String> colors = item.getColors();
+
+        for (final String color : colors) {
+
+            final RadioButton radioButton = new RadioButton(this);
+
+            radioButton.setText(color);
+            radioButton.setLayoutParams(params);
+            radioButton.setTextSize(18);
+            radioButton.setTag(color);
+
+            radioGroup.addView(radioButton);
+
+            radioButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NewchoosedStyle = (String) v.getTag();
+                    refreshFab();
+                    refreshSwitches();
+                }
+            });
+
+            if (colors.indexOf(color) == 0) {
+                radioButton.performClick();
+            }
+
+        }
+
+        colorDialog.setCancelable(false);
+        colorDialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //installDialog();
+                item.setSelectedStyle(NewchoosedStyle);
+                whichcheckbox.setText(item.getName() + ": " + NewchoosedStyle);
+            }
+        });
+        colorDialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                whichcheckbox.setChecked(false);
+                whichcheckbox.setText(item.getName());
+                refreshFab();
+                refreshSwitches();
+            }
+
+
+        });
+        colorDialog.create();
+        colorDialog.show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,20 +193,87 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         createLayouts();
 
         Log.d("Colors", String.valueOf(layer.getColors()));
-
+        Log.d("PluginVersion", String.valueOf(layer.getPluginVersion()));
     }
 
-    private boolean isAnyCheckboxEnabled() {
+    private boolean isAnyCheckboxEnabled(int mode) {
+        //Mode: 0 = General
+        //      1 = Style
+        //      2 = both
 
-        for (CheckBox checkBox : checkBoxesGeneral) {
-            if (checkBox.isChecked()) {
-                return true;
-            }
+        switch (mode){
+            case 0:
+                for (CheckBox checkBox : checkBoxesGeneral) {
+                    if (checkBox.isChecked()) {
+                        return true;
+                    }
+                }
+                break;
+            case 1:
+                for (CheckBox checkBox : checkBoxesStyle){
+                    if (checkBox.isChecked()){
+                        return true;
+                    }
+                }
+                break;
+            case 2:
+                for (CheckBox checkBox : checkBoxesGeneral) {
+                    if (checkBox.isChecked()) {
+                        return true;
+                    }
+                }
+                for (CheckBox checkBox : checkBoxesStyle){
+                    if (checkBox.isChecked()){
+                        return true;
+                    }
+                }
+                break;
         }
-        for (CheckBox checkBox : checkBoxesStyle){
-            if (checkBox.isChecked()){
-                return true;
-            }
+        return false;
+    }
+
+    private boolean AreAllCheckboxEnabled(int mode) {
+        //Mode: 0 = General
+        //      1 = Style
+        //      2 = both
+        int checked = 0;
+        switch (mode){
+
+            case 0:
+                for (CheckBox checkBox : checkBoxesGeneral) {
+                    if (checkBox.isChecked()) {
+                       checked++;
+                    }
+                }
+                if (checked==checkBoxesGeneral.size()){
+                    return true;
+                }
+                break;
+            case 1:
+                for (CheckBox checkBox : checkBoxesStyle){
+                    if (checkBox.isChecked()){
+                        checked++;
+                    }
+                }
+                if (checked==checkBoxesStyle.size()){
+                    return true;
+                }
+                break;
+            case 2:
+                for (CheckBox checkBox : checkBoxesGeneral) {
+                    if (checkBox.isChecked()) {
+                        checked++;
+                    }
+                }
+                for (CheckBox checkBox : checkBoxesStyle){
+                    if (checkBox.isChecked()){
+                        checked++;
+                    }
+                }
+                if (checked==(checkBoxesGeneral.size()+checkBoxesStyle.size())){
+                    return true;
+                }
+                break;
         }
         return false;
     }
@@ -126,10 +281,30 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
     private void refreshFab() {
 
-        if (isAnyCheckboxEnabled()) {
+        if (isAnyCheckboxEnabled(2)) {
             installationFAB.show();
         } else {
             installationFAB.hide();
+        }
+
+    }
+
+    private void refreshSwitches() {
+
+        if (!isAnyCheckboxEnabled(0)) {
+            installAllGeneral.setChecked(false);
+        }else {
+            if (AreAllCheckboxEnabled(0)) {
+                installAllGeneral.setChecked(true);
+            }
+        }
+
+        if (!isAnyCheckboxEnabled(1)) {
+            installAllStyle.setChecked(false);
+        }else {
+            if (AreAllCheckboxEnabled(1)) {
+                installAllStyle.setChecked(true);
+            }
         }
 
     }
@@ -338,7 +513,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                 finish();
                 return true;
             case R.id.menu_selectall:
-                if (isAnyCheckboxEnabled()){
+                if (isAnyCheckboxEnabled(2)){
                     uncheckAllCheckBoxes(2);
                     installAllGeneral.setChecked(false);
                     installAllStyle.setChecked(false);
@@ -378,6 +553,22 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         switch (mode) {
             case 0:
                 checkBoxList.addAll(checkBoxesGeneral);
+                if (layer.getPluginVersion()==3 && checked){
+                    List<LayerFile> styleDialogsToShow = new ArrayList<>();
+                    List<CheckBox> checkBoxesStyle = new ArrayList<>();
+                    for (final CheckBox checkBox : checkBoxesGeneral) {
+
+                        final LayerFile layerFile = (LayerFile) checkBox.getTag();
+
+                        if (layerFile.hasStyles()){
+
+                            styleDialogsToShow.add(layerFile);
+                            checkBoxesStyle.add(checkBox);
+                        }
+                    }
+                    styleDialogMultiple(styleDialogsToShow,checkBoxesStyle);
+                }
+
                 break;
 
             case 1:
@@ -397,8 +588,111 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         }
 
         refreshFab();
+        refreshSwitches();
 
     }
+
+
+
+    private void styleDialogMultiple(final List<LayerFile> OverlayFiles, final List<CheckBox> Checkboxes) {
+
+        final AlertDialog.Builder colorDialog = new AlertDialog.Builder(this);
+        final LayoutInflater inflater = getLayoutInflater();
+        colorDialog.setTitle(getString(R.string.pick_color) + " for " + OverlayFiles.get(0).getName());
+        View colordialogView = inflater.inflate(R.layout.dialog_colors, null);
+        colorDialog.setView(colordialogView);
+
+        final RadioGroup radioGroup = (RadioGroup) colordialogView.findViewById(R.id.radiogroup);
+
+        RadioGroup.LayoutParams params
+                = new RadioGroup.LayoutParams(this, null);
+
+        params.leftMargin = 66;
+        params.topMargin = 2;
+        params.bottomMargin = 2;
+        params.width = RadioGroup.LayoutParams.MATCH_PARENT;
+
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 44, getResources().getDisplayMetrics());
+        params.height = height;
+
+
+        final List<String> colors = OverlayFiles.get(0).getColors();
+
+        for (final String color : colors) {
+
+            final RadioButton radioButton = new RadioButton(this);
+
+            radioButton.setText(color);
+            radioButton.setLayoutParams(params);
+            radioButton.setTextSize(18);
+            radioButton.setTag(color);
+
+            radioGroup.addView(radioButton);
+
+            radioButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NewchoosedStyle = (String) v.getTag();
+                    refreshFab();
+                    refreshSwitches();
+                }
+            });
+
+            if (colors.indexOf(color) == 0) {
+                radioButton.performClick();
+            }
+
+        }
+
+        colorDialog.setCancelable(false);
+        colorDialog.setPositiveButton(R.string.next, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //installDialog();
+                OverlayFiles.get(0).setSelectedStyle(NewchoosedStyle);
+                Checkboxes.get(0).setText(OverlayFiles.get(0).getName() + ": " + NewchoosedStyle);
+                OverlayFiles.remove(0);
+                Checkboxes.remove(0);
+                if (OverlayFiles.size() > 0) {
+                    styleDialogMultiple(OverlayFiles, Checkboxes);
+                }
+            }
+        });
+        colorDialog.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                int i = 0;
+                for (CheckBox checkbox : Checkboxes) {
+                    checkbox.setChecked(false);
+                    checkbox.setText(OverlayFiles.get(i).getName());
+                    i++;
+                }
+                refreshFab();
+                refreshSwitches();
+                dialog.dismiss();
+            }
+
+
+        });
+        colorDialog.setNeutralButton(R.string.skip, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Checkboxes.get(0).setChecked(false);
+                Checkboxes.get(0).setText(OverlayFiles.get(0).getName());
+                OverlayFiles.remove(0);
+                Checkboxes.remove(0);
+                if (OverlayFiles.size() > 0) {
+                    styleDialogMultiple(OverlayFiles, Checkboxes);
+                }
+            }
+        });
+
+        colorDialog.create();
+        colorDialog.show();
+    }
+
+
 
 
     private void uncheckAllCheckBoxes(int mode) {

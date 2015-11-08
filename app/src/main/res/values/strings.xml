@@ -189,5 +189,8 @@
     <string name="refreshOverlays">Refresh Overlays</string>
     <string name="layerNotSupported">Layer not supported</string>
     <string name="plugin3NotSupportedDetail">Sorry, this version of Layers Manager does not support Plugin Version 3 Layers. Get a newer LM Version from our G+ Community.</string>
+    <string name="next">next</string>
+    <string name="remove">remove</string>
+    <string name="skip">Skip</string>
 
 </resources>

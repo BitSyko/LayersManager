@@ -19,7 +19,7 @@ public class CheckBoxHolder extends FrameLayout {
                     checkBox.performClick();
                 }
 
-                callback.onClick();
+                callback.onClick(checkBox, checkBox.isChecked());
             }
         });
 
@@ -31,7 +31,7 @@ public class CheckBoxHolder extends FrameLayout {
                     checkBox.performClick();
                 }
 
-                callback.onClick();
+                callback.onClick(checkBox, checkBox.isChecked());
 
                 return true;
             }
@@ -46,7 +46,7 @@ public class CheckBoxHolder extends FrameLayout {
 
 
     public interface CheckBoxHolderCallback {
-        void onClick();
+        void onClick(CheckBox checkBox, boolean checked);
     }
 
 }
