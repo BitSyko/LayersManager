@@ -4,14 +4,12 @@ import android.animation.Animator;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -29,23 +27,29 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
-
-import android.widget.*;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import com.bitsyko.liblayers.Layer;
-import com.bitsyko.liblayers.LayerFile;
+import com.bitsyko.liblayers.layerfiles.LayerFile;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.interfaces.Callback;
 import com.lovejoy777.rroandlayersmanager.interfaces.StoppableAsyncTask;
-import com.lovejoy777.rroandlayersmanager.loadingpackages.CreateList;
 import com.lovejoy777.rroandlayersmanager.loadingpackages.ShowAllPackagesFromLayer;
-import com.lovejoy777.rroandlayersmanager.loadingpackages.ShowPackagesFromList;
 import com.lovejoy777.rroandlayersmanager.views.CheckBoxHolder;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class OverlayDetailActivity extends AppCompatActivity implements AsyncResponse {
 
@@ -814,9 +818,11 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         params.height = height;
 
 
-        final List<String> colors = layer.getColors();
+        final List<com.bitsyko.liblayers.Color> colors = layer.getColors();
 
-        for (final String color : colors) {
+        for (final com.bitsyko.liblayers.Color colorTemp : colors) {
+
+            String color = colorTemp.getNiceName();
 
             final RadioButton radioButton = new RadioButton(this);
 
@@ -908,7 +914,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         boolean createList = (filesToGreyOut == null || !filesToGreyOut.contains(layer.getVersionCode()));
 
         loadLayerApks.clear();
-
+/*
         if (disableNotInstalledApps) {
 
             if (createList) {
@@ -920,7 +926,9 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         } else {
             loadLayerApks.add(new ShowAllPackagesFromLayer(this, cordLayout, layer, checkBoxCallback, checkBoxHolderCallback));
         }
+*/
 
+        loadLayerApks.add(new ShowAllPackagesFromLayer(this, cordLayout, layer, checkBoxCallback, checkBoxHolderCallback));
 
         for (AsyncTask<Void, ?, ?> asyncTask : loadLayerApks) {
             asyncTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);

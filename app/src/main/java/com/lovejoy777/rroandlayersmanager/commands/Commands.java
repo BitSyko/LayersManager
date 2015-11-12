@@ -12,8 +12,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.bitsyko.liblayers.LayerFile;
 import com.bitsyko.liblayers.NoFileInZipException;
+import com.bitsyko.liblayers.layerfiles.LayerFile;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.DeviceSingleton;
 import com.lovejoy777.rroandlayersmanager.R;

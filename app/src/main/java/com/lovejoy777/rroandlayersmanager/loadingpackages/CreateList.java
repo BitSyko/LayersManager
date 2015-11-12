@@ -22,7 +22,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+/*
 public class CreateList extends StoppableAsyncTask<Void, Void, Pair<Set<String>, Set<String>>> {
 
     private Context context;
@@ -40,9 +40,9 @@ public class CreateList extends StoppableAsyncTask<Void, Void, Pair<Set<String>,
     protected void onPreExecute() {
         progress = new ProgressDialog(context);
         progress.setTitle(R.string.generatingList);
-        progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        progress.setMax(layer.getLayersInPackage().size());
-        progress.setProgress(0);
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    //    progress.setMax(layer.getLayersInPackage().size());
+     //   progress.setProgress(0);
         progress.setCancelable(false);
         progress.show();
     }
@@ -59,37 +59,36 @@ public class CreateList extends StoppableAsyncTask<Void, Void, Pair<Set<String>,
 
 
         for (LayerFile layerFile : layerFiles) {
-            if (layer.getPluginVersion()==3 && layerFile.hasStyles() && !layerFile.isColor()){
-                    publishProgress();
-            }
-            else{
+            if (layer.getPluginVersion() == 3 && layerFile.hasStyles() && !layerFile.isColor()) {
+                publishProgress();
+            } else {
 
-                    publishProgress();
+                publishProgress();
 
-                    if (isCancelled() || stop) {
-                        return null;
+                if (isCancelled() || stop) {
+                    return null;
+                }
+
+                try {
+
+                    if (layerFile.isColor()) {
+                        layerFile.getFile(layer.getColors().get(0));
+                    } else {
+                        layerFile.getFile();
                     }
 
-                    try {
+                    Log.d("Manifest " + layerFile.getName(), layerFile.getRelatedPackage());
 
-                        if (layerFile.isColor()) {
-                            layerFile.getFile(layer.getColors().get(0));
-                        } else {
-                            layerFile.getFile();
-                        }
-
-                        Log.d("Manifest " + layerFile.getName(), layerFile.getRelatedPackage());
-
-                        if (!packages.contains(layerFile.getRelatedPackage())) {
-                            filesToGreyOut.add(layerFile.getName());
-                        }
-
-                    } catch (IOException | NoFileInZipException e) {
-                        e.printStackTrace();
-                        filesThatDontExist.add(layerFile.getName());
+                    if (!packages.contains(layerFile.getRelatedPackage())) {
+                        filesToGreyOut.add(layerFile.getName());
                     }
+
+                } catch (IOException | NoFileInZipException e) {
+                    e.printStackTrace();
+                    filesThatDontExist.add(layerFile.getName());
                 }
             }
+        }
         try {
             layer.close();
         } catch (IOException e) {
@@ -108,7 +107,7 @@ public class CreateList extends StoppableAsyncTask<Void, Void, Pair<Set<String>,
 
     @Override
     protected void onProgressUpdate(Void... values) {
-        progress.incrementProgressBy(1);
+      //  progress.incrementProgressBy(1);
     }
 
     @Override
@@ -121,3 +120,4 @@ public class CreateList extends StoppableAsyncTask<Void, Void, Pair<Set<String>,
         stop = false;
     }
 }
+*/

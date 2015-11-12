@@ -7,23 +7,34 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.ArrayMap;
-import android.util.Log;
 import android.util.Pair;
 
+import com.bitsyko.liblayers.layerfiles.ColorOverlay;
+import com.bitsyko.liblayers.layerfiles.GeneralOverlay;
+import com.bitsyko.liblayers.layerfiles.LayerFile;
 import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
-import com.stericson.RootTools.RootTools;
+
+import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class Layer implements Closeable {
@@ -37,7 +48,8 @@ public class Layer implements Closeable {
     private final ApplicationInfo applicationInfo;
     private final Resources resources;
     private final Context context;
-    private List<String> colors;
+    private Set<Color> colors = new HashSet<>();
+    private String generalZip;
 
     //Map for unpacked zipfiles from layer
     private Map<String, ZipFile> zipFileMap = new ArrayMap<>();
@@ -56,7 +68,7 @@ public class Layer implements Closeable {
         this.packageName = packageName;
         this.resources = resources;
         this.applicationInfo = applicationInfo;
-        this.context = context;
+        this.context = context.getApplicationContext();
     }
 
     public static Layer layerFromPackageName(String packageName, Context context)
@@ -201,6 +213,97 @@ public class Layer implements Closeable {
         return promo;
     }
 
+
+    public List<com.bitsyko.liblayers.layerfiles.LayerFile> getLayersInPackage() {
+
+        List<com.bitsyko.liblayers.layerfiles.LayerFile> layers = new ArrayList<>();
+
+        Bundle bundle = applicationInfo.metaData;
+
+        AssetManager assetManager = getResources().getAssets();
+
+        String layerNameWithoutWhitespace = StringUtils.deleteWhitespace(name);
+
+        List<String> layerZips = new ArrayList<>();
+
+        try {
+            layerZips.addAll(Arrays.asList(assetManager.list("Files")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        List<LayerFile> generalOverlays = new ArrayList<>();
+        Set<LayerFile> colorOverlays = new HashSet<>();
+
+        for (String overlayFile : layerZips) {
+
+            InputStream in;
+            try {
+                in = assetManager.open("Files" + File.separator + overlayFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+                continue;
+            }
+
+            boolean generalOverlay = false;
+
+            if (StringUtils.endsWithIgnoreCase(overlayFile, "general.zip")) {
+                generalOverlay = true;
+            }
+
+            //Extracting zip
+            File zipFile = new File(context.getCacheDir() + File.separator + overlayFile);
+
+            try {
+                FileUtils.copyInputStreamToFile(in, zipFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //Checking zip content
+
+            ArrayList<? extends ZipEntry> zipEntries = new ArrayList<>();
+
+            try {
+                ZipFile zip = new ZipFile(zipFile);
+                zipEntries = Collections.list(zip.entries());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            for (ZipEntry zipEntry : zipEntries) {
+
+                if (generalOverlay) {
+                    generalZip = overlayFile;
+                    generalOverlays.add(new GeneralOverlay(this, zipEntry.getName()));
+                    continue;
+                }
+
+                if (zipEntry.getName().contains("/")) {
+                    //Contains folders <=> custom style overlay
+                    continue;
+
+
+                } else {
+                    //Color overlay
+                    colorOverlays.add(new ColorOverlay(this, zipEntry.getName()));
+                    colors.add(new Color(overlayFile, this));
+                }
+
+            }
+
+
+        }
+
+        layers.addAll(generalOverlays);
+        layers.addAll(colorOverlays);
+        Collections.sort(layers);
+
+        return layers;
+    }
+
+    /*
+
     public List<LayerFile> getLayersInPackage() {
 
         Bundle bundle = applicationInfo.metaData;
@@ -258,17 +361,20 @@ public class Layer implements Closeable {
 
     }
 
-    public int getPluginVersion(){
+*/
+
+
+    public int getPluginVersion() {
         int mPluginVersion = 2;
         Bundle bundle = applicationInfo.metaData;
-        if (bundle.containsKey("Layers_PluginVersion")){
+        if (bundle.containsKey("Layers_PluginVersion")) {
             mPluginVersion = Integer.parseInt(bundle.getString("Layers_PluginVersion"));
         }
         return mPluginVersion;
     }
 
-    public List<String> getColors() {
-
+    public List<Color> getColors() {
+/*
         if (colors == null) {
 
             Bundle bundle = applicationInfo.metaData;
@@ -281,8 +387,9 @@ public class Layer implements Closeable {
             colors.remove("");
 
         }
+*/
 
-        return colors;
+        return new ArrayList<>(colors);
     }
 
     public Resources getResources() {
