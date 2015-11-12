@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
@@ -19,13 +18,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.Pair;
-import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,8 +32,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TableRow;
@@ -63,6 +57,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 public class OverlayDetailActivity extends AppCompatActivity implements AsyncResponse {
 
@@ -613,9 +608,21 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
         Log.d("Choosed color", choosedStyle);
 
-        new Commands.InstallOverlaysBetterWay(layersToInstall, this, this).execute();
+        //Grab the number of install framework overlays before you try to install anything
+        Commands.MeasureInstalledOverlays installedFrameworks = new Commands.MeasureInstalledOverlays("android");
+        installedFrameworks.execute();
+        int numberOfFrameworks = 0;
+        try {
+            numberOfFrameworks = installedFrameworks.get();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }catch (ExecutionException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-
+        new Commands.InstallOverlaysBetterWay(layersToInstall, this, this, numberOfFrameworks).execute();
     }
 
     public void processFinish() {

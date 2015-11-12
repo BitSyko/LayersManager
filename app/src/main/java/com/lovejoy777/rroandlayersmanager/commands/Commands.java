@@ -13,9 +13,11 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.bitsyko.liblayers.layerfiles.LayerFile;
+import com.bitsyko.liblayers.layerfiles.SimpleOverlay;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.DeviceSingleton;
 import com.lovejoy777.rroandlayersmanager.R;
+import com.lovejoy777.rroandlayersmanager.beans.FileBean;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
@@ -29,10 +31,9 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
@@ -350,11 +351,14 @@ public class Commands {
         private List<LayerFile> layersToInstall;
         private Context context;
         private int i = 0;
+        private int numberOfFrameworks = 0;
+        private boolean maxFrameworkOverlaysReached = false;
 
-        public InstallOverlaysBetterWay(List<LayerFile> layersToInstall, Context context, AsyncResponse delegate) {
+        public InstallOverlaysBetterWay(List<LayerFile> layersToInstall, Context context, AsyncResponse delegate, Integer numberOfFrameworks) {
             this.layersToInstall = layersToInstall;
             this.context = context;
             this.delegate = delegate;
+            this.numberOfFrameworks = numberOfFrameworks;
         }
 
         @Override
@@ -380,12 +384,21 @@ public class Commands {
 
                     String filelocation = RootCommands.getCommandLineString(layerFile.getFile(context).getAbsolutePath());
 
+                    // Notify the user of >4 framework overlays
+                    if (layerFile.getRelatedPackage().equals("android")) {
+                        numberOfFrameworks++;
+                        if (numberOfFrameworks > 4) {
+                            publishProgress(layerFile.getNiceName());
+                            continue;
+                        }
+                    }
+
                     RootCommands.moveRoot(filelocation, DeviceSingleton.getInstance().getOverlayFolder() + "/");
 
                     publishProgress();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    publishProgress(e.getMessage());
+                    Log.e("Exception", e.getMessage());
                 }
 
             }
@@ -429,7 +442,9 @@ public class Commands {
         @Override
         protected void onProgressUpdate(String... values) {
             if (values.length != 0) {
-                Toast.makeText(context, values[0], Toast.LENGTH_LONG).show();
+                // Notify the user of the installation abortions
+                String sInstallationFailure = String.format(context.getString(R.string.installationFailure), values[0]);
+                Toast.makeText(context, sInstallationFailure, Toast.LENGTH_SHORT).show();
             }
             progress.setProgress(++i);
         }
@@ -437,11 +452,13 @@ public class Commands {
         @Override
         protected void onPostExecute(Void aVoid) {
             progress.dismiss();
+            if (numberOfFrameworks > 4) {
+                Toast.makeText(context, R.string.tooManyFrameworks, Toast.LENGTH_LONG).show();
+            }
             if (delegate != null) {
                 delegate.processFinish();
             }
         }
-
     }
 
     public static int getSortMode(Activity context) {
@@ -471,4 +488,33 @@ public class Commands {
 
     }
 
+    public static class MeasureInstalledOverlays extends AsyncTask<Void, Void, Integer> {
+
+        private int numberOfOverlays = 0;
+        private String overlayPackage;
+
+        public MeasureInstalledOverlays(String overlayPackage) {
+            this.overlayPackage = overlayPackage;
+        }
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+
+            Collection<File> files = FileUtils.listFiles(new File(DeviceSingleton.getInstance().getOverlayFolder()), new String[]{"apk"}, false);
+
+            List<FileBean> fileBeans = new ArrayList<>();
+
+            for (File file : files) {
+                fileBeans.add(new FileBean(file));
+            }
+            for (FileBean fileBean : fileBeans) {
+                String packageName = new SimpleOverlay(fileBean.getFile()).getRelatedPackage();
+                if (packageName.equals(packageName)) {
+                    numberOfOverlays++;
+                }
+            }
+            Log.d("LayersManager", overlayPackage + " overlays installed: " + String.valueOf(numberOfOverlays));
+            return numberOfOverlays;
+        }
+    }
 }
