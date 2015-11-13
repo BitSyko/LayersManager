@@ -12,8 +12,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.bitsyko.liblayers.LayerFile;
-import com.bitsyko.liblayers.NoFileInZipException;
+import com.bitsyko.liblayers.layerfiles.LayerFile;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.DeviceSingleton;
 import com.lovejoy777.rroandlayersmanager.R;
@@ -35,7 +34,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.zip.ZipEntry;
@@ -47,53 +45,6 @@ public class Commands {
 
     //No instances
     private Commands() {
-    }
-
-
-    public static ArrayList<String> RootloadFiles(final Context context, final Activity act, String directory) {
-        ArrayList<String> files = new ArrayList<>();
-        if (RootTools.isAccessGiven()) {
-            try {
-                String line;
-                Process process = Runtime.getRuntime().exec("su");
-                OutputStream stdin = process.getOutputStream();
-                InputStream stderr = process.getErrorStream();
-                InputStream stdout = process.getInputStream();
-
-                stdin.write(("ls -a " + directory + "\n").getBytes());
-
-                stdin.write("exit\n".getBytes());
-                stdin.flush();   //flush stream
-                stdin.close(); //close stream
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(stdout));
-
-                while ((line = br.readLine()) != null) {
-
-                    files.add(line);
-                }
-                br.close();
-                br = new BufferedReader(new InputStreamReader(stderr));
-                while ((line = br.readLine()) != null) {
-                    Log.e("[Error]", line);
-                }
-                process.waitFor();//wait for process to finish
-                process.destroy();
-
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
-            }
-        } else {
-            act.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast toast = Toast.makeText(context, R.string.noRoot, Toast.LENGTH_LONG);
-                    toast.show();
-                }
-            });
-
-        }
-        return files;
     }
 
     public static ArrayList<String> loadFiles(String directory) {
@@ -159,32 +110,6 @@ public class Commands {
         progressDialogReboot.show();
     }
 
-
-    public static InputStream fileFromZip(ZipFile zipFile, String file) throws IOException {
-
-        ZipEntry ze = zipFile.getEntry(file);
-
-        if (ze != null) {
-
-            //First, we're checking if file is in zip
-            InputStream fileInputStream = zipFile.getInputStream(ze);
-
-            if (fileInputStream != null) {
-                Log.d("Found", "File found");
-                return fileInputStream;
-            }
-        }
-
-        for (Enumeration<? extends ZipEntry> zes = zipFile.entries(); zes.hasMoreElements(); ) {
-            ze = zes.nextElement();
-
-            if (ze.getName().equalsIgnoreCase(file.replaceAll(" ", ""))) {
-                return zipFile.getInputStream(ze);
-            }
-        }
-
-        throw new NoFileInZipException("No " + file + " in " + zipFile.getName());
-    }
 
     public static ArrayList<String> fileNamesFromZip(File zip) throws IOException {
 
@@ -424,13 +349,11 @@ public class Commands {
         private AsyncResponse delegate;
         private List<LayerFile> layersToInstall;
         private Context context;
-        private String color;
         private int i = 0;
 
-        public InstallOverlaysBetterWay(List<LayerFile> layersToInstall, String color, Context context, AsyncResponse delegate) {
+        public InstallOverlaysBetterWay(List<LayerFile> layersToInstall, Context context, AsyncResponse delegate) {
             this.layersToInstall = layersToInstall;
             this.context = context;
-            this.color = color;
             this.delegate = delegate;
         }
 
@@ -455,14 +378,7 @@ public class Commands {
             for (LayerFile layerFile : layersToInstall) {
                 try {
 
-                    String filelocation;
-
-                    if (layerFile.isColor()) {
-                        filelocation = RootCommands.getCommandLineString(layerFile.getFile(color).getAbsolutePath());
-                    } else {
-                        filelocation = RootCommands.getCommandLineString(layerFile.getFile().getAbsolutePath());
-                        System.out.println(filelocation);
-                    }
+                    String filelocation = RootCommands.getCommandLineString(layerFile.getFile(context).getAbsolutePath());
 
                     RootCommands.moveRoot(filelocation, DeviceSingleton.getInstance().getOverlayFolder() + "/");
 

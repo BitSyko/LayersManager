@@ -14,7 +14,6 @@ import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 
 public class SettingsActivity extends PreferenceActivity implements
-
         SharedPreferences.OnSharedPreferenceChangeListener {
 
     Boolean showLauncherShortcut = true;
@@ -30,7 +29,7 @@ public class SettingsActivity extends PreferenceActivity implements
         PreferenceManager prefMgr = getPreferenceManager();
         prefMgr.setSharedPreferencesName("myPrefs");
         addPreferencesFromResource(R.xml.settings);
-        Preference switch1 = (Preference)findPreference("switch1");
+        Preference switch1 = findPreference("switch1");
         if (mShowLauncherShortcut()) {
             switch1.setEnabled(false);
             switch1.setSummary(R.string.LauncherIconSummaryDisabled);

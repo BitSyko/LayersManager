@@ -11,7 +11,6 @@ public class LicenceBean extends DeveloperBean {
         this.longDescription = longDescription;
     }
 
-
     public String getLongDescription() {
         return longDescription;
     }
