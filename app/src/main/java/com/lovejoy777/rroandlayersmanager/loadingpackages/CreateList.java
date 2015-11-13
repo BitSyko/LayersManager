@@ -9,8 +9,9 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.bitsyko.liblayers.Layer;
-import com.bitsyko.liblayers.LayerFile;
 import com.bitsyko.liblayers.NoFileInZipException;
+import com.bitsyko.liblayers.layerfiles.ColorOverlay;
+import com.bitsyko.liblayers.layerfiles.LayerFile;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.activities.OverlayDetailActivity;
 import com.lovejoy777.rroandlayersmanager.helper.Helpers;
@@ -40,9 +41,7 @@ public class CreateList extends StoppableAsyncTask<Void, Void, Pair<Set<String>,
     protected void onPreExecute() {
         progress = new ProgressDialog(context);
         progress.setTitle(R.string.generatingList);
-        progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        progress.setMax(layer.getLayersInPackage().size());
-        progress.setProgress(0);
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progress.setCancelable(false);
         progress.show();
     }
@@ -52,44 +51,42 @@ public class CreateList extends StoppableAsyncTask<Void, Void, Pair<Set<String>,
     protected Pair<Set<String>, Set<String>> doInBackground(Void... params) {
 
         Set<String> filesToGreyOut = new HashSet<>();
-        Set<String> filesThatDontExist = new HashSet<>();
         filesToGreyOut.add(layer.getVersionCode());
         Collection<String> packages = Helpers.allPackagesInSystem(context);
         List<LayerFile> layerFiles = layer.getLayersInPackage();
 
 
         for (LayerFile layerFile : layerFiles) {
-            if (layer.getPluginVersion()==3 && layerFile.hasStyles() && !layerFile.isColor()){
-                    publishProgress();
-            }
-            else{
+            //We don't check custom style overlays
+            if (!layerFile.isCustom()) {
 
-                    publishProgress();
+                if (isCancelled() || stop) {
+                    return null;
+                }
 
-                    if (isCancelled() || stop) {
-                        return null;
+                try {
+
+                    if (layerFile.isColor()) {
+                        ((ColorOverlay) layerFile).setColor(layer.getColors().get(0));
+                        layerFile.getFile(context);
+                        ((ColorOverlay) layerFile).setColor(null);
+                    } else {
+                        layerFile.getFile(context);
                     }
 
-                    try {
+                    Log.d("Manifest " + layerFile.getName(), layerFile.getRelatedPackage());
 
-                        if (layerFile.isColor()) {
-                            layerFile.getFile(layer.getColors().get(0));
-                        } else {
-                            layerFile.getFile();
-                        }
-
-                        Log.d("Manifest " + layerFile.getName(), layerFile.getRelatedPackage());
-
-                        if (!packages.contains(layerFile.getRelatedPackage())) {
-                            filesToGreyOut.add(layerFile.getName());
-                        }
-
-                    } catch (IOException | NoFileInZipException e) {
-                        e.printStackTrace();
-                        filesThatDontExist.add(layerFile.getName());
+                    if (!packages.contains(layerFile.getRelatedPackage())) {
+                        filesToGreyOut.add(layerFile.getName());
                     }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    //Never remove files
+                    filesToGreyOut.add(layerFile.getName());
                 }
             }
+        }
         try {
             layer.close();
         } catch (IOException e) {
@@ -98,17 +95,9 @@ public class CreateList extends StoppableAsyncTask<Void, Void, Pair<Set<String>,
 
         SharedPreferences myprefs = context.getSharedPreferences("layersData", Context.MODE_PRIVATE);
 
-
         myprefs.edit().putStringSet(layer.getPackageName(), filesToGreyOut).commit();
-        myprefs.edit().putStringSet(layer.getPackageName() + "_dontExist", filesThatDontExist).commit();
-
 
         return null;
-    }
-
-    @Override
-    protected void onProgressUpdate(Void... values) {
-        progress.incrementProgressBy(1);
     }
 
     @Override

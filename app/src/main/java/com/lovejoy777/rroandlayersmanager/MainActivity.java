@@ -14,7 +14,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         if (!RootTools.isAccessGiven()) {
-
             Toast.makeText(MainActivity.this, R.string.noRoot, Toast.LENGTH_LONG).show();
         }
 

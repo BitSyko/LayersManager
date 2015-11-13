@@ -14,7 +14,7 @@ import android.view.*;
 import android.widget.*;
 
 import com.afollestad.materialcab.MaterialCab;
-import com.bitsyko.liblayers.LayerFile;
+import com.bitsyko.liblayers.layerfiles.SimpleOverlay;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.DeviceSingleton;
 import com.lovejoy777.rroandlayersmanager.R;
@@ -237,7 +237,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
                 TextView summary = new TextView(getActivity());
 
                 check.setText(fileBean.getName());
-                summary.setText(new LayerFile(fileBean.getFile()).getRelatedPackage());
+                summary.setText(new SimpleOverlay(fileBean.getFile()).getRelatedPackage());
 
                 check.setTag(fileBean);
                 check.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);

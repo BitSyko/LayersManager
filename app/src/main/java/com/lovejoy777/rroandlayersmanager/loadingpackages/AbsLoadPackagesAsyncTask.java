@@ -13,8 +13,7 @@ import com.lovejoy777.rroandlayersmanager.interfaces.Callback;
 import com.lovejoy777.rroandlayersmanager.interfaces.StoppableAsyncTask;
 import com.lovejoy777.rroandlayersmanager.views.CheckBoxHolder;
 
-//C extends Void is hack(?) to put Void there
-public abstract class AbsLoadPackagesAsyncTask<A, B, C extends Void> extends StoppableAsyncTask<A, B, C> {
+public abstract class AbsLoadPackagesAsyncTask<A, B, Void> extends StoppableAsyncTask<A, B, Void> {
 
     protected Context context;
     protected CoordinatorLayout cordLayout;
@@ -43,8 +42,6 @@ public abstract class AbsLoadPackagesAsyncTask<A, B, C extends Void> extends Sto
         cardViewCategory1 = (CardView) cordLayout.findViewById(R.id.CardViewCategory1);
         cardViewCategory2 = (CardView) cordLayout.findViewById(R.id.CardViewCategory2);
     }
-
-
 
     @Override
     public void stop() {

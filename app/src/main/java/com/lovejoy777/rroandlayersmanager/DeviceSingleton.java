@@ -1,11 +1,9 @@
 package com.lovejoy777.rroandlayersmanager;
 
-import android.os.Build;
 import android.util.Log;
 
 import com.lovejoy777.rroandlayersmanager.helper.Helpers;
 
-import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.StringUtils;
 
 public class DeviceSingleton {
@@ -28,15 +26,18 @@ public class DeviceSingleton {
 
             boolean vendorDevice = false;
 
-            for (String mountDataLine : mountDataArray) {
+            if (mountDataArray != null) {
 
-                String[] anotherStringArray = StringUtils.split(mountDataLine);
+                for (String mountDataLine : mountDataArray) {
 
-                if (anotherStringArray != null && anotherStringArray.length >= 2 && anotherStringArray[1].equals("/vendor")) {
-                    vendorDevice = true;
-                    break;
+                    String[] anotherStringArray = StringUtils.split(mountDataLine);
+
+                    if (anotherStringArray != null && anotherStringArray.length >= 2 && anotherStringArray[1].equals("/vendor")) {
+                        vendorDevice = true;
+                        break;
+                    }
+
                 }
-
             }
 
             if (vendorDevice) {
