@@ -1,9 +1,6 @@
 package com.bitsyko.liblayers;
 
 import android.content.res.AssetManager;
-import android.os.Bundle;
-import android.util.Log;
-import android.util.Pair;
 
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.helper.AndroidXMLDecompress;
@@ -28,7 +25,6 @@ public class LayerFile {
     private boolean color;
     private String colorName;
     private File file;
-    private List Styles;
     private String fullName;
     private String selectedStyle;
     private int pluginVersion;
@@ -39,9 +35,9 @@ public class LayerFile {
         this.layer = layer;
         this.pluginVersion = pluginVersion;
         //Plugin version 3
-        if (pluginVersion==3){
+        if (pluginVersion == 3) {
             this.fullName = name;
-            this.name = name.replaceAll("\\[.*?\\]","");
+            this.name = name.replaceAll("\\[.*?\\]", "");
         } else {
             this.name = name;
         }
@@ -91,7 +87,6 @@ public class LayerFile {
 
         this.colorName = color;
 
-
         String fileName = name.replaceAll(" ", "");
 
         String tempDir = layer.getCacheDir() + File.separator + layer.getName();
@@ -105,7 +100,7 @@ public class LayerFile {
 
         //Plugin Version 3 // One zip for each Overlay
         File zipFile;
-        if (pluginVersion==3 && hasStyles() && !isColor()){
+        if (pluginVersion == 3 && hasStyles() && !isColor()) {
             //PackName_OverlayName.zip
             zipFile = new File(tempDir + File.separator + layer.getName() + "_" + name + ".zip");
 
@@ -119,7 +114,7 @@ public class LayerFile {
             }
         }
         //Plugin 1 // One zip for each color
-        else{
+        else {
             //We're checking if zip with apk is in temp
             zipFile = new File(tempDir + File.separator + layer.getName() + "_" + color + ".zip");
 
@@ -131,7 +126,6 @@ public class LayerFile {
                 in.close();
 
             }
-
 
 
         }
@@ -150,7 +144,7 @@ public class LayerFile {
         File destFile;
         System.out.println(layer.getName());
         //Plugin Version 3 // One zip for each Overlay
-        if (pluginVersion==3){
+        if (pluginVersion == 3) {
             //We're extracting apk from zip
             zipTempDir = new File(tempDir + File.separator + layer.getName() + "_" + name);
 
@@ -158,19 +152,17 @@ public class LayerFile {
                 zipTempDir.mkdirs();
             }
 
-            if (!isColor() && hasStyles()){
-                destFile = new File(tempDir + File.separator + layer.getName() + "_" + name + File.separator+ selectedStyle+ File.separator + (layer.getName() + "_" + fileName + ".apk").replaceAll(" ", ""));
+            if (!isColor() && hasStyles()) {
+                destFile = new File(tempDir + File.separator + layer.getName() + "_" + name + File.separator + selectedStyle + File.separator + (layer.getName() + "_" + fileName + ".apk").replaceAll(" ", ""));
                 if (!destFile.exists()) {
-                    FileUtils.copyInputStreamToFile(Commands.fileFromZip(zipFile1, getSelectedStyle()+ File.separator +layer.getName() + "_" + fileName + ".apk"), destFile);
+                    FileUtils.copyInputStreamToFile(Commands.fileFromZip(zipFile1, getSelectedStyle() + File.separator + layer.getName() + "_" + fileName + ".apk"), destFile);
                 }
-            } else{
+            } else {
                 destFile = new File(tempDir + File.separator + layer.getName() + "_" + color + File.separator + (layer.getName() + "_" + fileName + ".apk").replaceAll(" ", ""));
                 if (!destFile.exists()) {
                     FileUtils.copyInputStreamToFile(Commands.fileFromZip(zipFile1, layer.getName() + "_" + fileName + ".apk"), destFile);
                 }
             }
-
-
 
 
         }
@@ -190,15 +182,13 @@ public class LayerFile {
                 FileUtils.copyInputStreamToFile(Commands.fileFromZip(zipFile1, layer.getName() + "_" + fileName + ".apk"), destFile);
             }
         }
-        System.out.println("ZipFile: "+zipFile);
-        System.out.println("ZipFile: "+zipFile1);
-        System.out.println("zipTempDir: "+zipTempDir);
-        System.out.println("destFile: "+destFile);
-
+        System.out.println("ZipFile: " + zipFile);
+        System.out.println("ZipFile: " + zipFile1);
+        System.out.println("zipTempDir: " + zipTempDir);
+        System.out.println("destFile: " + destFile);
 
 
         file = destFile;
-
 
 
         return destFile;
@@ -214,7 +204,6 @@ public class LayerFile {
 
     public String getName() {
         return name;
-
     }
 
     public String getNiceName() {
@@ -233,7 +222,7 @@ public class LayerFile {
         List colors = new ArrayList();
         Matcher m = Pattern.compile("\\[([^\\]]+)").matcher(fullName);
         String test;
-        while (m.find()){
+        while (m.find()) {
             test = m.group(1);
             colors = Arrays.asList(test.split(";"));
         }
@@ -242,16 +231,16 @@ public class LayerFile {
         return colors;
     }
 
-    public boolean hasStyles(){
+    public boolean hasStyles() {
         boolean mhasStyles = fullName.contains("[");
         return mhasStyles;
     }
 
-    public void setSelectedStyle(String color){
+    public void setSelectedStyle(String color) {
         this.selectedStyle = color;
     }
 
-    public String getSelectedStyle(){
+    public String getSelectedStyle() {
         return selectedStyle;
     }
 }

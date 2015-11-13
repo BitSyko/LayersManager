@@ -2,13 +2,19 @@ package com.lovejoy777.rroandlayersmanager.loadingpackages;
 
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.FrameLayout;
+import android.widget.CompoundButton;
+import android.widget.Spinner;
 import android.widget.TableRow;
 
+import com.bitsyko.liblayers.Color;
 import com.bitsyko.liblayers.Layer;
-import com.bitsyko.liblayers.LayerFile;
+import com.bitsyko.liblayers.layerfiles.CustomStyleOverlay;
+import com.bitsyko.liblayers.layerfiles.LayerFile;
+import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.interfaces.Callback;
 import com.lovejoy777.rroandlayersmanager.views.CheckBoxHolder;
 
@@ -48,20 +54,36 @@ public class ShowAllPackagesFromLayer extends AbsLoadPackagesAsyncTask<Void, Lay
 
         for (LayerFile layerFile : values) {
 
-            TableRow row = new TableRow(context);
-            row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            TableRow row = (TableRow) inflater.inflate(R.layout.tablerow_detailedview, null);
 
-            CheckBox check = new CheckBox(context);
+            final CheckBox check = (CheckBox) row.findViewById(R.id.CheckBox);
+
+            check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    checkBoxHolderCallback.onClick(check, isChecked);
+                }
+            });
 
             check.setText(layerFile.getNiceName());
             check.setTag(layerFile);
 
-            FrameLayout frameLayout = new CheckBoxHolder(context, check, checkBoxHolderCallback);
+            if (layerFile.isCustom()) {
 
-            frameLayout.addView(check);
-            row.addView(frameLayout);
+                Spinner spinner = (Spinner) row.findViewById(R.id.Spinner);
+                spinner.setVisibility(View.VISIBLE);
 
-            if (layerFile.isColor()) {
+                List<Color> styles = ((CustomStyleOverlay) layerFile).getStyles();
+
+                ArrayAdapter adapter = new ArrayAdapter<>(context, R.layout.simple_spinner_item_align_right, ((CustomStyleOverlay) layerFile).getStyles());
+
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(adapter);
+
+                linearLayoutCategory1.addView(row);
+
+            } else if (layerFile.isColor()) {
                 linearLayoutCategory2.addView(row);
             } else {
                 linearLayoutCategory1.addView(row);
@@ -75,23 +97,14 @@ public class ShowAllPackagesFromLayer extends AbsLoadPackagesAsyncTask<Void, Lay
 
     }
 
-    /*
     @Override
-    protected void onPostExecute(Void aVoid) {
+    protected void onPostExecute(Void nothing) {
+        super.onPostExecute(nothing);
 
-        //No styleSpecific Overlays
-        if (linearLayoutCategory2.getChildCount() == 0) {
-            cardViewCategory2.setVisibility(View.GONE);
-        }
-        //No normal Overlays
-        if (linearLayoutCategory1.getChildCount() == 0) {
-            cardViewCategory1.setVisibility(View.GONE);
-        }
 
-        linearLayoutCategory1.invalidate();
-        linearLayoutCategory2.invalidate();
-
+        Spinner spinner = (Spinner) cardViewCategory2.findViewById(R.id.Tv_Category2Spinner);
+        ArrayAdapter adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, layer.getColors());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
     }
-*/
-
 }

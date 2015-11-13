@@ -16,7 +16,7 @@ import com.lovejoy777.rroandlayersmanager.views.CheckBoxHolder;
 
 import java.util.List;
 import java.util.Set;
-
+/*
 //When we have list already generated
 public class ShowPackagesFromList extends AbsLoadPackagesAsyncTask<Void, Pair<LayerFile, Boolean>, Void> {
 
@@ -95,23 +95,5 @@ public class ShowPackagesFromList extends AbsLoadPackagesAsyncTask<Void, Pair<La
 
     }
 
-    /*
-    @Override
-    protected void onPostExecute(Void aVoid) {
-
-        //No styleSpecific Overlays
-        if (linearLayoutCategory2.getChildCount() == 0) {
-            cardViewCategory2.setVisibility(View.GONE);
-        }
-        //No normal Overlays
-        if (linearLayoutCategory1.getChildCount() == 0) {
-            cardViewCategory1.setVisibility(View.GONE);
-        }
-
-        linearLayoutCategory1.invalidate();
-        linearLayoutCategory2.invalidate();
-
-    }
-*/
-
 }
+*/

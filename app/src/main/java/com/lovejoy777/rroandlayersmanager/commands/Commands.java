@@ -12,8 +12,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.bitsyko.liblayers.LayerFile;
 import com.bitsyko.liblayers.NoFileInZipException;
+import com.bitsyko.liblayers.layerfiles.LayerFile;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.DeviceSingleton;
 import com.lovejoy777.rroandlayersmanager.R;
@@ -424,13 +424,11 @@ public class Commands {
         private AsyncResponse delegate;
         private List<LayerFile> layersToInstall;
         private Context context;
-        private String color;
         private int i = 0;
 
-        public InstallOverlaysBetterWay(List<LayerFile> layersToInstall, String color, Context context, AsyncResponse delegate) {
+        public InstallOverlaysBetterWay(List<LayerFile> layersToInstall, Context context, AsyncResponse delegate) {
             this.layersToInstall = layersToInstall;
             this.context = context;
-            this.color = color;
             this.delegate = delegate;
         }
 
@@ -455,14 +453,7 @@ public class Commands {
             for (LayerFile layerFile : layersToInstall) {
                 try {
 
-                    String filelocation;
-
-                    if (layerFile.isColor()) {
-                        filelocation = RootCommands.getCommandLineString(layerFile.getFile(color).getAbsolutePath());
-                    } else {
-                        filelocation = RootCommands.getCommandLineString(layerFile.getFile().getAbsolutePath());
-                        System.out.println(filelocation);
-                    }
+                    String filelocation = RootCommands.getCommandLineString(layerFile.getFile(context).getAbsolutePath());
 
                     RootCommands.moveRoot(filelocation, DeviceSingleton.getInstance().getOverlayFolder() + "/");
 
