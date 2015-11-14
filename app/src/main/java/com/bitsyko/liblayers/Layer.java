@@ -71,7 +71,12 @@ public class Layer implements Closeable {
         this.packageName = packageName;
         this.resources = resources;
         this.applicationInfo = applicationInfo;
-        this.context = context.getApplicationContext();
+
+        if (context != null) {
+            this.context = context.getApplicationContext();
+        } else {
+            this.context = null;
+        }
     }
 
     public static Layer layerFromPackageName(String packageName, Context context)
