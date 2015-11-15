@@ -351,14 +351,11 @@ public class Commands {
         private List<LayerFile> layersToInstall;
         private Context context;
         private int i = 0;
-        private int numberOfFrameworks = 0;
-        private boolean maxFrameworkOverlaysReached = false;
 
-        public InstallOverlaysBetterWay(List<LayerFile> layersToInstall, Context context, AsyncResponse delegate, Integer numberOfFrameworks) {
+        public InstallOverlaysBetterWay(List<LayerFile> layersToInstall, Context context, AsyncResponse delegate) {
             this.layersToInstall = layersToInstall;
             this.context = context;
             this.delegate = delegate;
-            this.numberOfFrameworks = numberOfFrameworks;
         }
 
         @Override
@@ -384,21 +381,12 @@ public class Commands {
 
                     String filelocation = RootCommands.getCommandLineString(layerFile.getFile(context).getAbsolutePath());
 
-                    // Notify the user of >4 framework overlays
-                    if (layerFile.getRelatedPackage().equals("android")) {
-                        numberOfFrameworks++;
-                        if (numberOfFrameworks > 4) {
-                            publishProgress(layerFile.getNiceName());
-                            continue;
-                        }
-                    }
-
                     RootCommands.moveRoot(filelocation, DeviceSingleton.getInstance().getOverlayFolder() + "/");
 
                     publishProgress();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.e("Exception", e.getMessage());
+                    publishProgress(layerFile.getName());
                 }
 
             }
@@ -441,7 +429,7 @@ public class Commands {
 
         @Override
         protected void onProgressUpdate(String... values) {
-            if (values.length != 0) {
+            if (values.length != 0 && !StringUtils.isEmpty(values[0])) {
                 // Notify the user of the installation abortions
                 String sInstallationFailure = String.format(context.getString(R.string.installationFailure), values[0]);
                 Toast.makeText(context, sInstallationFailure, Toast.LENGTH_SHORT).show();
@@ -452,7 +440,7 @@ public class Commands {
         @Override
         protected void onPostExecute(Void aVoid) {
             progress.dismiss();
-            if (numberOfFrameworks > 4) {
+            if (numberOfInstalledOverlays("android") > 4) {
                 Toast.makeText(context, R.string.tooManyFrameworks, Toast.LENGTH_LONG).show();
             }
             if (delegate != null) {
@@ -488,33 +476,21 @@ public class Commands {
 
     }
 
-    public static class MeasureInstalledOverlays extends AsyncTask<Void, Void, Integer> {
+    private static int numberOfInstalledOverlays(String targetPackage) {
 
-        private int numberOfOverlays = 0;
-        private String overlayPackage;
+        Collection<File> files = FileUtils.listFiles(new File(DeviceSingleton.getInstance().getOverlayFolder()), new String[]{"apk"}, false);
 
-        public MeasureInstalledOverlays(String overlayPackage) {
-            this.overlayPackage = overlayPackage;
+        int numberOfOverlays = 0;
+
+        for (File file : files) {
+            String packageName = new SimpleOverlay(file).getRelatedPackage();
+            if (targetPackage.equals(packageName)) {
+                numberOfOverlays++;
+            }
         }
 
-        @Override
-        protected Integer doInBackground(Void... params) {
 
-            Collection<File> files = FileUtils.listFiles(new File(DeviceSingleton.getInstance().getOverlayFolder()), new String[]{"apk"}, false);
-
-            List<FileBean> fileBeans = new ArrayList<>();
-
-            for (File file : files) {
-                fileBeans.add(new FileBean(file));
-            }
-            for (FileBean fileBean : fileBeans) {
-                String packageName = new SimpleOverlay(fileBean.getFile()).getRelatedPackage();
-                if (packageName.equals(packageName)) {
-                    numberOfOverlays++;
-                }
-            }
-            Log.d("LayersManager", overlayPackage + " overlays installed: " + String.valueOf(numberOfOverlays));
-            return numberOfOverlays;
-        }
+        return numberOfOverlays;
     }
+
 }

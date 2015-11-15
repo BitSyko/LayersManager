@@ -608,21 +608,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
         Log.d("Choosed color", choosedStyle);
 
-        //Grab the number of install framework overlays before you try to install anything
-        Commands.MeasureInstalledOverlays installedFrameworks = new Commands.MeasureInstalledOverlays("android");
-        installedFrameworks.execute();
-        int numberOfFrameworks = 0;
-        try {
-            numberOfFrameworks = installedFrameworks.get();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }catch (ExecutionException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        new Commands.InstallOverlaysBetterWay(layersToInstall, this, this, numberOfFrameworks).execute();
+        new Commands.InstallOverlaysBetterWay(layersToInstall, this, this).execute();
     }
 
     public void processFinish() {

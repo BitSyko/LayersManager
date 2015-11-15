@@ -109,7 +109,7 @@
     <string name="installed">Installed selected Overlays</string>
     <string name="installing">Installing</string>
     <string name="installationFailure">\"%1$s\": Installation aborted!</string>
-    <string name="tooManyFrameworks">CAUTION! You tried to install more than 4 framework overlays! Their installation was stopped to prevent a bootloop!</string>
+    <string name="tooManyFrameworks">CAUTION! You tried to install more than 4 framework overlays! Please remove some of them to prevent a bootloop!</string>
 
     <!-- UnInstall Fragment -->
     <string name="UninstallOverlays">Uninstall Overlays</string>

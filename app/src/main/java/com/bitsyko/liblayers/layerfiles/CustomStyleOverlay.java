@@ -70,6 +70,8 @@ public class CustomStyleOverlay extends LayerFile {
             return null;
         }
 
+        file = apkFile;
+
         return apkFile;
     }
 }
