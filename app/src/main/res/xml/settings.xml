@@ -17,6 +17,12 @@
             android:summary="@string/SettingsHideOverlaysDetail"
             android:title="@string/SettingsHideOverlays" />
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="preventBootloops"
+            android:summary="@string/SettingsFrameworkBootloopDetail"
+            android:title="@string/SettingsFrameworkBootloopTitle" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

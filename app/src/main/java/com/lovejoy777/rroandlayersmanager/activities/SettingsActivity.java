@@ -20,7 +20,6 @@ public class SettingsActivity extends PreferenceActivity implements
     String settingsPackageName= "com.android.settings";
     String settingsLayersDrawableName = "ic_bitsyko_layers";
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

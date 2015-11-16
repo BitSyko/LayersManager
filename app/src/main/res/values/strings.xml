@@ -109,7 +109,8 @@
     <string name="installed">Installed selected Overlays</string>
     <string name="installing">Installing</string>
     <string name="installationFailure">\"%1$s\": Installation aborted!</string>
-    <string name="tooManyFrameworks">CAUTION! You tried to install more than 4 framework overlays! Please remove some of them to prevent a bootloop!</string>
+    <string name="tooManyFrameworksAbort">CAUTION! You tried to install more than 4 framework overlays! Their installation was stopped to prevent a bootloop!</string>
+    <string name="tooManyFrameworksNotify">CAUTION! You installed MORE THAN 4 framework overlays! Please remove some of them to prevent a bootloop!</string>
 
     <!-- UnInstall Fragment -->
     <string name="UninstallOverlays">Uninstall Overlays</string>
@@ -160,6 +161,8 @@
     <string name="launcherIconRevived">Launcher icon is back</string>
     <string name="SettingsHideOverlays">Hide unnecessary Overlays</string>
     <string name="SettingsHideOverlaysDetail">Disable Overlays for not installed Apps</string>
+    <string name="SettingsFrameworkBootloopTitle">Prevent bootloops</string>
+    <string name="SettingsFrameworkBootloopDetail">Installation of more than 4 framework overlays is prohibited. Disabling this option can result in a bootloop</string>
 
     <!-- Dialogs -->
 

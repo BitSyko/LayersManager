@@ -17,7 +17,6 @@ import com.bitsyko.liblayers.layerfiles.SimpleOverlay;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.DeviceSingleton;
 import com.lovejoy777.rroandlayersmanager.R;
-import com.lovejoy777.rroandlayersmanager.beans.FileBean;
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.CommandCapture;
@@ -351,6 +350,8 @@ public class Commands {
         private List<LayerFile> layersToInstall;
         private Context context;
         private int i = 0;
+        private int numberOfFrameworks = numberOfInstalledOverlays("android");
+        private boolean preventBootloops = true;
 
         public InstallOverlaysBetterWay(List<LayerFile> layersToInstall, Context context, AsyncResponse delegate) {
             this.layersToInstall = layersToInstall;
@@ -376,10 +377,22 @@ public class Commands {
             // MOUNT /SYSTEM RW
             remountSystem("rw");
 
+            preventBootloops = context.getSharedPreferences("myPrefs", context.MODE_PRIVATE)
+                    .getBoolean("preventBootloops", true);
+
             for (LayerFile layerFile : layersToInstall) {
                 try {
 
                     String filelocation = RootCommands.getCommandLineString(layerFile.getFile(context).getAbsolutePath());
+
+                    // Notify the user of >4 framework overlays
+                    if (layerFile.getRelatedPackage().equals("android") && preventBootloops ) {
+                        numberOfFrameworks++;
+                        if (numberOfFrameworks > 4) {
+                            publishProgress(layerFile.getNiceName());
+                            continue;
+                        }
+                    }
 
                     RootCommands.moveRoot(filelocation, DeviceSingleton.getInstance().getOverlayFolder() + "/");
 
@@ -440,8 +453,12 @@ public class Commands {
         @Override
         protected void onPostExecute(Void aVoid) {
             progress.dismiss();
-            if (numberOfInstalledOverlays("android") > 4) {
-                Toast.makeText(context, R.string.tooManyFrameworks, Toast.LENGTH_LONG).show();
+            if ((numberOfFrameworks > 4) | ((numberOfInstalledOverlays("android")) > 4)) {
+                if (preventBootloops) {
+                    Toast.makeText(context, R.string.tooManyFrameworksAbort, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(context, R.string.tooManyFrameworksNotify, Toast.LENGTH_LONG).show();
+                }
             }
             if (delegate != null) {
                 delegate.processFinish();
@@ -488,7 +505,6 @@ public class Commands {
                 numberOfOverlays++;
             }
         }
-
 
         return numberOfOverlays;
     }
