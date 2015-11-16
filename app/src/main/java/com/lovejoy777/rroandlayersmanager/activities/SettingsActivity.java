@@ -81,10 +81,12 @@ public class SettingsActivity extends PreferenceActivity implements
         SharedPreferences myPrefs = this.getSharedPreferences("myPrefs", MODE_PRIVATE);
         Boolean HideLauncherIcon = myPrefs.getBoolean("switch1", false);
 
-        if (HideLauncherIcon) {
-            Commands.killLauncherIcon(this);
-        } else {
-            Commands.ReviveLauncherIcon(this);
+        if (key.equals("switch1")) {
+            if (HideLauncherIcon) {
+                Commands.killLauncherIcon(this);
+            } else {
+                Commands.ReviveLauncherIcon(this);
+            }
         }
     }
 
