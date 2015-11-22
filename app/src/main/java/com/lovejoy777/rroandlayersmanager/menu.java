@@ -1,11 +1,9 @@
 package com.lovejoy777.rroandlayersmanager;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.VoiceInteractor;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -15,16 +13,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.activities.*;
@@ -32,7 +25,6 @@ import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.fragments.*;
 import com.rubengees.introduction.IntroductionActivity;
 import com.rubengees.introduction.IntroductionBuilder;
-import com.rubengees.introduction.IntroductionConfiguration;
 import com.rubengees.introduction.entity.Option;
 import com.rubengees.introduction.entity.Slide;
 import com.stericson.RootTools.RootTools;
@@ -68,7 +60,7 @@ public class menu extends AppCompatActivity {
         if (!tutorialShown) {
             loadTutorial(this);
         }else{
-            changeFragment(1, 0);
+            changeFragment(1);
         }
     }
 
@@ -119,7 +111,7 @@ public class menu extends AppCompatActivity {
                     myprefs.edit().putBoolean("disableNotInstalledApps",true).commit();
                 }
                 PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("tutorialShown", true).commit();
-                changeFragment(1, 0);
+                changeFragment(1);
 
             }
         }else{
@@ -154,7 +146,7 @@ public class menu extends AppCompatActivity {
             case android.R.id.home:
                 Fragment currentFragment = menu.this.getFragmentManager().findFragmentById(R.id.fragment_container);
                 if (currentFragment instanceof InstallFragment) {
-                    changeFragment(1, 1);
+                    changeFragment(1);
                 } else {
                     mDrawerLayout.openDrawer(GravityCompat.START);
                 }
@@ -171,34 +163,28 @@ public class menu extends AppCompatActivity {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         mDrawerLayout.closeDrawers();
-                        menuItem.setChecked(true);
                         Bundle bndlanimation =
                                 ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
                         int id = menuItem.getItemId();
                         switch (id) {
+                            //Home
                             case R.id.nav_home:
-                                changeFragment(1, 0);
+                                menuItem.setChecked(true);
+                                changeFragment(1);
                                 break;
-                            case R.id.nav_about:
-                                Intent about = new Intent(menu.this, AboutActivity.class);
-                                startActivity(about, bndlanimation);
-                                break;
+                            //Uninstall
                             case R.id.nav_delete:
-                                changeFragment(2, 0);
+                                menuItem.setChecked(true);
+                                changeFragment(2);
                                 break;
-                            case R.id.nav_tutorial:
-                                Intent tutorial = new Intent(menu.this, DetailedTutorialActivity.class);
-                                startActivity(tutorial, bndlanimation);
-                                break;
+                            //Backup & Restore
                             case R.id.nav_restore:
-                                changeFragment(3, 0);
-                                getSupportActionBar().setElevation(0);
-                                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_menu);
-                                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+                                menuItem.setChecked(true);
+                                changeFragment(3);
                                 break;
+                            //Showcase
                             case R.id.nav_showcase:
-                                boolean installed = appInstalledOrNot("com.lovejoy777.showcase");
+                                boolean installed = Commands.appInstalledOrNot(menu.this,"com.lovejoy777.showcase");
                                 if (installed) {
                                     //This intent will help you to launch if the package is already installed
                                     Intent intent = new Intent();
@@ -208,15 +194,26 @@ public class menu extends AppCompatActivity {
                                 } else {
                                     Toast.makeText(menu.this, "Please install the layers showcase plugin", Toast.LENGTH_LONG).show();
                                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.lovejoy777.showcase")), bndlanimation);
-                                    //System.out.println("App is currently not installed on your phone");
                                     break;
                                 }
+                            //PlayStore
+                            case R.id.nav_playStore:
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/search?q=Layers+Theme&c=apps&docType=1&sp=CAFiDgoMTGF5ZXJzIFRoZW1legIYAIoBAggB:S:ANO1ljK_ZAY")), bndlanimation);
+                                break;
+                            //Tutorial
+                            case R.id.nav_tutorial:
+                                Intent tutorial = new Intent(menu.this, DetailedTutorialActivity.class);
+                                startActivity(tutorial, bndlanimation);
+                                break;
+                            //About
+                            case R.id.nav_about:
+                                Intent about = new Intent(menu.this, AboutActivity.class);
+                                startActivity(about, bndlanimation);
+                                break;
+                            //Settings
                             case R.id.nav_settings:
                                 Intent settings = new Intent(menu.this, SettingsActivity.class);
                                 startActivity(settings, bndlanimation);
-                                break;
-                            case R.id.nav_playStore:
-                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/search?q=Layers+Theme&c=apps&docType=1&sp=CAFiDgoMTGF5ZXJzIFRoZW1legIYAIoBAggB:S:ANO1ljK_ZAY")), bndlanimation);
                                 break;
                         }
                         return false;
@@ -224,7 +221,7 @@ public class menu extends AppCompatActivity {
                 });
     }
 
-    public void changeFragment(int position, int mode) {
+    public void changeFragment(int position) {
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         Fragment fragment = null;
         FragmentManager fragmentManager = getFragmentManager();
@@ -268,17 +265,7 @@ public class menu extends AppCompatActivity {
     }
 
 
-    private boolean appInstalledOrNot(String uri) {
-        PackageManager pm = getPackageManager();
-        boolean app_installed;
-        try {
-            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
-            app_installed = true;
-        } catch (PackageManager.NameNotFoundException e) {
-            app_installed = false;
-        }
-        return app_installed;
-    }
+
 
 
     private void createImportantDirectories() {
@@ -335,5 +322,4 @@ public class menu extends AppCompatActivity {
 
         super.onBackPressed();
     }
-
 }
