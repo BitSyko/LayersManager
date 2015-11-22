@@ -27,7 +27,6 @@
                 android:id="@+id/cardList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
                 android:layout_below="@+id/toolbar"/>
         </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -41,7 +40,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/mediumMargin"
         android:clickable="true"
         android:scaleType="center"
         android:src="@drawable/ic_drawer_install"

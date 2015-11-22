@@ -18,7 +18,7 @@
     <Spinner
         android:id="@+id/Spinner"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:gravity="end"
         android:visibility="gone"/>
 

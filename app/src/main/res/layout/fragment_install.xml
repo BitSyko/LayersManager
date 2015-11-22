@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
     android:id="@+id/main_content3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="56dp"
-
+    android:layout_marginTop="@dimen/toolbarHeight"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -37,10 +36,11 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/horizontalScrollView3"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp">
+            android:layout_marginBottom="@dimen/smallMargin"
+            android:layout_marginEnd="@dimen/smallMargin"
+            android:layout_marginStart="@dimen/smallMargin"
+            android:layout_marginTop="@dimen/smallMargin"
+            card_view:cardElevation="@dimen/cardElevation">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -55,7 +55,7 @@
                     android:layout_marginTop="200dp"
                     android:gravity="center"
                     android:text="@string/emptydirectory"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/textSizeSubheading"
                     android:visibility="invisible"/>
 
                 <android.support.v7.widget.RecyclerView
@@ -77,7 +77,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_gravity="bottom|end"
-                android:layout_margin="15dp"
+                android:layout_margin="@dimen/mediumMargin"
                 android:src="@drawable/ic_drawer_install"
                 android:tint="@color/fab_tint"
                 app:elevation="@dimen/design_fab_elevation"/>

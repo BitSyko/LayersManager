@@ -9,12 +9,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:paddingStart="8dp"
-        android:text=""
-        android:textSize="17sp"/>
+        android:layout_marginBottom="@dimen/smallMargin"
+        android:layout_marginStart="@dimen/mediumMargin"
+        android:layout_marginEnd="@dimen/mediumMargin"
+        android:layout_marginTop="@dimen/smallMargin"
+        android:paddingStart="@dimen/smallMargin"
+        android:text="CheckBox Text"
+        android:textSize="@dimen/textSizeSubheading"/>
 </RelativeLayout>
 
 

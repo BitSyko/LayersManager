@@ -10,11 +10,11 @@
         android:layout_height="48dp"
         android:background="@drawable/ripplewhite"
         android:gravity="center_vertical"
-        android:paddingStart="16dp"
-        android:text="@string/niklasschnettler"
+        android:paddingStart="@dimen/mediumMargin"
+        android:text="Backup Name"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
         android:textColor="@color/textColorPrimary"
-        android:textSize="16sp"/>
+        android:textSize="@dimen/textSizeSubheading"/>
 
 
 </TableLayout>

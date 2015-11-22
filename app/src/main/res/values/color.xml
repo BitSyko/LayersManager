@@ -22,6 +22,7 @@
     <color name="transparent">#00000000</color>
     <color name="background">#ffffffff</color>
     <color name="card_background">#fffafafa</color>
+
     <color name="tutorial_background_1">#ff00BCD4</color>
     <color name="tutorial_background_2">#ff4CAF50</color>
     <color name="tutorial_background_3">#ff5C6BC0</color>
@@ -31,6 +32,5 @@
 
     <!-- other colors -->
     <color name="white">#ffffff</color>
-    <color name="backup_restore_tint">#727272</color>
     <color name="fab_tint">#ffffff</color>
 </resources>

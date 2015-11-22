@@ -27,6 +27,7 @@ public class DetailedTutorialActivity extends AppCompatActivity {
 
         // Handle Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar5);
+        toolbar.setTitle(R.string.instructionstitle);
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
         setSupportActionBar(toolbar);
 

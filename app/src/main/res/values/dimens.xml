@@ -7,4 +7,21 @@
     <dimen name="first_keyline">16dp</dimen>
     <dimen name="second_keyline">72dp</dimen>
     <dimen name="toolbar_h_padding">4dp</dimen>
+
+    <dimen name="smallMargin">8dp</dimen>
+    <dimen name="mediumMargin">16dp</dimen>
+
+    <dimen name="cardElevation">5dp</dimen>
+    <dimen name="toolbarElevation">5dp</dimen>
+
+    <dimen name="toolbarHeight">56dp</dimen>
+
+    <dimen name="layerIconSize">64dp</dimen>
+    <dimen name="avatarSize">40dp</dimen>
+
+    <!-- Text Sizes -->
+    <dimen name="textSizeSubheading">16sp</dimen>
+    <dimen name="textSizeBody">14sp</dimen>
+    <dimen name="textSizeTitle">20sp</dimen>
+    <dimen name="textSizeDisplay1">45sp</dimen>
 </resources>

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
@@ -19,13 +18,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.Pair;
-import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,8 +32,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TableRow;
@@ -250,10 +244,10 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
     private void receiveAndUseData() {
 
-        TextView tv_description = (TextView) cordLayout.findViewById(R.id.HeX1);
+        TextView tv_description = (TextView) cordLayout.findViewById(R.id.tv_description);
         tv_description.setText(layer.getDescription());
 
-        TextView tv_whatsNew = (TextView) cordLayout.findViewById(R.id.tv_whatsNew);
+        TextView tv_whatsNew = (TextView) cordLayout.findViewById(R.id.tv_whatsnew);
         tv_whatsNew.setText(layer.getWhatsNew());
 
         CollapsingToolbarLayout collapsingToolbar =

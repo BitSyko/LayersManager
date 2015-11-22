@@ -1,30 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-
-    >
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar4"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="?android:attr/colorPrimary"
-        android:elevation="5dp"
-        android:gravity="bottom"
-        android:minHeight="?android:attr/actionBarSize"
-        tools:context="com.sh4dow.hex_layerstheme.activities.AboutActivity"/>
+        android:background="@color/primary"
+        android:elevation="@dimen/toolbarElevation"
+        android:gravity="bottom"/>
 
     <TextView
         android:id="@+id/tv_AppName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imVie_AppLogo"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:elevation="5dp"
+        android:elevation="@dimen/toolbarElevation"
         android:text="@string/layersmanager"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:textColor="@color/actionbar_text_color"/>
@@ -35,8 +28,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_AppName"
         android:layout_centerHorizontal="true"
-        android:elevation="5dp"
-        android:text=""
+        android:elevation="@dimen/toolbarElevation"
+        android:text="App Version"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         android:textColor="@color/actionbar_text_secondary_color"/>
 
@@ -46,8 +39,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar4"
         android:fillViewport="true"
-
         android:scrollbars="none"/>
-
 
 </RelativeLayout>
