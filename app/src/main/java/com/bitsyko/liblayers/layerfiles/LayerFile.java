@@ -97,9 +97,12 @@ public abstract class LayerFile implements Comparable<LayerFile> {
 
         Matcher matcher = pattern.matcher(AndroidXMLDecompress.decompressXML(array));
 
-        matcher.find();
+        if(matcher.find()) {
+            return matcher.group(1);
+        } else {
+            return "Can't find related package";
+        }
 
-        return matcher.group(1);
 
     }
 
