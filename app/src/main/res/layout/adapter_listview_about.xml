@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/mediumMargin"
                 android:text="Description"
-                android:textColor="@color/text_color_secondary"
+                android:textColor="@color/textColorSecondary"
                 android:textSize="@dimen/textSizeBody"
                 android:textStyle="normal"/>
         </LinearLayout>

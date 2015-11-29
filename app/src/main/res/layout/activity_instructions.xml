@@ -74,7 +74,7 @@
                         android:layout_marginTop="12dp"
                         android:elevation="@dimen/cardElevation"
                         android:text="@string/instructionscard1"
-                        android:textColor="@color/text_color_secondary"/>
+                        android:textColor="@color/textColorSecondary"/>
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -119,7 +119,7 @@
                         android:layout_marginTop="12dp"
                         android:elevation="@dimen/cardElevation"
                         android:text="@string/instructionscard2"
-                        android:textColor="@color/text_color_secondary"/>
+                        android:textColor="@color/textColorSecondary"/>
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -166,7 +166,7 @@
                         android:layout_marginTop="12dp"
                         android:elevation="5dp"
                         android:text="@string/instructionscard3"
-                        android:textColor="@color/text_color_secondary"/>
+                        android:textColor="@color/textColorSecondary"/>
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -213,7 +213,7 @@
                         android:layout_marginTop="12dp"
                         android:elevation="5dp"
                         android:text="@string/instructionscard4"
-                        android:textColor="@color/text_color_secondary"/>
+                        android:textColor="@color/textColorSecondary"/>
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -259,7 +259,7 @@
                         android:layout_marginTop="12dp"
                         android:elevation="5dp"
                         android:text="@string/instructionscard5"
-                        android:textColor="@color/text_color_secondary"/>
+                        android:textColor="@color/textColorSecondary"/>
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -306,7 +306,7 @@
                         android:layout_marginTop="12dp"
                         android:elevation="5dp"
                         android:text="@string/instructionscard6"
-                        android:textColor="@color/text_color_secondary"/>
+                        android:textColor="@color/textColorSecondary"/>
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>

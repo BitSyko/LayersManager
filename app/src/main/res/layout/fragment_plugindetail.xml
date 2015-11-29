@@ -131,7 +131,7 @@
                             android:animateLayoutChanges="true"
                             android:elevation="@dimen/cardElevation"
                             android:text="NEW THINGS"
-                            android:textColor="@color/text_color_secondary"/>
+                            android:textColor="@color/textColorSecondary"/>
 
                     </LinearLayout>
                 </android.support.v7.widget.CardView>

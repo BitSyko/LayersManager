@@ -10,18 +10,23 @@
 
     <!-- Text colors -->
     <color name="textColorPrimary">#ff212121</color>
-    <color name="text_color_inverse">#ffffffff</color>
-    <color name="text_color_secondary">#ff727272</color>
+    <color name="textColorInverse">@color/text_color_inverse</color>
+    <color name="textColorSecondary">@color/text_color_secondary</color>
     <color name="actionbar_text_color">#ffffffff</color>
     <color name="actionbar_text_secondary_color">#ffffffff</color>
     <color name="tutorial_text_primary_color">#ffffffff</color>
     <color name="tutorial_text_secondary_color">#ffffffff</color>
+
+    <!-- OLD REMOVE SOON -->
+    <color name="text_color_inverse">#ffffffff</color>
+    <color name="text_color_secondary">#ff727272</color>
 
 
     <!-- Backgrounds -->
     <color name="transparent">#00000000</color>
     <color name="background">#ffffffff</color>
     <color name="card_background">#fffafafa</color>
+    <color name="navigationDrawerBackground">#ffffffff</color>
 
     <color name="tutorial_background_1">#ff00BCD4</color>
     <color name="tutorial_background_2">#ff4CAF50</color>

@@ -3,12 +3,14 @@
     android:id="@+id/main_content4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center">
+        android:gravity="center"
+        >
 
         <android.support.v7.widget.CardView
             android:layout_width="fill_parent"
@@ -17,7 +19,7 @@
             android:layout_marginEnd="@dimen/smallMargin"
             android:layout_marginStart="@dimen/smallMargin"
             android:layout_marginTop="72dp"
-            android:background="@color/card_background"
+            card_view:cardBackgroundColor="@color/card_background"
             card_view:cardElevation="@dimen/cardElevation">
 
             <RelativeLayout
@@ -33,7 +35,7 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
                     android:src="@drawable/ic_restore"
-                    android:tint="@color/text_color_secondary"
+                    android:tint="@color/textColorSecondary"
                     android:visibility="invisible"/>
 
                 <TextView

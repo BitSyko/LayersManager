@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/toolbarHeight"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -40,7 +41,8 @@
             android:layout_marginEnd="@dimen/smallMargin"
             android:layout_marginStart="@dimen/smallMargin"
             android:layout_marginTop="@dimen/smallMargin"
-            card_view:cardElevation="@dimen/cardElevation">
+            card_view:cardElevation="@dimen/cardElevation"
+            card_view:cardBackgroundColor="@color/card_background">
 
             <RelativeLayout
                 android:layout_width="match_parent"

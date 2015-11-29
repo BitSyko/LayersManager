@@ -37,7 +37,7 @@
         <item name="android:colorPrimaryDark">@color/primary_dark</item>
         <item name="android:colorAccent">@color/accent</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
-        <item name="android:textColorSecondary">@color/text_color_secondary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
         <item name="android:textColor">@color/textColorPrimary</item>
         <item name="android:windowBackground">@color/background</item>
         <item name="android:divider">@null</item>

@@ -9,7 +9,8 @@
     android:layout_marginTop="@dimen/smallMargin"
     android:layout_marginBottom="@dimen/smallMargin"
     android:clickable="true"
-    card_view:elevation="@dimen/cardElevation">
+    card_view:elevation="@dimen/cardElevation"
+    card_view:cardBackgroundColor="@color/card_background">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -47,7 +48,7 @@
             android:layout_marginBottom="12dp"
             android:gravity="center_vertical"
             android:text="Subtitle"
-            android:textColor="@color/text_color_secondary"
+            android:textColor="@color/textColorSecondary"
             android:textSize="@dimen/textSizeBody"/>
 
     </RelativeLayout>

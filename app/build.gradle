@@ -3,14 +3,14 @@ apply plugin: 'com.github.triplet.play'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion '23.0.2'
 
     defaultConfig {
         applicationId "com.lovejoy777.rroandlayersmanager"
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 33
-        versionName "4.4.0b3"
+        versionName "4.4.0b4"
         archivesBaseName = "LayersManager"
     }
 
