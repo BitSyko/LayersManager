@@ -26,6 +26,8 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class UninstallFragment extends Fragment implements MaterialCab.Callback, AsyncResponse {
@@ -207,6 +209,13 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
             for (File file : files) {
                 fileBeans.add(new FileBean(file));
             }
+
+            Collections.sort(fileBeans, new Comparator<FileBean>() {
+                @Override
+                public int compare(FileBean lhs, FileBean rhs) {
+                    return lhs.getName().compareTo(rhs.getName());
+                }
+            });
 
             return fileBeans;
 
