@@ -154,15 +154,15 @@ public class PluginFragment extends Fragment {
             //Showcase
             if (position == 1) {
                 Bundle bndlanimation =
-                        ActivityOptions.makeCustomAnimation(getContext().getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
-                boolean installed = Commands.appInstalledOrNot(getContext(),"com.lovejoy777.showcase");
+                        ActivityOptions.makeCustomAnimation(getActivity().getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
+                boolean installed = Commands.appInstalledOrNot(getActivity(), "com.lovejoy777.showcase");
                 if (installed) {
                     //This intent will help you to launch if the package is already installed
                     Intent intent = new Intent();
                     intent.setComponent(new ComponentName("com.lovejoy777.showcase", "com.lovejoy777.showcase.MainActivity1"));
                     startActivity(intent);
                 } else {
-                    Toast.makeText(getContext(), "Please install the layers showcase plugin", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Please install the layers showcase plugin", Toast.LENGTH_LONG).show();
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.lovejoy777.showcase")), bndlanimation);
                 }
             }
