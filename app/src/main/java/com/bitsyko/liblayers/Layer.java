@@ -9,8 +9,6 @@ import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.ArrayMap;
@@ -20,7 +18,7 @@ import com.bitsyko.liblayers.layerfiles.ColorOverlay;
 import com.bitsyko.liblayers.layerfiles.CustomStyleOverlay;
 import com.bitsyko.liblayers.layerfiles.GeneralOverlay;
 import com.bitsyko.liblayers.layerfiles.LayerFile;
-import com.lovejoy777.rroandlayersmanager.commands.RootCommands;
+import com.lovejoy777.rroandlayersmanager.Utils;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -418,7 +416,8 @@ public class Layer implements Closeable {
     @Override
     public void close() throws IOException {
         if (new File(getCacheDir() + File.separator + getName()).exists()) {
-            RootCommands.DeleteFileRoot(context.getCacheDir() + File.separator + StringUtils.deleteWhitespace(getName()));
+            Utils.deleteFile(context.getCacheDir()
+                    + File.separator + StringUtils.deleteWhitespace(getName()));
         }
 
         for (ZipFile zipFile : zipFileMap.values()) {
@@ -427,7 +426,6 @@ public class Layer implements Closeable {
 
         zipFileMap.clear();
     }
-
 
     public String getGeneralZip() {
         return generalZip;
