@@ -100,7 +100,7 @@ public class Commands {
             public void onClick(DialogInterface dialog, int which) {
                 try {
                     Runtime.getRuntime()
-                            .exec(new String[]{"su", "-c", "busybox killall system_server"});
+                            .exec(new String[]{"su", "-c", "am restart"});
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
