@@ -1,0 +1,196 @@
+<resources xmlns:https="http://schemas.android.com/apk/res-auto">
+
+    <!-- MAIN Fragment -->
+    <string name="layersmanager">图层管理器</string>
+    <string name="PlaystoreSearch"><![CDATA[
+        https://play.google.com/store/search?q=Layers+Theme&c=apps&docType=1&sp=CAFiDgoMTGF5ZXJzIFRoZW1legIYAIoBAggB:S:ANO1ljK_ZAY
+        ]]></string>
+    <string name="tooBad">糟糕</string>
+    <string name="noPlugins">你还没有安装任何与此兼容的图层主题插件，点击右下角的浮动按钮手动选择安装无插件类型的图层主题。</string>
+    <string name="ShowCaseMore">在这里寻找漂亮的图层主题。Beta 测试中！</string>
+    <string name="PlayStoreMore">去 Play 商店查看图层主题。</string>
+
+    <!-- Plugin Detail -->
+    <string name="donotshowagain">不要再显示</string>
+    <string name="installeverything">安装所有</string>
+    <string name="selectalloverlays">选择所有图层</string>
+    <string name="WhatsNew">新特性</string>
+    <string name="Category2Name">拥有特定样式的的图层主题</string>
+    <string name="Category1Name">全局图层主题</string>
+    <string name="noRoot">未获取到 Root 权限</string>
+
+    <!-- About -->
+    <string name="niklasschnettler">Niklas Schnettler</string>
+    <string name="developedby">图层管理器的开发者们</string>
+    <string name="usefullinks">可能对您有用的链接</string>
+    <string name="version">版本</string>
+    <string name="AditionalLayersDev">Additional Layers commits</string>
+    <string name="findOutWhatsNew">看看有什么新特性</string>
+    <string name="joinTheChat">和我们一起讨论</string>
+    <string name="AppDeveloper">应用开发者</string>
+    <string name="LayersDeveloper">项目开发者</string>
+    <string name="LayersLeadDeveloper">项目领导开发者</string>
+    <string name="ShowcaseDeveloper">图层主题展览柜开发者</string>
+
+    <!-- Licenses -->
+    <string name="OpenSourceLicenses">开源项目许可：</string>
+    <string name="License1">Root Tools</string>
+    <string name="License1about" translatable="false">Stephen Erickson, Chris Ravenscroft, Dominik Schuermann, Adam Shanks</string>
+    <string name="License1github" translatable="false">https://github.com/Stericson/RootTools</string>
+
+    <string name="License2">Introduction</string>
+    <string name="License2about" translatable="false">Ruben Gees</string>
+    <string name="License2github">https://github.com/rubengees/introduction</string>
+
+    <string name="License3">Material CAB</string>
+    <string name="License3about" translatable="false">Aidan Michael Follestad</string>
+    <string name="License3github">https://github.com/afollestad/material-cab</string>
+
+    <string name="License4">CircleImageView</string>
+    <string name="License4about" translatable="false">Henning Dodenhof</string>
+    <string name="License4github">https://github.com/hdodenhof/CircleImageView</string>
+
+
+    <string name="MIT1">The MIT License (MIT)\n\nCopyright (c)</string>
+    <string name="MIT2">\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\n THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</string>
+
+    <string name="Apache1">Copyright ©</string>
+    <string name="Apache2">\n\nLicensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
+
+
+    <!-- Links -->
+    <string name="linkXda">http://forum.xda-developers.com/android/apps-games/official-layers-bitsyko-apps-rro-t3012172</string>
+    <string name="linkCommunity">https://plus.google.com/u/0/communities/102261717366580091389</string>
+    <string name="linkNiklas">https://plus.google.com/u/0/+NiklasSchnettler/posts</string>
+    <string name="linkSteve">https://plus.google.com/u/0/+SteveLovejoy/posts</string>
+    <string name="linkAldrin">https://plus.google.com/u/0/+AldrinHolmes20/posts</string>
+    <string name="linkBrian">https://plus.google.com/u/0/+BrianGill55/posts</string>
+    <string name="linkReinhard">https://plus.google.com/101549242713977412381/posts</string>
+    <string name="linkSyko">https://plus.google.com/u/0/+SykoPompos/posts</string>
+    <string name="linkBranden">https://plus.google.com/u/0/101729058057775926785/posts</string>
+    <string name="linkDenis">https://plus.google.com/u/0/+DenisSuarez98/posts</string>
+    <string name="linkAndrzej">https://plus.google.com/117376207394302665227/posts</string>
+
+
+    <!-- PRODUCT TOUR -->
+    <string name="Slide1_Heading">图层管理器</string>
+    <string name="Slide1_Text">管理您所有图层主题的得力助手。</string>
+    <string name="Slide2_Heading">插件式图层主题</string>
+    <string name="Slide2_Text">兼容的图层主题将被直接显示在图层管理器中。在主页面打开它们即可直接应用您喜爱的图层主题。</string>
+    <string name="Slide3_Heading">APK / ZIP 图层主题</string>
+    <string name="Slide3_Text">您可以点击浮动按钮以安装 apk 或 zip 文件格式的图层主题。</string>
+    <string name="Slide4_Heading">卸载图层主题</string>
+    <string name="Slide4_Text">卸载您不再想要显示的图层主题。</string>
+    <string name="Slide5_Heading">备份与还原</string>
+    <string name="Slide5_Text">备份您喜欢的图层主题设置，以后就可以还原它们了。</string>
+    <string name="Slide6_Heading">隐藏启动器图标？</string>
+    <string name="Slide7_Heading">隐藏不可用的图层主题？</string>
+
+
+    <!-- INSTRUCTIONS/TUTORIAL -->
+    <string name="instructionstitle">教程</string>
+    <string name="instructionscard1header">安装插件式图层主题</string>
+    <string name="instructionscard1">点击你已经安装的其中一个图层主题\n选择你想要应用主题的应用\n点击右下角的浮动按钮开始应用图层主题</string>
+    <string name="instructionscard2header">安装普通图层主题</string>
+    <string name="instructionscard2">点击主页面右下角的浮动按钮\n选择一个 .zip 压缩文件或多个 .apk 文件\n点击浮动按钮开始安装选定的图层主题</string>
+    <string name="instructionscard3header">卸载图层主题</string>
+    <string name="instructionscard3">从左侧的的导航抽屉中选择“卸载”\n选择一个或多个图层主题\n点击浮动按钮开始卸载选定的土层主题</string>
+    <string name="instructionscard4header">备份图层主题</string>
+    <string name="instructionscard4">从左侧的的导航抽屉中选择“备份与还原”\n点击浮动按钮新建备份\n输入备份名并点击确认</string>
+    <string name="instructionscard5header">还原图层主题</string>
+    <string name="instructionscard5">从左侧的的导航抽屉中选择“备份与还原”\n点击一份备份并在弹出的对话框选择“还原”</string>
+    <string name="instructionscard6header">重新开始介绍</string>
+    <string name="instructionscard6">点击重新展示初始教程</string>
+
+    <!-- Fragments -->
+
+    <!-- Install Fragment -->
+    <string name="InstallOverlays2">安装</string>
+    <string name="installed">安装选定的图层主题</string>
+    <string name="installing">正在安装……</string>
+
+    <!-- UnInstall Fragment -->
+    <string name="UninstallOverlays">卸载</string>
+    <string name="selectAll">全选</string>
+    <string name="nothingApplied">没有应用图层主题。\n在主页面选择您喜爱的主题吧。</string>
+    <string name="appliedOverlays">已应用的图层主题：</string>
+    <string name="OverlaysSelected">个已选择的图层</string>
+    <string name="PreformReboot">即将进行软重启，确定吗？</string>
+    <string name="uninstalled">已卸载选定的图层主题</string>
+    <string name="uninstallingOverlays">正在卸载……</string>
+
+    <!-- Backup Restore Fragment -->
+    <string name="noBackups">没有可用的备份。\n点击浮动按钮开始新建备份。</string>
+    <string name="Backups">备份：</string>
+    <string name="BackupRestore">备份与还原</string>
+    <string name="backupInstalledOverlays">备份已应用的图层主题</string>
+    <string name="enterBackupName">输入备份名</string>
+    <string name="noInputName">请输入备份名</string>
+    <string name="nothingToBackup">没有可供备份的项目</string>
+    <string name="DoYouWantToRestore">您想要还原该备份还是删除该备份？</string>
+    <string name="restore">还原</string>
+    <string name="delete">删除</string>
+    <string name="DeleteBackup">正在删除备份</string>
+    <string name="deleting">正在删除</string>
+    <string name="BackupOverlays">备份图层主题</string>
+    <string name="backingUp">正在备份</string>
+    <string name="backupComplete">备份完成</string>
+    <string name="Restore">Restore Overlays</string>
+    <string name="restoring">正在还原</string>
+    <string name="deletedBackup">已删除选定的备份</string>
+    <string name="restored">已还原选定的备份</string>
+
+    <!-- NavDrawer -->
+    <string name="More">更多</string>
+    <string name="Tutorial">教程</string>
+    <string name="About">关于</string>
+    <string name="Showcase">图层主题展览柜</string>
+    <string name="discover">探索</string>
+    <string name="PlayStore">Play 商店</string>
+    <string name="Settings">设置</string>
+
+    <!-- Settings -->
+    <string name="General">全局</string>
+    <string name="SettingLauncherIconDetail">移除启动器中的图标</string>
+    <string name="LauncherIconSummaryEnabled">您的系统支持在设置中显示图层管理器的快捷方式</string>
+    <string name="LauncherIconSummaryDisabled">您的系统不支持此选项</string>
+    <string name="launcherIconRemoved">已移除启动器中的图标</string>
+    <string name="launcherIconRevived">已复原启动器中的图标</string>
+    <string name="SettingsHideOverlays">隐藏不可用的图层主题</string>
+    <string name="SettingsHideOverlaysDetail">禁用未安装应用的图层主题</string>
+
+    <!-- Dialogs -->
+
+    <!-- Action texts -->
+    <string name="MoveOverlays">安装图层主题？</string>
+    <string name="VisitGithub">Github</string>
+    <string name="Reboot">重启</string>
+    <string name="pick_color">选择一个样式</string>
+
+
+    <!-- description and headline texts -->
+    <string name="ApplyOverlays">应用选定的图层主题？</string>
+
+
+    <!-- SnackBar texts -->
+    <string name="OverlaysInstalled">已安装图层主题</string>
+    <string name="emptydirectory">这个文件夹看起来是空的。</string>
+    <string name="installingOverlays">正在安装图层主题</string>
+    <string name="generatingList">生成图层主题列表</string>
+    <string name="Sort">排序</string>
+    <string name="sort_name">名称</string>
+    <string name="sort_developer">开发者</string>
+    <string name="sort_random">随机</string>
+    <string name="show">Show</string>
+    <string name="contains">contains:</string>
+    <string name="noPermission">未获取相应的权限</string>
+    <string name="noPermissionDescription">没有被授予访问存储空间的权限。\n要使用此功能，您需要先授予本应用访问存储空间的权限。</string>
+    <string name="toggleCheckboxes">反选选择框</string>
+    <string name="refreshOverlays">刷新图层主题状态</string>
+    <string name="layerNotSupported">不受支持的图层主题</string>
+    <string name="plugin3NotSupportedDetail">抱歉，该版本的图层管理器不支持插件版本 3 的图层主题。请前往我们的 Google+ 群组获得更高版本的图层管理器。</string>
+    <string name="next">下一步</string>
+    <string name="remove">移除</string>
+    <string name="skip">跳过</string>
+
+</resources>
