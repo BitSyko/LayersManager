@@ -1,13 +1,13 @@
 <resources xmlns:https="http://schemas.android.com/apk/res-auto">
 
     <!-- MAIN Fragment -->
-    <string name="layersmanager">图层管理器</string>
+    <string name="layersmanager">图层主题管理器</string>
     <string name="PlaystoreSearch"><![CDATA[
         https://play.google.com/store/search?q=Layers+Theme&c=apps&docType=1&sp=CAFiDgoMTGF5ZXJzIFRoZW1legIYAIoBAggB:S:ANO1ljK_ZAY
         ]]></string>
     <string name="tooBad">糟糕</string>
     <string name="noPlugins">你还没有安装任何与此兼容的图层主题插件，点击右下角的浮动按钮手动选择安装无插件类型的图层主题。</string>
-    <string name="ShowCaseMore">在这里寻找漂亮的图层主题。Beta 测试中！</string>
+    <string name="ShowCaseMore">来这里寻找漂亮的图层主题。Beta 测试中！</string>
     <string name="PlayStoreMore">去 Play 商店查看图层主题。</string>
 
     <!-- Plugin Detail -->
@@ -21,7 +21,7 @@
 
     <!-- About -->
     <string name="niklasschnettler">Niklas Schnettler</string>
-    <string name="developedby">图层管理器的开发者们</string>
+    <string name="developedby">图层主题管理器的开发者们</string>
     <string name="usefullinks">可能对您有用的链接</string>
     <string name="version">版本</string>
     <string name="AditionalLayersDev">Additional Layers commits</string>
@@ -30,7 +30,7 @@
     <string name="AppDeveloper">应用开发者</string>
     <string name="LayersDeveloper">项目开发者</string>
     <string name="LayersLeadDeveloper">项目领导开发者</string>
-    <string name="ShowcaseDeveloper">图层主题展览柜开发者</string>
+    <string name="ShowcaseDeveloper">图层主题市场开发者</string>
 
     <!-- Licenses -->
     <string name="OpenSourceLicenses">开源项目许可：</string>
@@ -73,10 +73,10 @@
 
 
     <!-- PRODUCT TOUR -->
-    <string name="Slide1_Heading">图层管理器</string>
+    <string name="Slide1_Heading">图层主题管理器</string>
     <string name="Slide1_Text">管理您所有图层主题的得力助手。</string>
     <string name="Slide2_Heading">插件式图层主题</string>
-    <string name="Slide2_Text">兼容的图层主题将被直接显示在图层管理器中。在主页面打开它们即可直接应用您喜爱的图层主题。</string>
+    <string name="Slide2_Text">兼容的图层主题将被直接显示在图层主题管理器中。在主页面打开它们即可直接应用您喜爱的图层主题。</string>
     <string name="Slide3_Heading">APK / ZIP 图层主题</string>
     <string name="Slide3_Text">您可以点击浮动按钮以安装 apk 或 zip 文件格式的图层主题。</string>
     <string name="Slide4_Heading">卸载图层主题</string>
@@ -106,7 +106,7 @@
 
     <!-- Install Fragment -->
     <string name="InstallOverlays2">安装</string>
-    <string name="installed">安装选定的图层主题</string>
+    <string name="installed">已安装选定的图层主题</string>
     <string name="installing">正在安装……</string>
 
     <!-- UnInstall Fragment -->
@@ -144,7 +144,7 @@
     <string name="More">更多</string>
     <string name="Tutorial">教程</string>
     <string name="About">关于</string>
-    <string name="Showcase">图层主题展览柜</string>
+    <string name="Showcase">图层主题市场</string>
     <string name="discover">探索</string>
     <string name="PlayStore">Play 商店</string>
     <string name="Settings">设置</string>
@@ -152,7 +152,7 @@
     <!-- Settings -->
     <string name="General">全局</string>
     <string name="SettingLauncherIconDetail">移除启动器中的图标</string>
-    <string name="LauncherIconSummaryEnabled">您的系统支持在设置中显示图层管理器的快捷方式</string>
+    <string name="LauncherIconSummaryEnabled">您的系统支持在设置中显示图层主题管理器的快捷方式</string>
     <string name="LauncherIconSummaryDisabled">您的系统不支持此选项</string>
     <string name="launcherIconRemoved">已移除启动器中的图标</string>
     <string name="launcherIconRevived">已复原启动器中的图标</string>
@@ -162,7 +162,7 @@
     <!-- Dialogs -->
 
     <!-- Action texts -->
-    <string name="MoveOverlays">安装图层主题？</string>
+    <string name="MoveOverlays">应用图层主题？</string>
     <string name="VisitGithub">Github</string>
     <string name="Reboot">重启</string>
     <string name="pick_color">选择一个样式</string>
@@ -173,7 +173,7 @@
 
 
     <!-- SnackBar texts -->
-    <string name="OverlaysInstalled">已安装图层主题</string>
+    <string name="OverlaysInstalled">已应用图层主题</string>
     <string name="emptydirectory">这个文件夹看起来是空的。</string>
     <string name="installingOverlays">正在安装图层主题</string>
     <string name="generatingList">生成图层主题列表</string>
@@ -181,14 +181,14 @@
     <string name="sort_name">名称</string>
     <string name="sort_developer">开发者</string>
     <string name="sort_random">随机</string>
-    <string name="show">Show</string>
-    <string name="contains">contains:</string>
+    <string name="show">显示备份内容</string>
+    <string name="contains">包含:</string>
     <string name="noPermission">未获取相应的权限</string>
     <string name="noPermissionDescription">没有被授予访问存储空间的权限。\n要使用此功能，您需要先授予本应用访问存储空间的权限。</string>
     <string name="toggleCheckboxes">反选选择框</string>
     <string name="refreshOverlays">刷新图层主题状态</string>
     <string name="layerNotSupported">不受支持的图层主题</string>
-    <string name="plugin3NotSupportedDetail">抱歉，该版本的图层管理器不支持插件版本 3 的图层主题。请前往我们的 Google+ 群组获得更高版本的图层管理器。</string>
+    <string name="plugin3NotSupportedDetail">抱歉，该版本的图层主题管理器不支持插件版本 3 的图层主题。请前往我们的 Google+ 群组获得更高版本的图层主题管理器。</string>
     <string name="next">下一步</string>
     <string name="remove">移除</string>
     <string name="skip">跳过</string>
