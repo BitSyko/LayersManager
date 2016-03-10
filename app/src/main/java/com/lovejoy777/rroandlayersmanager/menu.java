@@ -27,9 +27,6 @@ import com.rubengees.introduction.IntroductionActivity;
 import com.rubengees.introduction.IntroductionBuilder;
 import com.rubengees.introduction.entity.Option;
 import com.rubengees.introduction.entity.Slide;
-import com.stericson.RootTools.RootTools;
-import com.stericson.RootTools.exceptions.RootDeniedException;
-import com.stericson.RootTools.execution.CommandCapture;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,7 +47,7 @@ public class menu extends AppCompatActivity {
 
         loadToolbarNavDrawer();
 
-        if (!RootTools.isAccessGiven()) {
+        if (!Utils.isRootAvailable()) {
             Toast.makeText(this, getString(R.string.noRoot), Toast.LENGTH_LONG).show();
         } else {
             createImportantDirectories();
@@ -277,25 +274,14 @@ public class menu extends AppCompatActivity {
 
         dir1.mkdirs();
 
-        Commands.remountSystem("rw");
+        Utils.remount("rw");
         String vendover = DeviceSingleton.getInstance().getOverlayFolder();
         // CREATES /VENDOR/OVERLAY
         File dir2 = new File(vendover);
         if (!dir2.exists()) {
-            CommandCapture command5 = new CommandCapture(0, "mkdir " + vendover);
-            try {
-                RootTools.getShell(true).add(command5);
-                while (!command5.isFinished()) {
-                    Thread.sleep(1);
-                }
-
-            } catch (IOException | TimeoutException | InterruptedException | RootDeniedException e) {
-                e.printStackTrace();
-            }
+            Utils.createFolder(dir2);
         }
-
-        Commands.remountSystem("ro");
-
+        Utils.remount("ro");
     }
 
     @Override
