@@ -7,12 +7,13 @@
     <dimen name="first_keyline">16dp</dimen>
     <dimen name="second_keyline">72dp</dimen>
     <dimen name="toolbar_h_padding">4dp</dimen>
+    <dimen name="screenshot_padding">4dp</dimen>
 
     <dimen name="smallMargin">8dp</dimen>
     <dimen name="mediumMargin">16dp</dimen>
 
-    <dimen name="cardElevation">5dp</dimen>
-    <dimen name="toolbarElevation">5dp</dimen>
+    <dimen name="cardElevation">2dp</dimen>
+    <dimen name="toolbarElevation">4dp</dimen>
 
     <dimen name="toolbarHeight">56dp</dimen>
 
