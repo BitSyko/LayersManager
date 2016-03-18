@@ -1,5 +1,6 @@
 package com.lovejoy777.rroandlayersmanager;
 
+import android.os.Build;
 import android.util.Log;
 
 import com.lovejoy777.rroandlayersmanager.helper.Helpers;
@@ -14,7 +15,7 @@ public class DeviceSingleton {
 
         if (device == null) {
 
-            String mountData = Helpers.commandToString("mount");
+           /* String mountData = Helpers.commandToString("mount");
 
             if (StringUtils.isEmpty(mountData)) {
                 mountData = Helpers.commandToString("busybox mount");
@@ -38,15 +39,22 @@ public class DeviceSingleton {
                     }
 
                 }
-            }
+            } */
 
-            if (vendorDevice) {
+            //WORKAROUND UNTIL FIXED
+            String deviceName = Build.DEVICE.replaceAll(" ","");
+            if(deviceName.contains("angler") || deviceName.contains("bullhead") || deviceName.contains("flounder")){
                 device = new VendorDevice();
                 Log.d("Manager", "VendorDevice detected");
-            } else {
+            }
+            else {
                 device = new NormalDevice();
                 Log.d("Manager", "NormalDevice detected");
             }
+             /*if (vendorDevice) {
+                    device = new VendorDevice();
+                    Log.d("Manager", "VendorDevice detected");
+                } */
 
         }
 

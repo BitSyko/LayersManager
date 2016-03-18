@@ -10,7 +10,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 36
-        versionName "4.4.1"
+        versionName "4.4.2"
         archivesBaseName = "LayersManager"
     }
 

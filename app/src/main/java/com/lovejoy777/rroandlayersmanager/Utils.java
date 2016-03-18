@@ -63,6 +63,7 @@ public class Utils {
 
     public static boolean moveFile(String old, String newDir) {
         if (!isRootAvailable()) return false;
+        old = "\"" + old + "\"";
         try {
             runCommand("mv -f " + old + " " + newDir, true);
         } catch (Exception e) {
@@ -86,6 +87,7 @@ public class Utils {
     public static CommandOutput runCommand(String cmd, boolean useRoot) {
         if (!isRootAvailable()) return null;
         CommandOutput output = new CommandOutput();
+
         Log.d("TEST", "command=" + cmd);
         try {
             Process process = Runtime.getRuntime().exec(useRoot ? "su" : "sh");
@@ -113,7 +115,8 @@ public class Utils {
     public static boolean remount(String mountType) {
         if (!isRootAvailable()) return false;
         String folder = DeviceSingleton.getInstance().getMountFolder();
-        CommandOutput out =runCommand("mount -o remount," + mountType + " " + folder + "\n", true);
+        CommandOutput out =runCommand("mount -o "+mountType +",remount "+ folder + "\n", true);
+
         return true;
     }
 
