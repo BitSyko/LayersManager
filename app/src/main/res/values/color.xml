@@ -6,6 +6,9 @@
     <color name="primary_dark">#ff303F9F</color>
     <color name="primary_light">#7986CB</color>
     <color name="accent">#ffFF5252</color>
+    <color name="colorPrimary">@color/primary</color>
+    <color name="colorPrimaryDark">@color/primary_dark</color>
+    <color name="colorAccent">@color/accent</color>
 
 
     <!-- Text colors -->

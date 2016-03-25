@@ -48,29 +48,11 @@ public class AboutActivity extends AppCompatActivity {
                 new DeveloperBean("Layers on XDA", getString(R.string.joinTheChat), getDrawable(R.drawable.about_xda), getString(R.string.linkXda))
         };
 
-        DeveloperBean[] libraries = {
-                new LicenceBean(getString(R.string.License1), getString(R.string.License1about), getDrawable(R.drawable.ic_opensource), getString(R.string.License1github), generateLicense(getString(R.string.License1about), "Apache", "2012")),
-                new LicenceBean(getString(R.string.License2), getString(R.string.License2about), getDrawable(R.drawable.ic_opensource), getString(R.string.License2github), generateLicense(getString(R.string.License2about), "Apache", "2015")),
-                new LicenceBean(getString(R.string.License3), getString(R.string.License3about), getDrawable(R.drawable.ic_opensource), getString(R.string.License3github), generateLicense(getString(R.string.License3about), "MIT", "2015")),
-                new LicenceBean(getString(R.string.License4), getString(R.string.License4about), getDrawable(R.drawable.ic_opensource), getString(R.string.License4github), generateLicense(getString(R.string.License4about), "Apache", "2014 - 2015"))
-
-        };
 
         //set Toolbar
         android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar4);
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
         setSupportActionBar(toolbar);
-
-
-        TextView tv_version = (TextView) findViewById(R.id.tv_Version);
-        try {
-            String versionName = AboutActivity.this.getPackageManager()
-                    .getPackageInfo(AboutActivity.this.getPackageName(), 0).versionName;
-            tv_version.setText(getResources().getString(R.string.version) + " " + versionName);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
 
         ExpandableListView devlist = (ExpandableListView) findViewById(R.id.developers);
 
@@ -79,11 +61,9 @@ public class AboutActivity extends AppCompatActivity {
         final ArrayList<String> listDataHeader = new ArrayList<>();
         listDataHeader.add(getResources().getString(R.string.developedby));
         listDataHeader.add(getResources().getString(R.string.usefullinks));
-        listDataHeader.add(getResources().getString(R.string.OpenSourceLicenses));
 
         listDataChild.put(listDataHeader.get(0), Arrays.asList(developers));
         listDataChild.put(listDataHeader.get(1), Arrays.asList(usefulLinks));
-        listDataChild.put(listDataHeader.get(2), Arrays.asList(libraries));
 
         devlist.setGroupIndicator(null);
         devlist.setAdapter(new AboutAdapter(this, listDataHeader, listDataChild));
@@ -158,17 +138,5 @@ public class AboutActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.back2, R.anim.back1);
     }
 
-    private String generateLicense(String developer, String License, String year) {
-        String LicenseText = " ";
-        if (License.equals("Apache")) {
-            LicenseText = getString(R.string.Apache1) + " " + year + " " + developer + getString(R.string.Apache2);
-        } else {
-            if (License.equals("MIT")) {
-                LicenseText = getString(R.string.MIT1) + " " + year + " " + developer + getString(R.string.MIT2);
-            }
-        }
-        return LicenseText;
-
-    }
 
 }

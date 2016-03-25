@@ -52,9 +52,13 @@
                 android:icon="@drawable/ic_drawer_help"
                 android:title="@string/Tutorial" />
             <item
-                android:id="@+id/nav_about"
+                android:id="@+id/nav_the_team"
                 android:icon="@drawable/ic_drawer_about"
-                android:title="@string/About" />
+                android:title="@string/TheTeam" />
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@drawable/ic_opensource"
+                android:title="@string/Licenses" />
 
             <item
                 android:id="@+id/nav_settings"

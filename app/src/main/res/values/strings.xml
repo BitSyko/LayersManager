@@ -192,5 +192,9 @@
     <string name="next">next</string>
     <string name="remove">remove</string>
     <string name="skip">Skip</string>
+    <string name="TheTeam">The Team</string>
+    <string name="layersTeam">Layers - the Team</string>
+    <string name="TeamAbout">Meet the awesome team behind Layers.</string>
+    <string name="Licenses">Licenses</string>
 
 </resources>

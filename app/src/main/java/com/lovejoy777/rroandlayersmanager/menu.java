@@ -23,6 +23,8 @@ import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.activities.*;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.fragments.*;
+import com.mikepenz.aboutlibraries.Libs;
+import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.rubengees.introduction.IntroductionActivity;
 import com.rubengees.introduction.IntroductionBuilder;
 import com.rubengees.introduction.entity.Option;
@@ -190,10 +192,24 @@ public class menu extends AppCompatActivity {
                                 Intent tutorial = new Intent(menu.this, DetailedTutorialActivity.class);
                                 startActivity(tutorial, bndlanimation);
                                 break;
-                            //About
-                            case R.id.nav_about:
+                            //Team
+                            case R.id.nav_the_team:
                                 Intent about = new Intent(menu.this, AboutActivity.class);
                                 startActivity(about, bndlanimation);
+                                break;
+                            //About
+                            case R.id.nav_about:
+                                new LibsBuilder()
+                                        //Pass the fields of your application to the lib so it can find all external lib information
+                                        .withFields(R.string.class.getFields())
+                                        //provide a style (optional) (LIGHT, DARK, LIGHT_DARK_TOOLBAR)
+                                        .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
+                                        //start the activity
+                                        .withAboutIconShown(true)
+                                        .withAboutVersionShown(true)
+                                        .withAboutDescription("<b>Layers - the best way to theme your device!</b>")
+                                        .withActivityTitle("About")
+                                        .start(menu.this);
                                 break;
                             //Settings
                             case R.id.nav_settings:
