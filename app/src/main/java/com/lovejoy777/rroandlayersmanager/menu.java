@@ -141,12 +141,7 @@ public class menu extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Fragment currentFragment = menu.this.getFragmentManager().findFragmentById(R.id.fragment_container);
-                if (currentFragment instanceof InstallFragment) {
-                    changeFragment(1);
-                } else {
-                    mDrawerLayout.openDrawer(GravityCompat.START);
-                }
+                mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -233,9 +228,6 @@ public class menu extends AppCompatActivity {
                 break;
             case 3:
                 fragment = new BackupRestoreFragment();
-                break;
-            case 4:
-                fragment = new InstallFragment();
                 break;
         }
 
