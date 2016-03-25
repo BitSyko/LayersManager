@@ -50,6 +50,7 @@ public class BackupRestoreFragment extends Fragment {
     private CoordinatorLayout cordLayout = null;
 
     private static void zipFolder(String inputFolderPath, String outZipPath) {
+        System.out.println("ZZZZZZIIIIIIPP");
         try {
             FileOutputStream fos = new FileOutputStream(outZipPath);
             ZipOutputStream zos = new ZipOutputStream(fos);
@@ -135,45 +136,41 @@ public class BackupRestoreFragment extends Fragment {
                 alert.setTitle(R.string.backupInstalledOverlays);
                 alert.setView(input);
                 input.setHint(R.string.enterBackupName);
-                alert.setInverseBackgroundForced(true);
 
                 alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int whichButton) {
 
                                 // get editText String
-                                String backupname = input.getText().toString().replace(" ", "");
+                                String backupName = input.getText().toString().replace(" ", "");
 
-                                if (backupname.length() <= 1) {
-
+                                if (backupName.length() <= 1) {
                                     Toast.makeText(getActivity(), R.string.noInputName, Toast.LENGTH_LONG).show();
-
-                                    //finish();
-
                                 } else {
-                                    File directory = new File(DeviceSingleton.getInstance().getOverlayFolder());
-                                    File[] contents = directory.listFiles();
+                                    File overlayFolder = new File(DeviceSingleton.getInstance().getOverlayFolder());
 
-                                    // Folder is empty
-                                    if (contents == null || contents.length == 0) {
-
-                                        Toast.makeText(getActivity(), R.string.nothingToBackup, Toast.LENGTH_LONG).show();
-
-                                        //finish();
-                                    } else {
-                                        // CREATES /SDCARD/OVERLAYS/BACKUP/BACKUPNAME
-                                        String sdOverlays = Environment.getExternalStorageDirectory() + "/Overlays";
-                                        File dir2 = new File(sdOverlays + "/Backup/" + backupname);
-                                        if (!dir2.exists() && !dir2.isDirectory()) {
-                                            Utils.createFolder(dir2);
+                                    if (overlayFolder.exists()){
+                                        File[] overlays = overlayFolder.listFiles();
+                                        // Folder is empty
+                                        if (overlays == null || overlays.length == 0) {
+                                            Toast.makeText(getActivity(), R.string.nothingToBackup, Toast.LENGTH_LONG).show();
+                                        } else {
+                                            // CREATES /SDCARD/OVERLAYS/BACKUP/BACKUPNAME
+                                            String backupDirectory = Environment.getExternalStorageDirectory() + "/Overlays/Backup/";
+                                            File dir2 = new File(backupDirectory+ backupName);
+                                            if (!dir2.exists() && !dir2.isDirectory()) {
+                                                System.out.println("MKDIR");
+                                                dir2.mkdir();
+                                            }
+                                            //Async Task to backup Overlays
+                                            new BackupOverlays().execute(backupName);
                                         }
-                                        //Async Task to backup Overlays
-                                        new BackupOverlays().execute(backupname);
+                                    } else {
+                                            Toast.makeText(getActivity(), R.string.nothingToBackup, Toast.LENGTH_LONG).show();
                                     }
                                 }
                             }
                         }
-
                 );
 
                 alert.setNegativeButton(android.R.string.cancel, null);
@@ -334,16 +331,11 @@ public class BackupRestoreFragment extends Fragment {
 
         @Override
         protected Void doInBackground(String... params) {
-
-            String backupname = params[0];
+            Utils.remount("rw");
+            String backupName = params[0];
             String sdOverlays = Environment.getExternalStorageDirectory() + "/Overlays";
-            File dir1 = new File(sdOverlays + "/Backup/temp");
-            if (!dir1.exists() && !dir1.isDirectory() && !dir1.mkdirs()) {
-                throw new RuntimeException();
-            }
-            Utils.copyFile(DeviceSingleton.getInstance().getOverlayFolder(),dir1.getAbsolutePath());
-            zipFolder(dir1.getAbsolutePath(), sdOverlays + "/Backup/" + backupname + "/overlay.zip");
-            dir1.delete();
+            zipFolder(DeviceSingleton.getInstance().getOverlayFolder(), sdOverlays + "/Backup/" + backupName + "/overlay.zip");
+            Utils.remount("ro");
             return null;
 
         }

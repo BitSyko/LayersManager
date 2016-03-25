@@ -117,7 +117,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         createLayouts();
 
         Log.d("Colors", String.valueOf(layer.getColors()));
-        Log.d("PluginVersion", String.valueOf(layer.getPluginVersion()));
+        //Log.d("PluginVersion", String.valueOf(layer.getPluginVersion()));
     }
 
     private boolean isAnyCheckboxEnabled(int mode) {

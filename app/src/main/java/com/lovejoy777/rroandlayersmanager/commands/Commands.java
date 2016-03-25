@@ -145,7 +145,12 @@ public class Commands {
         @Override
         protected Void doInBackground(String... files) {
 
-            String tempDir = context.getCacheDir().getAbsolutePath() + File.separator + "zipCache/";
+            String tempDir = context.getCacheDir().getAbsolutePath() + File.separator + "overlay/";
+
+            File OverlayDirectory = new File(DeviceSingleton.getInstance().getMountFolder());
+            if (!OverlayDirectory.exists()){
+                OverlayDirectory.mkdir();
+            }
 
             try {
                 FileUtils.deleteDirectory(new File(tempDir));
@@ -201,7 +206,8 @@ public class Commands {
             }
 
             Utils.remount("rw");
-            Utils.moveFile(tempDir + "*", DeviceSingleton.getInstance().getOverlayFolder() + "/");
+            System.out.println("MOVE!");
+            Utils.moveFile(tempDir , DeviceSingleton.getInstance().getMountFolder() + "/");
             Utils.applyPermissionsRecursive(DeviceSingleton.getInstance().getOverlayFolder(), "644");
             Utils.applyPermissions(DeviceSingleton.getInstance().getOverlayFolder(), "755");
             Utils.remount("ro");
@@ -247,19 +253,6 @@ public class Commands {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public static boolean remountSystem(String mountType) {
-        String mountPoint = DeviceSingleton.getInstance().getMountFolder();
-        BufferedReader reader = runCommand("mount -o remount,"
-                + mountType + " " + mountPoint + "\n");
-        try {
-            if (reader != null) reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
     }
 
 
@@ -348,6 +341,11 @@ public class Commands {
             // MOUNT /SYSTEM RW
             Utils.remount("rw");
 
+            File OverlayDirectory = new File(DeviceSingleton.getInstance().getMountFolder());
+            if (!OverlayDirectory.exists()){
+                OverlayDirectory.mkdir();
+            }
+
             for (LayerFile layerFile : layersToInstall) {
                 try {
                     Utils.moveFile(layerFile.getFile(context).getAbsolutePath(),
@@ -432,5 +430,8 @@ public class Commands {
         }
         return app_installed;
     }
+
+
+
 
 }
