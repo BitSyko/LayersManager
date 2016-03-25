@@ -400,25 +400,6 @@ public class Commands {
         PreferenceManager.getDefaultSharedPreferences(context).edit().putInt("sortMode", mode).commit();
     }
 
-
-    public static void killLauncherIcon(Context context) {
-
-        PackageManager p = context.getPackageManager();
-        ComponentName componentName = new ComponentName(context, com.lovejoy777.rroandlayersmanager.MainActivity.class); // activity which is first time open in manifiest file which is declare as <category android:name="android.intent.category.LAUNCHER" />
-        p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-        Toast.makeText(context, context.getResources().getString(R.string.launcherIconRemoved), Toast.LENGTH_SHORT).show();
-
-    }
-
-    public static void ReviveLauncherIcon(Context context) {
-
-        PackageManager p = context.getPackageManager();
-        ComponentName componentName = new ComponentName(context, com.lovejoy777.rroandlayersmanager.MainActivity.class);
-        p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-        Toast.makeText(context, context.getResources().getString(R.string.launcherIconRevived), Toast.LENGTH_SHORT).show();
-
-    }
-
    public static boolean appInstalledOrNot(Context context, String uri) {
         PackageManager pm = context.getPackageManager();
         boolean app_installed;
