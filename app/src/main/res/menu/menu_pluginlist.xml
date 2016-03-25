@@ -1,28 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_reboot"
         android:orderInCategory="2"
         android:title="@string/Reboot" />
-    <item
-        android:id="@+id/menu_sort"
-        android:orderInCategory="2"
-        android:title="@string/Sort"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_action_sort">
-        <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/menu_sortName"
-                    android:title="@string/sort_name" />
-                <item
-                    android:id="@+id/menu_sortDeveloper"
-                    android:title="@string/sort_developer" />
-                <item
-                    android:id="@+id/menu_sortRandom"
-                    android:title="@string/sort_random" />
-            </group>
-        </menu>
-        </item>
 </menu>
