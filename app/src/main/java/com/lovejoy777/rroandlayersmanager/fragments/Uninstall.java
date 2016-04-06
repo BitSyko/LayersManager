@@ -63,7 +63,7 @@ public class Uninstall extends Fragment implements MaterialCab.Callback, AsyncRe
         android.support.v7.widget.Toolbar toolbar = ButterKnife.findById(getActivity(),R.id.toolbar_fragmentContainer);
         int elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
         int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 156, getResources().getDisplayMetrics());
-        toolbar.setNavigationIcon(R.drawable.ic_action_menu);
+        toolbar.setNavigationIcon(R.drawable.ic_menu_menu_white_24dp);
         tv_toolbarTitle = ButterKnife.findById(getActivity(),R.id.tv_fragmentContainer_toolbarTitle);
         tv_toolbarTitle.setText(getString(R.string.UninstallOverlays));
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
@@ -181,7 +181,7 @@ public class Uninstall extends Fragment implements MaterialCab.Callback, AsyncRe
     //Overflow Menu
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.overflow, menu);
+        inflater.inflate(R.menu.menu_uninstall, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -303,14 +303,14 @@ public class Uninstall extends Fragment implements MaterialCab.Callback, AsyncRe
         if (mCab == null) {
             mCab = new MaterialCab((AppCompatActivity) getActivity(), R.id.cab_stub)
                     .reset()
-                    .setCloseDrawableRes(R.drawable.ic_action_check)
-                    .setMenu(R.menu.overflow)
+                    .setCloseDrawableRes(R.drawable.ic_menu_done_white_24dp)
+                    .setMenu(R.menu.menu_uninstall)
                     .start(Uninstall.this);
         } else if (!mCab.isActive()) {
             mCab
                     .reset().start(Uninstall.this)
-                    .setCloseDrawableRes(R.drawable.ic_action_check)
-                    .setMenu(R.menu.overflow);
+                    .setCloseDrawableRes(R.drawable.ic_menu_done_white_24dp)
+                    .setMenu(R.menu.menu_uninstall);
         }
 
         mCab.setTitle(checkedItems + " " + getResources().getString(R.string.OverlaysSelected));

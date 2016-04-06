@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
@@ -21,22 +19,22 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DetailedTutorialActivity extends AppCompatActivity {
+public class TutorialActivity extends AppCompatActivity {
 
     @Bind(R.id.toolbar_tutorial) Toolbar toolbar;
     @OnClick(R.id.cv_tutorial_instructions)
         void buttonClick() {
-            menu.loadTutorial(DetailedTutorialActivity.this);
+            menu.loadTutorial(TutorialActivity.this);
         }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_instructions);
+        setContentView(R.layout.activity_tutorial);
         ButterKnife.bind(this);
 
         toolbar.setTitle(R.string.instructionstitle);
-        toolbar.setNavigationIcon(R.drawable.ic_action_back);
+        toolbar.setNavigationIcon(R.drawable.ic_menu_back_white_24dp);
         setSupportActionBar(toolbar);
     }
 

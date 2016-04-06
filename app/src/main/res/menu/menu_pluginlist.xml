@@ -10,7 +10,7 @@
         android:orderInCategory="2"
         android:title="@string/Sort"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_action_sort">
+        android:icon="@drawable/ic_menu_sort_white_24dp">
         <menu>
             <group android:checkableBehavior="single">
                 <item

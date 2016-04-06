@@ -32,8 +32,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_uninstall"
-                    android:tint="@color/textColorSecondary"
+                    android:src="@drawable/ic_nooverlays_gray_150dp"
                     android:visibility="invisible"/>
 
                 <TextView
@@ -93,8 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:clickable="true"
-                android:src="@drawable/ic_drawer_delete"
-                android:tint="@color/white"
+                android:src="@drawable/ic_fab_delete_white_24dp"
                 app:elevation="@dimen/design_fab_elevation"/>
 
 

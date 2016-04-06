@@ -82,7 +82,7 @@ public class PluginList extends Fragment implements AsyncResponse {
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        cl_root = (CoordinatorLayout) inflater.inflate(R.layout.fragment_plugins, container, false);
+        cl_root = (CoordinatorLayout) inflater.inflate(R.layout.fragment_pluginlist, container, false);
         ButterKnife.bind(this, cl_root);
 
         //Drawer
@@ -97,7 +97,7 @@ public class PluginList extends Fragment implements AsyncResponse {
         tv_toolbarTitle.setText(getString(R.string.InstallOverlays2));
         int elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
         int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, getResources().getDisplayMetrics());
-        toolbar.setNavigationIcon(R.drawable.ic_action_menu);
+        toolbar.setNavigationIcon(R.drawable.ic_menu_menu_white_24dp);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, height
         );

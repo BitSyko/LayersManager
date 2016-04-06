@@ -65,7 +65,7 @@ public class BackupRestore extends Fragment {
         android.support.v7.widget.Toolbar toolbar = ButterKnife.findById (getActivity(),R.id.toolbar_fragmentContainer);
         int elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
         int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 156, getResources().getDisplayMetrics());
-        toolbar.setNavigationIcon(R.drawable.ic_action_menu);
+        toolbar.setNavigationIcon(R.drawable.ic_menu_menu_white_24dp);
         TextView tv_toolbarTitle = ButterKnife.findById(getActivity(),R.id.tv_fragmentContainer_toolbarTitle);
         tv_toolbarTitle.setText(getString(R.string.BackupRestore));
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
@@ -152,7 +152,7 @@ public class BackupRestore extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        menuInflater.inflate(R.menu.menu_main, menu);
+        menuInflater.inflate(R.menu.menu_backup, menu);
     }
 
     //Adapter
@@ -327,7 +327,7 @@ public class BackupRestore extends Fragment {
 
         protected void onPostExecute(Void result) {
 
-            BackupRestore_CardViewAdapter mAdapter = new BackupRestore_CardViewAdapter(files, R.layout.adapter_backups);
+            BackupRestore_CardViewAdapter mAdapter = new BackupRestore_CardViewAdapter(files, R.layout.adapter_backup);
             rv_backupList.setAdapter(mAdapter);
             if (files.size() ==0) {
                 iv_noBackups.setVisibility(View.VISIBLE);

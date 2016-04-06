@@ -254,5 +254,5 @@
         android:layout_margin="@dimen/mediumMargin"
         android:clickable="true"
         android:scaleType="center"
-        android:src="@drawable/ic_drawer_install"/>
+        android:src="@drawable/ic_fab_install_white_24dp"/>
 </android.support.design.widget.CoordinatorLayout>

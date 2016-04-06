@@ -32,15 +32,14 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_restore"
-                    android:tint="@color/textColorSecondary"
+                    android:src="@drawable/ic_nobackups_gray_150dp"
                     android:visibility="invisible"/>
 
                 <TextView
                     android:id="@+id/tv_backupRestore_noBackups"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/imageView"
+                    android:layout_below="@+id/iv_backupRestore_noBackups"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="200dp"
                     android:gravity="center"
@@ -81,7 +80,7 @@
         android:layout_margin="@dimen/mediumMargin"
         android:clickable="true"
         android:scaleType="center"
-        android:src="@drawable/ic_action_add"
+        android:src="@drawable/ic_fab_add_white_24dp"
         android:tint="@color/fab_tint"/>
 
 

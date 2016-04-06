@@ -263,9 +263,9 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     private void createLayouts() {
 
         fab_installOverlays.hide();
-        toolbar.setNavigationIcon(R.drawable.ic_action_back);
+        toolbar.setNavigationIcon(R.drawable.ic_menu_back_white_24dp);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_back);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_back_white_24dp);
 
         sw_installAllStyle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

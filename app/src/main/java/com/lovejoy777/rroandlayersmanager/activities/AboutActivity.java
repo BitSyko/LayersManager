@@ -52,7 +52,7 @@ public class AboutActivity extends AppCompatActivity {
 
 
         //set Toolbar
-        toolbar.setNavigationIcon(R.drawable.ic_action_back);
+        toolbar.setNavigationIcon(R.drawable.ic_menu_back_white_24dp);
         setSupportActionBar(toolbar);
 
         final HashMap<String, List<DeveloperBean>> listDataChild = new HashMap<>();

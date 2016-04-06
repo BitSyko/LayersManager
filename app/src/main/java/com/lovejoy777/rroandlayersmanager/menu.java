@@ -127,7 +127,7 @@ public class menu extends AppCompatActivity {
     private void loadToolbarNavDrawer() {
         //set toolbar
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_menu);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_menu_white_24dp);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //set NavigationDrawer
@@ -195,7 +195,7 @@ public class menu extends AppCompatActivity {
                                 break;
                             //Tutorial
                             case R.id.nav_tutorial:
-                                Intent tutorial = new Intent(menu.this, DetailedTutorialActivity.class);
+                                Intent tutorial = new Intent(menu.this, TutorialActivity.class);
                                 startActivity(tutorial, bndlanimation);
                                 break;
                             //Team

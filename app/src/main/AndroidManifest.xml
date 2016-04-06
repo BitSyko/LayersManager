@@ -46,7 +46,7 @@
 
 
         <activity
-            android:name=".activities.DetailedTutorialActivity"
+            android:name=".activities.TutorialActivity"
             android:label=""
             android:parentActivityName=".menu">
             <intent-filter>
