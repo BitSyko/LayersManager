@@ -13,12 +13,14 @@ import com.lovejoy777.rroandlayersmanager.interfaces.Callback;
 import com.lovejoy777.rroandlayersmanager.interfaces.StoppableAsyncTask;
 import com.lovejoy777.rroandlayersmanager.views.CheckBoxHolder;
 
+import butterknife.ButterKnife;
+
 public abstract class AbsLoadPackagesAsyncTask<A, B, Void> extends StoppableAsyncTask<A, B, Void> {
 
     protected Context context;
     protected CoordinatorLayout cordLayout;
-    protected LinearLayout linearLayoutCategory1, linearLayoutCategory2;
-    protected CardView cardViewCategory1, cardViewCategory2;
+    protected LinearLayout ll_category1, ll_category2;
+    protected CardView cv_category1, cv_category2;
     protected Layer layer;
     protected boolean stop;
     protected Callback<CheckBox> checkBoxCallback;
@@ -37,10 +39,10 @@ public abstract class AbsLoadPackagesAsyncTask<A, B, Void> extends StoppableAsyn
 
     @Override
     protected void onPreExecute() {
-        linearLayoutCategory1 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory1);
-        linearLayoutCategory2 = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory2);
-        cardViewCategory1 = (CardView) cordLayout.findViewById(R.id.CardViewCategory1);
-        cardViewCategory2 = (CardView) cordLayout.findViewById(R.id.CardViewCategory2);
+        ll_category1 = ButterKnife.findById(cordLayout, R.id.ll_plugindetail_general);
+        ll_category2 = ButterKnife.findById(cordLayout, R.id.ll_plugindetail_style);
+        cv_category1 = ButterKnife.findById(cordLayout, R.id.cv_plugindetail_category1);
+        cv_category2 = ButterKnife.findById(cordLayout, R.id.cv_plugindetail_category2);
     }
 
     @Override
@@ -52,17 +54,15 @@ public abstract class AbsLoadPackagesAsyncTask<A, B, Void> extends StoppableAsyn
     protected void onPostExecute(Void nothing) {
 
         //No styleSpecific Overlays
-        if (linearLayoutCategory2.getChildCount() == 0) {
-            cardViewCategory2.setVisibility(View.GONE);
+        if (ll_category2.getChildCount() == 0) {
+            cv_category2.setVisibility(View.GONE);
         }
         //No normal Overlays
-        if (linearLayoutCategory1.getChildCount() == 0) {
-            cardViewCategory1.setVisibility(View.GONE);
+        if (ll_category1.getChildCount() == 0) {
+            cv_category1.setVisibility(View.GONE);
         }
 
-        linearLayoutCategory1.invalidate();
-        linearLayoutCategory2.invalidate();
-
+        ll_category1.invalidate();
+        ll_category2.invalidate();
     }
-
 }

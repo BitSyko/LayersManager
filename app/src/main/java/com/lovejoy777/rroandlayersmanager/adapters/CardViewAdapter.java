@@ -12,7 +12,9 @@ import com.lovejoy777.rroandlayersmanager.R;
 
 import java.util.List;
 
-public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ContactViewHolder> {
+import butterknife.ButterKnife;
+
+public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.viewHolder> {
 
     private List<Layer> layersList;
 
@@ -30,34 +32,31 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Contac
     }
 
     @Override
-    public void onBindViewHolder(ContactViewHolder contactViewHolder, int i) {
+    public void onBindViewHolder(viewHolder viewHolder, int i) {
         Layer layer = layersList.get(i);
-        contactViewHolder.name.setText(layer.getName());
-        contactViewHolder.developer.setText(layer.getDeveloper());
-        contactViewHolder.image.setImageDrawable(layer.getIcon());
+        viewHolder.title.setText(layer.getName());
+        viewHolder.subtitle.setText(layer.getDeveloper());
+        viewHolder.image.setImageDrawable(layer.getIcon());
     }
 
     @Override
-    public ContactViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View itemView = LayoutInflater.
-                from(viewGroup.getContext()).
-                inflate(R.layout.adapter_cardview, viewGroup, false);
+    public viewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_cardview, viewGroup, false);
 
-        return new ContactViewHolder(itemView);
+        return new viewHolder(itemView);
     }
 
-    public static class ContactViewHolder extends RecyclerView.ViewHolder {
+    public static class viewHolder extends RecyclerView.ViewHolder {
 
-        protected TextView name;
-        protected TextView developer;
+        protected TextView title;
+        protected TextView subtitle;
         protected ImageView image;
 
-        public ContactViewHolder(View v) {
+        public viewHolder(View v) {
             super(v);
-            name = (TextView) v.findViewById(R.id.txtName);
-            developer = (TextView) v.findViewById(R.id.txtSurname);
-            image = (ImageView) v.findViewById(R.id.iv_themeImage);
-
+            title = ButterKnife.findById(v,R.id.tv_cardViewAdapter_title);
+            subtitle = ButterKnife.findById(v,R.id.tv_cardViewAdapter_subtitle);
+            image = ButterKnife.findById(v,R.id.iv_cardViewAdapter_image);
         }
     }
 }

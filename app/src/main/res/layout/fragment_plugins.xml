@@ -19,23 +19,22 @@
 
 
         <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipeRefreshLayout"
+            android:id="@+id/srl_pluginList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="56dp">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/cardList"
+                android:id="@+id/rv_backupRestore_backupList"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/toolbar"/>
+                android:layout_height="match_parent"/>
         </android.support.v4.widget.SwipeRefreshLayout>
 
 
     </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab3"
+        android:id="@+id/fab_pluginList_install"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

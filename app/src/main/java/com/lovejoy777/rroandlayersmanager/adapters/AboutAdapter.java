@@ -14,6 +14,8 @@ import com.lovejoy777.rroandlayersmanager.beans.DeveloperBean;
 import java.util.HashMap;
 import java.util.List;
 
+import butterknife.ButterKnife;
+
 public class AboutAdapter extends BaseExpandableListAdapter {
 
     private final Activity context;
@@ -69,11 +71,8 @@ public class AboutAdapter extends BaseExpandableListAdapter {
             LayoutInflater inflater = context.getLayoutInflater();
             rowView = inflater.inflate(R.layout.adapter_about_headings, null);
         }
-
-        TextView lblListHeader = (TextView) rowView
-                .findViewById(R.id.header);
-
-        lblListHeader.setText(headers.get(groupPosition));
+        TextView tv_header = ButterKnife.findById(rowView,R.id.tv_aboutadapter_header);
+        tv_header.setText(headers.get(groupPosition));
 
         return rowView;
 
@@ -88,11 +87,9 @@ public class AboutAdapter extends BaseExpandableListAdapter {
             rowView = inflater.inflate(R.layout.adapter_listview_about, null);
             // configure view holder
             ViewHolder viewHolder = new ViewHolder();
-            viewHolder.image = (ImageView) rowView.findViewById(R.id.img);
-            viewHolder.text = (TextView) rowView
-                    .findViewById(R.id.txt);
-            viewHolder.text2 = (TextView) rowView
-                    .findViewById(R.id.description);
+            viewHolder.image = ButterKnife.findById(rowView, R.id.iv_aboutadapter_image);
+            viewHolder.title = ButterKnife.findById(rowView, R.id.tv_aboutadapter_title);
+            viewHolder.subtitle = ButterKnife.findById(rowView, R.id.tv_aboutadapter_subtitle);
             rowView.setTag(viewHolder);
         }
 
@@ -101,10 +98,9 @@ public class AboutAdapter extends BaseExpandableListAdapter {
 
         ViewHolder holder = (ViewHolder) rowView.getTag();
 
-
         holder.image.setImageDrawable(developer.getImage());
-        holder.text.setText(developer.getTitle());
-        holder.text2.setText(developer.getDescription());
+        holder.title.setText(developer.getTitle());
+        holder.subtitle.setText(developer.getDescription());
 
         return rowView;
     }
@@ -116,8 +112,7 @@ public class AboutAdapter extends BaseExpandableListAdapter {
 
     static class ViewHolder {
         public ImageView image;
-        public TextView text;
-        public TextView text2;
+        public TextView title;
+        public TextView subtitle;
     }
-
 }

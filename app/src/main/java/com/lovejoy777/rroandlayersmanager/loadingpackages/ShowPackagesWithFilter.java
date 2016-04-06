@@ -84,12 +84,12 @@ public abstract class ShowPackagesWithFilter extends AbsLoadPackagesAsyncTask<Vo
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(adapter);
 
-                linearLayoutCategory1.addView(row);
+                ll_category1.addView(row);
 
             } else if (layerFile.isColor()) {
-                linearLayoutCategory2.addView(row);
+                ll_category2.addView(row);
             } else {
-                linearLayoutCategory1.addView(row);
+                ll_category1.addView(row);
             }
 
 
@@ -103,7 +103,7 @@ public abstract class ShowPackagesWithFilter extends AbsLoadPackagesAsyncTask<Vo
     @Override
     protected void onPostExecute(Void nothing) {
         super.onPostExecute(nothing);
-        Spinner spinner = (Spinner) cardViewCategory2.findViewById(R.id.Tv_Category2Spinner);
+        Spinner spinner = (Spinner) cv_category2.findViewById(R.id.sp_plugindetail_styleOverlays);
         ArrayAdapter adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, layer.getColors());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);

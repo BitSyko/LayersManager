@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.Collections;
 
-//To hold layer's colors (to hold .zip name with name to display)
+//To hold layer's colors (to hold .zip title with title to display)
 public class Color implements Comparable<Color> {
 
     String zip;

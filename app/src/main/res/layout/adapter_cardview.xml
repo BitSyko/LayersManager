@@ -17,7 +17,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/iv_themeImage"
+            android:id="@+id/iv_cardViewAdapter_image"
             android:layout_width="@dimen/layerIconSize"
             android:layout_height="@dimen/layerIconSize"
             android:layout_centerVertical="true"
@@ -28,23 +28,23 @@
             android:src="@mipmap/ic_launcher"/>
 
         <TextView
-            android:id="@+id/txtName"
+            android:id="@+id/tv_cardViewAdapter_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/iv_themeImage"
+            android:layout_alignTop="@+id/iv_cardViewAdapter_image"
             android:layout_marginTop="12dp"
-            android:layout_toEndOf="@+id/iv_themeImage"
+            android:layout_toEndOf="@+id/iv_cardViewAdapter_image"
             android:gravity="center_vertical"
             android:text="Title"
             android:textColor="@color/textColorPrimary"
             android:textSize="@dimen/textSizeSubheading"/>
 
         <TextView
-            android:id="@+id/txtSurname"
+            android:id="@+id/tv_cardViewAdapter_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/txtName"
-            android:layout_below="@+id/txtName"
+            android:layout_alignStart="@+id/tv_cardViewAdapter_title"
+            android:layout_below="@+id/tv_cardViewAdapter_title"
             android:layout_marginBottom="12dp"
             android:gravity="center_vertical"
             android:text="Subtitle"

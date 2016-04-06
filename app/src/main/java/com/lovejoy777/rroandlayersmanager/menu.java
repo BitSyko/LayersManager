@@ -8,7 +8,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,6 +16,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 import com.bitsyko.liblayers.Layer;
@@ -31,15 +31,17 @@ import com.rubengees.introduction.entity.Option;
 import com.rubengees.introduction.entity.Slide;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class menu extends AppCompatActivity {
 
-    private DrawerLayout mDrawerLayout;
-
+    @Bind(R.id.toolbar_fragmentContainer) Toolbar toolbar;
+    @Bind(R.id.drawerLayout_fragmentContainer) DrawerLayout drawerLayout;
+    @Bind(R.id.navigationView_menu) NavigationView navigationView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class menu extends AppCompatActivity {
 
         setContentView(R.layout.fragment_container);
 
+        ButterKnife.bind(this);
         loadToolbarNavDrawer();
 
         if (!Utils.isRootAvailable()) {
@@ -122,16 +125,12 @@ public class menu extends AppCompatActivity {
     }
 
     private void loadToolbarNavDrawer() {
-        //set Toolbar
-        final android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+        //set toolbar
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_menu);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         //set NavigationDrawer
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null) {
             setupDrawerContent(navigationView);
         }
@@ -143,7 +142,7 @@ public class menu extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
+                drawerLayout.openDrawer(GravityCompat.START);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -156,7 +155,7 @@ public class menu extends AppCompatActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        mDrawerLayout.closeDrawers();
+                        drawerLayout.closeDrawers();
                         Bundle bndlanimation =
                                 ActivityOptions.makeCustomAnimation(getApplicationContext(), R.anim.anni1, R.anim.anni2).toBundle();
                         int id = menuItem.getItemId();
@@ -230,20 +229,19 @@ public class menu extends AppCompatActivity {
     }
 
     public void changeFragment(int position) {
-        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
         Fragment fragment = null;
         FragmentManager fragmentManager = getFragmentManager();
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         switch (position) {
             case 1:
-                fragment = new PluginFragment();
+                fragment = new PluginList();
                 break;
             case 2:
-                fragment = new UninstallFragment();
+                fragment = new Uninstall();
                 break;
             case 3:
-                fragment = new BackupRestoreFragment();
+                fragment = new BackupRestore();
                 break;
         }
 
@@ -296,8 +294,8 @@ public class menu extends AppCompatActivity {
     public void onBackPressed() {
         Fragment currentFragment = menu.this.getFragmentManager().findFragmentById(R.id.fragment_container);
 
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawers();
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawers();
             return;
         }
 

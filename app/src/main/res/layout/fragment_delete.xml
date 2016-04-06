@@ -26,7 +26,7 @@
                 android:gravity="center">
 
                 <ImageView
-                    android:id="@+id/imageView"
+                    android:id="@+id/iv_uninstall_noOverlays"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_centerHorizontal="true"
@@ -37,10 +37,10 @@
                     android:visibility="invisible"/>
 
                 <TextView
-                    android:id="@+id/textView7"
+                    android:id="@+id/tv_uninstall_noOverlays"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/imageView"
+                    android:layout_below="@+id/iv_uninstall_noOverlays"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="200dp"
                     android:gravity="center"
@@ -66,7 +66,7 @@
                     android:layout_below="@+id/textView8">
 
                     <LinearLayout
-                        android:id="@+id/cardList"
+                        android:id="@+id/ll_uninstall_installedOverlayList"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/smallMargin"
@@ -85,7 +85,7 @@
             android:layout_height="?actionBarSize"/>
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab6"
+                android:id="@+id/fab_uninstall_delete"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="@dimen/mediumMargin"

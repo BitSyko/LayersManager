@@ -5,7 +5,7 @@
 
 
     <TextView
-        android:id="@+id/txt"
+        android:id="@+id/tv_aboutadapter_title"
         android:layout_width="fill_parent"
         android:layout_height="48dp"
         android:background="@drawable/ripplewhite"

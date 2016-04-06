@@ -8,7 +8,7 @@
 
 
     <TextView
-        android:id="@+id/header"
+        android:id="@+id/tv_aboutadapter_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/mediumMargin"

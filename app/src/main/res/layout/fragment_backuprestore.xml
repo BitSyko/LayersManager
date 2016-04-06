@@ -26,7 +26,7 @@
                 android:gravity="center">
 
                 <ImageView
-                    android:id="@+id/imageView"
+                    android:id="@+id/iv_backupRestore_noBackups"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_centerHorizontal="true"
@@ -37,7 +37,7 @@
                     android:visibility="invisible"/>
 
                 <TextView
-                    android:id="@+id/textView7"
+                    android:id="@+id/tv_backupRestore_noBackups"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/imageView"
@@ -61,7 +61,7 @@
                     android:textStyle="bold"/>
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/cardList"
+                    android:id="@+id/rv_backupRestore_backupList"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/textView8"/>
@@ -72,7 +72,7 @@
     </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab6"
+        android:id="@+id/fab_backupRestore_newBackup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

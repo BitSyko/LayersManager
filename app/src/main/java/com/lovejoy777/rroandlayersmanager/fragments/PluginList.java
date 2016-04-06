@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentCompat;
@@ -24,14 +23,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.*;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialcab.Util;
 import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
 import com.lovejoy777.rroandlayersmanager.R;
@@ -41,13 +38,15 @@ import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.helper.RecyclerItemClickListener;
 import com.lovejoy777.rroandlayersmanager.menu;
 
-import java.io.File;
 import java.util.*;
 
-public class PluginFragment extends Fragment implements AsyncResponse {
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-    RecyclerView recList = null;
-    CardViewAdapter ca = null;
+public class PluginList extends Fragment implements AsyncResponse {
+
+    CardViewAdapter cardViewAdapter = null;
     public int sortMode;
     ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
         @Override
@@ -58,37 +57,50 @@ public class PluginFragment extends Fragment implements AsyncResponse {
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
             //Remove swiped item from list and notify the RecyclerView
-            String packageName = ca.getLayerFromPosition(viewHolder.getAdapterPosition()).getPackageName();
+            String packageName = cardViewAdapter.getLayerFromPosition(viewHolder.getAdapterPosition()).getPackageName();
             Uri packageURI = Uri.parse("package:" + packageName);
             Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, packageURI);
             startActivityForResult(uninstallIntent, 1);
         }
     };
-    private Boolean TestBoolean = false;
-    private CoordinatorLayout cordLayout = null;
-    private SwipeRefreshLayout mSwipeRefresh;
+    private Boolean noPluginsInstalled = false;
+    private CoordinatorLayout cl_root = null;
+
+    @Bind(R.id.rv_backupRestore_backupList) RecyclerView rv_installedOverlaysList;
+
+    @OnClick(R.id.fab_pluginList_install)
+        void onClick(){
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                askForPermission(1);
+            } else{
+                openFileManager();
+            }
+        }
+
+    @Bind(R.id.srl_pluginList) SwipeRefreshLayout swipeRefreshLayout;
+
+
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        cl_root = (CoordinatorLayout) inflater.inflate(R.layout.fragment_plugins, container, false);
+        ButterKnife.bind(this, cl_root);
 
-        cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_plugins, container, false);
+        //Drawer
+        DrawerLayout drawerLayout = ButterKnife.findById(getActivity(), R.id.drawerLayout_fragmentContainer);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        NavigationView navigationView = ButterKnife.findById(getActivity(), R.id.navigationView_menu);
+        navigationView.getMenu().getItem(0).setChecked(true);
 
-        ((DrawerLayout) getActivity().findViewById(R.id.drawer_layout)).setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-
-        ((NavigationView) getActivity().findViewById(R.id.nav_view)).getMenu().getItem(0).setChecked(true);
-
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-
-        TextView toolbarTitle = (TextView) getActivity().findViewById(R.id.title2);
-        toolbarTitle.setText(getString(R.string.InstallOverlays2));
-
+        //Toolbar
+        Toolbar toolbar = ButterKnife.findById(getActivity(),R.id.toolbar_fragmentContainer);
+        TextView tv_toolbarTitle = ButterKnife.findById(getActivity(),R.id.tv_fragmentContainer_toolbarTitle);
+        tv_toolbarTitle.setText(getString(R.string.InstallOverlays2));
         int elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
         int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, getResources().getDisplayMetrics());
         toolbar.setNavigationIcon(R.drawable.ic_action_menu);
-
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, height
         );
-
         toolbar.setElevation(elevation);
         toolbar.setLayoutParams(layoutParams);
 
@@ -100,14 +112,13 @@ public class PluginFragment extends Fragment implements AsyncResponse {
 
         setHasOptionsMenu(true);
 
-        return cordLayout;
+        return cl_root;
     }
 
     private void LoadRecyclerViewFabToolbar() {
         //create RecyclerView
-        RecyclerView recyclerCardViewList = (RecyclerView) cordLayout.findViewById(R.id.cardList);
-        recyclerCardViewList.setHasFixedSize(true);
-        recyclerCardViewList.addOnItemTouchListener(
+        rv_installedOverlaysList.setHasFixedSize(true);
+        rv_installedOverlaysList.addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -118,28 +129,13 @@ public class PluginFragment extends Fragment implements AsyncResponse {
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerCardViewList.setLayoutManager(llm);
-
+        rv_installedOverlaysList.setLayoutManager(llm);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerCardViewList);
+        itemTouchHelper.attachToRecyclerView(rv_installedOverlaysList);
 
-        //create FAB
-        FloatingActionButton fab = (FloatingActionButton) cordLayout.findViewById(R.id.fab3);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    askForPermission(1);
-                } else{
-                    openFileManager();
-                }
-            }
-        });
-
-        mSwipeRefresh = (SwipeRefreshLayout) cordLayout.findViewById(R.id.swipeRefreshLayout);
-        mSwipeRefresh.setColorSchemeResources(R.color.accent);
-        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefreshLayout.setColorSchemeResources(R.color.accent);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 new fillPluginList().execute();
@@ -160,8 +156,8 @@ public class PluginFragment extends Fragment implements AsyncResponse {
 
     //open Plugin page after clicked on a cardview
     protected void onListItemClick(int position) {
-        if (!TestBoolean) {
-            ((menu) getActivity()).changeFragment2(ca.getLayerFromPosition(position));
+        if (!noPluginsInstalled) {
+            ((menu) getActivity()).changeFragment2(cardViewAdapter.getLayerFromPosition(position));
         } else {
             //PlayStore
             if (position == 2) {
@@ -201,7 +197,7 @@ public class PluginFragment extends Fragment implements AsyncResponse {
                 ClipData clipdata = data.getClipData();
                 for (int i=0; i<clipdata.getItemCount();i++) {
                     String path = Utils.getPath(getActivity(), clipdata.getItemAt(i).getUri());
-                    if (path.endsWith(".apk") || (path.endsWith(".zip"))) {
+                    if (path.endsWith(".apk") || path.endsWith(".zip")) {
                         paths.add(path);
                     }
                     else {
@@ -212,26 +208,18 @@ public class PluginFragment extends Fragment implements AsyncResponse {
                 if (paths.size() != 0) {
                     new Commands.InstallZipBetterWay(getActivity(), this).execute(paths.toArray(new String[paths.size()]));
                 }
-
-
             }
             else {
                 Uri uri = data.getData();
                 String path = Utils.getPath(getActivity(), uri);
                 System.out.println(Utils.getMimeType(path));
-                if (path.endsWith(".apk") || (path.endsWith(".zip"))){
+                if (path.endsWith(".apk") || path.endsWith(".zip")){
                     paths.add(Utils.getPath(getActivity(), uri));
                     new Commands.InstallZipBetterWay(getActivity(), this).execute(paths.toArray(new String[paths.size()]));
                 }else {
                         Toast.makeText(getActivity(),"File type not supported: "+Utils.getMimeType(path),Toast.LENGTH_SHORT).show();
-
                 }
-
             }
-
-
-
-
         }
     }
 
@@ -277,11 +265,10 @@ public class PluginFragment extends Fragment implements AsyncResponse {
 
     @Override
     public void processFinish() {
-        Snackbar.make(cordLayout, R.string.installed, Snackbar.LENGTH_LONG)
+        Snackbar.make(cl_root, R.string.installed, Snackbar.LENGTH_LONG)
                 .setAction(R.string.Reboot, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         Commands.reboot(getActivity());
                     }
                 })
@@ -291,13 +278,13 @@ public class PluginFragment extends Fragment implements AsyncResponse {
     private class fillPluginList extends AsyncTask<Void, Void, Void> {
 
         protected void onPreExecute() {
-            mSwipeRefresh.setRefreshing(true);
+            swipeRefreshLayout.setRefreshing(true);
         }
 
         @Override
         protected Void doInBackground(Void... params) {
 
-            List<Layer> layerList = Layer.getLayersInSystem(PluginFragment.this.getActivity());
+            List<Layer> layerList = Layer.getLayersInSystem(PluginList.this.getActivity());
 
             sortMode = Commands.getSortMode(getActivity());
             if (sortMode == 1 || sortMode == 0) {
@@ -324,12 +311,11 @@ public class PluginFragment extends Fragment implements AsyncResponse {
 
             }
 
-
             if (layerList.size() > 0) {
-                ca = new CardViewAdapter(layerList);
+                cardViewAdapter = new CardViewAdapter(layerList);
             } else {
-                ca = new CardViewAdapter(createList2());
-                TestBoolean = true;
+                cardViewAdapter = new CardViewAdapter(createList2());
+                noPluginsInstalled = true;
             }
 
             return null;
@@ -337,10 +323,9 @@ public class PluginFragment extends Fragment implements AsyncResponse {
         }
 
         protected void onPostExecute(Void result) {
-            recList = (RecyclerView) cordLayout.findViewById(R.id.cardList);
-            recList.setHasFixedSize(true);
-            recList.setAdapter(ca);
-            mSwipeRefresh.setRefreshing(false);
+            rv_installedOverlaysList.setHasFixedSize(true);
+            rv_installedOverlaysList.setAdapter(cardViewAdapter);
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -349,9 +334,7 @@ public class PluginFragment extends Fragment implements AsyncResponse {
         if (FragmentCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE)) {
             // Explain to the user why we need to read the contacts
         }
-
         FragmentCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, mode);
-
         return;
     }
 
@@ -361,11 +344,8 @@ public class PluginFragment extends Fragment implements AsyncResponse {
         switch (requestCode) {
             case 1: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
                     openFileManager();
-
                 } else {
-
                     AlertDialog.Builder noPermissionDialog = new AlertDialog.Builder(getActivity());
                     noPermissionDialog.setTitle(R.string.noPermission);
                     noPermissionDialog.setMessage(R.string.noPermissionDescription);
@@ -374,28 +354,23 @@ public class PluginFragment extends Fragment implements AsyncResponse {
                         }
                     });
                     noPermissionDialog.show();
-
                 }
                 return;
             }
-
-            // other 'switch' lines to check for other
-            // permissions this app might request
         }
     }
 
     private void openFileManager() {
-        //((menu) getActivity()).changeFragment(4);
-        //Intent chooseFiles = new Intent(Intent.ACTION_GET_CONTENT);
+
         Intent chooseFiles = new Intent();
         chooseFiles.setAction(Intent.ACTION_GET_CONTENT);
-
         chooseFiles.setType("*/*");
-        //chooseFiles.setType("application/vnd.android.package-archive");
-
         chooseFiles.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         startActivityForResult(Intent.createChooser(chooseFiles,"Choose Overlays"),2);
     }
 
-
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
 }

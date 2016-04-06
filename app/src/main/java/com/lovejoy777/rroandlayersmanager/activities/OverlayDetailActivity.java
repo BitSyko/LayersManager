@@ -58,21 +58,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class OverlayDetailActivity extends AppCompatActivity implements AsyncResponse {
 
-    private CheckBox dontShowAgain;
     private ArrayList<CheckBox> checkBoxesGeneral = new ArrayList<>();
     private ArrayList<CheckBox> checkBoxesStyle = new ArrayList<>();
     private String choosedStyle = "";
-    private String NewchoosedStyle;
     private Layer layer;
-    private Switch installAllGeneral;
-    private Switch installAllStyle;
-    private FloatingActionButton installationFAB;
-    private CoordinatorLayout cordLayout;
     private LoadDrawables imageLoader;
     private List<StoppableAsyncTask<Void, ?, ?>> loadLayerApks = new ArrayList<>();
-
     private CheckBoxHolder.CheckBoxHolderCallback checkBoxHolderCallback = new CheckBoxHolder.CheckBoxHolderCallback() {
         @Override
         public void onClick(CheckBox which, boolean checked) {
@@ -94,18 +91,45 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         }
     };
 
+    @Bind(R.id.cl_plugindetail_root) CoordinatorLayout cl_root;
+
+    @Bind(R.id.tv_plugindetail_layerDescription) TextView tv_layer_description;
+    @Bind(R.id.tv_plugindetail_layerWhatsnew) TextView tv_whatsNew;
+
+    @Bind(R.id.ctb_plugindetail) CollapsingToolbarLayout collapsingToolbar;
+    @Bind(R.id.tb_plugindetail) Toolbar toolbar;
+
+    @Bind(R.id.sw_plugindetail_general) Switch sw_installAllGeneral;
+    @Bind(R.id.sw_plugindetail_style) Switch sw_installAllStyle;
+
+    @Bind(R.id.fab_plugindetail_installOverlays) FloatingActionButton fab_installOverlays;
+    @OnClick(R.id.fab_plugindetail_installOverlays)
+        void fabClicked(){
+            installDialog();
+        }
+    @Bind(R.id.iv_plugindetail_backdrop) ImageView iv_backdrop;
+
+    @Bind(R.id.ll_plugindetail_general) LinearLayout  ll_generalOverlays;
+    @Bind(R.id.ll_plugindetail_style) LinearLayout  ll_styleOverlays;
+
+    @Bind(R.id.sp_plugindetail_styleOverlays) Spinner sp_styles;
+
+    @Bind(R.id.rv_plugindetail_screenshots) RecyclerView rv_screenshots;
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_plugindetail);
+        ButterKnife.bind(this);
 
         getWindow().setStatusBarColor(getResources().getColor(R.color.transparent));
 
-        cordLayout = (CoordinatorLayout) findViewById(R.id.main_content);
-
         receiveIntent();
 
-        cordLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+        cl_root.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 v.removeOnLayoutChangeListener(this);
@@ -113,11 +137,9 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             }
         });
 
-
         createLayouts();
 
         Log.d("Colors", String.valueOf(layer.getColors()));
-        //Log.d("PluginVersion", String.valueOf(layer.getPluginVersion()));
     }
 
     private boolean isAnyCheckboxEnabled(int mode) {
@@ -206,9 +228,9 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     private void refreshFab() {
 
         if (isAnyCheckboxEnabled(2)) {
-            installationFAB.show();
+            fab_installOverlays.show();
         } else {
-            installationFAB.hide();
+            fab_installOverlays.hide();
         }
 
     }
@@ -216,71 +238,36 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     private void refreshSwitches() {
 
         if (!isAnyCheckboxEnabled(0)) {
-            installAllGeneral.setChecked(false);
+            sw_installAllGeneral.setChecked(false);
         } else {
             if (AreAllCheckboxEnabled(0)) {
-                installAllGeneral.setChecked(true);
+                sw_installAllGeneral.setChecked(true);
             }
         }
 
         if (!isAnyCheckboxEnabled(1)) {
-            installAllStyle.setChecked(false);
+            sw_installAllStyle.setChecked(false);
         } else {
             if (AreAllCheckboxEnabled(1)) {
-                installAllStyle.setChecked(true);
+                sw_installAllStyle.setChecked(true);
             }
         }
-
-    }
-
-    private void loadScreenshotCardview() {
-        loadScreenshots();
-
-
-
-        //  recyclerView.setMinimumWidth(2000);
-
     }
 
     private void receiveAndUseData() {
-
-        TextView tv_description = (TextView) cordLayout.findViewById(R.id.tv_description);
-        tv_description.setText(layer.getDescription());
-
-        TextView tv_whatsNew = (TextView) cordLayout.findViewById(R.id.tv_whatsnew);
+        tv_layer_description.setText(layer.getDescription());
         tv_whatsNew.setText(layer.getWhatsNew());
-
-        CollapsingToolbarLayout collapsingToolbar =
-                (CollapsingToolbarLayout) cordLayout.findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle(layer.getName());
-
     }
 
     private void createLayouts() {
-        //switch to select all Checkboxes
-        installAllGeneral = (Switch) cordLayout.findViewById(R.id.Tv_Category1Name);
-        installAllStyle = (Switch) cordLayout.findViewById(R.id.Tv_Category2Name);
 
-
-        //Hide the FAB
-        installationFAB = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab2);
-        installationFAB.hide();
-
-        //Initialize Layout
-        Toolbar toolbar = (Toolbar) cordLayout.findViewById(R.id.toolbar);
+        fab_installOverlays.hide();
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_back);
 
-
-        installationFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                installTheme();
-            }
-        });
-
-        installAllStyle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        sw_installAllStyle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     checkall(1);
@@ -290,7 +277,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             }
         });
 
-        installAllGeneral.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        sw_installAllGeneral.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     checkall(0);
@@ -299,7 +286,6 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                 }
             }
         });
-
     }
 
     private void receiveIntent() {
@@ -321,14 +307,9 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
     private void loadBackdrop() {
 
-        ImageView imageView = (ImageView) cordLayout.findViewById(R.id.backdrop);
-
         Drawable promo = layer.getPromo();
 
-        imageView.setImageDrawable(promo);
-
-        final CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) cordLayout.findViewById(R.id.collapsing_toolbar);
-
+        iv_backdrop.setImageDrawable(promo);
         Palette.from(((BitmapDrawable) promo).getBitmap()).generate(new Palette.PaletteAsyncListener() {
             public void onGenerated(Palette palette) {
                 Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
@@ -338,27 +319,20 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                     Color.colorToHSV(vibrantSwatch.getRgb(), hsv);
                     hsv[2] *= 0.8f;
                     collapsingToolbar.setStatusBarScrimColor(Color.HSVToColor(hsv));
-                    //int colorPrimaryDark = Color.HSVToColor(hsv);
-                    //  Window window = getWindow();
-                    // window.setStatusBarColor(Color.HSVToColor(hsv));
                 }
             }
         });
-        Animator reveal = ViewAnimationUtils.createCircularReveal(imageView,
-                imageView.getWidth() / 2,
-                imageView.getHeight() / 2,
+        Animator reveal = ViewAnimationUtils.createCircularReveal(iv_backdrop,
+                iv_backdrop.getWidth() / 2,
+                iv_backdrop.getHeight() / 2,
                 0,
-                imageView.getHeight() * 2);
+                iv_backdrop.getHeight() * 2);
         reveal.setDuration(750);
         reveal.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-                loadScreenshotCardview();
+                loadScreenshots();
                 receiveAndUseData();
-                //  Animation fadeInAnimation = AnimationUtils.loadAnimation(OverlayDetailActivity.this, R.anim.fadein);
-                LinearLayout WN = (LinearLayout) cordLayout.findViewById(R.id.lin2);
-                WN.setVisibility(View.VISIBLE);
-                // WN.startAnimation(fadeInAnimation);
             }
 
             @Override
@@ -368,30 +342,18 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
             @Override
             public void onAnimationCancel(Animator animation) {
-
             }
 
             @Override
             public void onAnimationRepeat(Animator animation) {
-
             }
         });
         reveal.start();
     }
 
-    private void loadBackdrop2() {
-        final ImageView imageView = (ImageView) cordLayout.findViewById(R.id.backdrop);
-        imageView.setBackgroundResource(R.drawable.no_heroimage);
-    }
-
     private void loadScreenshots() {
         imageLoader = new LoadDrawables();
         imageLoader.execute();
-    }
-
-    //If FAB is clicked
-    private void installTheme() {
-        installDialog();
     }
 
     @Override
@@ -410,12 +372,12 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             case R.id.menu_selectall:
                 if (isAnyCheckboxEnabled(2)) {
                     uncheckAllCheckBoxes(2);
-                    installAllGeneral.setChecked(false);
-                    installAllStyle.setChecked(false);
+                    sw_installAllGeneral.setChecked(false);
+                    sw_installAllStyle.setChecked(false);
                 } else {
                     checkall(2);
-                    installAllGeneral.setChecked(true);
-                    installAllStyle.setChecked(true);
+                    sw_installAllGeneral.setChecked(true);
+                    sw_installAllStyle.setChecked(true);
                 }
                 return true;
             case R.id.menu_refresh:
@@ -430,8 +392,8 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         checkBoxesGeneral.clear();
         checkBoxesStyle.clear();
 
-        ((LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory1)).removeAllViews();
-        ((LinearLayout) cordLayout.findViewById(R.id.LinearLayoutCategory2)).removeAllViews();
+        ll_generalOverlays.removeAllViews();
+        ll_styleOverlays.removeAllViews();
 
         SharedPreferences myprefs = getSharedPreferences("layersData", Context.MODE_PRIVATE);
         myprefs.edit().remove(layer.getPackageName()).commit();
@@ -465,10 +427,8 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                 checkBox.setChecked(checked);
             }
         }
-
         refreshFab();
         refreshSwitches();
-
     }
 
 
@@ -478,7 +438,6 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         //      2 = uncheck both
 
         changeCheckBoxCheckedStatus(mode, false);
-
     }
 
     private void checkall(int mode) {
@@ -487,18 +446,14 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         //      2 = uncheck both
 
         changeCheckBoxCheckedStatus(mode, true);
-
     }
 
 
     ///////////
     //Snackbars
-
     private void installationFinishedSnackBar() {
-
         //show SnackBar after successful installation of the overlays
-        final View coordinatorLayoutView = cordLayout.findViewById(R.id.main_content);
-        Snackbar.make(coordinatorLayoutView, R.string.OverlaysInstalled, Snackbar.LENGTH_LONG)
+        Snackbar.make(cl_root, R.string.OverlaysInstalled, Snackbar.LENGTH_LONG)
                 .setAction(R.string.Reboot, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -513,11 +468,10 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     //Dialogs
     private void installDialog() {
 
-        //if (showInstallationConfirmDialog()) {
         AlertDialog.Builder installdialog = new AlertDialog.Builder(this);
         final LayoutInflater inflater = getLayoutInflater();
         View dontShowAgainLayout = inflater.inflate(R.layout.dialog_donotshowagain, null);
-        dontShowAgain = (CheckBox) dontShowAgainLayout.findViewById(R.id.skip);
+        final CheckBox dontShowAgain = ButterKnife.findById(dontShowAgainLayout, R.id.cb_dontShowAgainDialog_dontShowAgain);
 
         installdialog.setView(dontShowAgainLayout);
         installdialog.setTitle(R.string.MoveOverlays);
@@ -531,7 +485,6 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                     editor.putString("ConfirmInstallationDialog", "checked");
                     editor.apply();
                 }
-
                 //start async task to install the Overlays
                 InstallAsyncOverlays();
             }
@@ -551,15 +504,14 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
         List<LayerFile> layersToInstall = new ArrayList<>();
 
-        int childrenNumber = ((LinearLayout) findViewById(R.id.LinearLayoutCategory1)).getChildCount();
+        int childrenNumber = ll_generalOverlays.getChildCount();
 
         for (int i = 0; i < childrenNumber; i++) {
 
-            //TODO: Butterknife this
-            TableRow tableRow = (TableRow) ((LinearLayout) findViewById(R.id.LinearLayoutCategory1)).getChildAt(i);
+            TableRow tableRow = (TableRow) ll_generalOverlays.getChildAt(i);
 
-            CheckBox checkBox = (CheckBox) tableRow.findViewById(R.id.CheckBox);
-            Spinner spinner = (Spinner) tableRow.findViewById(R.id.Spinner);
+            CheckBox checkBox = ButterKnife.findById(tableRow, R.id.CheckBox);
+            Spinner spinner = ButterKnife.findById(tableRow, R.id.Spinner);
 
             if (!checkBox.isChecked()) {
                 continue;
@@ -580,60 +532,40 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
         }
 
-/*
-        for (CheckBox checkBox : checkBoxesGeneral) {
-
-            if (checkBox.isChecked()) {
-                LayerFile layerFile = (LayerFile) checkBox.getTag();
-                layersToInstall.add(layerFile);
-            }
-
-        }
-*/
-
-        Spinner colorSpinner = (Spinner) findViewById(R.id.Tv_Category2Spinner);
-
-        com.bitsyko.liblayers.Color color = (com.bitsyko.liblayers.Color) colorSpinner.getSelectedItem();
+        com.bitsyko.liblayers.Color color = (com.bitsyko.liblayers.Color) sp_styles.getSelectedItem();
 
         for (CheckBox checkBox : checkBoxesStyle) {
-
             if (checkBox.isChecked()) {
                 ColorOverlay layerFile = (ColorOverlay) checkBox.getTag();
                 layerFile.setColor(color);
                 layersToInstall.add(layerFile);
             }
-
         }
 
         Log.d("Choosed color", choosedStyle);
 
         new Commands.InstallOverlaysBetterWay(layersToInstall, this, this).execute();
-
-
     }
 
     public void processFinish() {
         installationFinishedSnackBar();
         uncheckAllCheckBoxes(2);
-        installAllStyle.setChecked(false);
-        installAllGeneral.setChecked(false);
+        sw_installAllStyle.setChecked(false);
+        sw_installAllGeneral.setChecked(false);
     }
 
     @Override
     public void onDestroy() {
-        loadBackdrop2();
+        iv_backdrop.setBackgroundResource(R.drawable.no_heroimage);
         if (imageLoader != null && imageLoader.getStatus() != AsyncTask.Status.FINISHED) {
             imageLoader.cancel(true);
         }
 
-
         for (StoppableAsyncTask asyncTask : loadLayerApks) {
-
             if (asyncTask != null && asyncTask.getStatus() != AsyncTask.Status.FINISHED) {
                 asyncTask.stop();
                 asyncTask.cancel(true);
             }
-
         }
 
         try {
@@ -648,10 +580,8 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     private void loadOverlayCardviews() {
 
         //We're checking if progress dialog is required
-
         boolean disableNotInstalledApps = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
                 .getBoolean("disableNotInstalledApps", false);
-
 
         /**
          * We need 3 asynctasks:
@@ -674,13 +604,11 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                 loadLayerApks.add(new CreateList(this, layer));
             }
 
-            loadLayerApks.add(new ShowPackagesFromList(this, cordLayout, layer, checkBoxCallback, checkBoxHolderCallback));
+            loadLayerApks.add(new ShowPackagesFromList(this, cl_root, layer, checkBoxCallback, checkBoxHolderCallback));
 
         } else {
-            loadLayerApks.add(new ShowAllPackagesFromLayer(this, cordLayout, layer, checkBoxCallback, checkBoxHolderCallback));
+            loadLayerApks.add(new ShowAllPackagesFromLayer(this, cl_root, layer, checkBoxCallback, checkBoxHolderCallback));
         }
-
-
 
         for (AsyncTask<Void, ?, ?> asyncTask : loadLayerApks) {
             asyncTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
@@ -690,20 +618,13 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
     private class LoadDrawables extends AsyncTask<Void, Void, Void> {
 
-        LinearLayout screenshotLayout;
-
-
 
         @Override
         protected void onPreExecute() {
-            // screenshotLayout = (LinearLayout) cordLayout.findViewById(R.id.LinearLayoutScreenshots);
         }
 
         @Override
         protected void onProgressUpdate(Void... values) {
-
-
-
         }
 
         @Override
@@ -714,25 +635,20 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.horizontalScrollView);
-
             Display display = getWindowManager().getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
 
-            recyclerView.setMinimumHeight(size.y / 2);
+            rv_screenshots.setMinimumHeight(size.y / 2);
 
             RecyclerView.Adapter adapter = new ScreenshotAdapter(OverlayDetailActivity.this, layer, size.y);
 
             LinearLayoutManager layoutManager
                     = new LinearLayoutManager(OverlayDetailActivity.this, LinearLayoutManager.HORIZONTAL, false);
 
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setNestedScrollingEnabled(false);
-
+            rv_screenshots.setAdapter(adapter);
+            rv_screenshots.setLayoutManager(layoutManager);
+            rv_screenshots.setNestedScrollingEnabled(false);
         }
     }
-
-
 }

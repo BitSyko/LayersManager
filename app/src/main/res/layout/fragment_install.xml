@@ -61,7 +61,7 @@
                     android:visibility="invisible"/>
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/cardList"
+                    android:id="@+id/rv_backupRestore_backupList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textView8">
@@ -72,7 +72,7 @@
 
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab6"
+                android:id="@+id/fab_backupRestore_newBackup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"

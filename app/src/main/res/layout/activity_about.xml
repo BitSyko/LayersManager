@@ -4,7 +4,7 @@
     android:layout_height="fill_parent">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar4"
+        android:id="@+id/toolbar_about"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:background="@color/primary"
@@ -34,10 +34,10 @@
         android:textColor="@color/actionbar_text_secondary_color"/>
 
     <ExpandableListView
-        android:id="@+id/developers"
+        android:id="@+id/elv_about_developers"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar4"
+        android:layout_below="@+id/toolbar_about"
         android:fillViewport="true"
         android:scrollbars="none"/>
 

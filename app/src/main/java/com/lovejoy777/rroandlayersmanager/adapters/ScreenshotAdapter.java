@@ -1,7 +1,6 @@
 package com.lovejoy777.rroandlayersmanager.adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -69,7 +68,7 @@ public class ScreenshotAdapter extends RecyclerView.Adapter<ScreenshotAdapter.Sc
 
         public ScreenshotViewHolder(View v) {
             super(v);
-            image = (ImageView) v.findViewById(R.id.iv_themeImage);
+            image = (ImageView) v.findViewById(R.id.iv_cardViewAdapter_image);
         }
     }
 

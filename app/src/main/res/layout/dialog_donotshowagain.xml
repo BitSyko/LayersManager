@@ -9,7 +9,7 @@
 
     <CheckBox
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/skip"
+        android:id="@+id/cb_dontShowAgainDialog_dontShowAgain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/smallMargin"

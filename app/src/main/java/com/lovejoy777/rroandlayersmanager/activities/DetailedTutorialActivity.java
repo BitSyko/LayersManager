@@ -17,32 +17,28 @@ import com.rubengees.introduction.IntroductionActivity;
 import com.rubengees.introduction.IntroductionBuilder;
 import com.rubengees.introduction.entity.Option;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class DetailedTutorialActivity extends AppCompatActivity {
+
+    @Bind(R.id.toolbar_tutorial) Toolbar toolbar;
+    @OnClick(R.id.cv_tutorial_instructions)
+        void buttonClick() {
+            menu.loadTutorial(DetailedTutorialActivity.this);
+        }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // ENDS SWVALUE ELSE
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_instructions);
+        ButterKnife.bind(this);
 
-        // Handle Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar5);
         toolbar.setTitle(R.string.instructionstitle);
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
         setSupportActionBar(toolbar);
-
-
-        CardView card1 = (CardView) findViewById(R.id.CardView_Instructions6);
-
-        // CARD 6
-        card1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                menu.loadTutorial(DetailedTutorialActivity.this);
-            }
-        }); // end card6
-
-    } // ends onCreate
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

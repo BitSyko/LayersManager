@@ -38,10 +38,10 @@ public abstract class LayerFile implements Comparable<LayerFile> {
         //Remove .apk and .zip
         name = StringUtils.replaceEach(name, new String[]{".apk", ".zip"}, new String[]{"", ""});
 
-        //Remove plugin name
+        //Remove plugin title
         name = StringUtils.removeStartIgnoreCase(name, StringUtils.deleteWhitespace(parentLayer.getName()));
 
-        //Remove plugin name pt.2
+        //Remove plugin title pt.2
         name = StringUtils.removeStartIgnoreCase(name, StringUtils.replace(parentLayer.getName(), " ", "_"));
 
         //Replace _ with " "
@@ -52,7 +52,7 @@ public abstract class LayerFile implements Comparable<LayerFile> {
 
         return name;
 
-        // return StringUtils.strip(StringUtils.removeStartIgnoreCase(name.replaceAll("_", " ").replace(".apk", "").replace(".zip", ""), StringUtils.deleteWhitespace(parentLayer.getName())));
+        // return StringUtils.strip(StringUtils.removeStartIgnoreCase(title.replaceAll("_", " ").replace(".apk", "").replace(".zip", ""), StringUtils.deleteWhitespace(parentLayer.getName())));
     }
 
     public String getName() {

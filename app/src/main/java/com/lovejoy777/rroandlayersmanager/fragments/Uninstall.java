@@ -30,39 +30,47 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class UninstallFragment extends Fragment implements MaterialCab.Callback, AsyncResponse {
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
-    private FloatingActionButton fab2;
-    private LinearLayout mLinearLayout;
+public class Uninstall extends Fragment implements MaterialCab.Callback, AsyncResponse {
+
     private MaterialCab mCab = null;
-    private CoordinatorLayout cordLayout = null;
+    private CoordinatorLayout cl_root = null;
     private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
-    android.support.v7.widget.Toolbar toolbar;
-    TextView toolbarTitle;
+    private  TextView tv_toolbarTitle;
+
+
+    @Bind(R.id.ll_uninstall_installedOverlayList) LinearLayout ll_installedOverlays;
+
+    @Bind(R.id.fab_uninstall_delete) FloatingActionButton fab_uninstall;
+
+    @Bind(R.id.iv_uninstall_noOverlays) ImageView iv_noOverlays;
+    @Bind(R.id.tv_uninstall_noOverlays) TextView tv_noOverlays;
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        cl_root = (CoordinatorLayout) inflater.inflate(R.layout.fragment_delete, container, false);
+        ButterKnife.bind(this, cl_root);
 
-        cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_delete, container, false);
-
-        ((NavigationView) getActivity().findViewById(R.id.nav_view)).getMenu().getItem(1).setChecked(true);
-
-        toolbar = (android.support.v7.widget.Toolbar) getActivity().findViewById(R.id.toolbar);
-
+        //Drawer
+        NavigationView navigationView = ButterKnife.findById(getActivity(), R.id.navigationView_menu);
+        navigationView.getMenu().getItem(1).setChecked(true);
+        //Toolbar
+        android.support.v7.widget.Toolbar toolbar = ButterKnife.findById(getActivity(),R.id.toolbar_fragmentContainer);
         int elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
         int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 156, getResources().getDisplayMetrics());
         toolbar.setNavigationIcon(R.drawable.ic_action_menu);
-
-        toolbarTitle = (TextView) getActivity().findViewById(R.id.title2);
-        toolbarTitle.setText(getString(R.string.UninstallOverlays));
-
+        tv_toolbarTitle = ButterKnife.findById(getActivity(),R.id.tv_fragmentContainer_toolbarTitle);
+        tv_toolbarTitle.setText(getString(R.string.UninstallOverlays));
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, height
         );
-
         toolbar.setElevation(elevation);
         toolbar.setLayoutParams(layoutParams);
-
 
         setHasOptionsMenu(true);
 
@@ -70,15 +78,14 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
         new LoadAndSet().execute();
 
-        return cordLayout;
+        return cl_root;
     }
 
     @Override
     public void processFinish() {
-        fab2.hide();
-        fab2.setClickable(true);
-        CoordinatorLayout coordinatorLayoutView = (CoordinatorLayout) cordLayout.findViewById(R.id.main_content3);
-        Snackbar.make(coordinatorLayoutView, R.string.uninstalled, Snackbar.LENGTH_LONG)
+        fab_uninstall.hide();
+        fab_uninstall.setClickable(true);
+        Snackbar.make(cl_root, R.string.uninstalled, Snackbar.LENGTH_LONG)
                 .setAction(R.string.Reboot, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -94,14 +101,11 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
     private void loadToolbarRecylcerViewFab() {
 
-        mLinearLayout = (LinearLayout) cordLayout.findViewById(R.id.cardList);
-
-        fab2 = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab6);
-        fab2.hide();
-        fab2.setOnClickListener(new View.OnClickListener() {
+        fab_uninstall.hide();
+        fab_uninstall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fab2.setClickable(false);
+                fab_uninstall.setClickable(false);
                 AsyncUninstallOverlays();
             }
         });
@@ -141,7 +145,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
         }
 
         if (calledFromCabFinished) {
-            fab2.hide();
+            fab_uninstall.hide();
         } else {
             refreshFab();
         }
@@ -151,7 +155,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
     //CAB methods
     @Override
     public boolean onCabCreated(MaterialCab materialCab, Menu menu) {
-        toolbarTitle.setText("");
+        tv_toolbarTitle.setText("");
         return true;
     }
 
@@ -170,7 +174,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
     @Override
     public boolean onCabFinished(MaterialCab materialCab) {
         UncheckAll(true);
-        toolbarTitle.setText(getString(R.string.UninstallOverlays));
+        tv_toolbarTitle.setText(getString(R.string.UninstallOverlays));
         return true;
     }
 
@@ -225,7 +229,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
         protected void onPostExecute(List<FileBean> result) {
 
             checkBoxes.clear();
-            mLinearLayout.removeAllViews();
+            ll_installedOverlays.removeAllViews();
 
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 
@@ -261,7 +265,7 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
                 row.addView(rowlayout);
 
-                mLinearLayout.addView(row);
+                ll_installedOverlays.addView(row);
 
                 final FileBean finalFileBean = fileBean;
 
@@ -277,12 +281,9 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
             }
 
-
-            ImageView noOverlays = (ImageView) cordLayout.findViewById(R.id.imageView);
-            TextView noOverlaysText = (TextView) cordLayout.findViewById(R.id.textView7);
             if (result.isEmpty()) {
-                noOverlays.setVisibility(View.VISIBLE);
-                noOverlaysText.setVisibility(View.VISIBLE);
+                iv_noOverlays.setVisibility(View.VISIBLE);
+                tv_noOverlays.setVisibility(View.VISIBLE);
             }
 
             refreshFab();
@@ -304,10 +305,10 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
                     .reset()
                     .setCloseDrawableRes(R.drawable.ic_action_check)
                     .setMenu(R.menu.overflow)
-                    .start(UninstallFragment.this);
+                    .start(Uninstall.this);
         } else if (!mCab.isActive()) {
             mCab
-                    .reset().start(UninstallFragment.this)
+                    .reset().start(Uninstall.this)
                     .setCloseDrawableRes(R.drawable.ic_action_check)
                     .setMenu(R.menu.overflow);
         }
@@ -316,13 +317,18 @@ public class UninstallFragment extends Fragment implements MaterialCab.Callback,
 
 
         if (checkedItems > 0) {
-            fab2.show();
+            fab_uninstall.show();
         } else {
             if (mCab != null) {
                 mCab.finish();
                 mCab = null;
             }
-            fab2.hide();
+            fab_uninstall.hide();
         }
+    }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 }

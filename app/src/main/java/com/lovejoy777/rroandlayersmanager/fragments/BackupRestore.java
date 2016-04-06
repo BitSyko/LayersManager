@@ -10,14 +10,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.*;
 import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
@@ -36,51 +33,50 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.TimeoutException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static android.support.v4.content.PermissionChecker.checkSelfPermission;
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class BackupRestoreFragment extends Fragment {
+public class BackupRestore extends Fragment {
 
-    private FloatingActionButton fab2;
     private ArrayList<String> files = new ArrayList<>();
-    private RecyclerView mRecyclerView;
-    private CoordinatorLayout cordLayout = null;
+    private CoordinatorLayout cl_root = null;
 
-    private static void zipFolder(String inputFolderPath, String outZipPath) {
+    @Bind(R.id.rv_backupRestore_backupList) RecyclerView rv_backupList;
 
-        try {
-            FileOutputStream fos = new FileOutputStream(outZipPath);
-            ZipOutputStream zos = new ZipOutputStream(fos);
-            File srcFile = new File(inputFolderPath);
-            File[] files = srcFile.listFiles();
-            Log.d("", "Zip directory: " + srcFile.getName());
-            for (File file : files) {
-                Log.d("", "Adding file: " + file.getName());
-                byte[] buffer = new byte[1024];
-                FileInputStream fis = new FileInputStream(file);
-                zos.putNextEntry(new ZipEntry(file.getName()));
-                int length;
-                while ((length = fis.read(buffer)) > 0) {
-                    zos.write(buffer, 0, length);
-                }
-                zos.closeEntry();
-                fis.close();
-            }
-            zos.close();
-        } catch (IOException ioe) {
-            Log.e("", ioe.getMessage());
+    @OnClick(R.id.fab_backupRestore_newBackup)
+        void onClick(){
+            showNewBackupDialog();
         }
-    }
+
+    @Bind(R.id.iv_backupRestore_noBackups) ImageView iv_noBackups;
+    @Bind(R.id.tv_backupRestore_noBackups) TextView tv_noBackups;
+
+
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        cl_root = (CoordinatorLayout) inflater.inflate(R.layout.fragment_backuprestore, container, false);
+        ButterKnife.bind(this, cl_root);
 
-        cordLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_backuprestore, container, false);
-
-        android.support.v7.widget.Toolbar toolbar = (android.support.v7.widget.Toolbar) getActivity().findViewById(R.id.toolbar);
-
+        //Toolbar
+        android.support.v7.widget.Toolbar toolbar = ButterKnife.findById (getActivity(),R.id.toolbar_fragmentContainer);
+        int elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 156, getResources().getDisplayMetrics());
+        toolbar.setNavigationIcon(R.drawable.ic_action_menu);
+        TextView tv_toolbarTitle = ButterKnife.findById(getActivity(),R.id.tv_fragmentContainer_toolbarTitle);
+        tv_toolbarTitle.setText(getString(R.string.BackupRestore));
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, height
+        );
+        toolbar.setElevation(elevation);
+        toolbar.setLayoutParams(layoutParams);
+        //NavigationView
+        NavigationView navigationView = ButterKnife.findById(getActivity(), R.id.navigationView_menu);
+        navigationView.getMenu().getItem(2).setChecked(true);
+        //Permissions
         if (ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             askForPermission(1);
@@ -88,95 +84,60 @@ public class BackupRestoreFragment extends Fragment {
             new LoadAndSet().execute();
         }
 
-        ((NavigationView) getActivity().findViewById(R.id.nav_view)).getMenu().getItem(2).setChecked(true);
-
-        int elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics());
-        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 156, getResources().getDisplayMetrics());
-
-        toolbar.setNavigationIcon(R.drawable.ic_action_menu);
-
-        TextView toolbarTitle = (TextView) getActivity().findViewById(R.id.title2);
-        toolbarTitle.setText(getString(R.string.BackupRestore));
-
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, height
-        );
-
-        toolbar.setElevation(elevation);
-        toolbar.setLayoutParams(layoutParams);
-
-
-        loadToolbarRecyclerViewFab();
-
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            askForPermission(1);
-        } else {
-            new LoadAndSet().execute();
-        }
+        rv_backupList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rv_backupList.setItemAnimator(new DefaultItemAnimator());
 
         setHasOptionsMenu(true);
 
-        return cordLayout;
+        return cl_root;
     }
 
-    private void loadToolbarRecyclerViewFab() {
 
+    void showNewBackupDialog(){
+        final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        final EditText input = new EditText(getActivity());
+        alert.setTitle(R.string.backupInstalledOverlays);
+        alert.setView(input);
+        input.setHint(R.string.enterBackupName);
 
-        mRecyclerView = (RecyclerView) cordLayout.findViewById(R.id.cardList);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
-        fab2 = (android.support.design.widget.FloatingActionButton) cordLayout.findViewById(R.id.fab6);
-        fab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                final EditText input = new EditText(getActivity());
-                alert.setTitle(R.string.backupInstalledOverlays);
-                alert.setView(input);
-                input.setHint(R.string.enterBackupName);
+                    public void onClick(DialogInterface dialog, int whichButton) {
 
-                alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        // get editText String
+                        String backupName = input.getText().toString().replace(" ", "");
 
-                            public void onClick(DialogInterface dialog, int whichButton) {
+                        if (backupName.length() <= 1) {
+                            Toast.makeText(getActivity(), R.string.noInputName, Toast.LENGTH_LONG).show();
+                        } else {
+                            File overlayFolder = new File(DeviceSingleton.getInstance().getOverlayFolder());
 
-                                // get editText String
-                                String backupName = input.getText().toString().replace(" ", "");
-
-                                if (backupName.length() <= 1) {
-                                    Toast.makeText(getActivity(), R.string.noInputName, Toast.LENGTH_LONG).show();
+                            if (overlayFolder.exists()){
+                                File[] overlays = overlayFolder.listFiles();
+                                // Folder is empty
+                                if (overlays == null || overlays.length == 0) {
+                                    Toast.makeText(getActivity(), R.string.nothingToBackup, Toast.LENGTH_LONG).show();
                                 } else {
-                                    File overlayFolder = new File(DeviceSingleton.getInstance().getOverlayFolder());
-
-                                    if (overlayFolder.exists()){
-                                        File[] overlays = overlayFolder.listFiles();
-                                        // Folder is empty
-                                        if (overlays == null || overlays.length == 0) {
-                                            Toast.makeText(getActivity(), R.string.nothingToBackup, Toast.LENGTH_LONG).show();
-                                        } else {
-                                            // CREATES /SDCARD/OVERLAYS/BACKUP/BACKUPNAME
-                                            String backupDirectory = Environment.getExternalStorageDirectory() + "/Overlays/Backup/";
-                                            File dir2 = new File(backupDirectory+ backupName);
-                                            if (!dir2.exists() && !dir2.isDirectory()) {
-                                                System.out.println("MKDIR");
-                                                dir2.mkdir();
-                                            }
-                                            //Async Task to backup Overlays
-                                            new BackupOverlays().execute(backupName);
-                                        }
-                                    } else {
-                                            Toast.makeText(getActivity(), R.string.nothingToBackup, Toast.LENGTH_LONG).show();
+                                    // CREATES /SDCARD/OVERLAYS/BACKUP/BACKUPNAME
+                                    String backupDirectory = Environment.getExternalStorageDirectory() + "/Overlays/Backup/";
+                                    File dir2 = new File(backupDirectory+ backupName);
+                                    if (!dir2.exists() && !dir2.isDirectory()) {
+                                        System.out.println("MKDIR");
+                                        dir2.mkdir();
                                     }
+                                    //Async Task to backup Overlays
+                                    new BackupOverlays().execute(backupName);
                                 }
+                            } else {
+                                Toast.makeText(getActivity(), R.string.nothingToBackup, Toast.LENGTH_LONG).show();
                             }
                         }
-                );
+                    }
+                }
+        );
 
-                alert.setNegativeButton(android.R.string.cancel, null);
-                alert.show();
-            }
-        });
+        alert.setNegativeButton(android.R.string.cancel, null);
+        alert.show();
     }
 
     @Override
@@ -195,12 +156,12 @@ public class BackupRestoreFragment extends Fragment {
     }
 
     //Adapter
-    private class CardViewAdapter3 extends RecyclerView.Adapter<CardViewAdapter3.ViewHolder> {
+    private class BackupRestore_CardViewAdapter extends RecyclerView.Adapter<BackupRestore_CardViewAdapter.ViewHolder> {
 
         private ArrayList<String> themes;
         private int rowLayout;
 
-        public CardViewAdapter3(ArrayList<String> themes, int rowLayout) {
+        public BackupRestore_CardViewAdapter(ArrayList<String> themes, int rowLayout) {
             this.themes = themes;
             this.rowLayout = rowLayout;
         }
@@ -216,16 +177,16 @@ public class BackupRestoreFragment extends Fragment {
 
             final String layerBackupName = themes.get(i);
 
-            viewHolder.themeName.setText(layerBackupName);
-            viewHolder.themeName.setId(i);
-            viewHolder.themeName.setOnClickListener(new View.OnClickListener() {
+            viewHolder.backupName.setText(layerBackupName);
+            viewHolder.backupName.setId(i);
+            viewHolder.backupName.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     AlertDialog.Builder installdialog = new AlertDialog.Builder(getActivity());
                     installdialog.setTitle(layerBackupName);
                     installdialog.setMessage(Html.fromHtml(getResources().getString(R.string.DoYouWantToRestore)));
                     installdialog.setPositiveButton(R.string.restore, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            new Commands.InstallZipBetterWay(BackupRestoreFragment.this.getActivity(), null)
+                            new Commands.InstallZipBetterWay(BackupRestore.this.getActivity(), null)
                                     .execute(Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + layerBackupName + "/overlay.zip");
                         }
                     });
@@ -275,12 +236,12 @@ public class BackupRestoreFragment extends Fragment {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            public TextView themeName;
+            public TextView backupName;
 
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                themeName = (TextView) itemView.findViewById(R.id.txt);
+                backupName = ButterKnife.findById(itemView,R.id.tv_aboutadapter_title);
             }
         }
     }
@@ -313,8 +274,7 @@ public class BackupRestoreFragment extends Fragment {
         protected void onPostExecute(Void result) {
 
             progressBackup.dismiss();
-            CoordinatorLayout coordinatorLayoutView = (CoordinatorLayout) cordLayout.findViewById(R.id.main_content4);
-            Snackbar.make(coordinatorLayoutView, R.string.deletedBackup, Snackbar.LENGTH_LONG)
+            Snackbar.make(cl_root, R.string.deletedBackup, Snackbar.LENGTH_LONG)
                     .show();
             new LoadAndSet().execute();
         }
@@ -343,8 +303,7 @@ public class BackupRestoreFragment extends Fragment {
         protected void onPostExecute(Void result) {
 
             progressBackup.dismiss();
-            CoordinatorLayout coordinatorLayoutView = (CoordinatorLayout) cordLayout.findViewById(R.id.main_content4);
-            Snackbar.make(coordinatorLayoutView, R.string.backupComplete, Snackbar.LENGTH_LONG)
+            Snackbar.make(cl_root, R.string.backupComplete, Snackbar.LENGTH_LONG)
                     .show();
             new LoadAndSet().execute();
         }
@@ -368,13 +327,11 @@ public class BackupRestoreFragment extends Fragment {
 
         protected void onPostExecute(Void result) {
 
-            CardViewAdapter3 mAdapter = new CardViewAdapter3(files, R.layout.adapter_backups);
-            mRecyclerView.setAdapter(mAdapter);
-            if (files == null) {
-                ImageView noOverlays = (ImageView) cordLayout.findViewById(R.id.imageView);
-                TextView noOverlaysText = (TextView) cordLayout.findViewById(R.id.textView7);
-                noOverlays.setVisibility(View.VISIBLE);
-                noOverlaysText.setVisibility(View.VISIBLE);
+            BackupRestore_CardViewAdapter mAdapter = new BackupRestore_CardViewAdapter(files, R.layout.adapter_backups);
+            rv_backupList.setAdapter(mAdapter);
+            if (files.size() ==0) {
+                iv_noBackups.setVisibility(View.VISIBLE);
+                tv_noBackups.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -414,9 +371,37 @@ public class BackupRestoreFragment extends Fragment {
                 }
                 return;
             }
-
-            // other 'switch' lines to check for other
-            // permissions this app might request
         }
+    }
+
+    private static void zipFolder(String inputFolderPath, String outZipPath) {
+
+        try {
+            FileOutputStream fos = new FileOutputStream(outZipPath);
+            ZipOutputStream zos = new ZipOutputStream(fos);
+            File srcFile = new File(inputFolderPath);
+            File[] files = srcFile.listFiles();
+            Log.d("", "Zip directory: " + srcFile.getName());
+            for (File file : files) {
+                Log.d("", "Adding file: " + file.getName());
+                byte[] buffer = new byte[1024];
+                FileInputStream fis = new FileInputStream(file);
+                zos.putNextEntry(new ZipEntry(file.getName()));
+                int length;
+                while ((length = fis.read(buffer)) > 0) {
+                    zos.write(buffer, 0, length);
+                }
+                zos.closeEntry();
+                fis.close();
+            }
+            zos.close();
+        } catch (IOException ioe) {
+            Log.e("", ioe.getMessage());
+        }
+    }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 }

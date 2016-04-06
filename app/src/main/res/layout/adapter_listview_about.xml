@@ -12,7 +12,7 @@
         android:padding="@dimen/smallMargin">
 
         <ImageView
-            android:id="@+id/img"
+            android:id="@+id/iv_aboutadapter_image"
             android:layout_width="@dimen/avatarSize"
             android:layout_height="@dimen/avatarSize"
             android:layout_gravity="center_vertical"
@@ -25,7 +25,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/txt"
+                android:id="@+id/tv_aboutadapter_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/mediumMargin"
@@ -36,7 +36,7 @@
                 android:textSize="@dimen/textSizeSubheading"/>
 
             <TextView
-                android:id="@+id/description"
+                android:id="@+id/tv_aboutadapter_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/mediumMargin"
