@@ -50,7 +50,7 @@ public class BackupRestoreFragment extends Fragment {
     private CoordinatorLayout cordLayout = null;
 
     private static void zipFolder(String inputFolderPath, String outZipPath) {
-        System.out.println("ZZZZZZIIIIIIPP");
+
         try {
             FileOutputStream fos = new FileOutputStream(outZipPath);
             ZipOutputStream zos = new ZipOutputStream(fos);

@@ -24,6 +24,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.*;
 import android.widget.RelativeLayout;
@@ -40,6 +41,7 @@ import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.helper.RecyclerItemClickListener;
 import com.lovejoy777.rroandlayersmanager.menu;
 
+import java.io.File;
 import java.util.*;
 
 public class PluginFragment extends Fragment implements AsyncResponse {
@@ -195,21 +197,32 @@ public class PluginFragment extends Fragment implements AsyncResponse {
             //IF multiple files selected
             if (data.getClipData() != null){
                 ClipData clipdata = data.getClipData();
-                for (int i=0; i<clipdata.getItemCount();i++)
-                {
-                    paths.add(Utils.getPath(getActivity(), clipdata.getItemAt(i).getUri()));
-                    new Commands.InstallZipBetterWay(getActivity(), this).execute(paths.toArray(new String[paths.size()]));
-
+                for (int i=0; i<clipdata.getItemCount();i++) {
+                    String path = Utils.getPath(getActivity(), clipdata.getItemAt(i).getUri());
+                    if (path.endsWith(".apk") || (path.endsWith(".zip"))) {
+                        paths.add(path);
+                    }
+                    else {
+                        Toast.makeText(getActivity(),"File "+ path +" is not supported",Toast.LENGTH_SHORT).show();
+                    }
                 }
-            } else {
+
+                if (paths.size() != 0) {
+                    new Commands.InstallZipBetterWay(getActivity(), this).execute(paths.toArray(new String[paths.size()]));
+                }
+
+
+            }
+            else {
                 Uri uri = data.getData();
                 String path = Utils.getPath(getActivity(), uri);
                 System.out.println(Utils.getMimeType(path));
-                if (Utils.getMimeType(path)=="application/vnd.android.package-archive" || Utils.getMimeType(path)=="application/zip"){
+                if (path.endsWith(".apk") || (path.endsWith(".zip"))){
                     paths.add(Utils.getPath(getActivity(), uri));
                     new Commands.InstallZipBetterWay(getActivity(), this).execute(paths.toArray(new String[paths.size()]));
                 }else {
-                    Toast.makeText(getActivity(),"File type not supported",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"File type not supported: "+Utils.getMimeType(path),Toast.LENGTH_SHORT).show();
+
                 }
 
             }

@@ -207,7 +207,7 @@ public class Commands {
 
             Utils.remount("rw");
             System.out.println("MOVE!");
-            Utils.moveFile(tempDir , DeviceSingleton.getInstance().getMountFolder() + "/");
+            Utils.moveFile(tempDir , DeviceSingleton.getInstance().getParentOfOverlayFolder() + "/");
             Utils.applyPermissionsRecursive(DeviceSingleton.getInstance().getOverlayFolder(), "644");
             Utils.applyPermissions(DeviceSingleton.getInstance().getOverlayFolder(), "755");
             Utils.remount("ro");

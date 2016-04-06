@@ -46,6 +46,8 @@ public class DeviceSingleton {
         String getOverlayFolder();
 
         String getMountFolder();
+
+        String getParentOfOverlayFolder();
     }
 
     private static class VendorDevice implements Singleton {
@@ -59,6 +61,9 @@ public class DeviceSingleton {
         public String getMountFolder() {
             return "/vendor";
         }
+
+        @Override
+        public String getParentOfOverlayFolder(){return "/vendor";}
     }
 
 
@@ -73,5 +78,8 @@ public class DeviceSingleton {
         public String getMountFolder() {
             return "/system";
         }
+
+        @Override
+        public String getParentOfOverlayFolder(){return "/system/vendor";}
     }
 }
