@@ -21,9 +21,9 @@
         tools:replace="android:label">
 
         <activity
-            android:name="menu"
+            android:name=".MainActivity"
             android:label="Layers Manager"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:noHistory="true"
             android:theme="@style/Base.Theme.Toolbar.TransparentStatusBar">
 
             <intent-filter>
@@ -31,6 +31,19 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".menu"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="Layers Manager"
+            android:theme="@style/Base.Theme.Toolbar.TransparentStatusBar">
+            <intent-filter android:label="Layers Manager">
+                <action android:name="android.intent.action.MAIN1"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
 
         <activity
             android:name=".activities.DetailedTutorialActivity"

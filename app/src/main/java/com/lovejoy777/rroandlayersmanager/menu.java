@@ -46,7 +46,7 @@ public class menu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.fragment_container);
-        DeviceSingleton.getInstance();
+
         loadToolbarNavDrawer();
 
         if (!Utils.isRootAvailable()) {
@@ -80,6 +80,8 @@ public class menu extends AppCompatActivity {
                 .withColorResource(R.color.tutorial_background_4).withImage(R.drawable.intro_4));
         slides.add(new Slide().withTitle(R.string.Slide5_Heading).withDescription(R.string.Slide5_Text)
                 .withColorResource(R.color.tutorial_background_5).withImage(R.drawable.intro_5));
+        slides.add(new Slide().withTitle(R.string.Slide6_Heading).withOption(new Option(R.string.SettingLauncherIconDetail))
+                .withColorResource(R.color.tutorial_background_6).withImage(R.drawable.layersmanager_crossed));
         slides.add(new Slide().withTitle(R.string.Slide7_Heading).withOption(new Option(R.string.SettingsHideOverlays))
                 .withColorResource(R.color.tutorial_background_6).withImage(R.drawable.intro_7));
         return slides;
@@ -98,6 +100,11 @@ public class menu extends AppCompatActivity {
             for (Option option : data.<Option>getParcelableArrayListExtra(IntroductionActivity.
                     OPTION_RESULT)) {
 
+                if (option.getPosition()==5 && option.isActivated()){
+                    SharedPreferences myprefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                    myprefs.edit().putBoolean("switch1",true).commit();
+                    Commands.killLauncherIcon(this);
+                }
                 if (option.getPosition()==6 && option.isActivated()){
                     SharedPreferences myprefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
                     myprefs.edit().putBoolean("disableNotInstalledApps",true).commit();

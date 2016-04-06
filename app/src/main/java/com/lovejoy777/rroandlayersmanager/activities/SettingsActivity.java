@@ -13,7 +13,8 @@ import android.view.MenuItem;
 import com.lovejoy777.rroandlayersmanager.R;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 
-public class SettingsActivity extends PreferenceActivity {
+public class SettingsActivity extends PreferenceActivity implements
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     Boolean showLauncherShortcut = true;
     String settingsPackageName= "com.android.settings";
@@ -44,7 +45,9 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        // Set up a listener whenever a key changes
+        getPreferenceScreen().getSharedPreferences()
+                .registerOnSharedPreferenceChangeListener(this);
     }
 
     public boolean mShowLauncherShortcut() {
@@ -69,9 +72,23 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
+        // Unregister the listener whenever a key changes
+        getPreferenceScreen().getSharedPreferences()
+                .unregisterOnSharedPreferenceChangeListener(this);
     }
 
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        SharedPreferences myPrefs = this.getSharedPreferences("myPrefs", MODE_PRIVATE);
+        Boolean HideLauncherIcon = myPrefs.getBoolean("switch1", false);
+
+        if (key.equals("switch1")) {
+            if (HideLauncherIcon) {
+                Commands.killLauncherIcon(this);
+            } else {
+                Commands.ReviveLauncherIcon(this);
+            }
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
