@@ -32,7 +32,7 @@ public class SettingsActivity extends PreferenceActivity implements
         Preference switch1 = findPreference("switch1");
         if (mShowLauncherShortcut()) {
             switch1.setEnabled(false);
-            switch1.setSummary(R.string.LauncherIconSummaryDisabled);
+            switch1.setSummary(R.string.settings_hidelauncher_summary_notsupported);
         }
     }
 

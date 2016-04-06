@@ -4,24 +4,24 @@
     <item
         android:id="@+id/menu_reboot"
         android:orderInCategory="2"
-        android:title="@string/Reboot" />
+        android:title="@string/commands_rebootdialog_title" />
     <item
         android:id="@+id/menu_sort"
         android:orderInCategory="2"
-        android:title="@string/Sort"
+        android:title="@string/pluginList_menu_sortby"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_menu_sort_white_24dp">
         <menu>
             <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/menu_sortName"
-                    android:title="@string/sort_name" />
+                    android:title="@string/pluginList_menu_sortby_name" />
                 <item
                     android:id="@+id/menu_sortDeveloper"
-                    android:title="@string/sort_developer" />
+                    android:title="@string/pluginList_menu_sortby_developer" />
                 <item
                     android:id="@+id/menu_sortRandom"
-                    android:title="@string/sort_random" />
+                    android:title="@string/pluginList_menu_sortby_random" />
             </group>
         </menu>
         </item>

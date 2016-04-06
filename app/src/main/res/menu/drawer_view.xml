@@ -20,50 +20,50 @@
             android:id="@+id/nav_home"
             android:checked="true"
             android:icon="@drawable/ic_drawer_install_gray_24dp"
-            android:title="@string/InstallOverlays2" />
+            android:title="@string/drawer_install" />
         <item
 
             android:id="@+id/nav_delete"
             android:icon="@drawable/ic_drawer_delete_gray_24dp"
-            android:title="@string/UninstallOverlays" />
+            android:title="@string/drawer_uninstall" />
         <item
             android:id="@+id/nav_restore"
             android:icon="@drawable/ic_drawer_restore_gray_24dp"
-            android:title="@string/BackupRestore" />
+            android:title="@string/drawer_backuprestore" />
     </group>
 
-    <item android:title="@string/discover">
+    <item android:title="@string/drawer_discover">
         <menu>
             <item
                 android:id="@+id/nav_showcase"
                 android:icon="@drawable/ic_drawer_showcase_gray_24dp"
-                android:title="@string/Showcase" />
+                android:title="@string/pluginList_showcasecard_title" />
             <item
                 android:id="@+id/nav_playStore"
                 android:icon="@drawable/ic_drawer_playstore_gray_24dp"
-                android:title="@string/PlayStore" />
+                android:title="@string/pluginList_playstorecard_title" />
         </menu>
     </item>
 
-    <item android:title="@string/More">
+    <item android:title="@string/drawer_more">
         <menu>
             <item
                 android:id="@+id/nav_tutorial"
                 android:icon="@drawable/ic_drawer_help_gray_24dp"
-                android:title="@string/Tutorial" />
+                android:title="@string/drawer_tutorial" />
             <item
                 android:id="@+id/nav_the_team"
                 android:icon="@drawable/ic_drawer_about_gray_24dp"
-                android:title="@string/TheTeam" />
+                android:title="@string/drawer_team" />
             <item
                 android:id="@+id/nav_about"
                 android:icon="@drawable/ic_drawer_licenses_gray_24dp"
-                android:title="@string/Licenses" />
+                android:title="@string/drawer_licenses" />
 
             <item
                 android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_drawer_settings_gray_24dp"
-                android:title="@string/Settings" />
+                android:title="@string/drawer_settings" />
 
         </menu>
     </item>

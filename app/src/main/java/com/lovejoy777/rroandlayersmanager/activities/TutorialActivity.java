@@ -33,7 +33,7 @@ public class TutorialActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tutorial);
         ButterKnife.bind(this);
 
-        toolbar.setTitle(R.string.instructionstitle);
+        toolbar.setTitle(R.string.tutorial_toolbar_title);
         toolbar.setNavigationIcon(R.drawable.ic_menu_back_white_24dp);
         setSupportActionBar(toolbar);
     }

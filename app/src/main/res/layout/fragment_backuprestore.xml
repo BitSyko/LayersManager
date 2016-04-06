@@ -43,7 +43,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="200dp"
                     android:gravity="center"
-                    android:text="@string/noBackups"
+                    android:text="@string/backup_nobackup"
                     android:textSize="@dimen/textSizeSubheading"
                     android:visibility="invisible"/>
 
@@ -55,7 +55,7 @@
                     android:layout_marginTop="@dimen/mediumMargin"
                     android:gravity="center"
                     android:paddingBottom="@dimen/smallMargin"
-                    android:text="@string/Backups"
+                    android:text="@string/backup_card_title"
                     android:textColor="@color/accent"
                     android:textStyle="bold"/>
 

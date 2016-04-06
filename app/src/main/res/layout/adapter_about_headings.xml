@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/mediumMargin"
         android:layout_marginTop="@dimen/mediumMargin"
-        android:text="@string/developedby"
+        android:text="@string/about_header1_developedby"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textColor="@color/accent"/>
 

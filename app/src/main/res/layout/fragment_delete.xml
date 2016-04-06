@@ -43,7 +43,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="200dp"
                     android:gravity="center"
-                    android:text="@string/nothingApplied"
+                    android:text="@string/uninstall_noOverlaysInstalled"
                     android:textSize="@dimen/textSizeSubheading"
                     android:visibility="invisible"/>
 
@@ -55,7 +55,7 @@
                     android:layout_marginTop="@dimen/mediumMargin"
                     android:gravity="center"
                     android:paddingBottom="@dimen/smallMargin"
-                    android:text="@string/appliedOverlays"
+                    android:text="@string/uninstall_card_title"
                     android:textColor="@color/accent"
                     android:textStyle="bold"/>
 
@@ -92,8 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:clickable="true"
-                android:src="@drawable/ic_fab_delete_white_24dp"
-                app:elevation="@dimen/design_fab_elevation"/>
+                android:src="@drawable/ic_fab_delete_white_24dp" />
 
 
 

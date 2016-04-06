@@ -53,7 +53,7 @@ public class menu extends AppCompatActivity {
         loadToolbarNavDrawer();
 
         if (!Utils.isRootAvailable()) {
-            Toast.makeText(this, getString(R.string.noRoot), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.menu_toast_noRoot), Toast.LENGTH_LONG).show();
         } else {
             createImportantDirectories();
         }
@@ -83,9 +83,9 @@ public class menu extends AppCompatActivity {
                 .withColorResource(R.color.tutorial_background_4).withImage(R.drawable.intro_4));
         slides.add(new Slide().withTitle(R.string.Slide5_Heading).withDescription(R.string.Slide5_Text)
                 .withColorResource(R.color.tutorial_background_5).withImage(R.drawable.intro_5));
-        slides.add(new Slide().withTitle(R.string.Slide6_Heading).withOption(new Option(R.string.SettingLauncherIconDetail))
+        slides.add(new Slide().withTitle(R.string.Slide6_Heading).withOption(new Option(R.string.settings_hidelauncher_title))
                 .withColorResource(R.color.tutorial_background_6).withImage(R.drawable.layersmanager_crossed));
-        slides.add(new Slide().withTitle(R.string.Slide7_Heading).withOption(new Option(R.string.SettingsHideOverlays))
+        slides.add(new Slide().withTitle(R.string.Slide7_Heading).withOption(new Option(R.string.settings_hideoverlays_title))
                 .withColorResource(R.color.tutorial_background_6).withImage(R.drawable.intro_7));
         return slides;
     }

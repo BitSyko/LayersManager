@@ -65,7 +65,7 @@ public class Uninstall extends Fragment implements MaterialCab.Callback, AsyncRe
         int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 156, getResources().getDisplayMetrics());
         toolbar.setNavigationIcon(R.drawable.ic_menu_menu_white_24dp);
         tv_toolbarTitle = ButterKnife.findById(getActivity(),R.id.tv_fragmentContainer_toolbarTitle);
-        tv_toolbarTitle.setText(getString(R.string.UninstallOverlays));
+        tv_toolbarTitle.setText(getString(R.string.uninstall_toolbar_title));
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, height
         );
@@ -85,8 +85,8 @@ public class Uninstall extends Fragment implements MaterialCab.Callback, AsyncRe
     public void processFinish() {
         fab_uninstall.hide();
         fab_uninstall.setClickable(true);
-        Snackbar.make(cl_root, R.string.uninstalled, Snackbar.LENGTH_LONG)
-                .setAction(R.string.Reboot, new View.OnClickListener() {
+        Snackbar.make(cl_root, R.string.uninstall_snackbar_uninstallFinished, Snackbar.LENGTH_LONG)
+                .setAction(R.string.commands_rebootdialog_title, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Commands.reboot(getActivity());
@@ -174,7 +174,7 @@ public class Uninstall extends Fragment implements MaterialCab.Callback, AsyncRe
     @Override
     public boolean onCabFinished(MaterialCab materialCab) {
         UncheckAll(true);
-        tv_toolbarTitle.setText(getString(R.string.UninstallOverlays));
+        tv_toolbarTitle.setText(getString(R.string.uninstall_toolbar_title));
         return true;
     }
 
@@ -313,7 +313,7 @@ public class Uninstall extends Fragment implements MaterialCab.Callback, AsyncRe
                     .setMenu(R.menu.menu_uninstall);
         }
 
-        mCab.setTitle(checkedItems + " " + getResources().getString(R.string.OverlaysSelected));
+        mCab.setTitle(checkedItems + " " + getResources().getString(R.string.uninstall_toolbar_title_overlaysselected));
 
 
         if (checkedItems > 0) {

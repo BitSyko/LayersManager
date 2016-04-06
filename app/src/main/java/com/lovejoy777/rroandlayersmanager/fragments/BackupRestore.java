@@ -67,7 +67,7 @@ public class BackupRestore extends Fragment {
         int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 156, getResources().getDisplayMetrics());
         toolbar.setNavigationIcon(R.drawable.ic_menu_menu_white_24dp);
         TextView tv_toolbarTitle = ButterKnife.findById(getActivity(),R.id.tv_fragmentContainer_toolbarTitle);
-        tv_toolbarTitle.setText(getString(R.string.BackupRestore));
+        tv_toolbarTitle.setText(getString(R.string.backup_tootlbar_title));
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, height
         );
@@ -96,9 +96,9 @@ public class BackupRestore extends Fragment {
     void showNewBackupDialog(){
         final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         final EditText input = new EditText(getActivity());
-        alert.setTitle(R.string.backupInstalledOverlays);
+        alert.setTitle(R.string.backup_newbackupdialog_title);
         alert.setView(input);
-        input.setHint(R.string.enterBackupName);
+        input.setHint(R.string.backup_newbackupdialog_hint);
 
         alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
@@ -108,7 +108,7 @@ public class BackupRestore extends Fragment {
                         String backupName = input.getText().toString().replace(" ", "");
 
                         if (backupName.length() <= 1) {
-                            Toast.makeText(getActivity(), R.string.noInputName, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), R.string.backup_toast_noBackupName, Toast.LENGTH_LONG).show();
                         } else {
                             File overlayFolder = new File(DeviceSingleton.getInstance().getOverlayFolder());
 
@@ -116,7 +116,7 @@ public class BackupRestore extends Fragment {
                                 File[] overlays = overlayFolder.listFiles();
                                 // Folder is empty
                                 if (overlays == null || overlays.length == 0) {
-                                    Toast.makeText(getActivity(), R.string.nothingToBackup, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), R.string.backup_toast_noOverlaysToBackup, Toast.LENGTH_LONG).show();
                                 } else {
                                     // CREATES /SDCARD/OVERLAYS/BACKUP/BACKUPNAME
                                     String backupDirectory = Environment.getExternalStorageDirectory() + "/Overlays/Backup/";
@@ -129,7 +129,7 @@ public class BackupRestore extends Fragment {
                                     new BackupOverlays().execute(backupName);
                                 }
                             } else {
-                                Toast.makeText(getActivity(), R.string.nothingToBackup, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(), R.string.backup_toast_noOverlaysToBackup, Toast.LENGTH_LONG).show();
                             }
                         }
                     }
@@ -183,22 +183,22 @@ public class BackupRestore extends Fragment {
                 public void onClick(View v) {
                     AlertDialog.Builder installdialog = new AlertDialog.Builder(getActivity());
                     installdialog.setTitle(layerBackupName);
-                    installdialog.setMessage(Html.fromHtml(getResources().getString(R.string.DoYouWantToRestore)));
-                    installdialog.setPositiveButton(R.string.restore, new DialogInterface.OnClickListener() {
+                    installdialog.setMessage(Html.fromHtml(getResources().getString(R.string.backup_restoredialog_message)));
+                    installdialog.setPositiveButton(R.string.backup_restoredialog_restore, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             new Commands.InstallZipBetterWay(BackupRestore.this.getActivity(), null)
                                     .execute(Environment.getExternalStorageDirectory() + "/Overlays/Backup/" + layerBackupName + "/overlay.zip");
                         }
                     });
-                    installdialog.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
+                    installdialog.setNegativeButton(R.string.backup_restoredialog_delete, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             new DeleteBackup().execute(layerBackupName);
                         }
                     });
-                    installdialog.setNeutralButton(R.string.show, new DialogInterface.OnClickListener() {
+                    installdialog.setNeutralButton(R.string.backup_restoredialog_show, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             AlertDialog.Builder contentDialog = new AlertDialog.Builder(getActivity());
-                            contentDialog.setTitle(layerBackupName + " " + getString(R.string.contains));
+                            contentDialog.setTitle(layerBackupName + " " + getString(R.string.backup_contentdialog_title));
                             try {
 
                                 String overlays = "";
@@ -251,8 +251,8 @@ public class BackupRestore extends Fragment {
 
         protected void onPreExecute() {
 
-            progressBackup = ProgressDialog.show(getActivity(), getString(R.string.DeleteBackup),
-                    getString(R.string.deleting) + "...", true);
+            progressBackup = ProgressDialog.show(getActivity(), getString(R.string.backup_deletingdialog_title),
+                    getString(R.string.backup_deletingdialog_message) + "...", true);
         }
 
         @Override
@@ -274,7 +274,7 @@ public class BackupRestore extends Fragment {
         protected void onPostExecute(Void result) {
 
             progressBackup.dismiss();
-            Snackbar.make(cl_root, R.string.deletedBackup, Snackbar.LENGTH_LONG)
+            Snackbar.make(cl_root, R.string.backup_snackbar_deleteFinished, Snackbar.LENGTH_LONG)
                     .show();
             new LoadAndSet().execute();
         }
@@ -285,8 +285,8 @@ public class BackupRestore extends Fragment {
 
         protected void onPreExecute() {
 
-            progressBackup = ProgressDialog.show(getActivity(), getString(R.string.BackupOverlays),
-                    getString(R.string.backingUp) + "...", true);
+            progressBackup = ProgressDialog.show(getActivity(), getString(R.string.backup_backingupdialog_title),
+                    getString(R.string.backup_backingupdialog_message) + "...", true);
         }
 
         @Override
@@ -303,7 +303,7 @@ public class BackupRestore extends Fragment {
         protected void onPostExecute(Void result) {
 
             progressBackup.dismiss();
-            Snackbar.make(cl_root, R.string.backupComplete, Snackbar.LENGTH_LONG)
+            Snackbar.make(cl_root, R.string.backup_snackbar_backupFinished, Snackbar.LENGTH_LONG)
                     .show();
             new LoadAndSet().execute();
         }
@@ -359,8 +359,8 @@ public class BackupRestore extends Fragment {
                 } else {
 
                     AlertDialog.Builder noPermissionDialog = new AlertDialog.Builder(getActivity());
-                    noPermissionDialog.setTitle(R.string.noPermission);
-                    noPermissionDialog.setMessage(R.string.noPermissionDescription);
+                    noPermissionDialog.setTitle(R.string.permission_nopermissiondialog_title);
+                    noPermissionDialog.setMessage(R.string.permission_nopermissiondialog_message);
                     noPermissionDialog.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             getActivity().onBackPressed();

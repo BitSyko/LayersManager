@@ -453,8 +453,8 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     //Snackbars
     private void installationFinishedSnackBar() {
         //show SnackBar after successful installation of the overlays
-        Snackbar.make(cl_root, R.string.OverlaysInstalled, Snackbar.LENGTH_LONG)
-                .setAction(R.string.Reboot, new View.OnClickListener() {
+        Snackbar.make(cl_root, R.string.pluginlist_snackbar_installationFinished, Snackbar.LENGTH_LONG)
+                .setAction(R.string.commands_rebootdialog_title, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Commands.reboot(OverlayDetailActivity.this);
@@ -474,8 +474,8 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
         final CheckBox dontShowAgain = ButterKnife.findById(dontShowAgainLayout, R.id.cb_dontShowAgainDialog_dontShowAgain);
 
         installdialog.setView(dontShowAgainLayout);
-        installdialog.setTitle(R.string.MoveOverlays);
-        installdialog.setMessage(R.string.ApplyOverlays);
+        installdialog.setTitle(R.string.overlaydetail_asktoinstalldialog_title);
+        installdialog.setMessage(R.string.overlaydetail_asktoinstalldialog_message);
         installdialog.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
 

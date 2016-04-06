@@ -22,7 +22,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/toolbar_tutorial"
-        android:background="@color/background_material_light"
+        android:background="@color/background"
         android:fillViewport="true"
         android:scrollbarStyle="insideInset"
         android:scrollbars="vertical">
@@ -59,7 +59,7 @@
                         android:layout_marginStart="@dimen/mediumMargin"
                         android:layout_marginTop="@dimen/mediumMargin"
                         android:elevation="@dimen/cardElevation"
-                        android:text="@string/instructionscard1header"
+                        android:text="@string/tutorial_card1_header"
                         android:textColor="@color/textColorPrimary"
                         android:textStyle="bold"/>
 
@@ -73,7 +73,7 @@
                         android:layout_marginStart="@dimen/mediumMargin"
                         android:layout_marginTop="12dp"
                         android:elevation="@dimen/cardElevation"
-                        android:text="@string/instructionscard1"
+                        android:text="@string/tutorial_card1_description"
                         android:textColor="@color/textColorSecondary"/>
 
                 </LinearLayout>
@@ -103,7 +103,7 @@
                         android:layout_marginStart="@dimen/mediumMargin"
                         android:layout_marginTop="@dimen/mediumMargin"
                         android:elevation="@dimen/cardElevation"
-                        android:text="@string/instructionscard2header"
+                        android:text="@string/tutorial_card2_header"
                         android:textColor="@color/textColorPrimary"
                         android:textStyle="bold"/>
 
@@ -118,7 +118,7 @@
                         android:layout_marginStart="@dimen/mediumMargin"
                         android:layout_marginTop="12dp"
                         android:elevation="@dimen/cardElevation"
-                        android:text="@string/instructionscard2"
+                        android:text="@string/tutorial_card2_description"
                         android:textColor="@color/textColorSecondary"/>
 
                 </LinearLayout>
@@ -150,7 +150,7 @@
                         android:layout_marginStart="@dimen/mediumMargin"
                         android:layout_marginTop="@dimen/mediumMargin"
                         android:elevation="5dp"
-                        android:text="@string/instructionscard3header"
+                        android:text="@string/tutorial_card3_header"
                         android:textColor="@color/textColorPrimary"
                         android:textStyle="bold"/>
 
@@ -165,7 +165,7 @@
                         android:layout_marginStart="@dimen/mediumMargin"
                         android:layout_marginTop="12dp"
                         android:elevation="5dp"
-                        android:text="@string/instructionscard3"
+                        android:text="@string/tutorial_card3_description"
                         android:textColor="@color/textColorSecondary"/>
 
                 </LinearLayout>
@@ -197,7 +197,7 @@
                         android:layout_marginStart="@dimen/mediumMargin"
                         android:layout_marginTop="@dimen/mediumMargin"
                         android:elevation="5dp"
-                        android:text="@string/instructionscard4header"
+                        android:text="@string/tutorial_card4_header"
                         android:textColor="@color/textColorPrimary"
                         android:textStyle="bold"/>
 
@@ -212,7 +212,7 @@
                         android:layout_marginStart="@dimen/mediumMargin"
                         android:layout_marginTop="12dp"
                         android:elevation="5dp"
-                        android:text="@string/instructionscard4"
+                        android:text="@string/tutorial_card4_description"
                         android:textColor="@color/textColorSecondary"/>
 
                 </LinearLayout>
@@ -244,7 +244,7 @@
                         android:layout_marginStart="@dimen/mediumMargin"
                         android:layout_marginTop="@dimen/mediumMargin"
                         android:elevation="5dp"
-                        android:text="@string/instructionscard5header"
+                        android:text="@string/tutorial_card5_header"
                         android:textColor="@color/textColorPrimary"
                         android:textStyle="bold"/>
 
@@ -258,7 +258,7 @@
                         android:layout_marginStart="@dimen/mediumMargin"
                         android:layout_marginTop="12dp"
                         android:elevation="5dp"
-                        android:text="@string/instructionscard5"
+                        android:text="@string/tutorial_card5_description"
                         android:textColor="@color/textColorSecondary"/>
 
                 </LinearLayout>
@@ -291,7 +291,7 @@
                         android:layout_marginStart="@dimen/mediumMargin"
                         android:layout_marginTop="@dimen/mediumMargin"
                         android:elevation="5dp"
-                        android:text="@string/instructionscard6header"
+                        android:text="@string/tutorial_card6_header"
                         android:textColor="@color/textColorPrimary"
                         android:textStyle="bold"/>
 
@@ -305,7 +305,7 @@
                         android:layout_marginStart="@dimen/mediumMargin"
                         android:layout_marginTop="12dp"
                         android:elevation="5dp"
-                        android:text="@string/instructionscard6"
+                        android:text="@string/tutorial_card6_description"
                         android:textColor="@color/textColorSecondary"/>
 
                 </LinearLayout>

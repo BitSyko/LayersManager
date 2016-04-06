@@ -8,6 +8,7 @@
         android:id="@+id/iv_cardViewAdapter_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingEnd="@dimen/screenshot_padding"/>
+        android:paddingEnd="@dimen/screenshot_padding"
+        android:paddingStart="@dimen/screenshot_padding"/>
 
 </LinearLayout>

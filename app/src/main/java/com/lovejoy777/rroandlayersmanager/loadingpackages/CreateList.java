@@ -4,21 +4,17 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.util.Pair;
 
 import com.bitsyko.liblayers.Layer;
-import com.bitsyko.liblayers.NoFileInZipException;
 import com.bitsyko.liblayers.layerfiles.ColorOverlay;
 import com.bitsyko.liblayers.layerfiles.LayerFile;
 import com.lovejoy777.rroandlayersmanager.R;
-import com.lovejoy777.rroandlayersmanager.activities.OverlayDetailActivity;
 import com.lovejoy777.rroandlayersmanager.helper.Helpers;
 import com.lovejoy777.rroandlayersmanager.interfaces.StoppableAsyncTask;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -40,7 +36,7 @@ public class CreateList extends StoppableAsyncTask<Void, Void, Pair<Set<String>,
     @Override
     protected void onPreExecute() {
         progress = new ProgressDialog(context);
-        progress.setTitle(R.string.generatingList);
+        progress.setTitle(R.string.overlaydetail_createlistdialog_title);
         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progress.setCancelable(false);
         progress.show();

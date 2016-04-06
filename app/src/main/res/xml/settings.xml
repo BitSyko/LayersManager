@@ -3,19 +3,19 @@
 
     <PreferenceCategory
         android:key="first_category"
-        android:title="@string/General">
+        android:title="@string/settings_general">
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="switch1"
-            android:summary="@string/LauncherIconSummaryEnabled"
-            android:title="@string/SettingLauncherIconDetail" />
+            android:summary="@string/settings_hidelauncher_summary_supported"
+            android:title="@string/settings_hidelauncher_title" />
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="disableNotInstalledApps"
-            android:summary="@string/SettingsHideOverlaysDetail"
-            android:title="@string/SettingsHideOverlays" />
+            android:summary="@string/settings_hideoverlays_summary"
+            android:title="@string/settings_hideoverlays_title" />
 
     </PreferenceCategory>
 

@@ -11,7 +11,8 @@
         android:background="@drawable/ripplewhite"
         android:gravity="center_vertical"
         android:paddingStart="@dimen/mediumMargin"
-        android:text="Backup Name"
+        android:paddingEnd="@dimen/mediumMargin"
+        android:text=""
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
         android:textColor="@color/textColorPrimary"
         android:textSize="@dimen/textSizeSubheading"/>

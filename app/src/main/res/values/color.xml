@@ -17,8 +17,6 @@
     <color name="textColorSecondary">@color/text_color_secondary</color>
     <color name="actionbar_text_color">#ffffffff</color>
     <color name="actionbar_text_secondary_color">#ffffffff</color>
-    <color name="tutorial_text_primary_color">#ffffffff</color>
-    <color name="tutorial_text_secondary_color">#ffffffff</color>
 
     <!-- OLD REMOVE SOON -->
     <color name="text_color_inverse">#ffffffff</color>

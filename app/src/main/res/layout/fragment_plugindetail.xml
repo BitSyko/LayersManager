@@ -114,7 +114,7 @@
                             android:layout_marginTop="@dimen/mediumMargin"
                             android:animateLayoutChanges="true"
                             android:elevation="@dimen/cardElevation"
-                            android:text="@string/WhatsNew"
+                            android:text="@string/overlaydetail_whatsnew_title"
                             android:textColor="@color/accent"
                             android:textStyle="bold"/>
 
@@ -169,7 +169,7 @@
                         android:layout_marginStart="@dimen/mediumMargin"
                         android:layout_marginTop="@dimen/mediumMargin"
                         android:elevation="@dimen/cardElevation"
-                        android:text="@string/Category1Name"
+                        android:text="@string/overlaydetail_category1_generalOverlays"
                         android:textColor="@color/accent"
                         android:textSize="@dimen/textSizeSubheading"
                         android:textStyle="bold"/>
@@ -210,7 +210,7 @@
                             android:layout_marginStart="@dimen/mediumMargin"
                             android:layout_marginTop="@dimen/mediumMargin"
                             android:elevation="@dimen/cardElevation"
-                            android:text="@string/Category2Name"
+                            android:text="@string/overlaydetail_category2_styleOverlays"
                             android:textColor="@color/accent"
                             android:textSize="@dimen/textSizeSubheading"
                             android:textStyle="bold"/>
@@ -223,7 +223,7 @@
                             android:layout_marginEnd="6dp"
                             android:layout_marginStart="@dimen/mediumMargin"
                             android:elevation="@dimen/cardElevation"
-                            android:text="@string/Category2Name"
+                            android:text="@string/overlaydetail_category2_styleOverlays"
                             android:textColor="@color/accent"
                             android:textSize="@dimen/textSizeSubheading"
                             android:textStyle="bold"/>

@@ -27,13 +27,10 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -83,8 +80,8 @@ public class Commands {
 
     public static void reboot(final Context context) {
         AlertDialog.Builder progressDialogReboot = new AlertDialog.Builder(context);
-        progressDialogReboot.setTitle(R.string.Reboot);
-        progressDialogReboot.setMessage(R.string.PreformReboot);
+        progressDialogReboot.setTitle(R.string.commands_rebootdialog_title);
+        progressDialogReboot.setMessage(R.string.commands_rebootdialog_message);
         progressDialogReboot.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             //when Cancel Button is clicked
             @Override
@@ -138,8 +135,8 @@ public class Commands {
 
         @Override
         protected void onPreExecute() {
-            progressBackup = ProgressDialog.show(context, context.getString(R.string.installingOverlays),
-                    context.getString(R.string.installing) + "...", true);
+            progressBackup = ProgressDialog.show(context, context.getString(R.string.commands_installingdialog_title),
+                    context.getString(R.string.commands_installingdialog_message) + "...", true);
         }
 
         @Override
@@ -271,7 +268,7 @@ public class Commands {
 
         protected void onPreExecute() {
             progress = new ProgressDialog(Context);
-            progress.setTitle(R.string.uninstallingOverlays);
+            progress.setTitle(R.string.commands_uninstalldialog_title);
             progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             progress.setProgress(0);
             progress.show();
@@ -326,7 +323,7 @@ public class Commands {
         @Override
         protected void onPreExecute() {
             progress = new ProgressDialog(context);
-            progress.setTitle(R.string.installingOverlays);
+            progress.setTitle(R.string.commands_installingdialog_title);
             progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             progress.setProgress(i);
             progress.show();
@@ -406,7 +403,7 @@ public class Commands {
         PackageManager p = context.getPackageManager();
         ComponentName componentName = new ComponentName(context, com.lovejoy777.rroandlayersmanager.MainActivity.class); // activity which is first time open in manifiest file which is declare as <category android:name="android.intent.category.LAUNCHER" />
         p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-        Toast.makeText(context, context.getResources().getString(R.string.launcherIconRemoved), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, context.getResources().getString(R.string.commands_hidelauncher_removed), Toast.LENGTH_SHORT).show();
 
     }
 
@@ -415,7 +412,7 @@ public class Commands {
         PackageManager p = context.getPackageManager();
         ComponentName componentName = new ComponentName(context, com.lovejoy777.rroandlayersmanager.MainActivity.class);
         p.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-        Toast.makeText(context, context.getResources().getString(R.string.launcherIconRevived), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, context.getResources().getString(R.string.commands_hidelauncher_revived), Toast.LENGTH_SHORT).show();
 
     }
 

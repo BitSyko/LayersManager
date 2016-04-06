@@ -4,11 +4,11 @@
     <item
         android:id="@+id/menu_selectall"
         android:orderInCategory="2"
-        android:title="@string/toggleCheckboxes" />
+        android:title="@string/overlaydetail_menu_toogleCheckboxes" />
 
     <item
         android:id="@+id/menu_refresh"
         android:orderInCategory="2"
-        android:title="@string/refreshOverlays" />
+        android:title="@string/overlaydetail_menu_refresh" />
 
 </menu>

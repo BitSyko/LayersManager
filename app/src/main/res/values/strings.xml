@@ -1,76 +1,118 @@
 <resources xmlns:https="http://schemas.android.com/apk/res-auto">
 
-    <!-- MAIN Fragment -->
-    <string name="layersmanager">Layers Manager</string>
-    <string name="PlaystoreSearch"><![CDATA[
-        https://play.google.com/store/search?q=Layers+Theme&c=apps&docType=1&sp=CAFiDgoMTGF5ZXJzIFRoZW1legIYAIoBAggB:S:ANO1ljK_ZAY
-        ]]></string>
-    <string name="tooBad">Too bad.</string>
-    <string name="noPlugins">You don\'t have installed any compatible plugins yet, Use the FAB button for none plugin type overlays.</string>
-    <string name="ShowCaseMore">Find some new beautiful overlays. Beta available now!</string>
-    <string name="PlayStoreMore">Have a look on the PlayStore.</string>
+    <!-- ABOUT -->
+    <string name="about_team_title">Layers - the Team</string>
+    <string name="about_team_subtitle">Meet the awesome team behind Layers.</string>
 
-    <!-- Plugin Detail -->
-    <string name="donotshowagain">Do not show again</string>
-    <string name="installeverything">Install everything</string>
-    <string name="selectalloverlays">Select all Overlays</string>
-    <string name="WhatsNew">WHAT\'S NEW</string>
-    <string name="Category2Name">Style Specific Overlays</string>
-    <string name="Category1Name">General Overlays</string>
-    <string name="noRoot">No root access available</string>
+    <!-- NavDrawer -->
+    <string name="drawer_more">More</string>
+    <string name="drawer_tutorial">Tutorial</string>
+    <string name="pluginList_showcasecard_title">Layers Showcase</string>
+    <string name="drawer_discover">Discover</string>
+    <string name="pluginList_playstorecard_title">PlayStore</string>
+    <string name="drawer_settings">Settings</string>
+    <string name="drawer_install">Install Overlays</string>
+    <string name="drawer_uninstall">Uninstall Overlays</string>
+    <string name="drawer_backuprestore">Backup &amp; Restore</string>
+    <string name="drawer_team">The Team</string>
+    <string name="drawer_licenses">Licenses</string>
+
+    <!-- Settings -->
+    <string name="settings_general">General</string>
+    <string name="settings_hidelauncher_title">Hide Launcher Icon</string>
+    <string name="settings_hidelauncher_summary_supported">Supported</string>
+    <string name="settings_hidelauncher_summary_notsupported">Not supported. Please contact the ROM developer.</string>
+    <string name="settings_hideoverlays_title">Hide unnecessary Overlays</string>
+    <string name="settings_hideoverlays_summary">Disable Overlays for not installed Apps</string>
+
+    <!-- TUTORIAL -->
+    <string name="tutorial_toolbar_title">Tutorial</string>
+    <string name="tutorial_card1_header">Install plugin overlays</string>
+    <string name="tutorial_card1_description">Click one of the installed overlays\nChoose the apps you want to theme\nClick the FAB to install the overlays</string>
+    <string name="tutorial_card2_header">Install normal overlays</string>
+    <string name="tutorial_card2_description">Click the FAB on the main screen\nChoose either a .zip or multiple .apk\'s\nClick the FAB to install the selected overlays</string>
+    <string name="tutorial_card3_header">Uninstall overlays</string>
+    <string name="tutorial_card3_description">From the nav-drawer select "uninstall overlays"\nSelect multiple overlays\nClick the FAB to uninstall the selected overlays</string>
+    <string name="tutorial_card4_header">Backup overlays</string>
+    <string name="tutorial_card4_description">From the nav-drawer select "Backup overlays"\nEnter a name and click "OK"</string>
+    <string name="tutorial_card5_header">Restore overlays</string>
+    <string name="tutorial_card5_description">From the nav-drawer select "Restore overlays"\nClick the FAB to Restore the selected backup file</string>
+    <string name="tutorial_card6_header">Replay Introduction</string>
+    <string name="tutorial_card6_description">Click to start tutorial from the beginning</string>
+
+    <!-- Backup Restore Fragment -->
+    <string name="backup_nobackup">No Backups available.\nMake one by clicking the FAB.</string>
+    <string name="backup_card_title">Backups:</string>
+    <string name="backup_newbackupdialog_title">Backup installed Overlays</string>
+    <string name="backup_newbackupdialog_hint">Enter a backup name</string>
+    <string name="backup_toast_noBackupName">Please enter a name</string>
+    <string name="backup_toast_noOverlaysToBackup">Nothing available to backup</string>
+    <string name="backup_restoredialog_message">Do you want to restore or delete the selected Backup?</string>
+    <string name="backup_restoredialog_restore">Restore</string>
+    <string name="backup_restoredialog_delete">Delete</string>
+    <string name="backup_deletingdialog_title">Deleting Backup</string>
+    <string name="backup_deletingdialog_message">Deleting</string>
+    <string name="backup_backingupdialog_title">Backup Overlays</string>
+    <string name="backup_backingupdialog_message">Backing up</string>
+    <string name="backup_snackbar_backupFinished">Backup complete</string>
+    <string name="backup_snackbar_deleteFinished">Deleted selected Backup</string>
+    <string name="backup_restoredialog_show">Show</string>
+    <string name="backup_contentdialog_title">contains:</string>
+    <string name="backup_tootlbar_title">Backup &amp; Restore</string>
+    <string name="uninstall_menu_selectall">Select all</string>
+
+    <!-- Uninstall Fragment -->
+    <string name="uninstall_snackbar_uninstallFinished">Uninstalled selected Overlays</string>
+    <string name="uninstall_noOverlaysInstalled">No Overlays applied.\nInstall some on the main page.</string>
+    <string name="uninstall_card_title">Applied Overlays:</string>
+    <string name="uninstall_toolbar_title_overlaysselected">Overlays selected</string>
+    <string name="uninstall_toolbar_title">Uninstall Overlays</string>
+
+    <!-- Commands -->
+    <string name="commands_uninstalldialog_title">Uninstalling Overlays</string>
+    <string name="commands_installingdialog_title">Installing Overlays</string>
+    <string name="commands_installingdialog_message">Installing</string>
+    <string name="commands_hidelauncher_removed">Removed Launcher Icon</string>
+    <string name="commands_hidelauncher_revived">Revived Launcher Icon</string>
+    <string name="commands_rebootdialog_title">Reboot</string>
+    <string name="commands_rebootdialog_message">Perform a soft reboot?</string>
+
+    <!-- PluginList Fragment -->
+    <string name="pluginList_noplugincard_title">Too bad.</string>
+    <string name="pluginList_noplugincard_description">You don\'t have installed any compatible plugins yet, Use the FAB button for none plugin type overlays.</string>
+    <string name="pluginList_showcasecard_description">Find some new beautiful overlays. Beta available now!</string>
+    <string name="pluginList_playstorecard_description">Have a look on the PlayStore.</string>
+    <string name="pluginlist_snackbar_installationFinished">Installed selected Overlays</string>
+    <string name="pluginlist_toolbar_title">Install Overlays</string>
+    <string name="pluginList_menu_sortby">Sort by</string>
+    <string name="pluginList_menu_sortby_name">Name</string>
+    <string name="pluginList_menu_sortby_developer">Developer</string>
+    <string name="pluginList_menu_sortby_random">Random</string>
+
+    <!-- Overlay Detail Activity -->
+    <string name="overlaydetail_menu_toogleCheckboxes">Toggle Checkboxes</string>
+    <string name="overlaydetail_menu_refresh">Refresh Overlays</string>
+    <string name="overlaydetail_asktoinstalldialog_title">Install Overlays?</string>
+    <string name="overlaydetail_asktoinstalldialog_message">Apply selected Overlays?</string>
+    <string name="overlaydetail_dialogdonotshowagain_option">Do not show again</string>
+    <string name="overlaydetail_whatsnew_title">WHAT\'S NEW</string>
+    <string name="overlaydetail_category2_styleOverlays">Style Specific Overlays</string>
+    <string name="overlaydetail_category1_generalOverlays">General Overlays</string>
+    <string name="overlaydetail_createlistdialog_title">Generating overlay list</string>
+
+    <!-- Permissions -->
+    <string name="permission_nopermissiondialog_title">No Permission</string>
+    <string name="permission_nopermissiondialog_message">No permission to view your phone´s internal storage granted.\nYou won´t be able to use this feature until you grant this permission.</string>
 
     <!-- About -->
-    <string name="niklasschnettler">Niklas Schnettler</string>
-    <string name="developedby">Layers developed by</string>
-    <string name="usefullinks">Useful links</string>
-    <string name="version">Version</string>
-    <string name="AditionalLayersDev">Additional Layers commits</string>
-    <string name="findOutWhatsNew">Find out whats new</string>
-    <string name="joinTheChat">Join the chat</string>
-    <string name="AppDeveloper">App Developer</string>
-    <string name="LayersDeveloper">Layers Developer</string>
-    <string name="LayersLeadDeveloper">Layers Lead Developer</string>
-    <string name="ShowcaseDeveloper">Showcase Developer</string>
-
-    <!-- Licenses -->
-    <string name="OpenSourceLicenses">Open Source Licenses:</string>
-    <string name="License1">Root Tools</string>
-    <string name="License1about" translatable="false">Stephen Erickson, Chris Ravenscroft, Dominik Schuermann, Adam Shanks</string>
-    <string name="License1github" translatable="false">https://github.com/Stericson/RootTools</string>
-
-    <string name="License2">Introduction</string>
-    <string name="License2about" translatable="false">Ruben Gees</string>
-    <string name="License2github">https://github.com/rubengees/introduction</string>
-
-    <string name="License3">Material CAB</string>
-    <string name="License3about" translatable="false">Aidan Michael Follestad</string>
-    <string name="License3github">https://github.com/afollestad/material-cab</string>
-
-    <string name="License4">CircleImageView</string>
-    <string name="License4about" translatable="false">Henning Dodenhof</string>
-    <string name="License4github">https://github.com/hdodenhof/CircleImageView</string>
-
-
-    <string name="MIT1">The MIT License (MIT)\n\nCopyright (c)</string>
-    <string name="MIT2">\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\n THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</string>
-
-    <string name="Apache1">Copyright ©</string>
-    <string name="Apache2">\n\nLicensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</string>
-
-
-    <!-- Links -->
-    <string name="linkXda">http://forum.xda-developers.com/android/apps-games/official-layers-bitsyko-apps-rro-t3012172</string>
-    <string name="linkCommunity">https://plus.google.com/u/0/communities/102261717366580091389</string>
-    <string name="linkNiklas">https://plus.google.com/u/0/+NiklasSchnettler/posts</string>
-    <string name="linkSteve">https://plus.google.com/u/0/+SteveLovejoy/posts</string>
-    <string name="linkAldrin">https://plus.google.com/u/0/+AldrinHolmes20/posts</string>
-    <string name="linkBrian">https://plus.google.com/u/0/+BrianGill55/posts</string>
-    <string name="linkReinhard">https://plus.google.com/101549242713977412381/posts</string>
-    <string name="linkSyko">https://plus.google.com/u/0/+SykoPompos/posts</string>
-    <string name="linkBranden">https://plus.google.com/u/0/101729058057775926785/posts</string>
-    <string name="linkDenis">https://plus.google.com/u/0/+DenisSuarez98/posts</string>
-    <string name="linkAndrzej">https://plus.google.com/117376207394302665227/posts</string>
-
+    <string name="about_header1_developedby">Layers developed by</string>
+    <string name="about_header2_links">Useful links</string>
+    <string name="about_link1_description">Find out whats new</string>
+    <string name="about_link2_description">Join the chat</string>
+    <string name="about_developerjobs_appdev">App Developer</string>
+    <string name="about_developerjobs_dev">Layers Developer</string>
+    <string name="about_developerjobs_leaddev">Layers Lead Developer</string>
+    <string name="about_developerjobs_showdev">Showcase Developer</string>
 
     <!-- PRODUCT TOUR -->
     <string name="Slide1_Heading">Layers Manager</string>
@@ -86,115 +128,19 @@
     <string name="Slide6_Heading">Hide Launcher Icon?</string>
     <string name="Slide7_Heading">Hide unnecessary Overlays?</string>
 
+    <!-- Menu -->
+    <string name="menu_toast_noRoot">No root access available</string>
 
-    <!-- INSTRUCTIONS/TUTORIAL -->
-    <string name="instructionstitle">Tutorial</string>
-    <string name="instructionscard1header">Install plugin overlays</string>
-    <string name="instructionscard1">Click one of the installed overlays\nChoose the apps you want to theme\nClick the FAB to install the overlays</string>
-    <string name="instructionscard2header">Install normal overlays</string>
-    <string name="instructionscard2">Click the FAB on the main screen\nChoose either a .zip or multiple .apk\'s\nClick the FAB to install the selected overlays</string>
-    <string name="instructionscard3header">Uninstall overlays</string>
-    <string name="instructionscard3">From the nav-drawer select "uninstall overlays"\nSelect multiple overlays\nClick the FAB to uninstall the selected overlays</string>
-    <string name="instructionscard4header">Backup overlays</string>
-    <string name="instructionscard4">From the nav-drawer select "Backup overlays"\nEnter a name and click "OK"</string>
-    <string name="instructionscard5header">Restore overlays</string>
-    <string name="instructionscard5">From the nav-drawer select "Restore overlays"\nClick the FAB to Restore the selected backup file</string>
-    <string name="instructionscard6header">Replay Introduction</string>
-    <string name="instructionscard6">Click to start tutorial from the beginning</string>
-
-    <!-- Fragments -->
-
-    <!-- Install Fragment -->
-    <string name="InstallOverlays2">Install Overlays</string>
-    <string name="installed">Installed selected Overlays</string>
-    <string name="installing">Installing</string>
-
-    <!-- UnInstall Fragment -->
-    <string name="UninstallOverlays">Uninstall Overlays</string>
-    <string name="selectAll">Select all</string>
-    <string name="nothingApplied">No Overlays applied.\nInstall some on the main page.</string>
-    <string name="appliedOverlays">Applied Overlays:</string>
-    <string name="OverlaysSelected">Overlays selected</string>
-    <string name="PreformReboot">Perform a soft reboot?</string>
-    <string name="uninstalled">Uninstalled selected Overlays</string>
-    <string name="uninstallingOverlays">Uninstalling Overlays</string>
-
-    <!-- Backup Restore Fragment -->
-    <string name="noBackups">No Backups available.\nMake one by clicking the FAB.</string>
-    <string name="Backups">Backups:</string>
-    <string name="BackupRestore">Backup &amp; Restore</string>
-    <string name="backupInstalledOverlays">Backup installed Overlays</string>
-    <string name="enterBackupName">Enter a backup name</string>
-    <string name="noInputName">Please enter a name</string>
-    <string name="nothingToBackup">Nothing available to backup</string>
-    <string name="DoYouWantToRestore">Do you want to restore or delete the selected Backup?</string>
-    <string name="restore">Restore</string>
-    <string name="delete">Delete</string>
-    <string name="DeleteBackup">Deleting Backup</string>
-    <string name="deleting">Deleting</string>
-    <string name="BackupOverlays">Backup Overlays</string>
-    <string name="backingUp">Backing up</string>
-    <string name="backupComplete">Backup complete</string>
-    <string name="Restore">Restore Overlays</string>
-    <string name="restoring">Restoring</string>
-    <string name="deletedBackup">Deleted selected Backup</string>
-    <string name="restored">Restored selected Backup</string>
-
-    <!-- NavDrawer -->
-    <string name="More">More</string>
-    <string name="Tutorial">Tutorial</string>
-    <string name="About">About</string>
-    <string name="Showcase">Layers Showcase</string>
-    <string name="discover">Discover</string>
-    <string name="PlayStore">PlayStore</string>
-    <string name="Settings">Settings</string>
-
-    <!-- Settings -->
-    <string name="General">General</string>
-    <string name="SettingLauncherIconDetail">Remove Launcher icon</string>
-    <string name="LauncherIconSummaryEnabled">Your ROM supports the Settings dashboard Layers shortcut</string>
-    <string name="LauncherIconSummaryDisabled">Your ROM doesn\'t support this option</string>
-    <string name="launcherIconRemoved">Launcher icon is removed</string>
-    <string name="launcherIconRevived">Launcher icon is back</string>
-    <string name="SettingsHideOverlays">Hide unnecessary Overlays</string>
-    <string name="SettingsHideOverlaysDetail">Disable Overlays for not installed Apps</string>
-
-    <!-- Dialogs -->
-
-    <!-- Action texts -->
-    <string name="MoveOverlays">Install Overlays?</string>
-    <string name="VisitGithub">Github</string>
-    <string name="Reboot">Reboot</string>
-    <string name="pick_color">Pick a Style</string>
-
-
-    <!-- description and headline texts -->
-    <string name="ApplyOverlays">Apply selected Overlays?</string>
-
-
-    <!-- SnackBar texts -->
-    <string name="OverlaysInstalled">Overlays installed!</string>
-    <string name="emptydirectory">This directory seems to be empty.</string>
-    <string name="installingOverlays">Installing Overlays</string>
-    <string name="generatingList">Generating overlay list</string>
-    <string name="Sort">Sort by</string>
-    <string name="sort_name">Name</string>
-    <string name="sort_developer">Developer</string>
-    <string name="sort_random">Random</string>
-    <string name="show">Show</string>
-    <string name="contains">contains:</string>
-    <string name="noPermission">No Permission</string>
-    <string name="noPermissionDescription">No permission to view your phone´s internal storage granted.\nYou won´t be able to use this feature until you grant this permission.</string>
-    <string name="toggleCheckboxes">Toggle Checkboxes</string>
-    <string name="refreshOverlays">Refresh Overlays</string>
-    <string name="layerNotSupported">Layer not supported</string>
-    <string name="plugin3NotSupportedDetail">Sorry, this version of Layers Manager does not support Plugin Version 3 Layers. Get a newer LM Version from our G+ Community.</string>
-    <string name="next">next</string>
-    <string name="remove">remove</string>
-    <string name="skip">Skip</string>
-    <string name="TheTeam">The Team</string>
-    <string name="layersTeam">Layers - the Team</string>
-    <string name="TeamAbout">Meet the awesome team behind Layers.</string>
-    <string name="Licenses">Licenses</string>
-
+    <!-- Links -->
+    <string name="linkXda" translatable="false">http://forum.xda-developers.com/android/apps-games/official-layers-bitsyko-apps-rro-t3012172</string>
+    <string name="linkCommunity" translatable="false">https://plus.google.com/u/0/communities/102261717366580091389</string>
+    <string name="linkNiklas" translatable="false">https://plus.google.com/u/0/+NiklasSchnettler/posts</string>
+    <string name="linkSteve" translatable="false">https://plus.google.com/u/0/+SteveLovejoy/posts</string>
+    <string name="linkAldrin" translatable="false">https://plus.google.com/u/0/+AldrinHolmes20/posts</string>
+    <string name="linkBrian" translatable="false">https://plus.google.com/u/0/+BrianGill55/posts</string>
+    <string name="linkReinhard" translatable="false">https://plus.google.com/101549242713977412381/posts</string>
+    <string name="linkSyko" translatable="false">https://plus.google.com/u/0/+SykoPompos/posts</string>
+    <string name="linkBranden" translatable="false">https://plus.google.com/u/0/101729058057775926785/posts</string>
+    <string name="linkDenis" translatable="false">https://plus.google.com/u/0/+DenisSuarez98/posts</string>
+    <string name="linkAndrzej" translatable="false">https://plus.google.com/117376207394302665227/posts</string>
 </resources>

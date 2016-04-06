@@ -94,7 +94,7 @@ public class PluginList extends Fragment implements AsyncResponse {
         //Toolbar
         Toolbar toolbar = ButterKnife.findById(getActivity(),R.id.toolbar_fragmentContainer);
         TextView tv_toolbarTitle = ButterKnife.findById(getActivity(),R.id.tv_fragmentContainer_toolbarTitle);
-        tv_toolbarTitle.setText(getString(R.string.InstallOverlays2));
+        tv_toolbarTitle.setText(getString(R.string.pluginlist_toolbar_title));
         int elevation = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
         int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56, getResources().getDisplayMetrics());
         toolbar.setNavigationIcon(R.drawable.ic_menu_menu_white_24dp);
@@ -147,9 +147,9 @@ public class PluginList extends Fragment implements AsyncResponse {
     private List<Layer> createList2() {
 
         List<Layer> result = new ArrayList<>();
-        result.add(new Layer(getString(R.string.tooBad), getString(R.string.noPlugins), getResources().getDrawable(R.drawable.ic_noplugin, null)));
-        result.add(new Layer(getString(R.string.Showcase), getString(R.string.ShowCaseMore), getResources().getDrawable(R.mipmap.ic_launcher, null)));
-        result.add(new Layer(getString(R.string.PlayStore), getString(R.string.PlayStoreMore), getResources().getDrawable(R.drawable.playstore, null)));
+        result.add(new Layer(getString(R.string.pluginList_noplugincard_title), getString(R.string.pluginList_noplugincard_description), getResources().getDrawable(R.drawable.ic_noplugin, null)));
+        result.add(new Layer(getString(R.string.pluginList_showcasecard_title), getString(R.string.pluginList_showcasecard_description), getResources().getDrawable(R.mipmap.ic_launcher, null)));
+        result.add(new Layer(getString(R.string.pluginList_playstorecard_title), getString(R.string.pluginList_playstorecard_description), getResources().getDrawable(R.drawable.playstore, null)));
         return result;
     }
 
@@ -161,7 +161,7 @@ public class PluginList extends Fragment implements AsyncResponse {
         } else {
             //PlayStore
             if (position == 2) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.PlaystoreSearch))));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/search?q=Layers+Theme&c=apps&docType=1&sp=CAFiDgoMTGF5ZXJzIFRoZW1legIYAIoBAggB:S:ANO1ljK_ZAY")));
             }
             //Showcase
             if (position == 1) {
@@ -265,8 +265,8 @@ public class PluginList extends Fragment implements AsyncResponse {
 
     @Override
     public void processFinish() {
-        Snackbar.make(cl_root, R.string.installed, Snackbar.LENGTH_LONG)
-                .setAction(R.string.Reboot, new View.OnClickListener() {
+        Snackbar.make(cl_root, R.string.pluginlist_snackbar_installationFinished, Snackbar.LENGTH_LONG)
+                .setAction(R.string.commands_rebootdialog_title, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Commands.reboot(getActivity());
@@ -347,8 +347,8 @@ public class PluginList extends Fragment implements AsyncResponse {
                     openFileManager();
                 } else {
                     AlertDialog.Builder noPermissionDialog = new AlertDialog.Builder(getActivity());
-                    noPermissionDialog.setTitle(R.string.noPermission);
-                    noPermissionDialog.setMessage(R.string.noPermissionDescription);
+                    noPermissionDialog.setTitle(R.string.permission_nopermissiondialog_title);
+                    noPermissionDialog.setMessage(R.string.permission_nopermissiondialog_message);
                     noPermissionDialog.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                         }
