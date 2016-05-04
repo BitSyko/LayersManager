@@ -32,7 +32,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_nooverlays_gray_150dp"
+                    android:src="@drawable/ic_no_overlays_gray_150dp"
                     android:visibility="invisible"/>
 
                 <TextView
