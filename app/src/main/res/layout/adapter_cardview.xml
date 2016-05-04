@@ -35,7 +35,6 @@
             android:layout_marginTop="12dp"
             android:layout_toEndOf="@+id/iv_cardViewAdapter_image"
             android:gravity="center_vertical"
-            android:text="Title"
             android:textColor="@color/textColorPrimary"
             android:textSize="@dimen/textSizeSubheading"/>
 
@@ -47,7 +46,6 @@
             android:layout_below="@+id/tv_cardViewAdapter_title"
             android:layout_marginBottom="12dp"
             android:gravity="center_vertical"
-            android:text="Subtitle"
             android:textColor="@color/textColorSecondary"
             android:textSize="@dimen/textSizeBody"/>
 

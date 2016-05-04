@@ -131,7 +131,6 @@
                             android:layout_marginTop="@dimen/smallMargin"
                             android:animateLayoutChanges="true"
                             android:elevation="@dimen/cardElevation"
-                            android:text="NEW THINGS"
                             android:textColor="@color/textColorSecondary"/>
 
                     </LinearLayout>

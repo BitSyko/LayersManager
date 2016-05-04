@@ -5,6 +5,7 @@
     <string name="about_team_subtitle">Meet the awesome team behind Layers.</string>
 
     <!-- NavDrawer -->
+    <string name="drawer_title">Manager</string>
     <string name="drawer_more">More</string>
     <string name="drawer_tutorial">Tutorial</string>
     <string name="pluginList_showcasecard_title">Layers Showcase</string>

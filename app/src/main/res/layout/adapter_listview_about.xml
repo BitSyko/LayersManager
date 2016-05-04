@@ -30,7 +30,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/mediumMargin"
                 android:gravity="center_vertical"
-                android:text="Heading"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead.Inverse"
                 android:textColor="@color/textColorPrimary"
                 android:textSize="@dimen/textSizeSubheading"/>
@@ -40,7 +39,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/mediumMargin"
-                android:text="Description"
                 android:textColor="@color/textColorSecondary"
                 android:textSize="@dimen/textSizeBody"
                 android:textStyle="normal"/>

@@ -31,7 +31,6 @@
             android:layout_marginStart="@dimen/second_keyline"
             android:layout_marginTop="14dp"
             android:elevation="@dimen/toolbarElevation"
-            android:text="Toolbar Title"
             android:textColor="@color/white"
             android:textSize="@dimen/textSizeTitle"
             android:textStyle="bold"/>
