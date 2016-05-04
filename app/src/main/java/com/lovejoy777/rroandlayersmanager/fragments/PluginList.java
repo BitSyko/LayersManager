@@ -323,9 +323,13 @@ public class PluginList extends Fragment implements AsyncResponse {
         }
 
         protected void onPostExecute(Void result) {
-            rv_installedOverlaysList.setHasFixedSize(true);
-            rv_installedOverlaysList.setAdapter(cardViewAdapter);
-            swipeRefreshLayout.setRefreshing(false);
+            if (rv_installedOverlaysList != null) {
+                rv_installedOverlaysList.setHasFixedSize(true);
+                rv_installedOverlaysList.setAdapter(cardViewAdapter);
+            }
+            if (swipeRefreshLayout != null) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
         }
     }
 
