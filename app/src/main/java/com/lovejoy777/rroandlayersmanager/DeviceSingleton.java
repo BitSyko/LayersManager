@@ -10,6 +10,7 @@ public class DeviceSingleton {
 
     private static Singleton device;
 
+
     public static Singleton getInstance() {
 
         if (device == null) {
@@ -82,4 +83,6 @@ public class DeviceSingleton {
         @Override
         public String getParentOfOverlayFolder(){return "/system/vendor";}
     }
+
+
 }

@@ -8,7 +8,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Environment;
+import android.os.StatFs;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -202,12 +205,12 @@ public class Commands {
 
             }
 
-            Utils.remount("rw");
+            Utils.remount("rw",DeviceSingleton.getInstance().getMountFolder());
             System.out.println("MOVE!");
             Utils.moveFile(tempDir , DeviceSingleton.getInstance().getParentOfOverlayFolder() + "/");
             Utils.applyPermissionsRecursive(DeviceSingleton.getInstance().getOverlayFolder(), "644");
             Utils.applyPermissions(DeviceSingleton.getInstance().getOverlayFolder(), "755");
-            Utils.remount("ro");
+            Utils.remount("ro",DeviceSingleton.getInstance().getMountFolder());
             return null;
         }
 
@@ -278,7 +281,7 @@ public class Commands {
 
         @Override
         protected Void doInBackground(Void... params) {
-            Utils.remount("rw");
+            Utils.remount("rw",DeviceSingleton.getInstance().getMountFolder());
             for (String path : paths) {
                 Log.d("Removing: ", path);
                 try {
@@ -289,7 +292,7 @@ public class Commands {
                 }
                 publishProgress();
             }
-            Utils.remount("ro");
+            Utils.remount("ro",DeviceSingleton.getInstance().getMountFolder());
             return null;
         }
 
@@ -313,49 +316,107 @@ public class Commands {
         private List<LayerFile> layersToInstall;
         private Context context;
         private int i = 0;
+        public int mode;
 
-        public InstallOverlaysBetterWay(List<LayerFile> layersToInstall, Context context, AsyncResponse delegate) {
+        public InstallOverlaysBetterWay(List<LayerFile> layersToInstall, Context context, AsyncResponse delegate,int mode) {
             this.layersToInstall = layersToInstall;
             this.context = context;
             this.delegate = delegate;
+            this.mode = mode;
         }
 
         @Override
         protected void onPreExecute() {
-            progress = new ProgressDialog(context);
-            progress.setTitle(R.string.commands_installingdialog_title);
-            progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            progress.setProgress(i);
-            progress.show();
-            progress.setCancelable(false);
-            progress.setMax(layersToInstall.size());
+
+                progress = new ProgressDialog(context);
+                progress.setTitle(R.string.commands_installingdialog_title);
+                progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                progress.setProgress(i);
+                progress.setCancelable(false);
+                progress.setMax(layersToInstall.size()+4);
+                progress.setMessage("");
+                progress.show();
+
+
         }
 
 
         @Override
         protected Void doInBackground(Void... params) {
 
-            // MOUNT /SYSTEM RW
-            Utils.remount("rw");
+            // Modes
+            //  0: Normal Installation,
+            //  1: Create Symlink before installation
+            //  2: Install to symLink
 
-            File OverlayDirectory = new File(DeviceSingleton.getInstance().getMountFolder());
-            if (!OverlayDirectory.exists()){
-                OverlayDirectory.mkdir();
+
+    // Mount
+    publishProgress("Mounting Filesystem");
+                switch (mode){
+                    case 0:
+                        Utils.remount("rw",DeviceSingleton.getInstance().getMountFolder());
+                        break;
+                    case 1:
+                        Utils.remount("rw", "/system");
+                        Utils.remount("rw", "/vendor");
+                        break;
+                    case 2:
+                        Utils.remount("rw", "/system");
+                        break;
+                }
+
+
+    //Manage Overlay Folders
+    publishProgress("Managing Overlay folders");
+            switch (mode){
+                case 0:
+                    File OverlayDirectory = new File(DeviceSingleton.getInstance().getOverlayFolder());
+                    if (!OverlayDirectory.exists()){
+                        Utils.createFolder2(DeviceSingleton.getInstance().getOverlayFolder());
+                    }
+                    break;
+                case 1:
+                    //Create /System/Overlay
+                    Log.d("SymLinker","Creating /system/overlay");
+                    Utils.createFolder2("/system/overlay/");
+                    //Delete /vendor/Overlay if existing
+                    Log.d("SymLinker","Delete /vendor/Overlay if existing");
+                    File VendorOverlay = new File(DeviceSingleton.getInstance().getOverlayFolder());
+                    if (VendorOverlay.exists()){
+                        Utils.deleteFile(VendorOverlay.getAbsolutePath());
+                    }
+                    //SymLink system/Overlay to Vendor/Overlay
+                    Log.d("SymLinker","SymLink system/Overlay to Vendor/Overlay");
+                    Utils.Symlink("/system/overlay/", DeviceSingleton.getInstance().getParentOfOverlayFolder());
+                    break;
+                case 2:
+                    //
+                    break;
             }
 
+
+    //Copy Overlays
+            String OverlayFolder = null;
+            switch (mode){
+                case 0:
+                    OverlayFolder = DeviceSingleton.getInstance().getOverlayFolder() + "/";
+                    break;
+                case 1:
+                    OverlayFolder = "/system/overlay/";
+                    break;
+                case 2:
+                    OverlayFolder = "/system/overlay/";
+                    break;
+            }
             for (LayerFile layerFile : layersToInstall) {
                 try {
-                    Utils.moveFile(layerFile.getFile(context).getAbsolutePath(),
-                            DeviceSingleton.getInstance().getOverlayFolder() + "/");
-
-                    publishProgress();
+                    Utils.moveFile(layerFile.getFile(context).getAbsolutePath(),OverlayFolder);
+                    publishProgress("Installing: "+layerFile.getNiceName());
                 } catch (Exception e) {
                     e.printStackTrace();
                     publishProgress(e.getMessage());
                 }
-
             }
-
             if (!layersToInstall.isEmpty()) {
                 try {
                     layersToInstall.get(0).getLayer().close();
@@ -364,9 +425,381 @@ public class Commands {
                 }
             }
 
-            Utils.applyPermissionsRecursive(DeviceSingleton.getInstance().getOverlayFolder(), "644");
-            Utils.applyPermissions(DeviceSingleton.getInstance().getOverlayFolder(), "755");
-            Utils.remount("ro");
+
+    //Change Permissions
+    publishProgress("Changing Permissions");
+            Utils.applyPermissionsRecursive("/system/overlay/", "644");
+            Utils.applyPermissionsRecursive(OverlayFolder, "644");
+            Log.d("SymLinker","Give Permissions to Overlay Files (755)");
+            Utils.applyPermissions(OverlayFolder, "755");
+
+
+    //Remount
+    publishProgress("Remounting Filesystem");
+            switch (mode){
+                case 0:
+                    Utils.remount("ro",DeviceSingleton.getInstance().getMountFolder());
+                    break;
+                case 1:
+                    Utils.remount("ro", "/system");
+                    Utils.remount("ro", "/vendor");
+                    break;
+                case 2:
+                    Utils.remount("ro", "/system");
+                    break;
+            }
+
+/*
+
+            if (doSymlink){
+                //Create /System/Overlay
+                Log.d("SymLinker","Creating /system/overlay");
+                Utils.createFolder2("/system/overlay/");
+                //Delete /vendor/Overlay if existing
+                Log.d("SymLinker","Delete /vendor/Overlay if existing");
+                File VendorOverlay = new File(DeviceSingleton.getInstance().getOverlayFolder());
+                if (VendorOverlay.exists()){
+                    Utils.deleteFile(VendorOverlay.getAbsolutePath());
+                }
+            }
+            if (symLinkAlreadyPresent){
+                //
+            }
+            if (!doSymlink){
+
+            }
+
+
+
+            //SYSTEMLINK
+            if (doSymlink){
+                //Mount System & Vendor
+                publishProgress("Mounting");
+                Log.d("SymLinker","Mounting System and Vendor");
+                Utils.remount("rw", "/system");
+                Utils.remount("rw", "/vendor");
+
+                //Create /System/Overlay
+                publishProgress("Create new Overlay Folder");
+                Log.d("SymLinker","Creating /system/overlay");
+                Utils.createFolder2("/system/overlay/");
+
+                //Copy Overlays
+                Log.d("SymLinker","Copy Overlays");
+                for (LayerFile layerFile : layersToInstall) {
+                    try {
+                        Utils.moveFile(layerFile.getFile(context).getAbsolutePath(), "/system/overlay/");
+                            publishProgress(layerFile.getNiceName());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            publishProgress(e.getMessage());
+                        }
+                    }
+                    if (!layersToInstall.isEmpty()) {
+                        try {
+                            layersToInstall.get(0).getLayer().close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    publishProgress("Change Permissions");
+                    //Give Permissions to Overlay Files (644)
+                    Log.d("SymLinker","Give Permissions to Overlay Files (644)");
+                    Utils.applyPermissionsRecursive("/system/overlay/", "644");
+                    //Give Permissions to Overlay Folder (755)
+                    Log.d("SymLinker","Give Permissions to Overlay Files (755)");
+                    Utils.applyPermissions("/system/overlay/", "755");
+
+                    publishProgress("Delete old Overlay folder");
+                    //Delete /vendor/Overlay if existing
+                    Log.d("SymLinker","Delete /vendor/Overlay if existing");
+                    File VendorOverlay = new File(DeviceSingleton.getInstance().getOverlayFolder());
+                    if (VendorOverlay.exists()){
+                        Utils.deleteFile(VendorOverlay.getAbsolutePath());
+                    }
+
+                    publishProgress("Creating Symlink");
+                    //SymLink system/Overlay to Vendor/Overlay
+                    Log.d("SymLinker","SymLink system/Overlay to Vendor/Overlay");
+                    Utils.Symlink("/system/overlay/", DeviceSingleton.getInstance().getParentOfOverlayFolder());
+                    publishProgress("Change Permissions");
+                    //Give Permissions to Overlay Folder (755)
+                    Log.d("SymLinker","Give Permissions to Overlay Files (755) AGAIN");
+                    Utils.applyPermissions("/system/overlay/", "755");
+
+                    Utils.remount("ro", "/system");
+                    Utils.remount("ro", "/vendor");
+
+            }else {
+
+
+                //SymlinkedMode
+                if (symLinkAlreadyPresent){
+                    publishProgress("Mounting");
+                    Utils.remount("rw","/system");
+                    for (LayerFile layerFile : layersToInstall) {
+                        try {
+                            Utils.moveFile(layerFile.getFile(context).getAbsolutePath(), "/system/overlay/");
+
+                            publishProgress(layerFile.getNiceName());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            publishProgress(e.getMessage());
+                        }
+
+                    }
+                    if (!layersToInstall.isEmpty()) {
+                        try {
+                            layersToInstall.get(0).getLayer().close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    publishProgress("Change Permissions");
+                    //Give Permissions to Overlay Files (644)
+                    Log.d("SymLinker","Give Permissions to Overlay Files (644)");
+                    Utils.applyPermissionsRecursive("/system/overlay/", "644");
+                    //Give Permissions to Overlay Folder (755)
+                    Log.d("SymLinker","Give Permissions to Overlay Files (755) AGAIN");
+                    Utils.applyPermissions("/system/overlay/", "755");
+                    Utils.remount("ro", "/system");
+                }
+                //NORMAL MODE
+                else {
+                    // MOUNT /SYSTEM RW
+                    Utils.remount("rw",DeviceSingleton.getInstance().getMountFolder());
+                    File OverlayDirectory = new File(DeviceSingleton.getInstance().getMountFolder());
+                    if (!OverlayDirectory.exists()){
+                        OverlayDirectory.mkdir();
+                    }
+                    for (LayerFile layerFile : layersToInstall) {
+                        try {
+                            Utils.moveFile(layerFile.getFile(context).getAbsolutePath(),
+                                    DeviceSingleton.getInstance().getOverlayFolder() + "/");
+
+                            publishProgress();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            publishProgress(e.getMessage());
+                        }
+
+                    }
+                    if (!layersToInstall.isEmpty()) {
+                        try {
+                            layersToInstall.get(0).getLayer().close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    Utils.applyPermissionsRecursive(DeviceSingleton.getInstance().getOverlayFolder(), "644");
+                    Utils.applyPermissions(DeviceSingleton.getInstance().getOverlayFolder(), "755");
+                    Utils.remount("ro",DeviceSingleton.getInstance().getMountFolder());
+                }
+
+
+
+
+
+            }
+
+
+/*
+            // ANDROID N LOW VENDOR SPACE WORKAROUND
+                Utils.remount("rw", "/system");
+                Utils.remount("rw", "/vendor");
+
+
+                //1. Delete VENDOR OVERLAY
+                File VendorOverlay = new File(DeviceSingleton.getInstance().getOverlayFolder());
+                if (VendorOverlay.exists()){
+                    Utils.deleteFile(VendorOverlay.getAbsolutePath());
+                }
+
+                //2. Create DATA Overlay
+                //File DataOverlay = new File("/data/overlay/");
+                //if (DataOverlay.exists()){
+                    Utils.createFolder2("/system/overlay/");
+               // }
+
+                //3. Copy Ovrlays to DATA Overlays
+                for (LayerFile layerFile : layersToInstall) {
+                    try {
+                        Utils.moveFile(layerFile.getFile(context).getAbsolutePath(),
+                                "/system/overlay/");
+
+                        publishProgress();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        publishProgress(e.getMessage());
+                    }
+
+                }
+                if (!layersToInstall.isEmpty()) {
+                    try {
+                        layersToInstall.get(0).getLayer().close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Utils.applyPermissionsRecursive("/system/overlay/", "644");
+                Utils.applyPermissions("/system/overlay/", "755");
+
+                // 4. SymLink to DATA Overlay to Vendor/Overlay
+                Utils.Symlink("/system/overlay/", DeviceSingleton.getInstance().getParentOfOverlayFolder());
+                Utils.applyPermissions("/system/overlay/", "755");
+
+    /*
+                //1. Delete VENDOR OVERLAY
+                File StockOverlayDirectory = new File(DeviceSingleton.getInstance().getOverlayFolder());
+                if (StockOverlayDirectory.exists()){
+                    Utils.deleteFile(StockOverlayDirectory.getAbsolutePath());
+                }
+
+                //2. Delete SYSTEM OVERLAY
+                File OverlayDirectory = new File("/system/overlay/");
+                if (OverlayDirectory.exists()){
+                    Utils.deleteFile(OverlayDirectory.getAbsolutePath());
+                }
+
+
+                //3. Helper Folder
+                String HelperFolder = Environment.getExternalStorageDirectory() + "/overlay/";
+                File dir1 = new File(HelperFolder);
+                dir1.mkdirs();
+
+                //4. Symlink Helper to Stock Folder
+                Utils.Symlink(HelperFolder,StockOverlayDirectory.getAbsolutePath());
+
+                //5. Install theme to stock Folder
+                for (LayerFile layerFile : layersToInstall) {
+                    try {
+                        Utils.moveFile(layerFile.getFile(context).getAbsolutePath(),
+                                DeviceSingleton.getInstance().getOverlayFolder() + "/");
+
+                        publishProgress();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        publishProgress(e.getMessage());
+                    }
+
+                }
+                if (!layersToInstall.isEmpty()) {
+                    try {
+                        layersToInstall.get(0).getLayer().close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Utils.applyPermissionsRecursive(DeviceSingleton.getInstance().getOverlayFolder(), "644");
+                Utils.applyPermissions(DeviceSingleton.getInstance().getOverlayFolder(), "755");
+
+                //6. Delete VENDOR OVERLAY
+                if (StockOverlayDirectory.exists()){
+                    Utils.deleteFile(StockOverlayDirectory.getAbsolutePath());
+                }
+
+                // 7. NEW OVERLAY FOLDER: SYSTEM/OVERLAY
+                Utils.createFolder(OverlayDirectory);
+                Utils.applyPermissions(OverlayDirectory.getAbsolutePath(),"755");
+
+                // 8. Copy Overlays
+               // File[] fList = dir1.listFiles();
+                //for (File file : fList) {
+                //    Utils.moveFile(file.getAbsolutePath(),"/system/overlay");
+                //}
+                Utils.moveFile(HelperFolder,"/system/");
+                Utils.applyPermissions(OverlayDirectory.getAbsolutePath(),"755");
+                Utils.applyPermissionsRecursive(OverlayDirectory.getAbsolutePath(),"644");
+
+                // 9. SymLink to Vendor/Overlay
+                Utils.Symlink("/system/overlay/", DeviceSingleton.getInstance().getParentOfOverlayFolder());
+
+                Utils.applyPermissions(OverlayDirectory.getAbsolutePath(),"755");
+                /*
+                // 1. NEW OVERLAY FOLDER: SYSTEM/OVERLAY
+                File OverlayDirectory = new File("/system/overlay/");
+                Utils.deleteFile(OverlayDirectory.getAbsolutePath());
+                Utils.createFolder(OverlayDirectory);
+                Utils.applyPermissions(OverlayDirectory.getAbsolutePath(),"755");
+
+                //2. Delete Normall Overlay Folder
+
+
+
+
+                // 4. Helper Directory SD CARD
+                String sdOverlays1 = Environment.getExternalStorageDirectory() + "/overlay/";
+                File dir1 = new File(sdOverlays1);
+                dir1.mkdirs();
+
+                // 5. Copy to helper Directory
+                for (LayerFile layerFile : layersToInstall) {
+                    try {
+                        Utils.moveFile(layerFile.getFile(context).getAbsolutePath(),
+                                sdOverlays1);
+                        publishProgress();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        publishProgress(e.getMessage());
+                    }
+                }
+
+                // 4. Copy Overlays
+                Utils.moveFile(sdOverlays1,"/system/");
+
+                Utils.applyPermissionsRecursive(OverlayDirectory.getAbsolutePath(),"644");
+
+                // 3. SymLink to Vendor/Overlay
+                Utils.Symlink("/system/overlay/", DeviceSingleton.getInstance().getParentOfOverlayFolder());
+
+                // 2. SystemLink to VENDOR/OVERLAY
+            /*
+
+            File OverlayDirectory = new File(DeviceSingleton.getInstance().getMountFolder());
+            if (OverlayDirectory.exists()){
+                OverlayDirectory.delete();
+            }
+
+                // Create overlay folder on internal sd
+                String sdOverlays1 = Environment.getExternalStorageDirectory() + "/overlay/";
+                File dir1 = new File(sdOverlays1);
+                dir1.mkdirs();
+
+                //Copy Overlays to temp. folder
+                for (LayerFile layerFile : layersToInstall) {
+                    try {
+                        Utils.moveFile(layerFile.getFile(context).getAbsolutePath(),
+                                sdOverlays1);
+                        publishProgress();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        publishProgress(e.getMessage());
+                    }
+                }
+/*
+
+                //Copy Files to Workaround direct.
+                Utils.moveFile(sdOverlays1,"/system/");
+                //Check & Create Workaround Overlay Directory
+                Utils.remount("rw");
+
+
+                //Chmod Workaraound folder
+                Utils.applyPermissions("/system/overlay/", "755");
+
+                //Chmod Files
+                Utils.applyPermissionsRecursive("/system/overlay/","644");
+
+                //Symlink
+                Utils.Symlink("/system/overlay/","/vendor");
+
+
+
+           /* Utils.remount("rw");
+
+
+            */
 
             return null;
         }
@@ -374,9 +807,10 @@ public class Commands {
         @Override
         protected void onProgressUpdate(String... values) {
             if (values.length != 0) {
-                Toast.makeText(context, values[0], Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, values[0], Toast.LENGTH_LONG).show();
             }
             progress.setProgress(++i);
+            progress.setMessage(values[0]);
         }
 
         @Override

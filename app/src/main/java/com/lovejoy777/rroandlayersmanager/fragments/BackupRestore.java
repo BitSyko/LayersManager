@@ -291,11 +291,11 @@ public class BackupRestore extends Fragment {
 
         @Override
         protected Void doInBackground(String... params) {
-            Utils.remount("rw");
+            Utils.remount("rw",DeviceSingleton.getInstance().getMountFolder());
             String backupName = params[0];
             String sdOverlays = Environment.getExternalStorageDirectory() + "/Overlays";
             zipFolder(DeviceSingleton.getInstance().getOverlayFolder(), sdOverlays + "/Backup/" + backupName + "/overlay.zip");
-            Utils.remount("ro");
+            Utils.remount("ro",DeviceSingleton.getInstance().getMountFolder());
             return null;
 
         }

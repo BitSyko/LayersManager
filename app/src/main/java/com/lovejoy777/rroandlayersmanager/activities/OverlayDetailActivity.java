@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StatFs;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +22,7 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -43,7 +45,9 @@ import com.bitsyko.liblayers.layerfiles.CustomStyleOverlay;
 import com.bitsyko.liblayers.layerfiles.GeneralOverlay;
 import com.bitsyko.liblayers.layerfiles.LayerFile;
 import com.lovejoy777.rroandlayersmanager.AsyncResponse;
+import com.lovejoy777.rroandlayersmanager.DeviceSingleton;
 import com.lovejoy777.rroandlayersmanager.R;
+import com.lovejoy777.rroandlayersmanager.Utils;
 import com.lovejoy777.rroandlayersmanager.adapters.ScreenshotAdapter;
 import com.lovejoy777.rroandlayersmanager.commands.Commands;
 import com.lovejoy777.rroandlayersmanager.interfaces.Callback;
@@ -53,6 +57,9 @@ import com.lovejoy777.rroandlayersmanager.loadingpackages.ShowAllPackagesFromLay
 import com.lovejoy777.rroandlayersmanager.loadingpackages.ShowPackagesFromList;
 import com.lovejoy777.rroandlayersmanager.views.CheckBoxHolder;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +84,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             refreshSwitches();
         }
     };
+    private List<LayerFile> layersToInstall = new ArrayList<>();
 
     private Callback<CheckBox> checkBoxCallback = new Callback<CheckBox>() {
 
@@ -502,8 +510,8 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
     private void InstallAsyncOverlays() {
 
-        List<LayerFile> layersToInstall = new ArrayList<>();
 
+        layersToInstall.clear();
         int childrenNumber = ll_generalOverlays.getChildCount();
 
         for (int i = 0; i < childrenNumber; i++) {
@@ -544,8 +552,61 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
         Log.d("Choosed color", choosedStyle);
 
-        new Commands.InstallOverlaysBetterWay(layersToInstall, this, this).execute();
+        //CHECK IF ENOUGH SPACE ON VENDOR DEVICES AND THERE IS NO SYMLINK ALREADY
+        File VendorOverlay = new File(DeviceSingleton.getInstance().getOverlayFolder());
+        boolean symLinkAlreadyPresent = false;
+        try {
+            symLinkAlreadyPresent = Utils.isSymlink(VendorOverlay);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.d("SymLinker","SymLink already present: "+ symLinkAlreadyPresent);
+        if (DeviceSingleton.getInstance().getMountFolder().equals("/vendor") & !symLinkAlreadyPresent) {
+            //FREE SPACE
+            StatFs statFs = new StatFs(DeviceSingleton.getInstance().getMountFolder());
+            long freeSpace = (statFs.getAvailableBlocks() * (long) statFs.getBlockSize());
+            //NEEDED SPACE
+            long neededSpace = 0;
+            for (LayerFile layerFile : layersToInstall) {
+                neededSpace = neededSpace + layerFile.getFile(this).length();
+            }
+            //Symlink is necessary = not enough space
+            if (neededSpace > freeSpace) {
+                AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+                alertDialog.setTitle("Low Storage");
+                alertDialog.setMessage(Html.fromHtml("You don´t have enough space on your /vendor partition to install the selected Layers.<br><br><b>Free Space:</b> " + Utils.bytesToHuman(freeSpace) + "<br>" + "<b>Needed Space:</b> " + Utils.bytesToHuman(neededSpace) + "<br><br>Create a symbolic link to /system to gain some extra storage?"));
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "DO IT",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                new Commands.InstallOverlaysBetterWay(layersToInstall, OverlayDetailActivity.this, OverlayDetailActivity.this,1).execute();
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Ignore",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                new Commands.InstallOverlaysBetterWay(layersToInstall, OverlayDetailActivity.this, OverlayDetailActivity.this,0).execute();
+                            }
+                        });
+                alertDialog.show();
+            } //enough space
+            else {
+                new Commands.InstallOverlaysBetterWay(layersToInstall, OverlayDetailActivity.this, OverlayDetailActivity.this,0).execute();
+            }
+        }else{
+            if (symLinkAlreadyPresent){
+                new Commands.InstallOverlaysBetterWay(layersToInstall, OverlayDetailActivity.this, OverlayDetailActivity.this,2).execute();
+            }else {
+                new Commands.InstallOverlaysBetterWay(layersToInstall, OverlayDetailActivity.this, OverlayDetailActivity.this,0).execute();
+            }
+        }
+
+
+
+
     }
+
+
+
 
     public void processFinish() {
         installationFinishedSnackBar();

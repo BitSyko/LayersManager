@@ -280,14 +280,14 @@ public class menu extends AppCompatActivity {
 
         dir1.mkdirs();
 
-        Utils.remount("rw");
+        Utils.remount("rw",DeviceSingleton.getInstance().getMountFolder());
         String vendover = DeviceSingleton.getInstance().getOverlayFolder();
         // CREATES /VENDOR/OVERLAY
         File dir2 = new File(vendover);
         if (!dir2.exists()) {
             Utils.createFolder(dir2);
         }
-        Utils.remount("ro");
+        Utils.remount("ro",DeviceSingleton.getInstance().getMountFolder());
     }
 
     @Override

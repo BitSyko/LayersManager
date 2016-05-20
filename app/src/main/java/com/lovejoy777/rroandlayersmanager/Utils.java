@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 
 public class Utils {
 
@@ -50,7 +51,21 @@ public class Utils {
 
     public static boolean createFolder(File folder) {
         if (!isRootAvailable()) return false;
-        runCommand("mkdir " + folder.getPath(), true);
+        Utils.remount("rw",DeviceSingleton.getInstance().getMountFolder());
+        runCommand("mkdir " + folder.getAbsolutePath(), true);
+        return true;
+    }
+
+    public static boolean createFolder2(String folder) {
+        if (!isRootAvailable()) return false;
+        try {
+            runCommand("mkdir " + folder, true);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         return true;
     }
 
@@ -85,6 +100,21 @@ public class Utils {
         }
         return new File(newDir).exists();
     }
+
+    public static void Symlink(String start, String target) {
+        if (!isRootAvailable()) return;
+        try {
+            runCommand("ln -s "+start+" "+target, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ;
+        }
+        return;
+    }
+
+
+
+
 
     public static boolean copyFile(String old, String newFile) {
         if (!isRootAvailable()) return false;
@@ -125,10 +155,9 @@ public class Utils {
         return output;
     }
 
-    public static boolean remount(String mountType) {
+    public static boolean remount(String mountType, String mountFolder) {
         if (!isRootAvailable()) return false;
-        String folder = DeviceSingleton.getInstance().getMountFolder();
-        CommandOutput out =runCommand("mount -o "+mountType +",remount "+ folder + "\n", true);
+        CommandOutput out =runCommand("mount -o "+mountType +",remount "+ mountFolder + "\n", true);
 
         return true;
     }
@@ -338,4 +367,39 @@ public class Utils {
         return type;
     }
 
+    public static String bytesToHuman (long size)
+    {
+        long Kb = 1  * 1024;
+        long Mb = Kb * 1024;
+        long Gb = Mb * 1024;
+        long Tb = Gb * 1024;
+        long Pb = Tb * 1024;
+        long Eb = Pb * 1024;
+
+        if (size <  Kb)                 return floatForm(        size     ) + " byte";
+        if (size >= Kb && size < Mb)    return floatForm((double)size / Kb) + " Kb";
+        if (size >= Mb && size < Gb)    return floatForm((double)size / Mb) + " Mb";
+        if (size >= Gb && size < Tb)    return floatForm((double)size / Gb) + " Gb";
+        if (size >= Tb && size < Pb)    return floatForm((double)size / Tb) + " Tb";
+        if (size >= Pb && size < Eb)    return floatForm((double)size / Pb) + " Pb";
+        if (size >= Eb)                 return floatForm((double)size / Eb) + " Eb";
+
+        return "???";
+    }
+
+    public static String floatForm (double d)
+    {
+        return new DecimalFormat("#.##").format(d);
+    }
+
+    public static boolean isSymlink(File file) throws IOException {
+        File canon;
+        if (file.getParent() == null) {
+            canon = file;
+        } else {
+            File canonDir = file.getParentFile().getCanonicalFile();
+            canon = new File(canonDir, file.getName());
+        }
+        return !canon.getCanonicalFile().equals(canon.getAbsoluteFile());
+    }
 }

@@ -26,6 +26,7 @@ public class GeneralOverlay extends LayerFile {
 
         String cacheDir = context.getCacheDir() + File.separator + StringUtils.deleteWhitespace(parentLayer.getName()) + File.separator;
 
+
         if (!new File(cacheDir).exists()) {
             new File(cacheDir).mkdirs();
         }
