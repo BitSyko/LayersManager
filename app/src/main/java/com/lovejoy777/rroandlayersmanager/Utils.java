@@ -400,6 +400,10 @@ public class Utils {
             File canonDir = file.getParentFile().getCanonicalFile();
             canon = new File(canonDir, file.getName());
         }
+        System.out.println(canon.getCanonicalFile().getAbsolutePath());
         return !canon.getCanonicalFile().equals(canon.getAbsoluteFile());
     }
+
+
+
 }

@@ -113,7 +113,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     @Bind(R.id.fab_plugindetail_installOverlays) FloatingActionButton fab_installOverlays;
     @OnClick(R.id.fab_plugindetail_installOverlays)
         void fabClicked(){
-            installDialog();
+            InstallAsyncOverlays();
         }
     @Bind(R.id.iv_plugindetail_backdrop) ImageView iv_backdrop;
 
@@ -472,42 +472,6 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
     }
 
 
-    /////////
-    //Dialogs
-    private void installDialog() {
-
-        AlertDialog.Builder installdialog = new AlertDialog.Builder(this);
-        final LayoutInflater inflater = getLayoutInflater();
-        View dontShowAgainLayout = inflater.inflate(R.layout.dialog_donotshowagain, null);
-        final CheckBox dontShowAgain = ButterKnife.findById(dontShowAgainLayout, R.id.cb_dontShowAgainDialog_dontShowAgain);
-
-        installdialog.setView(dontShowAgainLayout);
-        installdialog.setTitle(R.string.overlaydetail_asktoinstalldialog_title);
-        installdialog.setMessage(R.string.overlaydetail_asktoinstalldialog_message);
-        installdialog.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-
-                if (dontShowAgain.isChecked()) {
-                    SharedPreferences myprefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = myprefs.edit();
-                    editor.putString("ConfirmInstallationDialog", "checked");
-                    editor.apply();
-                }
-                //start async task to install the Overlays
-                InstallAsyncOverlays();
-            }
-        });
-        installdialog.setNegativeButton(android.R.string.cancel, null);
-
-        SharedPreferences myprefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-        String skipMessage = myprefs.getString("ConfirmInstallationDialog", "unchecked");
-        if (!skipMessage.equals("checked")) {
-            installdialog.show();
-        } else {
-            InstallAsyncOverlays();
-        }
-    }
-
     private void InstallAsyncOverlays() {
 
 
@@ -552,6 +516,206 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
 
         Log.d("Choosed color", choosedStyle);
 
+
+    //SPACE DIALOG
+
+        // CHECK FOR SYMLINK
+        boolean symLinkAlreadyPresent = false;
+        String symLinkDestination = null;
+        File OverlayFolder = new File(DeviceSingleton.getInstance().getOverlayFolder());
+        Utils.remount("rw",DeviceSingleton.getInstance().getMountFolder());
+        OverlayFolder.mkdir();
+        Utils.remount("ro",DeviceSingleton.getInstance().getMountFolder());
+        Log.d("SpaceCalculating","Stock Overlay Folder "+ OverlayFolder);
+        File newOverlayFolder = OverlayFolder;
+        try {
+            symLinkAlreadyPresent = Utils.isSymlink(OverlayFolder);
+            if (symLinkAlreadyPresent){
+                symLinkDestination = OverlayFolder.getCanonicalPath();
+                newOverlayFolder = new File(symLinkDestination);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.d("SpaceCalculating","Current Overlay Folder "+ newOverlayFolder);
+
+        //CALCULATE SPACE
+            //FREE SPACE
+            StatFs statFs = new StatFs(newOverlayFolder.getAbsolutePath());
+            long freeSpace = (statFs.getAvailableBlocksLong() * statFs.getBlockSizeLong());
+            Log.d("SpaceCalculating","Free Space "+ Utils.bytesToHuman(freeSpace));
+
+            //NEEDED SPACE
+            long neededSpace = 0;
+            for (LayerFile layerFile : layersToInstall) {
+                neededSpace = neededSpace + layerFile.getFile(this).length();
+            }
+            Log.d("SpaceCalculating","Needed Space "+ Utils.bytesToHuman(neededSpace));
+
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setCancelable(false);
+
+        // NOT ENOUGH SPACE
+        if (neededSpace > freeSpace){
+            alertDialog.setTitle("Low Storage");
+            if (!symLinkAlreadyPresent){
+                alertDialog.setMessage(Html.fromHtml("Not enough space on "+DeviceSingleton.getInstance().getMountFolder()+ " (Default Location)<br><br><b>Free Space:</b> " + Utils.bytesToHuman(freeSpace) + "<br>" + "<b>Needed Space:</b><font color=\"#F44336\"> " + Utils.bytesToHuman(neededSpace) + "</font><br><br>Create a symbolic link to /system to gain some extra storage?"));
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "DO IT",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                new Commands.InstallOverlaysBetterWay(layersToInstall, OverlayDetailActivity.this, OverlayDetailActivity.this,1).execute();
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Ignore",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                new Commands.InstallOverlaysBetterWay(layersToInstall, OverlayDetailActivity.this, OverlayDetailActivity.this,0).execute();
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //
+                            }
+                        });
+                alertDialog.show();
+            }else {
+                alertDialog.setMessage(Html.fromHtml("Can´t install to "+newOverlayFolder+ "</b><br>(Linked to "+DeviceSingleton.getInstance().getOverlayFolder()+") )<br><br><b>Free Space:</b> " + Utils.bytesToHuman(freeSpace) + "<br>" + "<b>Needed Space:</b><font color=\"#F44336\"> " + Utils.bytesToHuman(neededSpace)+"</font>"));
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //
+                            }
+                        });
+                alertDialog.show();
+            }
+        }else{
+            // ENOUGH SPACE
+            final LayoutInflater inflater = getLayoutInflater();
+            View dontShowAgainLayout = inflater.inflate(R.layout.dialog_donotshowagain, null);
+            final CheckBox dontShowAgain = ButterKnife.findById(dontShowAgainLayout, R.id.cb_dontShowAgainDialog_dontShowAgain);
+            alertDialog.setView(dontShowAgainLayout);
+            alertDialog.setTitle("Enough Storage");
+            if (!symLinkAlreadyPresent) {
+                alertDialog.setMessage(Html.fromHtml("Install to<b> " + DeviceSingleton.getInstance().getOverlayFolder() + " </b><br>(Default location).<br><br><b>Free Space:</b> " + Utils.bytesToHuman(freeSpace) + "<br>" + "<b>Needed Space:</b><font color=\"#4caf50\"> " + Utils.bytesToHuman(neededSpace) + "</font><br><br>Install selected Layers?"));
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (dontShowAgain.isChecked()) {
+                                    SharedPreferences myprefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = myprefs.edit();
+                                    editor.putString("hideSpaceDialog", "true");
+                                    editor.apply();
+                                }
+                                new Commands.InstallOverlaysBetterWay(layersToInstall, OverlayDetailActivity.this, OverlayDetailActivity.this, 0).execute();
+                            }
+                        });
+
+            }else{
+                alertDialog.setMessage(Html.fromHtml("Install to<b> " +newOverlayFolder+" </b><br>(Linked to "+DeviceSingleton.getInstance().getOverlayFolder()+")<br><br><b>Free Space:</b> " + Utils.bytesToHuman(freeSpace) + "<br>" + "<b>Needed Space:</b><font color=\"#4caf50\"> " + Utils.bytesToHuman(neededSpace) + "</font><br><br>Install selected Layers?"));
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (dontShowAgain.isChecked()) {
+                                    SharedPreferences myprefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = myprefs.edit();
+                                    editor.putString("hideSpaceDialog", "true");
+                                    editor.apply();
+                                }
+                                new Commands.InstallOverlaysBetterWay(layersToInstall, OverlayDetailActivity.this, OverlayDetailActivity.this, 2).execute();
+                            }
+                        });
+            }
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //
+                        }
+                    });
+            SharedPreferences myprefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+            String hideSpaceDialog = myprefs.getString("hideSpaceDialog", "false");
+            if (hideSpaceDialog.equals("false")) {
+                alertDialog.show();
+            }else{
+                if(symLinkAlreadyPresent)new Commands.InstallOverlaysBetterWay(layersToInstall, OverlayDetailActivity.this, OverlayDetailActivity.this, 2).execute();
+                else new Commands.InstallOverlaysBetterWay(layersToInstall, OverlayDetailActivity.this, OverlayDetailActivity.this, 0).execute();
+            }
+
+        }
+
+
+
+/*
+        int spaceCalculationMode = 0;
+
+        //FREE SPACE
+        StatFs statFs = new StatFs(DeviceSingleton.getInstance().getMountFolder());
+        long freeSpace = (statFs.getAvailableBlocksLong() * statFs.getBlockSizeLong());
+        //NEEDED SPACE
+        long neededSpace = 0;
+        for (LayerFile layerFile : layersToInstall) {
+            neededSpace = neededSpace + layerFile.getFile(this).length();
+        }
+        boolean symLinkAlreadyPresent = false;
+        File OverlayFolder = new File(DeviceSingleton.getInstance().getOverlayFolder());
+        try {
+            symLinkAlreadyPresent = Utils.isSymlink(OverlayFolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //Select MODE
+        if (neededSpace > freeSpace){
+            spaceCalculationMode = 1;
+        }
+        if (symLinkAlreadyPresent){
+            spaceCalculationMode = 2;
+        }
+
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+
+        switch (spaceCalculationMode){
+            case 0:
+                alertDialog.setTitle("Enough Free Storage");
+                alertDialog.setMessage(Html.fromHtml("Enough free space on " +DeviceSingleton.getInstance().getMountFolder()+" to install the theme.<br><br><b>Free Space:</b> " + Utils.bytesToHuman(freeSpace) + "<br>" + "<b>Needed Space:</b> " + Utils.bytesToHuman(neededSpace) + "<br><br>Install selected Layers?"));
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "YES",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                new Commands.InstallOverlaysBetterWay(layersToInstall, OverlayDetailActivity.this, OverlayDetailActivity.this,0).execute();
+                            }
+                        });
+                break;
+            case 1:
+                alertDialog.setTitle("Low Storage");
+                alertDialog.setMessage(Html.fromHtml("You don´t have enough space on your "+ DeviceSingleton.getInstance().getMountFolder()+" partition to install the selected Layers.<br><br><b>Free Space:</b> " + Utils.bytesToHuman(freeSpace) + "<br>" + "<b>Needed Space:</b> " + Utils.bytesToHuman(neededSpace) + "<br><br>Create a symbolic link to /system to gain some extra storage?"));
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "DO IT",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                new Commands.InstallOverlaysBetterWay(layersToInstall, OverlayDetailActivity.this, OverlayDetailActivity.this,1).execute();
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Ignore",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                new Commands.InstallOverlaysBetterWay(layersToInstall, OverlayDetailActivity.this, OverlayDetailActivity.this,0).execute();
+                            }
+                        });
+                alertDialog.show();
+                break;
+            case 2:
+
+                try {
+                    alertDialog.setTitle("SymLinked to  "+OverlayFolder.getCanonicalPath());
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                alertDialog.show();
+                break;
+        }
+
+        /*
+
+
         //CHECK IF ENOUGH SPACE ON VENDOR DEVICES AND THERE IS NO SYMLINK ALREADY
         File VendorOverlay = new File(DeviceSingleton.getInstance().getOverlayFolder());
         boolean symLinkAlreadyPresent = false;
@@ -561,6 +725,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             e.printStackTrace();
         }
         Log.d("SymLinker","SymLink already present: "+ symLinkAlreadyPresent);
+        //Vendor Device and no symlink yet
         if (DeviceSingleton.getInstance().getMountFolder().equals("/vendor") & !symLinkAlreadyPresent) {
             //FREE SPACE
             StatFs statFs = new StatFs(DeviceSingleton.getInstance().getMountFolder());
@@ -593,6 +758,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
                 new Commands.InstallOverlaysBetterWay(layersToInstall, OverlayDetailActivity.this, OverlayDetailActivity.this,0).execute();
             }
         }else{
+            //already simlink
             if (symLinkAlreadyPresent){
                 new Commands.InstallOverlaysBetterWay(layersToInstall, OverlayDetailActivity.this, OverlayDetailActivity.this,2).execute();
             }else {
@@ -600,7 +766,7 @@ public class OverlayDetailActivity extends AppCompatActivity implements AsyncRes
             }
         }
 
-
+*/
 
 
     }
