@@ -2,13 +2,16 @@ package com.lovejoy777.rroandlayersmanager;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -17,7 +20,10 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
 import android.widget.Toast;
 import com.bitsyko.liblayers.Layer;
 import com.lovejoy777.rroandlayersmanager.activities.*;
@@ -42,6 +48,8 @@ public class menu extends AppCompatActivity {
     @Bind(R.id.toolbar_fragmentContainer) Toolbar toolbar;
     @Bind(R.id.drawerLayout_fragmentContainer) DrawerLayout drawerLayout;
     @Bind(R.id.navigationView_menu) NavigationView navigationView;
+    private int sdkVersion;
+    private boolean omsCompatible;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,11 +66,85 @@ public class menu extends AppCompatActivity {
             createImportantDirectories();
         }
 
-        Boolean tutorialShown = PreferenceManager.getDefaultSharedPreferences(menu.this).getBoolean("tutorialShown", false);
-        if (!tutorialShown) {
-            loadTutorial(this);
+        //GET ANDROID VERSION
+        sdkVersion= Build.VERSION.SDK_INT;
+
+        //Is oms compatible
+        omsCompatible = false;
+
+        AlertDialog.Builder installdialog = new AlertDialog.Builder(this);
+        final LayoutInflater inflater = getLayoutInflater();
+        View dontShowAgainLayout = inflater.inflate(R.layout.dialog_donotshowagain, null);
+        final CheckBox dontShowAgain = ButterKnife.findById(dontShowAgainLayout, R.id.cb_dontShowAgainDialog_dontShowAgain);
+
+        installdialog.setView(dontShowAgainLayout);
+        installdialog.setCancelable(false);
+        installdialog.setTitle(R.string.SubstratumSwitch_NewEra);
+        if (sdkVersion<23){
+            installdialog.setMessage(getString(R.string.SubstratumSwitch_DescriptionNotSupported_Part1)+Build.VERSION.RELEASE+getString(R.string.SubstratumSwitch_DescriptionNotSupported_Part2));
+            installdialog.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    if (dontShowAgain.isChecked()) {
+                        SharedPreferences myprefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = myprefs.edit();
+                        editor.putString("SubstratumDialog", "checked");
+                        editor.apply();
+                    }
+                    Boolean tutorialShown = PreferenceManager.getDefaultSharedPreferences(menu.this).getBoolean("tutorialShown", false);
+                    if (!tutorialShown) {
+                        loadTutorial(menu.this);
+                    }else{
+                        changeFragment(1);
+                    }
+                }
+            });
         }else{
-            changeFragment(1);
+            installdialog.setMessage(R.string.SubstratumSwitch_DescriptionSupported);
+            installdialog.setPositiveButton("Yes please", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+
+                    if (dontShowAgain.isChecked()) {
+                        SharedPreferences myprefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = myprefs.edit();
+                        editor.putString("SubstratumDialog", "checked");
+                        editor.apply();
+                    }
+                    loadSubstarumTutorial(menu.this);
+                    //start async task to install the Overlays
+                    //InstallAsyncOverlays();
+                }
+            });
+        }
+
+
+        installdialog.setNegativeButton("Ignore", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+                if (dontShowAgain.isChecked()) {
+                    SharedPreferences myprefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = myprefs.edit();
+                    editor.putString("SubstratumDialog", "checked");
+                    editor.apply();
+                }
+                Boolean tutorialShown = PreferenceManager.getDefaultSharedPreferences(menu.this).getBoolean("tutorialShown", false);
+                if (!tutorialShown) {
+                    loadTutorial(menu.this);
+                }else{
+                    changeFragment(1);
+                }
+            }
+        });;
+        SharedPreferences myprefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+        String skipMessage = myprefs.getString("SubstratumDialog", "unchecked");
+        if (!skipMessage.equals("checked")) {
+            installdialog.show();
+        } else {
+            Boolean tutorialShown = PreferenceManager.getDefaultSharedPreferences(menu.this).getBoolean("tutorialShown", false);
+            if (!tutorialShown) {
+                loadTutorial(menu.this);
+            }else{
+                changeFragment(1);
+            }
         }
     }
 
@@ -90,6 +172,44 @@ public class menu extends AppCompatActivity {
         return slides;
     }
 
+    public void loadSubstarumTutorial(final Activity context) {
+        new IntroductionBuilder(context).withSlides(generateSlidesSubstartum()).introduceMyself();
+    }
+
+    public List<Slide> generateSlidesSubstartum() {
+        List<Slide> slides = new ArrayList<>();
+
+        slides.add(new Slide().withTitle(R.string.SubstratumSwitch_Slide1_Title).withDescription(R.string.SubstratumSwitch_Slide1_Description).
+                withColorResource(R.color.slide_1).withImage(R.drawable.appintro0));
+        if(omsCompatible){
+            slides.add(new Slide().withTitle(R.string.SubstratumSwitch_Slide2_Title).withDescription(R.string.SubstratumSwitch_Slide2_Description)
+                    .withColorResource(R.color.slide_2).withImage(R.drawable.appintro6));
+            slides.add(new Slide().withTitle(R.string.SubstratumSwitch_Slide_Overlays_Title).withDescription(R.string.SubstratumSwitch_Slide_Overlays_Description_OMS)
+                    .withColorResource(R.color.slide_3).withImage(R.drawable.appintro1));
+            slides.add(new Slide().withTitle(R.string.SubstratumSwitch_Slide_Fonts_Title).withDescription(R.string.SubstratumSwitch_Slide_Fonts_Description_OMS)
+                    .withColorResource(R.color.slide_4).withImage(R.drawable.appintro2));
+            slides.add(new Slide().withTitle(R.string.SubstratumSwitch_Slide_Bootanimations_Title).withDescription(R.string.SubstratumSwitch_Slide_Bootanimations_Description_OMS)
+                    .withColorResource(R.color.slide_5).withImage(R.drawable.appintro3));
+            slides.add(new Slide().withTitle(R.string.SubstratumSwitch_Slide_Sounds_Title).withDescription(R.string.SubstratumSwitch_Slide_Sounds_Description_OMS)
+                    .withColorResource(R.color.slide_6).withImage(R.drawable.appintro4));
+        }else{
+            slides.add(new Slide().withTitle(R.string.SubstratumSwitch_Slide3_Title).withDescription(R.string.SubstratumSwitch_Slide3_Description)
+                    .withColorResource(R.color.slide_6).withImage(R.drawable.appintro5));
+            slides.add(new Slide().withTitle(R.string.SubstratumSwitch_Slide4_Title).withDescription(R.string.SubstratumSwitch_Slide4_Description)
+                    .withColorResource(R.color.slide_2).withImage(R.drawable.appintro6));
+            slides.add(new Slide().withTitle(R.string.SubstratumSwitch_Slide_Overlays_Title).withDescription(R.string.SubstratumSwitch_Slide_Overlays_Description_NotOMS)
+                    .withColorResource(R.color.slide_3).withImage(R.drawable.appintro1));
+            slides.add(new Slide().withTitle(R.string.SubstratumSwitch_Slide_Fonts_Title).withDescription(R.string.SubstratumSwitch_Slide_Fonts_Description_NotOMS)
+                    .withColorResource(R.color.slide_4).withImage(R.drawable.appintro2));
+            slides.add(new Slide().withTitle(R.string.SubstratumSwitch_Slide_Bootanimations_Title).withDescription(R.string.SubstratumSwitch_Slide_Bootanimations_Description_NotOMS)
+                    .withColorResource(R.color.slide_5).withImage(R.drawable.appintro3));
+            slides.add(new Slide().withTitle(R.string.SubstratumSwitch_Slide_Sounds_Title).withDescription(R.string.SubstratumSwitch_Slide_Sounds_Description_NotOMS)
+                    .withColorResource(R.color.slide_6).withImage(R.drawable.appintro4));
+        }
+        slides.add(new Slide().withTitle(R.string.SubstratumSwitch_Slide5_Title).withOption(new Option(getString(R.string.SubstratumSwitch_Slide5_Description)))
+                .withColorResource(R.color.slide_1).withImage(R.drawable.appintro6));
+        return slides;
+    }
 
 
 
@@ -100,21 +220,46 @@ public class menu extends AppCompatActivity {
         if (requestCode == IntroductionBuilder.INTRODUCTION_REQUEST_CODE &&
                 resultCode == RESULT_OK) {
 
+            changeFragment(1);
             for (Option option : data.<Option>getParcelableArrayListExtra(IntroductionActivity.
                     OPTION_RESULT)) {
-
-                if (option.getPosition()==5 && option.isActivated()){
-                    SharedPreferences myprefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-                    myprefs.edit().putBoolean("switch1",true).commit();
-                    Commands.killLauncherIcon(this);
+                if (option.getPosition() == 5) {
+                    //HIDE LAUNCHER ICON CHECKBOX
+                    if (option.isActivated()) {
+                        SharedPreferences myprefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                        myprefs.edit().putBoolean("switch1", true).commit();
+                    }
+                    //TUTORIAL SHOWN
+                    PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("tutorialShown", true).commit();
                 }
-                if (option.getPosition()==6 && option.isActivated()){
-                    SharedPreferences myprefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-                    myprefs.edit().putBoolean("disableNotInstalledApps",true).commit();
-                }
-                PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("tutorialShown", true).commit();
-                changeFragment(1);
 
+                if (option.getPosition() == 6) {
+                    //HIDE OVERLAYS CHECKBOX OR GET SUBSTRATUM CHECKBOX
+                    if (option.getTitle().equals("Do not install Substratum!")) {
+                        //NOT GET SUBSTRATUM CHECKBOX
+                        if (!option.isActivated()) {
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/apps/testing/projekt.substratum"));
+                            startActivity(browserIntent);
+                        }
+                    } else {
+                        //HIDE OVERLAYS CHECKBOX
+                        if (option.isActivated()) {
+                            SharedPreferences myprefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                            myprefs.edit().putBoolean("disableNotInstalledApps", true).commit();
+                        }
+                        //TUTORIAL SHOWN
+                        PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("tutorialShown", true).commit();
+
+                    }
+                }
+
+                if (option.getPosition() == 7) {
+                    //NOT GET SUBSTRATUM CHECKBOX
+                    if (!option.isActivated()) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/apps/testing/projekt.substratum"));
+                        startActivity(browserIntent);
+                    }
+                }
             }
         }else{
             if (resultCode == RESULT_CANCELED){
@@ -222,6 +367,26 @@ public class menu extends AppCompatActivity {
                                 Intent settings = new Intent(menu.this, SettingsActivity.class);
                                 startActivity(settings, bndlanimation);
                                 break;
+                            case R.id.nav_substratum:
+                                if(sdkVersion>22){
+                                    loadSubstarumTutorial(menu.this);
+                                }else {
+                                    AlertDialog.Builder installdialog = new AlertDialog.Builder(menu.this);
+                                    installdialog.setCancelable(false);
+                                    installdialog.setTitle(R.string.SubstratumSwitch_Dialog_NotSupported_Title);
+                                    installdialog.setMessage(getString(R.string.SubstratumSwitch_Dialog_NotSupported_Description_Part1)+Build.VERSION.RELEASE+getString(R.string.SubstratumSwitch_Dialog_NotSupported_Description_Part2));
+                                    installdialog.setPositiveButton("Oh...", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                        }
+                                    });
+                                    installdialog.setNeutralButton("Show nevertheless", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            loadSubstarumTutorial(menu.this);
+                                        }
+                                    });
+                                    installdialog.show();
+                                }
+
                         }
                         return false;
                     }
