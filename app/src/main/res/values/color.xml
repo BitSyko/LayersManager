@@ -39,4 +39,11 @@
     <!-- other colors -->
     <color name="white">#ffffff</color>
     <color name="fab_tint">#ffffff</color>
+
+    <color name="slide_1">#5e98ce</color>
+    <color name="slide_2">#fcb257</color>
+    <color name="slide_3">#ff8da1</color>
+    <color name="slide_4">#a9d67b</color>
+    <color name="slide_5">#c187ff</color>
+    <color name="slide_6">#f9da7c</color>
 </resources>
