@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="drawer_upgrade">Upgrade</string>
+    <string name="substatratum">Get Substratum</string>
+    <string name="SubstratumSwitch_NewEra">A new era of theming has begun</string>
+    <string name="SubstratumSwitch_DescriptionNotSupported_Part1">Layers Manager has been replaced by our new theming app Substratum. There is just one problem: Substratum does not support your android version (</string>
+    <string name="SubstratumSwitch_DescriptionNotSupported_Part2">). Please be aware that most themes will be updated to only work with substratum in the future. It is probably a good idea to make backups of your favorite themes and/or disable automatic updates on the Play Store.</string>
+    <string name="SubstratumSwitch_DescriptionSupported">Layers Manager has been replaced by our new theming app Substratum. Have a look!</string>
+
+
+    <string name="SubstratumSwitch_Slide_Overlays_Title">Overlays</string>
+    <string name="SubstratumSwitch_Slide_Overlays_Description_OMS">Install, enable, switch and disable themes without rebooting.</string>
+    <string name="SubstratumSwitch_Slide_Overlays_Description_NotOMS">Install, switch and uninstall themes using legacy mode. (needs reboot)</string>
+
+    <string name="SubstratumSwitch_Slide_Fonts_Title">Fonts</string>
+    <string name="SubstratumSwitch_Slide_Fonts_Description_OMS">Personalize your Font on the fly.</string>
+    <string name="SubstratumSwitch_Slide_Fonts_Description_NotOMS">Personalize your Font. (not added as of 26.07.2016)</string>
+
+    <string name="SubstratumSwitch_Slide_Bootanimations_Title">Bootanimations</string>
+    <string name="SubstratumSwitch_Slide_Bootanimations_Description_OMS">Customize your Bootanimation.</string>
+    <string name="SubstratumSwitch_Slide_Bootanimations_Description_NotOMS">Customize your Bootanimation. (not added as of 26.07.2016)</string>
+
+    <string name="SubstratumSwitch_Slide_Sounds_Title">Sounds</string>
+    <string name="SubstratumSwitch_Slide_Sounds_Description_OMS">Make your phone sound different without the need to reboot.</string>
+    <string name="SubstratumSwitch_Slide_Sounds_Description_NotOMS">Make your phone sound different. (needs reboot)</string>
+
+
+
+    <string name="SubstratumSwitch_Slide1_Title">Meet Substratum</string>
+    <string name="SubstratumSwitch_Slide1_Description">a minimal yet powerful theme engine.</string>
+
+    <string name="SubstratumSwitch_Slide2_Title">OMS compatible ROM: Substratum</string>
+    <string name="SubstratumSwitch_Slide2_Description">This means you can use all of the awesome new features of Substratum.</string>
+
+    <string name="SubstratumSwitch_Slide3_Title">Get an OMS compatible ROM</string>
+    <string name="SubstratumSwitch_Slide3_Description">Substratum shines on OMS compatible ROMS. On those ROMs you can change Overlays, Fonts, Sounds and Bootanimations on the fly, without rebooting.</string>
+
+    <string name="SubstratumSwitch_Slide4_Title">ROM not OMS compatible: Substratum Legacy</string>
+    <string name="SubstratumSwitch_Slide4_Description">You are not on an OMS compatible ROM. This means that Substratum legacy will emulate the functions of Layers Manager for you (and add some extras), but you still have to reboot after changing themes.</string>
+
+    <string name="SubstratumSwitch_Slide5_Title">We hope you like Substratum.</string>
+    <string name="SubstratumSwitch_Slide5_Description">Do not install Substratum!</string>
+
+
+    <string name="SubstratumSwitch_Dialog_NotSupported_Title">Android version not supported</string>
+    <string name="SubstratumSwitch_Dialog_NotSupported_Description_Part1">We are sorry, but Substratum does not support your android version (</string>
+    <string name="SubstratumSwitch_Dialog_NotSupported_Description_Part2">). You need atleast Android 6.0 (Marshmallow).</string>
+</resources>
